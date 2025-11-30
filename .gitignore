@@ -1,0 +1,10 @@
+#.gitignore
+.vscode/
+dep/
+obj/
+*.o
+*.d
+libft.a
+.config
+a.out
+miniRT
