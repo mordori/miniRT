@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 14:05:21 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/07/31 02:31:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 20:44:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@
  */
 t_vec2i	vec2i_f(float x, float y)
 {
-	t_vec2i	result;
-
-	result.x = (int)x;
-	result.y = (int)y;
-	return (result);
+	return ((t_vec2i){(int)x, (int)y});
 }
 
 /**
@@ -42,9 +38,5 @@ t_vec2i	vec2i_f(float x, float y)
  */
 t_vec2i	vec2i_nf(float n)
 {
-	t_vec2i	result;
-
-	result.x = (int)n;
-	result.y = (int)n;
-	return (result);
+	return ((t_vec2i){(int)n, (int)n});
 }

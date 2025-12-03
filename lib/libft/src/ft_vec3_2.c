@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/07/31 02:08:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:06:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@
  */
 t_vec3	vec3_cross(t_vec3 a, t_vec3 b)
 {
-	t_vec3	result;
-
-	result.x = a.y * b.z - a.z * b.y;
-	result.y = a.z * b.x - a.x * b.z;
-	result.z = a.x * b.y - a.y * b.x;
-	return (result);
+	return ((t_vec3){{
+		a.y * b.z - a.z * b.y,
+		a.z * b.x - a.x * b.z,
+		a.x * b.y - a.y * b.x
+	}});
 }
 
 /**
@@ -45,6 +44,17 @@ float	vec3_dot(t_vec3 a, t_vec3 b)
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
+t_vec3	vec3_div(t_vec3 v, float div)
+{
+	if (div == 0.0f)
+		return (vec3_n(0.0f));
+	return ((t_vec3){{
+		v.x / div,
+		v.y / div,
+		v.z / div
+	}});
+}
+
 /**
  * Normalizes a 3D vector.
  *
@@ -56,32 +66,9 @@ float	vec3_dot(t_vec3 a, t_vec3 b)
  */
 t_vec3	vec3_normalize(t_vec3 v)
 {
-	float	len;
-
-	len = vec3_length(v);
-	if (len == 0.0f)
-		return (vec3_n(0.0f));
-	v.x /= len;
-	v.y /= len;
-	v.z /= len;
-	return (v);
+	return (vec3_div(v, vec3_length(v)));
 }
 
-/**
- * Converts a 4D vector to a 3D vector by discarding the w-component.
- *
- * @param v Input 4D vector.
- * @return A 3D vector containing the x, y, z components of `v`.
- */
-t_vec3	vec3_4(t_vec4 v)
-{
-	t_vec3	result;
-
-	result.x = v.x;
-	result.y = v.y;
-	result.z = v.z;
-	return (result);
-}
 
 /**
  * Computes the length (magnitude) of a 3D vector.

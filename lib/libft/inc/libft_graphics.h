@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 20:12:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/30 20:16:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:43:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 
 struct s_vertex
 {
+	t_vec4		raw_pos;
 	t_vec4		pos;
-	t_vec4		o_pos;
-	t_vec2i		s;
+	t_vec2i		screen_pos;
 	uint32_t	color;
 	float		depth;
 };
@@ -32,12 +32,19 @@ struct s_transform
 	t_vec3	scale;
 };
 
+struct s_ray
+{
+	t_vec3	origin;
+	t_vec3	dir;
+};
+
+
 struct s_quad
 {
-	float	topleft;
-	float	topright;
-	float	bottomleft;
-	float	bottomright;
+	float	top_left;
+	float	top_right;
+	float	bottom_left;
+	float	bottom_right;
 };
 
 #endif

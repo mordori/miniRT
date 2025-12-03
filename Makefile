@@ -6,13 +6,12 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/11/30 23:21:49 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/02 03:39:09 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=miniRT
 
-MEMORY		?=16777216
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
@@ -37,10 +36,13 @@ DIR_LIBFT	:=$(DIR_LIB)libft/
 DIR_MLX		:=$(DIR_LIB)MLX42/
 
 DIR_CAM		:=camera/
+DIR_EDIT	:=editing/
 DIR_INPUT	:=input/
+DIR_LIGHTS	:=lights/
+DIR_MAT		:=materials/
 DIR_OBJECTS	:=objects/
-DIR_PARS	:=parsing/
 DIR_RENDER	:=rendering/
+DIR_SCENE	:=scene/
 DIR_UTILS	:=utils/
 
 LIBFT		:=$(DIR_LIBFT)libft.a
@@ -57,17 +59,23 @@ INCS		:=$(addprefix -I, \
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
+				camera.c)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
+				light.c ambient.c directional.c point.c)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
+				patterns.c textures.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
-				)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARS), \
-				)
+				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				)
+				threads.c render.c shadows.c)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
+				scene.c validation.c skydome.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				)
+				errors.c files.c hooks.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
@@ -99,7 +107,7 @@ $(MLX42):
 	@echo "$(YELLOW) [✔] mlx42.a created$(COLOR)"
 
 $(NAME): $(CONF) $(LIBFT) $(MLX42) $(OBJS)
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBFT) $(MLX42)
+	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) $(MLX42) $(LDFLAGS)
 	@$(call output)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT) $(MLX42)
@@ -148,34 +156,15 @@ define check_config
 	@if [ ! -e "$(CONF)" ]; then \
 		touch "$(CONF)"; \
 		echo "" >> $(CONF); \
-		echo "" >> $(CONF); \
 	fi
 	@if [ "$$(head -n 1 $(CONF))" != "$(1)" ]; then \
 		sed -i '1c\$(1)' "$(CONF)"; \
 	fi
-	@if [ "$$(head -n 2 $(CONF) | tail -n 1)" != "$(MEMORY)" ]; then \
-		sed -i '2c\$(MEMORY)' "$(CONF)"; \
-	fi
 endef
 
 define output
-	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
-		echo "$(YELLOW) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(COLOR)"; \
-		echo "$(RED) [/] the program will produce an error when run$(COLOR)"; \
-	elif [ $$(($(MEMORY) & ($(MEMORY) - 1))) -ne 0 ]; then \
-		echo "$(YELLOW) [✔] $(NAME) built with non power of two amount of memory$(COLOR)"; \
-		echo "$(RED) [/] the program will produce an error when run$(COLOR)"; \
-	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
-		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
-	elif [ $$(($(MEMORY)/1024/1024)) -lt 1000 ]; then \
-		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024" | bc) MiB memory$(COLOR)"; \
-	else \
-		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024/1024" | bc) GiB memory$(COLOR)"; \
-	fi
-	@if [ $$(($(MEMORY))) -ge 1024 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
-		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \
-		if [ "$(BUILD_TYPE)" = "DEBUG" ]; then \
-			echo "$(YELLOW) [DEBUG]$(COLOR)"; \
-		fi; \
-	fi
+	echo "$(GREEN) [/] usage: $(YELLOW)./$(NAME) 'scenes/scene_name.rt$(COLOR)'"; \
+	if [ "$(BUILD_TYPE)" = "DEBUG" ]; then \
+		echo "$(YELLOW) [DEBUG]$(COLOR)"; \
+	fi;
 endef

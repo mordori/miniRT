@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 03:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/07/31 02:29:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 20:49:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,7 @@
  */
 t_vec3	vec3(float x, float y, float z)
 {
-	t_vec3	result;
-
-	result.x = x;
-	result.y = y;
-	result.z = z;
-	return (result);
+	return ((t_vec3){{x, y, z}});
 }
 
 /**
@@ -40,12 +35,7 @@ t_vec3	vec3(float x, float y, float z)
  */
 t_vec3	vec3_n(float n)
 {
-	t_vec3	result;
-
-	result.x = n;
-	result.y = n;
-	result.z = n;
-	return (result);
+	return ((t_vec3){{n, n, n}});
 }
 
 /**
@@ -57,12 +47,7 @@ t_vec3	vec3_n(float n)
  */
 t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 {
-	t_vec3	result;
-
-	result.x = a.x + b.x;
-	result.y = a.y + b.y;
-	result.z = a.z + b.z;
-	return (result);
+	return ((t_vec3){{a.x + b.x, a.y + b.y, a.z + b.z}});
 }
 
 /**
@@ -74,12 +59,7 @@ t_vec3	vec3_add(t_vec3 a, t_vec3 b)
  */
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
 {
-	t_vec3	result;
-
-	result.x = a.x - b.x;
-	result.y = a.y - b.y;
-	result.z = a.z - b.z;
-	return (result);
+	return ((t_vec3){{a.x - b.x, a.y - b.y, a.z - b.z}});
 }
 
 /**
@@ -93,10 +73,5 @@ t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
  */
 t_vec3	vec3_scale(t_vec3 v, float s)
 {
-	t_vec3	result;
-
-	result.x = v.x * s;
-	result.y = v.y * s;
-	result.z = v.z * s;
-	return (result);
+	return ((t_vec3){{v.x * s, v.y * s, v.z * s}});
 }

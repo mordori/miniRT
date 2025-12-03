@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/30 20:48:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/02 02:14:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,19 +71,20 @@
 typedef struct s_list		t_list;
 typedef struct s_vec2i		t_vec2i;
 typedef struct s_vec2		t_vec2;
-typedef struct s_vec3		t_vec3;
-typedef struct s_vec4		t_vec4;
+typedef struct s_vec2		t_float2;
+typedef struct s_vec2		t_point;
 typedef struct s_mat4		t_mat4;
-typedef struct s_color		t_color;
 typedef struct s_quad		t_quad;
 typedef struct s_vertex		t_vertex;
 typedef struct s_transform	t_transform;
 typedef struct s_arena		t_arena;
+typedef struct s_ray		t_ray;
 
-typedef struct s_pair
-{
-	int32_t	index;
-	int32_t	value;
-}				t_pair;
+typedef union u_vec3		t_vec3;
+typedef union u_vec3		t_float3;
+typedef union u_vec4		t_vec4;
+typedef union u_vec4		t_float4;
+typedef union u_color		t_color;
+typedef union u_vec4		t_quaternion;
 
 #endif

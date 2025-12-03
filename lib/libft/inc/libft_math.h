@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/30 20:08:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/02 04:02:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,49 @@ struct s_vec2
 	float	y;
 };
 
-struct s_vec3
+union u_vec3
 {
-	float	x;
-	float	y;
-	float	z;
+	float	data[3];
+	struct
+	{
+		float	x;
+		float	y;
+		float	z;
+	};
+	struct
+	{
+		float	r;
+		float	g;
+		float	b;
+	};
+	struct
+	{
+		float	pitch;
+		float	yaw;
+		float	roll;
+	};
+	t_vec2	xy;
 };
 
-struct s_vec4
+union u_vec4
 {
-	float	x;
-	float	y;
-	float	z;
-	float	w;
+	float	data[4];
+	struct
+	{
+		float	x;
+		float	y;
+		float	z;
+		float	w;
+	};
+	struct
+	{
+		float	r;
+		float	g;
+		float	b;
+		float	a;
+	};
+	t_vec3	xyz;
+	t_vec3	rgb;
 };
 
 float	ft_lerp(float a, float b, float t);
@@ -69,9 +99,9 @@ t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
 t_vec3	vec3_scale(t_vec3 v, float s);
 t_vec3	vec3_cross(t_vec3 a, t_vec3 b);
 float	vec3_dot(t_vec3 a, t_vec3 b);
+t_vec3	vec3_div(t_vec3 v, float div);
 float	vec3_length(t_vec3 v);
 t_vec3	vec3_normalize(t_vec3 v);
-t_vec3	vec3_4(t_vec4 v);
 t_vec4	vec4(float x, float y, float z, float w);
 t_vec4	vec4_3(t_vec3 v, float w);
 t_vec4	vec4_n(float n);

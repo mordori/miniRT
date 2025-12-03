@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:30:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 00:15:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:22:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ size_t	vector_size(t_vector *vec);
 size_t	vector_total(t_vector *vec);
 void	*vector_getlast(t_vector *vec);
 bool	vector_insert(t_vector *vec, void *new, size_t index);
+void	vector_clean_items(t_vector *vec, void (*del)(void *));
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 22:44:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/30 20:19:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:18:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,12 @@
 t_mat4	mat4_identity(void)
 {
 	t_mat4	matrix;
-	size_t	i;
 
-	matrix = mat4_zero();
-	i = 0;
-	while (i < 4)
-	{
-		matrix.m[i][i] = 1.0f;
-		++i;
-	}
+	matrix = (t_mat4){0};
+	matrix.m[0][0] = 1.0f;
+	matrix.m[1][1] = 1.0f;
+	matrix.m[2][2] = 1.0f;
+	matrix.m[3][3] = 1.0f;
 	return (matrix);
 }
 
@@ -48,7 +45,7 @@ t_mat4	mat4_mul(t_mat4 a, t_mat4 b)
 	int		j;
 	int		k;
 
-	result = mat4_zero();
+	result = (t_mat4){0};
 	i = 0;
 	while (i < 4)
 	{
@@ -103,32 +100,6 @@ t_vec3	mat4_mul_vec3(t_mat4 model, t_vec3 v)
 {
 	t_vec4	vec;
 
-	vec.x = v.x;
-	vec.y = v.y;
-	vec.z = v.z;
-	vec.w = 0.0f;
-	vec = mat4_mul_vec4(model, vec);
-	v.x = vec.x;
-	v.y = vec.y;
-	v.z = vec.z;
-	return (v);
-}
-
-/**
- * Zero 4x4 matrix with 0 everywhere.
- *
- * @return Zero 4x4 matrix.
- */
-t_mat4	mat4_zero(void)
-{
-	t_mat4	matrix;
-	size_t	i;
-
-	i = 0;
-	while (i < 16)
-	{
-		matrix.m[i / 4][i % 4] = 0.0f;
-		++i;
-	}
-	return (matrix);
+	vec = mat4_mul_vec4(model, vec4_3(v, 0.0f));
+	return (vec.xyz);
 }

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 16:13:36 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 00:18:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:23:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ bool	vector_del(t_vector *vec, size_t index)
 		return (false);
 	if (vec->del)
 	{
-		free(vec->items[index]);
+		vec->del(vec->items[index]);
 		vec->items[index] = NULL;
 	}
 	while (index < vec->total - 1)
@@ -131,7 +131,7 @@ bool	vector_free(t_vector *vec, ...)
 			if (vec->del && vec->total)
 			{
 				while (i < vec->total)
-					free(vec->items[i++]);
+					vec->del(vec->items[i++]);
 			}
 			vec->total = 0;
 			vec->size = 0;

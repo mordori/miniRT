@@ -1,19 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   files.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/01 00:48:12 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 01:00:06 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "utils.h"
 #include "libft_str.h"
+#include "libft_io.h"
 
-ssize_t	try_write(t_context	*ctx, int fd, char *src)
+ssize_t	try_write(t_context *ctx, int fd, char *src)
 {
 	ssize_t	bytes;
 	ssize_t	len;
@@ -32,7 +21,7 @@ ssize_t	try_write(t_context	*ctx, int fd, char *src)
 	return (bytes);
 }
 
-ssize_t	try_write_endl(t_context	*ctx, int fd, char *src)
+ssize_t	try_write_endl(t_context *ctx, int fd, char *src)
 {
 	ssize_t	bytes;
 
@@ -41,19 +30,17 @@ ssize_t	try_write_endl(t_context	*ctx, int fd, char *src)
 	return (bytes);
 }
 
-int	try_open(t_context	*ctx, char *file, int o_flag, int p_flag)
+int	try_open(char *file, int o_flag, int p_flag)
 {
 	int	fd;
 
 	fd = open(file, o_flag, p_flag);
 	if (fd == ERROR)
-	{
-		warning(ctx, file);
-	}
+		fatal_error(NULL, "open failed");
 	return (fd);
 }
 
-ssize_t	try_read(t_context	*ctx, int fd, char *buf, size_t n_bytes)
+ssize_t	try_read(t_context *ctx, int fd, char *buf, size_t n_bytes)
 {
 	ssize_t	bytes;
 
@@ -64,4 +51,14 @@ ssize_t	try_read(t_context	*ctx, int fd, char *buf, size_t n_bytes)
 		fatal_error(ctx, "read failed");
 	}
 	return (bytes);
+}
+
+int	try_gnl(t_context *ctx, int fd, char **line)
+{
+	int	status;
+
+	status = get_next_line(fd, line);
+	if (status == GNL_ERROR)
+		fatal_error(ctx, "GNL failed");
+	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 20:50:47 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 00:14:51 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:02:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft_arena.h"
 #include "libft_mem.h"
 #include "libft_math.h"
+#include "libft_io.h"
 
 /**
  * @brief	Allocates and zero-initializes memory for the arena and initializes
@@ -24,17 +25,23 @@
  * @return	Created memory arena or NULL if creation fails.
  */
 t_arena	arena_create(\
-void *ctx, size_t capacity, void (*e)(void *ctx, char *msg))
+void *ctx, size_t capacity, void (*err)(void *ctx, char *msg))
 {
 	t_arena	arena;
 
-	if (capacity < MEM_UNIT)
-		f(ctx, "arena capacity is less than 1 KiB");
-	if (!ft_is_pot(capacity))
-		f(ctx, "arena capacity is not a power of 2");
-	arena.base = ft_calloc(capacity, 1);
-	if (!arena.base)
-		f(ctx, "arena malloc failed");
+	arena.base = NULL;
+	if (err)
+	{
+		if (capacity < MEM_UNIT)
+			err(ctx, "arena capacity is less than 1 KiB");
+		if (!ft_is_pot(capacity))
+			err(ctx, "arena capacity is not a power of 2");
+		arena.base = ft_calloc(capacity, 1);
+		if (!arena.base)
+			err(ctx, "arena malloc failed");
+	}
+	else
+		ft_putendl_fd("error function is NULL: undefined behavior", 2);
 	arena.capacity = capacity;
 	arena.head = 0;
 	return (arena);
