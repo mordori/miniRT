@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/02 03:39:09 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/05 04:56:06 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,11 +59,11 @@ INCS		:=$(addprefix -I, \
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
-				camera.c)
+				camera.c controls.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
-				)
+				mouse.c keys.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				light.c ambient.c directional.c point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
@@ -71,11 +71,11 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				threads.c render.c shadows.c)
+				renderer.c shadows.c ray_tracer.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validation.c skydome.c)
+				scene.c validator.c sky_sphere.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c)
+				errors.c files.c hooks.c strings.c vectors.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
@@ -163,7 +163,7 @@ define check_config
 endef
 
 define output
-	echo "$(GREEN) [/] usage: $(YELLOW)./$(NAME) 'scenes/scene_name.rt$(COLOR)'"; \
+	echo "$(GREEN) [/] usage: $(YELLOW)./$(NAME) 'assets/scenes/scene_name.rt$(COLOR)'"; \
 	if [ "$(BUILD_TYPE)" = "DEBUG" ]; then \
 		echo "$(YELLOW) [DEBUG]$(COLOR)"; \
 	fi;

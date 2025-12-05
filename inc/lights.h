@@ -3,6 +3,6 @@
 
 # include "defines.h"
 
-void	add_light(t_context *ctx, char *src);
+void	add_light(t_context *ctx, char **params);
 
 #endif

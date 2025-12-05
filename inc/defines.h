@@ -14,6 +14,10 @@
 # define HEIGHT			1080
 # define THREADS_DFL	4
 # define SPIN_TIME		250
+# define RENDER_PASSES	4
+# define SENS_ORBIT		0.0025f
+# define SENS_ZOOM		0.0018f
+# define SENS_PAN		0.0006f
 
 typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
@@ -21,7 +25,7 @@ typedef enum e_cam_state	t_cam_state;
 typedef enum e_base_color	t_base_color;
 typedef enum e_surface_type	t_surface_type;
 typedef enum e_pattern		t_pattern;
-typedef enum e_entity_id	t_entity_id;
+typedef enum e_entity		t_entity;
 
 typedef struct s_context	t_context;
 typedef struct s_object		t_object;
@@ -29,11 +33,11 @@ typedef struct s_light		t_light;
 typedef struct s_scene		t_scene;
 typedef struct s_camera		t_camera;
 typedef struct s_material	t_material;
-typedef struct s_entity		t_entity;
+typedef struct s_renderer	t_renderer;
 
 typedef mlx_texture_t		t_texture;
 
-typedef void				(*t_add_entity)(t_context *, t_entity);
+typedef void				(*t_add_entity)(t_context *, char **);
 
 enum e_obj_type
 {
@@ -80,18 +84,11 @@ enum e_surface_type
 	SURF_TRANSPARENT
 };
 
-enum e_entity_id
+enum e_entity
 {
 	ENT_CAMERA,
 	ENT_OBJECT,
-	ENT_LIGHT,
-	ENT_SKYDOME
-};
-
-struct s_entity
-{
-	t_entity_id		id;
-	char			*tex_path;
+	ENT_LIGHT
 };
 
 struct s_material
@@ -129,12 +126,14 @@ struct s_camera
 {
 	t_transform		transform;
 	t_transform		target;
+	t_vec3			pivot;
 	t_vec3			up;
+	float			pitch;
+	float			yaw;
+	float			roll;
 	float			distance;
 	float			fov;
 	float			aspect;
-	float			near;
-	float			far;
 	t_cam_state		state;
 };
 
@@ -144,6 +143,20 @@ struct s_scene
 	t_vector		objs;
 	t_vector		lights;
 	t_object		sky_sphere;
+	t_light			ambient_light;
+	t_light			directional_light;
+};
+
+struct s_renderer
+{
+	uint32_t		jobs;
+	pthread_t		*threads;
+	long			threads_init;
+	long			threads_amount;
+	_Atomic bool	active;
+	_Atomic bool	paused;
+	_Atomic bool	finished;
+	uint8_t			pass;
 };
 
 struct s_context
@@ -151,12 +164,8 @@ struct s_context
 	mlx_t			*mlx;
 	mlx_image_t		*img;
 	t_scene			scene;
-	pthread_t		*threads;
-	long			threads_init;
-	long			threads_target;
-	_Atomic bool	render_active;
-	_Atomic bool	render_paused;
-	_Atomic bool	render_finished;
+	t_object		*selected_object;
+	t_renderer		renderer;
 };
 
 #endif

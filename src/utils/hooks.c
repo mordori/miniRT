@@ -1,6 +1,7 @@
 #include "input.h"
 #include "rendering.h"
 #include "utils.h"
+#include "camera.h"
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
@@ -22,7 +23,7 @@ void	resize_hook(int width, int height, void *param)
 	{
 		fatal_error(ctx, "resize failed");
 	}
-	update_viewport();
+	// update_viewport();
 	// frame_scene();
 }
 
@@ -31,6 +32,6 @@ void	update_hook(void *param)
 	t_context	*ctx;
 
 	ctx = (t_context *)param;
-	process_input(ctx);
+	// process_input(ctx);
 	update_cam(ctx);
 }

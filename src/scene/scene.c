@@ -3,44 +3,65 @@
 #include "lights.h"
 #include "objects.h"
 #include "libft_io.h"
+#include "utils.h"
 
-t_entity	process_line(t_context *ctx, char *line)
-{
-	t_entity	entity;
-
-	(void)ctx;
-	(void)line;
-	return (entity);
-}
+static inline void	add_entity(t_context *ctx, char **params);
+static inline char	**split_line(t_context *ctx, char *line);
+static inline size_t	get_id_type(t_context *ctx, char *id);
 
 void	init_scene(t_context *ctx, int fd)
 {
-	char		*line;
-	t_entity	entity;
+	char	*line;
+	char	**params;
 
 	init_sky_sphere(ctx);
 	try_gnl(ctx, fd, &line);
 	while (line)
 	{
-		entity = process_line(ctx, line);
-		validate_entity(ctx, entity);
-		add_entity(ctx, entity);
+		params = split_line(ctx, line);
+		add_entity(ctx, params);
 		free(line);
 		try_gnl(ctx, fd, &line);
 	}
 }
 
-void	add_entity(t_context *ctx, t_entity entity)
+static inline char	**split_line(t_context *ctx, char *line)
+{
+	char	**result;
+
+	(void)ctx;
+	(void)line;
+	result = NULL;
+	return (result);
+}
+
+static inline void	add_entity(t_context *ctx, char **params)
 {
 	static const t_add_entity	functions[] =
 	{
 		add_camera,
 		add_light,
 		add_object,
-		add_sky_sphere_tex
 	};
 
-	functions[entity.id](ctx, entity);
+	functions[get_id_type(ctx, *params)](ctx, params);
+}
+
+static inline size_t	get_id_type(t_context *ctx, char *id)
+{
+	const char	*id_cam[] = {"C", NULL};
+	const char	*id_light[] = {"A", "L", NULL};
+	const char	*id_object[] = {"sp", "pl", "cy", NULL};
+
+	if (cmp_strs(id_cam, id))
+		return (0);
+	else if (cmp_strs(id_light, id))
+		return (1);
+	else if (cmp_strs(id_object, id))
+		return (2);
+	else
+		fatal_error(ctx, "invalid entity type");
+	return (0);
 }
 
 void	clean_scene(t_context *ctx)

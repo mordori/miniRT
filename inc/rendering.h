@@ -8,10 +8,8 @@
 
 # include "defines.h"
 
-bool	init_threads(t_context *ctx);
-
+bool	init_renderer(t_context *ctx);
 void	render();
-void	get_render_bucket();
-void	update_viewport();
+void	get_render_job(t_context *ctx);
 
 #endif

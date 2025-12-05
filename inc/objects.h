@@ -3,6 +3,6 @@
 
 # include "defines.h"
 
-void	add_object(t_context *ctx, char *src);
+void	add_object(t_context *ctx, char **params);
 
 #endif

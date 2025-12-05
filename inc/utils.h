@@ -20,5 +20,7 @@ int		try_open(char *file, int o_flag, int p_flag);
 ssize_t	try_write(t_context *ctx, int fd, char *src);
 ssize_t	try_write_endl(t_context *ctx, int fd, char *src);
 ssize_t	try_read(t_context *ctx, int fd, char *buf, size_t n_bytes);
+bool	cmp_strs(const char **types, const char *src);
+int		try_gnl(t_context *ctx, int fd, char **line);
 
 #endif

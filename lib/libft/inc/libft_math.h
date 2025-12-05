@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/02 04:02:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/05 03:00:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 struct s_vec2i
 {
-	int	x;
-	int	y;
+	int32_t	x;
+	int32_t	y;
 };
 
 struct s_vec2
@@ -43,12 +43,6 @@ union u_vec3
 		float	r;
 		float	g;
 		float	b;
-	};
-	struct
-	{
-		float	pitch;
-		float	yaw;
-		float	roll;
 	};
 	t_vec2	xy;
 };
@@ -80,8 +74,8 @@ int		ft_imin(int a, int b);
 float	ft_normalize(float value, float min, float max);
 float	ft_clamp01(float value);
 float	ft_clamp(float value, float min, float max);
-t_vec2i	vec2i(int x, int y);
-t_vec2i	vec2i_n(int n);
+t_vec2i	vec2i(int32_t x, int32_t y);
+t_vec2i	vec2i_n(int32_t n);
 t_vec2i	vec2i_f(float x, float y);
 t_vec2i	vec2i_nf(float n);
 t_vec2i	vec2i_add(t_vec2i a, t_vec2i b);
