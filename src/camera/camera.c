@@ -21,8 +21,8 @@ void	update_cam(t_context *ctx)
 	t_camera	*cam;
 
 	cam = &ctx->scene.cam;
-	if (ctx->selected_object)
-		cam->pivot = ctx->selected_object->transform.pos;
+	if (ctx->editor.selected_object)
+		cam->pivot = ctx->editor.selected_object->transform.pos;
 	else
 		cam->pivot = (t_vec3){0};
 	// add relative deltas
@@ -34,7 +34,6 @@ void	update_cam(t_context *ctx)
 	dir.y = sinf(cam->pitch);
 	dir.z = cosf(cam->pitch) * cosf(cam->yaw);
 	cam->transform.pos = vec3_add(cam->target.pos, vec3_scale(dir, cam->distance));
-	ctx->scene.sky_sphere.transform.pos = ctx->scene.cam.transform.pos;
 }
 
 // void	compute_distance(t_context *ctx)

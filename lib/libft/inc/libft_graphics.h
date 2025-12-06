@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 20:12:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 21:43:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/06 00:50:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ struct s_ray
 {
 	t_vec3	origin;
 	t_vec3	dir;
+	float	t;
 };
 
 

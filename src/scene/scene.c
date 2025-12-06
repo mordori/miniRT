@@ -49,9 +49,9 @@ static inline void	add_entity(t_context *ctx, char **params)
 
 static inline size_t	get_id_type(t_context *ctx, char *id)
 {
-	const char	*id_cam[] = {"C", NULL};
-	const char	*id_light[] = {"A", "L", NULL};
-	const char	*id_object[] = {"sp", "pl", "cy", NULL};
+	static const char	*id_cam[] = {"C", NULL};
+	static const char	*id_light[] = {"A", "L", NULL};
+	static const char	*id_object[] = {"sp", "pl", "cy", NULL};
 
 	if (cmp_strs(id_cam, id))
 		return (0);
@@ -60,7 +60,7 @@ static inline size_t	get_id_type(t_context *ctx, char *id)
 	else if (cmp_strs(id_object, id))
 		return (2);
 	else
-		fatal_error(ctx, "invalid entity type");
+		fatal_error(ctx, errors(ERR_EINVAL), __FILE__, __LINE__);
 	return (0);
 }
 

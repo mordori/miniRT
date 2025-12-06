@@ -3,7 +3,7 @@
 
 #include "defines.h"
 
-bool	validate_file_type(char *file);
+void	validate_file_type(char *file);
 void	init_scene(t_context *ctx, int fd);
 void	clean_scene(t_context *ctx);
 void	init_sky_sphere(t_context *ctx);

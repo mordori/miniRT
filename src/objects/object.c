@@ -9,7 +9,7 @@ void	add_object(t_context *ctx, char **params)
 
 	obj = malloc(sizeof(*obj));
 	if (!obj)
-		fatal_error(ctx, "object malloc failed");
+		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
 	*obj = init_object(params);
 	vector_try_add(ctx, &ctx->scene.objs, obj);
 }

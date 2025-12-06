@@ -13,12 +13,12 @@ bool	init_renderer(t_context *ctx)
 		r->threads_amount = THREADS_DFL;
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->threads)
-		fatal_error(ctx, "renderer init failed");
+		fatal_error(ctx, errors(ERR_RENINIT), __FILE__, __LINE__);
 	r->active = true;
 	r->paused = false;
 	while (r->threads_init < r->threads_amount)
 	{
-		if (!pthread_create(&r->threads[r->threads_init], NULL, worker, ctx))
+		if (pthread_create(&r->threads[r->threads_init], NULL, worker, ctx))
 			break ;
 		++r->threads_init;
 	}
@@ -35,7 +35,7 @@ static inline void	*worker(void *arg)
 	while (r->active)
 	{
 		while (r->paused || (r->pass == 0 && r->finished))
-			usleep(SPIN_TIME);
+			usleep(CPU_SPIN);
 		get_render_job(ctx);
 		render();
 	}
@@ -44,7 +44,7 @@ static inline void	*worker(void *arg)
 
 void	render()
 {
-
+	// put_pixel();
 }
 
 void	restart_render_queue(t_context *ctx)

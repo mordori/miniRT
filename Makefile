@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/05 04:56:06 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/05 22:56:56 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,13 @@ NAME		:=miniRT
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
+CC			:=clang
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
-DEFS		:=-D MEMORY=$(MEMORY)
+DEFS		:=
 DFLAGS		:=-D DEBUG -g
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math
-CC			:=cc
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
-
 MAKEFLAGS	+= --no-print-directory
 
 DIR_INC		:=inc/
@@ -53,8 +52,7 @@ MLX42		:=$(DIR_MLX)build/libmlx42.a
 INCS		:=$(addprefix -I, \
 				$(DIR_MLX)include/MLX42 \
 				$(DIR_LIBFT)$(DIR_INC) \
-				$(DIR_INC) \
-				)
+				$(DIR_INC))
 
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
