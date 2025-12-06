@@ -10,7 +10,8 @@
 
 # include "defines.h"
 
-void	fatal_error(t_context *ctx, char *msg);
+char	*errors(t_err_code code);
+void	fatal_error(t_context *ctx, char *message, char *file, int line);
 void	key_hook(mlx_key_data_t keydata, void *param);
 void	resize_hook(int width, int height, void *param);
 void	update_hook(void *param);

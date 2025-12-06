@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:46:28 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/30 19:58:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/06 23:13:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ char		*ft_uitoa(uintptr_t n, const char *base);
 char		*ft_itoa(int n, const char *base);
 uint32_t	ft_atouint32_t_base(const char *str, const char *base);
 int64_t		ft_strtol(char *str, char *end);
+void		int_to_str(int n, char *str);
 
 #endif

@@ -101,6 +101,7 @@ static inline void	pan(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos)
 		speed *= ctx->mlx->delta_time * 60.0f * SENS_PAN;
 		*previous_pos = pos;
 		(void)delta;
+		(void)speed;
 	}
 	else
 		ctx->scene.cam.state = CAM_DEFAULT;

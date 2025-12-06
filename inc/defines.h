@@ -13,7 +13,7 @@
 # define WIDTH			1920
 # define HEIGHT			1080
 # define THREADS_DFL	4
-# define SPIN_TIME		250
+# define CPU_SPIN		150
 # define RENDER_PASSES	4
 # define SENS_ORBIT		0.0025f
 # define SENS_ZOOM		0.0018f
@@ -26,6 +26,7 @@ typedef enum e_base_color	t_base_color;
 typedef enum e_surface_type	t_surface_type;
 typedef enum e_pattern		t_pattern;
 typedef enum e_entity		t_entity;
+typedef enum e_err_code		t_err_code;
 
 typedef struct s_context	t_context;
 typedef struct s_object		t_object;
@@ -34,10 +35,31 @@ typedef struct s_scene		t_scene;
 typedef struct s_camera		t_camera;
 typedef struct s_material	t_material;
 typedef struct s_renderer	t_renderer;
+typedef struct s_editor		t_editor;
 
+typedef mlx_image_t			t_image;
 typedef mlx_texture_t		t_texture;
 
 typedef void				(*t_add_entity)(t_context *, char **);
+
+enum e_err_code
+{
+	ERR_ARGINVL,
+	ERR_MLXINIT,
+	ERR_IMGINIT,
+	ERR_VECADD,
+	ERR_RESIZE,
+	ERR_SSIZE,
+	ERR_WRITE,
+	ERR_OPEN,
+	ERR_READ,
+	ERR_GNL,
+	ERR_TEX,
+	ERR_EINVAL,
+	ERR_RENINIT,
+	ERR_OBJADD,
+	ERR_POINTLADD,
+};
 
 enum e_obj_type
 {
@@ -117,6 +139,7 @@ struct s_light
 {
 	t_transform		transform;
 	t_light_type	type;
+	t_vec3			direction;
 	float			radius;
 	float			intensity;
 	t_color			color;
@@ -142,7 +165,7 @@ struct s_scene
 	t_camera		cam;
 	t_vector		objs;
 	t_vector		lights;
-	t_object		sky_sphere;
+	t_texture		*sky_dome;
 	t_light			ambient_light;
 	t_light			directional_light;
 };
@@ -159,12 +182,17 @@ struct s_renderer
 	uint8_t			pass;
 };
 
+struct s_editor
+{
+	t_object		*selected_object;
+};
+
 struct s_context
 {
 	mlx_t			*mlx;
-	mlx_image_t		*img;
+	t_image			*img;
 	t_scene			scene;
-	t_object		*selected_object;
+	t_editor		editor;
 	t_renderer		renderer;
 };
 
