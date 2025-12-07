@@ -12,7 +12,7 @@
  */
 int	wrap_mouse_x(t_context *ctx, t_vec2i *pos)
 {
-	static int32_t	wraps_x;
+	static int32_t	wraps_x = {0};
 
 	if (pos->x >= (int32_t)ctx->img->width - 1)
 	{
@@ -41,7 +41,7 @@ int	wrap_mouse_x(t_context *ctx, t_vec2i *pos)
  */
 int	wrap_mouse_y(t_context *ctx, t_vec2i *pos)
 {
-	static int32_t	wraps_y;
+	static int32_t	wraps_y = {0};
 
 	if (pos->y >= (int32_t)ctx->img->height - 1)
 	{

@@ -14,7 +14,15 @@ void	init_scene(t_context *ctx, int fd)
 	char	*line;
 	char	**params;
 
-	init_sky_sphere(ctx);
+	// For testing rendering
+	// -----------------------
+		params = NULL;
+		add_camera(ctx, params);
+		add_light(ctx, params);
+		add_object(ctx, params);
+	// -----------------------
+
+	init_skydome(ctx);
 	try_gnl(ctx, fd, &line);
 	while (line)
 	{
@@ -41,7 +49,7 @@ static inline void	add_entity(t_context *ctx, char **params)
 	{
 		add_camera,
 		add_light,
-		add_object,
+		add_object
 	};
 
 	functions[get_id_type(ctx, *params)](ctx, params);

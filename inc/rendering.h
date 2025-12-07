@@ -11,5 +11,6 @@
 bool	init_renderer(t_context *ctx);
 void	render();
 void	get_render_job(t_context *ctx);
+t_vec4	trace(t_context *ctx, t_ray *ray);
 
 #endif

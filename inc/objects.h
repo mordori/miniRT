@@ -3,6 +3,7 @@
 
 # include "defines.h"
 
-void	add_object(t_context *ctx, char **params);
+void		add_object(t_context *ctx, char **params);
+t_shape		init_sphere(char **params);
 
 #endif

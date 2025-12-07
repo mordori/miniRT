@@ -27,7 +27,7 @@ void	fatal_error(t_context *ctx, char *msg, char *file, int line)
 
 char	*errors(t_err_code code)
 {
-	static char	*e[] = \
+	static char	*e[] =
 	{
 "invalid number of arguments", \
 "mlx init failed", \
@@ -43,7 +43,7 @@ char	*errors(t_err_code code)
 "invalid entity type", \
 "renderer init failed", \
 "object add failed", \
-"point light add failed", \
+"point light add failed"
 	};
 
 	return (e[code]);
