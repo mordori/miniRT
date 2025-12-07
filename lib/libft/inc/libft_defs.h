@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/06 00:27:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/07 05:08:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,10 @@
 
 # ifndef M_2_PI_INV
 #  define M_2_PI_INV	0.15915494309189533577
+# endif
+
+# ifndef M_INF
+#  define M_INF			1.e30f
 # endif
 
 typedef struct s_list		t_list;

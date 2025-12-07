@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/05 22:56:56 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/07 06:19:39 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,15 +65,15 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				light.c ambient.c directional.c point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
-				patterns.c textures.c)
+				material.c patterns.c textures.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				renderer.c shadows.c ray_tracer.c)
+				renderer.c shadows.c tracer.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validator.c sky_sphere.c)
+				scene.c validator.c skydome.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c)
+				errors.c files.c hooks.c strings.c vectors.c rays.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 

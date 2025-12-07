@@ -30,12 +30,18 @@ typedef enum e_err_code		t_err_code;
 
 typedef struct s_context	t_context;
 typedef struct s_object		t_object;
+typedef struct s_plane		t_plane;
+typedef struct s_sphere		t_sphere;
+typedef struct s_cylinder	t_cylinder;
 typedef struct s_light		t_light;
 typedef struct s_scene		t_scene;
 typedef struct s_camera		t_camera;
 typedef struct s_material	t_material;
 typedef struct s_renderer	t_renderer;
 typedef struct s_editor		t_editor;
+typedef struct s_viewport	t_viewport;
+
+typedef union u_shape		t_shape;
 
 typedef mlx_image_t			t_image;
 typedef mlx_texture_t		t_texture;
@@ -127,12 +133,36 @@ struct s_material
 	bool			receive_shadows;
 };
 
+struct s_plane
+{
+	t_vec3			dimensions;
+};
+
+struct s_sphere
+{
+	float			radius;
+};
+
+struct s_cylinder
+{
+	float			radius;
+	float			height;
+};
+
+union u_shape
+{
+	t_plane			plane;
+	t_sphere		sphere;
+	t_cylinder		cylinder;
+};
+
 struct s_object
 {
 	t_transform		transform;
-	t_obj_type		type;
 	t_material		material;
 	t_float2		uv;
+	t_obj_type		type;
+	t_shape			shape;
 };
 
 struct s_light
@@ -145,19 +175,30 @@ struct s_light
 	t_color			color;
 };
 
+struct s_viewport
+{
+	float	width;
+	float	height;
+	t_vec3	u;
+	t_vec3	v;
+};
+
 struct s_camera
 {
 	t_transform		transform;
 	t_transform		target;
 	t_vec3			pivot;
 	t_vec3			up;
+	t_vec3			right;
+	float			aspect;
+	float			focal_length;
+	float			fov;
 	float			pitch;
 	float			yaw;
 	float			roll;
 	float			distance;
-	float			fov;
-	float			aspect;
 	t_cam_state		state;
+	t_viewport		viewport;
 };
 
 struct s_scene
@@ -165,7 +206,7 @@ struct s_scene
 	t_camera		cam;
 	t_vector		objs;
 	t_vector		lights;
-	t_texture		*sky_dome;
+	t_texture		*skydome;
 	t_light			ambient_light;
 	t_light			directional_light;
 };
