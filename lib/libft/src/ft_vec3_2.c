@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 21:06:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/09 02:02:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ t_vec3	vec3_normalize(t_vec3 v)
 	return (vec3_div(v, vec3_length(v)));
 }
 
-
 /**
  * Computes the length (magnitude) of a 3D vector.
  *
@@ -78,5 +77,5 @@ t_vec3	vec3_normalize(t_vec3 v)
  */
 float	vec3_length(t_vec3 v)
 {
-	return (sqrt(vec3_dot(v, v)));
+	return (sqrtf(vec3_dot(v, v)));
 }

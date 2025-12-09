@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/07 06:19:39 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/09 01:59:45 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		:=miniRT
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
-CC			:=clang
+CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
@@ -71,7 +71,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				renderer.c shadows.c tracer.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validator.c skydome.c)
+				scene.c validator.c skydome.c bvh.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c rays.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
@@ -116,6 +116,9 @@ $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT) $(MLX42)
 clean:
 	@make -C $(DIR_LIBFT) clean
 	@$(call rm_dir,$(DIR_OBJ))
+# REMOVE FOLLOWING BEFORE SUBMISSION:
+	@$(call rm_file,$(CONF))
+	@$(call rm_file,$(NAME))
 
 fclean: clean
 	@make -C $(DIR_LIBFT) fclean

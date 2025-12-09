@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/14 00:20:42 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/08 20:31:06 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ NAME		:=libft.a
 CONF		:=.config
 BUILD_TYPE	?=RELEASE
 
-WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 CC			:=cc
+WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CFLAGS		?=$(WFLAGS) $(OPTS)
 MAKEFLAGS	+= --no-print-directory

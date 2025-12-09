@@ -44,6 +44,7 @@ static inline void	*worker(void *arg)
 
 void	render()
 {
+	// trace();
 	// put_pixel();
 }
 

@@ -56,3 +56,14 @@ static inline void	set_shape(t_object *obj, char **params)
 
 	obj->shape = shape;
 }
+
+bool	hit_object(t_object *obj, t_ray *ray, t_hit *hit)
+{
+	bool	result;
+
+	result = hit_sphere(&obj->shape.sphere, ray, hit);
+
+	// if (result)
+		// hit->color = get_mat_color();
+	return (result);
+}

@@ -7,7 +7,7 @@
 
 static inline void	add_entity(t_context *ctx, char **params);
 static inline char	**split_line(t_context *ctx, char *line);
-static inline size_t	get_id_type(t_context *ctx, char *id);
+static inline int	get_ent_type(t_context *ctx, char *param);
 
 void	init_scene(t_context *ctx, int fd)
 {
@@ -52,28 +52,28 @@ static inline void	add_entity(t_context *ctx, char **params)
 		add_object
 	};
 
-	functions[get_id_type(ctx, *params)](ctx, params);
+	functions[get_ent_type(ctx, *params)](ctx, params);
 }
 
-static inline size_t	get_id_type(t_context *ctx, char *id)
+static inline int	get_ent_type(t_context *ctx, char *param)
 {
 	static const char	*id_cam[] = {"C", NULL};
 	static const char	*id_light[] = {"A", "L", NULL};
 	static const char	*id_object[] = {"sp", "pl", "cy", NULL};
 
-	if (cmp_strs(id_cam, id))
-		return (0);
-	else if (cmp_strs(id_light, id))
-		return (1);
-	else if (cmp_strs(id_object, id))
-		return (2);
-	else
-		fatal_error(ctx, errors(ERR_EINVAL), __FILE__, __LINE__);
-	return (0);
+	if (cmp_strs(id_cam, param))
+		return (ENT_CAMERA);
+	if (cmp_strs(id_light, param))
+		return (ENT_LIGHT);
+	if (cmp_strs(id_object, param))
+		return (ENT_OBJECT);
+	fatal_error(ctx, errors(ERR_EINVAL), __FILE__, __LINE__);
+	return (ERROR);
 }
 
 void	clean_scene(t_context *ctx)
 {
 	vector_free(&ctx->scene.objs, NULL);
 	vector_free(&ctx->scene.lights, NULL);
+	clean_bvh_recursive(ctx->scene.bvh_root);
 }
