@@ -7,6 +7,7 @@ static inline void	setup_mlx(t_context *ctx);
 
 /**
  * @brief	Entry point to the program.
+ * @mainpage
  *
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Wassem Showeky		https://github.com/wshoweky

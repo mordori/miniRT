@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/07 05:08:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/09 03:47:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@
 # endif
 
 # ifndef M_INF
-#  define M_INF			1.e30f
+#  define M_INF			FLT_MAX
 # endif
 
 typedef struct s_list		t_list;

@@ -18,6 +18,7 @@
 # define SENS_ORBIT		0.0025f
 # define SENS_ZOOM		0.0018f
 # define SENS_PAN		0.0006f
+# define RENDER_TILE	8
 
 typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
@@ -29,6 +30,9 @@ typedef enum e_entity		t_entity;
 typedef enum e_err_code		t_err_code;
 
 typedef struct s_context	t_context;
+typedef struct s_bvh_node	t_bvh_node;
+typedef struct s_aabb		t_aabb;
+typedef struct s_hit		t_hit;
 typedef struct s_object		t_object;
 typedef struct s_plane		t_plane;
 typedef struct s_sphere		t_sphere;
@@ -65,6 +69,7 @@ enum e_err_code
 	ERR_RENINIT,
 	ERR_OBJADD,
 	ERR_POINTLADD,
+	ERR_BVH
 };
 
 enum e_obj_type
@@ -115,8 +120,8 @@ enum e_surface_type
 enum e_entity
 {
 	ENT_CAMERA,
-	ENT_OBJECT,
-	ENT_LIGHT
+	ENT_LIGHT,
+	ENT_OBJECT
 };
 
 struct s_material
@@ -140,7 +145,9 @@ struct s_plane
 
 struct s_sphere
 {
+	t_vec3			center;
 	float			radius;
+	float			radius_squared;
 };
 
 struct s_cylinder
@@ -205,6 +212,7 @@ struct s_scene
 {
 	t_camera		cam;
 	t_vector		objs;
+	t_bvh_node		*bvh_root;
 	t_vector		lights;
 	t_texture		*skydome;
 	t_light			ambient_light;
@@ -226,6 +234,29 @@ struct s_renderer
 struct s_editor
 {
 	t_object		*selected_object;
+};
+
+struct s_hit
+{
+	float			t;
+	t_vec3			point;
+	t_vec3			normal;
+	t_vec4			color;
+	bool			front_face;
+};
+
+struct s_aabb
+{
+	t_vec3			min;
+	t_vec3			max;
+};
+
+struct s_bvh_node
+{
+	t_aabb			box;
+	t_bvh_node		*left;
+	t_bvh_node		*right;
+	t_object		*obj;
 };
 
 struct s_context

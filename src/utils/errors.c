@@ -43,7 +43,8 @@ char	*errors(t_err_code code)
 "invalid entity type", \
 "renderer init failed", \
 "object add failed", \
-"point light add failed"
+"point light add failed", \
+"bvh failed"
 	};
 
 	return (e[code]);

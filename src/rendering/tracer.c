@@ -1,6 +1,23 @@
 #include "rendering.h"
+#include "scene.h"
 
-t_vec4	trace(t_context *ctx, t_ray *ray)
+t_vec4	trace(t_context *ctx)
+{
+	t_ray	ray;
+	t_hit	hit;
+	t_vec4	albedo;
+
+	albedo = (t_vec4){0};
+	if (hit_bvh(ctx->scene.bvh_root, &ray, &hit))
+	{
+		// albedo = calculate_lighting();
+		// tonemap(&albedo);
+		return (albedo);
+	}
+	return (backgroud_color(ctx, &ray));
+}
+
+t_vec4	backgroud_color(t_context *ctx, t_ray *ray)
 {
 	uint32_t	u;
 	uint32_t	v;
