@@ -29,3 +29,13 @@ static inline t_light	init_light(char **params)
 	light.color = (t_color){(255 << 24) | (255 << 16) | (255 << 8) | 0xFF}; // {R | G | B | A} 32bit uint combined
 	return (light);
 }
+
+t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit)
+{
+	t_vec4	color;
+
+	(void)scene;
+	(void)hit;
+	color = (t_vec4){0};
+	return (color);
+}

@@ -9,8 +9,8 @@
 # include "defines.h"
 
 bool	init_renderer(t_context *ctx);
-void	render();
 void	get_render_job(t_context *ctx);
-t_vec4	trace(t_context *ctx);
+t_vec4	trace(const t_scene *scene, int x, int y);
+void	post_process(float *buffer);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/08 20:31:06 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/10 08:41:45 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ BUILD_TYPE	?=RELEASE
 
 CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
-OPTS		:=-O3 -march=native -funroll-loops -fno-plt
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt -flto
 CFLAGS		?=$(WFLAGS) $(OPTS)
 MAKEFLAGS	+= --no-print-directory
 

@@ -9,7 +9,7 @@ static inline void	add_entity(t_context *ctx, char **params);
 static inline char	**split_line(t_context *ctx, char *line);
 static inline int	get_ent_type(t_context *ctx, char *param);
 
-void	init_scene(t_context *ctx, int fd)
+void	init_scene(t_context *ctx)
 {
 	char	*line;
 	char	**params;
@@ -23,14 +23,17 @@ void	init_scene(t_context *ctx, int fd)
 	// -----------------------
 
 	init_skydome(ctx);
-	try_gnl(ctx, fd, &line);
+	try_gnl(ctx, ctx->fd, &line);
 	while (line)
 	{
 		params = split_line(ctx, line);
 		add_entity(ctx, params);
 		free(line);
-		try_gnl(ctx, fd, &line);
+		try_gnl(ctx, ctx->fd, &line);
 	}
+	close(ctx->fd);
+	ctx->fd = ERROR;
+	init_bvh(ctx);
 }
 
 static inline char	**split_line(t_context *ctx, char *line)
@@ -73,7 +76,6 @@ static inline int	get_ent_type(t_context *ctx, char *param)
 
 void	clean_scene(t_context *ctx)
 {
-	vector_free(&ctx->scene.objs, NULL);
-	vector_free(&ctx->scene.lights, NULL);
-	clean_bvh_recursive(ctx->scene.bvh_root);
+	clean_bvh(ctx->scene.bvh_root);
+	vector_free(&ctx->scene.objs, &ctx->scene.lights, NULL);
 }

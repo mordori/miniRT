@@ -2,9 +2,9 @@
 #include "utils.h"
 #include "materials.h"
 
-static inline t_object	init_object(char **params);
-static inline void		set_transform(t_object *obj, char **params);
-static inline void		set_shape(t_object *obj, char **params);
+static inline t_object		init_object(char **params);
+static inline t_transform	set_transform(char **params);
+static inline t_shape		set_shape(const t_object *obj, char **params);
 
 void	add_object(t_context *ctx, char **params)
 {
@@ -21,18 +21,18 @@ static inline t_object	init_object(char **params)
 {
 	t_object	obj;
 
+	obj = (t_object){0};
 	(void)params;
-	set_transform(&obj, params);
-	set_material(&obj, params);
-	set_shape(&obj, params);
+	obj.transform = set_transform(params);
+	obj.material = set_material(params);
+	obj.shape = set_shape(&obj, params);
 	return (obj);
 }
 
-static inline void	set_transform(t_object *obj, char **params)
+static inline t_transform	set_transform(char **params)
 {
 	t_transform	transform;
 
-	transform = (t_transform){0};
 	transform.scale = (t_vec3){{1.0f, 1.0f, 1.0f}};
 	transform.rot = (t_vec3){{0.0f, 0.0f, 0.0f}};
 
@@ -42,26 +42,29 @@ static inline void	set_transform(t_object *obj, char **params)
 		transform.pos = (t_vec3){{0.0f, 0.0f, 5.0f}};
 	// -----------------------
 
-	obj->transform = transform;
+	return (transform);
 }
 
-static inline void	set_shape(t_object *obj, char **params)
+static inline t_shape	set_shape(const t_object *obj, char **params)
 {
 	t_shape	shape;
 
 	// For testing rendering
 	// -----------------------
-		shape = init_sphere(params);
+		shape = init_sphere(obj, params);
 	// -----------------------
 
-	obj->shape = shape;
+	return (shape);
 }
 
-bool	hit_object(t_object *obj, t_ray *ray, t_hit *hit)
+bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 {
 	bool	result;
 
+	// For testing rendering
+	// -----------------------
 	result = hit_sphere(&obj->shape.sphere, ray, hit);
+	// -----------------------
 
 	// if (result)
 		// hit->color = get_mat_color();

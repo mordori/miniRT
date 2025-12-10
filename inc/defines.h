@@ -170,6 +170,7 @@ struct s_object
 	t_float2		uv;
 	t_obj_type		type;
 	t_shape			shape;
+	t_vec3			bounds_center;
 };
 
 struct s_light
@@ -186,8 +187,9 @@ struct s_viewport
 {
 	float	width;
 	float	height;
-	t_vec3	u;
-	t_vec3	v;
+	float	d_u;
+	float	d_v;
+	t_vec3	pixel_00_pos;
 };
 
 struct s_camera
@@ -221,14 +223,15 @@ struct s_scene
 
 struct s_renderer
 {
-	uint32_t		jobs;
+	_Atomic int		jobs;
 	pthread_t		*threads;
 	long			threads_init;
 	long			threads_amount;
 	_Atomic bool	active;
 	_Atomic bool	paused;
 	_Atomic bool	finished;
-	uint8_t			pass;
+	_Atomic int		pass;
+	float			*buffer;
 };
 
 struct s_editor
@@ -253,10 +256,11 @@ struct s_aabb
 
 struct s_bvh_node
 {
-	t_aabb			box;
+	t_aabb			aabb;
 	t_bvh_node		*left;
 	t_bvh_node		*right;
 	t_object		*obj;
+	int				axis;
 };
 
 struct s_context
@@ -266,6 +270,7 @@ struct s_context
 	t_scene			scene;
 	t_editor		editor;
 	t_renderer		renderer;
+	int				fd;
 };
 
 #endif

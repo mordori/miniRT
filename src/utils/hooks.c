@@ -25,7 +25,6 @@ void	resize_hook(int width, int height, void *param)
 	if (!mlx_resize_image(ctx->img, width, height))
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
 	// update_viewport();
-	// frame_scene();
 }
 
 void	update_hook(void *param)

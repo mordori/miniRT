@@ -1,8 +1,8 @@
 #include "objects.h"
 
-static inline float	solve_quadratic(t_sphere *sphere, t_ray *ray, t_hit *hit);
+static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
-t_shape	init_sphere(char **params)
+t_shape	init_sphere(const t_object *obj, char **params)
 {
 	t_sphere	sphere;
 	t_shape		shape;
@@ -14,37 +14,44 @@ t_shape	init_sphere(char **params)
 	// -----------------------
 
 	sphere.radius_squared = sphere.radius * sphere.radius;
+	sphere.center = obj->transform.pos;
 	shape.sphere = sphere;
 	return (shape);
 }
 
-bool	hit_sphere(t_sphere *sphere, t_ray *ray, t_hit *hit)
+bool	hit_sphere(const t_sphere *sphere, const t_ray *ray, t_hit *hit)
 {
 	float	t;
 
-	t = solve_quadratic(sphere, ray, hit);
+	t = solve_quadratic(sphere, ray, hit->t);
 	if (t == M_INF)
 		return (false);
 	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	hit->normal = vec3_normalize(vec3_sub(hit->point, sphere->center));
+	hit->normal = vec3_div(vec3_sub(hit->point, sphere->center), sphere->radius);
 	return (true);
 }
 
-static inline float	solve_quadratic(t_sphere *sphere, t_ray *ray, t_hit *hit)
+static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max)
 {
 	t_vec3	oc;
-	float	a;
-	float	b;
+	float	half_b;
 	float	c;
-	float	discriminant;
+	float	d;
+	float	sqrt_d;
 
-	oc = vec3_sub(sphere->center, ray->origin);
-	a = vec3_dot(ray->dir, ray->dir);
-	b = -2.0f * vec3_dot(ray->dir, sphere->center);
+	oc = vec3_sub(ray->origin, sphere->center);
+	half_b = vec3_dot(ray->dir, oc);
 	c = vec3_dot(oc, oc) - sphere->radius_squared;
-	discriminant = b * b - 4.0f * a * c;
-	if (discriminant < 0)
+	d = half_b * half_b - c;
+	if (d < 0)
 		return (M_INF);
-	return ((-b - sqrtf(discriminant)) / (2.0f * a));
+	sqrt_d = sqrtf(d);
+	if (-half_b - sqrt_d <= 0.001f || -half_b - sqrt_d >= t_max)
+	{
+		if (-half_b + sqrt_d <= 0.001f || -half_b + sqrt_d >= t_max)
+			return (M_INF);
+		return (-half_b + sqrt_d);
+	}
+	return (-half_b - sqrt_d);
 }

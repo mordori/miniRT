@@ -2,6 +2,8 @@
 #include "utils.h"
 
 static inline void	*worker(void *arg);
+static inline void	render_pixel(t_context *ctx, int x, int y);
+// static inline void	put_pixel(float *buffer, int x, int y, t_vec4 *color);
 
 bool	init_renderer(t_context *ctx)
 {
@@ -35,17 +37,32 @@ static inline void	*worker(void *arg)
 	while (r->active)
 	{
 		while (r->paused || (r->pass == 0 && r->finished))
-			usleep(CPU_SPIN);
+		{
+			usleep(2000);
+			continue ;
+		}
 		get_render_job(ctx);
-		render();
+		// render_pixel(ctx);
+		if (r->finished)
+		{
+			post_process(ctx->renderer.buffer);
+			// copy_pixels(&ctx->img, ctx->renderer.buffer);
+		}
 	}
 	return (NULL);
 }
 
-void	render()
+static inline void	render_pixel(t_context *ctx, int x, int y)
 {
-	// trace();
-	// put_pixel();
+	t_vec4	color;
+	int		idx;
+
+	color = trace(&ctx->scene, x, y);
+	idx = x + y * ctx->img->width;
+	ctx->renderer.buffer[idx] = color.r;
+	ctx->renderer.buffer[++idx] = color.b;
+	ctx->renderer.buffer[++idx] = color.g;
+	ctx->renderer.buffer[++idx] = color.a;
 }
 
 void	restart_render_queue(t_context *ctx)

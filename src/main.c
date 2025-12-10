@@ -16,15 +16,14 @@ int	main(int argc, char *argv[])
 {
 	t_context	ctx;
 	char		*file;
-	int			fd;
 
 	if (argc != 2)
 		fatal_error(NULL, errors(ERR_ARGINVL), __FILE__, __LINE__);
 	ctx = (t_context){0};
 	file = argv[1];
 	validate_file_type(file);
-	fd = try_open(file, O_RDONLY, 0);
-	init_scene(&ctx, fd);
+	ctx.fd = try_open(file, O_RDONLY, 0);
+	init_scene(&ctx);
 	setup_mlx(&ctx);
 	clean(&ctx);
 	return (EXIT_SUCCESS);
@@ -49,6 +48,8 @@ void	clean(t_context *ctx)
 {
 	if (!ctx)
 		return ;
+	if (ctx->fd != ERROR)
+		close(ctx->fd);
 	ctx->renderer.active = false;
 	while (ctx->renderer.threads_init--)
 		pthread_join(ctx->renderer.threads[ctx->renderer.threads_init], NULL);
@@ -72,10 +73,11 @@ void	clean(t_context *ctx)
 // shadow acne
 // blue noise disk soft shadows
 // scene saving
-// recursive ray tracer, also known as a Whitted-style ray tracer
 // parse .obj files
 // BVH
 // gamma -> srgb
 // Interleaved Gradient Noise
 // distance -> dim lights
 // save render .png
+// json file for extended objects
+// bouncing ball animation, squash strect
