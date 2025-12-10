@@ -1,6 +1,6 @@
 #include "materials.h"
 
-void	set_material(t_object *obj, char **params)
+t_material	set_material(char **params)
 {
 	t_material	mat;
 
@@ -12,5 +12,5 @@ void	set_material(t_object *obj, char **params)
 	// -----------------------
 
 	// set_texture();
-	obj->material = mat;
+	return (mat);
 }

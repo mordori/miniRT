@@ -3,6 +3,6 @@
 
 # include "defines.h"
 
-void	set_material(t_object *obj, char **params);
+t_material	set_material(char **params);
 
 #endif

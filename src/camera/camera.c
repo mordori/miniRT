@@ -7,7 +7,7 @@ void	add_camera(t_context *ctx, char **params)
 	(void)params;
 	cam = &ctx->scene.cam;
 	cam->state = CAM_DEFAULT;
-	cam->transform.pos = (t_vec3){0};
+	cam->transform.pos = (t_vec3){{0.0f, 0.0f, -5.0f}};
 	// cam->target.pos = vec3_add(cam->transform.pos, vec3(x, y, z));
 	// cam->fov = ;
 	cam->focal_length = 1.0f;
@@ -22,8 +22,8 @@ void	update_viewport(t_context *ctx)
 	vp = &ctx->scene.cam.viewport;
 	vp->height = 2.0f;
 	vp->width = vp->height * ((float)ctx->img->width / ctx->img->height);
-	vp->u = (t_vec3){{vp->width, 0.0f, 0.0f}};
-	vp->v = (t_vec3){{0.0f, -vp->height, 0.0f}};
+	vp->d_u = vp->width / (float)ctx->img->width;
+	vp->d_v = vp->height / (float)ctx->img->height;
 }
 
 void	update_cam(t_context *ctx)

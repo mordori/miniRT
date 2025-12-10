@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/09 01:59:45 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/10 08:39:12 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
-OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math -flto
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory
@@ -69,11 +69,11 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				renderer.c shadows.c tracer.c)
+				renderer.c shadows.c tracer.c post_processing.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validator.c skydome.c bvh.c)
+				scene.c validator.c skydome.c bvh.c aabb.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c rays.c)
+				errors.c files.c hooks.c strings.c vectors.c rays.c bounds.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
