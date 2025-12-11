@@ -39,8 +39,14 @@ static inline void	setup_mlx(t_context *ctx)
 	if (!ctx->img || mlx_image_to_window(ctx->mlx, ctx->img, 0, 0) == ERROR)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
 	mlx_key_hook(ctx->mlx, key_hook, ctx);
+	mlx_cursor_hook(ctx->mlx, cursor_hook, ctx);
+	mlx_mouse_hook(ctx->mlx, mouse_hook, ctx);
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
-	if (mlx_loop_hook(ctx->mlx, update_hook, ctx) && init_renderer(ctx))
+	resize_hook(ctx->img->width, ctx->img->height, ctx);
+	if (\
+mlx_loop_hook(ctx->mlx, update_hook, ctx) && \
+init_renderer(ctx) && \
+render(&ctx->renderer))
 		mlx_loop(ctx->mlx);
 }
 
@@ -55,6 +61,8 @@ void	clean(t_context *ctx)
 		pthread_join(ctx->renderer.threads[ctx->renderer.threads_init], NULL);
 	free(ctx->renderer.threads);
 	clean_scene(ctx);
+	if (ctx->renderer.buffer)
+		free(ctx->renderer.buffer);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
 	if (ctx->mlx)

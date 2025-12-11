@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:30:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 22:22:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/11 06:49:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@
 
 typedef struct s_vector
 {
-	void	**items;
-	size_t	size;
-	size_t	total;
-	bool	is_shrink;
-	void	(*del)(void *);
+	void		**items;
+	size_t		size;
+	size_t		total;
+	void		(*del)(void *);
+	bool		is_shrink;
+	uint8_t		padding[7];			// Optimizes to 40 bytes
 }				t_vector;
 
 bool	vector_add(t_vector *vec, void *new);

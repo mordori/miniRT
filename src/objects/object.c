@@ -39,7 +39,7 @@ static inline t_transform	set_transform(char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		transform.pos = (t_vec3){{0.0f, 0.0f, 5.0f}};
+		transform.pos = (t_vec3){{1.0f, 0.0f, 0.0f}};
 	// -----------------------
 
 	return (transform);
@@ -59,13 +59,15 @@ static inline t_shape	set_shape(const t_object *obj, char **params)
 
 bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 {
+	static const t_hit_shape	functions[] =
+	{
+		hit_plane,
+		hit_sphere,
+		hit_cylinder
+	};
 	bool	result;
 
-	// For testing rendering
-	// -----------------------
-	result = hit_sphere(&obj->shape.sphere, ray, hit);
-	// -----------------------
-
+	result = functions[obj->type](&obj->shape, ray, hit);
 	// if (result)
 		// hit->color = get_mat_color();
 	return (result);

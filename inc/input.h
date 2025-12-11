@@ -3,7 +3,8 @@
 
 # include "defines.h"
 
-int	wrap_mouse_x(t_context *ctx, t_vec2i *pos);
-int	wrap_mouse_y(t_context *ctx, t_vec2i *pos);
+void	process_input(t_context *ctx);
+int		wrap_mouse_x(t_context *ctx, t_vec2i *pos);
+int		wrap_mouse_y(t_context *ctx, t_vec2i *pos);
 
 #endif

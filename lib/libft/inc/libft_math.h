@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/10 08:45:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/11 04:05:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ struct s_vec2
 
 union u_vec3
 {
-	float	data[3];
+	float	data[4];		// Extra element optimizes u_vec3 to 16 bytes
 	struct
 	{
 		float	x;

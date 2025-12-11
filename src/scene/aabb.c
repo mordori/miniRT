@@ -1,7 +1,6 @@
 #include "scene.h"
 #include "libft_list.h"
 
-static inline bool		find_t_min_max(float *t_min, float *t_max, float min, float max);
 static inline t_aabb	get_object_bounds(const t_object *obj);
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b);
 
@@ -26,16 +25,14 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n)
 
 static inline t_aabb	get_object_bounds(const t_object *obj)
 {
-	t_aabb	aabb;
-	t_vec3	r;
-
-	if (obj->type == OBJ_SPHERE)
+	static const t_get_shape_bounds	functions[] =
 	{
-		r = vec3_n(obj->shape.sphere.radius);
-		aabb.min = vec3_sub(obj->shape.sphere.center, r);
-		aabb.max = vec3_add(obj->shape.sphere.center, r);
-	}
-	return (aabb);
+		plane_bounds,
+		sphere_bounds,
+		cylinder_bounds
+	};
+
+	return(functions[obj->type](obj));
 }
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
@@ -62,20 +59,19 @@ bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, const float closest_t)
 	t_max = closest_t;
 	min = (aabb->min.x - ray->origin.x) * ray->inv_dir.x;
 	max = (aabb->max.x - ray->origin.x) * ray->inv_dir.x;
-	if (!find_t_min_max(&t_min, &t_max, min, max))
+	t_min = fmaxf(t_min, fminf(min, max));
+	t_max = fminf(t_max, fmaxf(min, max));
+	if (t_min > t_max)
 		return (false);
 	min = (aabb->min.y - ray->origin.y) * ray->inv_dir.y;
 	max = (aabb->max.y - ray->origin.y) * ray->inv_dir.y;
-	if (!find_t_min_max(&t_min, &t_max, min, max))
+	t_min = fmaxf(t_min, fminf(min, max));
+	t_max = fminf(t_max, fmaxf(min, max));
+	if (t_min > t_max)
 		return (false);
 	min = (aabb->min.z - ray->origin.z) * ray->inv_dir.z;
 	max = (aabb->max.z - ray->origin.z) * ray->inv_dir.z;
-	return (find_t_min_max(&t_min, &t_max, min, max));
-}
-
-static inline bool	find_t_min_max(float *t_min, float *t_max, float min, float max)
-{
-	*t_min = fmaxf(*t_min, fminf(min, max));
-	*t_max = fminf(*t_max, fmaxf(min, max));
-	return (*t_max > *t_min);
+	t_min = fmaxf(t_min, fminf(min, max));
+	t_max = fminf(t_max, fmaxf(min, max));
+	return (t_max >= t_min);
 }

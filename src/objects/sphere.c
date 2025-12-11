@@ -19,16 +19,18 @@ t_shape	init_sphere(const t_object *obj, char **params)
 	return (shape);
 }
 
-bool	hit_sphere(const t_sphere *sphere, const t_ray *ray, t_hit *hit)
+bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {
-	float	t;
+	t_sphere	sphere;
+	float		t;
 
-	t = solve_quadratic(sphere, ray, hit->t);
-	if (t == M_INF)
+	sphere = shape->sphere;
+	t = solve_quadratic(&sphere, ray, hit->t);
+	if (t > hit->t)
 		return (false);
 	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	hit->normal = vec3_div(vec3_sub(hit->point, sphere->center), sphere->radius);
+	hit->normal = vec3_div(vec3_sub(hit->point, sphere.center), sphere.radius);
 	return (true);
 }
 
@@ -36,22 +38,22 @@ static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, fl
 {
 	t_vec3	oc;
 	float	half_b;
-	float	c;
 	float	d;
 	float	sqrt_d;
+	float	root;
 
 	oc = vec3_sub(ray->origin, sphere->center);
 	half_b = vec3_dot(ray->dir, oc);
-	c = vec3_dot(oc, oc) - sphere->radius_squared;
-	d = half_b * half_b - c;
+	d = half_b * half_b - (vec3_dot(oc, oc) - sphere->radius_squared);
 	if (d < 0)
 		return (M_INF);
 	sqrt_d = sqrtf(d);
-	if (-half_b - sqrt_d <= 0.001f || -half_b - sqrt_d >= t_max)
+	root = -half_b - sqrt_d;
+	if (root <= 0.001f || root >= t_max)
 	{
-		if (-half_b + sqrt_d <= 0.001f || -half_b + sqrt_d >= t_max)
+		root = -half_b + sqrt_d;
+		if (root <= 0.001f || root >= t_max)
 			return (M_INF);
-		return (-half_b + sqrt_d);
 	}
-	return (-half_b - sqrt_d);
+	return (root);
 }

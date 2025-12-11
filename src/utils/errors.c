@@ -32,6 +32,7 @@ char	*errors(t_err_code code)
 "invalid number of arguments", \
 "mlx init failed", \
 "mlx img failed", \
+"vector init failed", \
 "vector add failed", \
 "resize failed", \
 "write: src is longer than SSIZE_MAX", \
