@@ -14,8 +14,12 @@ void	init_scene(t_context *ctx)
 	char	*line;
 	char	**params;
 
+	vector_try_init(ctx, &ctx->scene.objs, false, free);
+	vector_try_init(ctx, &ctx->scene.lights, false, free);
+
 	// For testing rendering
 	// -----------------------
+		(void)line;
 		params = NULL;
 		add_camera(ctx, params);
 		add_light(ctx, params);
@@ -23,14 +27,14 @@ void	init_scene(t_context *ctx)
 	// -----------------------
 
 	init_skydome(ctx);
-	try_gnl(ctx, ctx->fd, &line);
-	while (line)
-	{
-		params = split_line(ctx, line);
-		add_entity(ctx, params);
-		free(line);
-		try_gnl(ctx, ctx->fd, &line);
-	}
+	// try_gnl(ctx, ctx->fd, &line);
+	// while (line)
+	// {
+	// 	params = split_line(ctx, line);
+	// 	add_entity(ctx, params);
+	// 	free(line);
+	// 	try_gnl(ctx, ctx->fd, &line);
+	// }
 	close(ctx->fd);
 	ctx->fd = ERROR;
 	init_bvh(ctx);
@@ -55,6 +59,8 @@ static inline void	add_entity(t_context *ctx, char **params)
 		add_object
 	};
 
+	if (!params || !*params)
+		return ;
 	functions[get_ent_type(ctx, *params)](ctx, params);
 }
 

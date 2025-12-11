@@ -6,7 +6,7 @@ static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_v
 static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
 static inline void	pan(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos);
 
-void	control_camera(t_context *ctx)
+bool	control_camera(t_context *ctx)
 {
 	static t_vec2i	logical_mouse;
 	static t_vec2i	original_pos;
@@ -16,18 +16,22 @@ void	control_camera(t_context *ctx)
 
 	cam = &ctx->scene.cam;
 	set_cam_state(ctx, &original_pos, &previous_pos);
+	if (cam->state == CAM_DEFAULT)
+	{
+		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
+		return (false);
+	}
 	mlx_get_mouse_pos(ctx->mlx, &pos.x, &pos.y);
-	if (cam->state == CAM_ORBIT || cam->state == CAM_ZOOM)
+	if (cam->state != CAM_PAN)
 		logical_mouse = vec2i(wrap_mouse_x(ctx, &pos), wrap_mouse_y(ctx, &pos));
 	pos = vec2i_add(pos, logical_mouse);
 	if (cam->state == CAM_ORBIT)
 		orbit(ctx, pos, &previous_pos, original_pos);
 	else if (cam->state == CAM_ZOOM)
 		zoom(ctx, pos, &previous_pos, original_pos);
-	else if (cam->state == CAM_PAN)
-		pan(ctx, pos, &previous_pos);
 	else
-		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
+		pan(ctx, pos, &previous_pos);
+	return (true);
 }
 
 static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos)
@@ -39,11 +43,13 @@ static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i 
 	{
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			cam->state = CAM_ORBIT;
-		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
+		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 			cam->state = CAM_ZOOM;
-		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
+		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
 			cam->state = CAM_PAN;
-		if (cam->state == CAM_ORBIT || cam->state == CAM_ZOOM)
+		if (cam->state == CAM_DEFAULT)
+			return ;
+		if (cam->state != CAM_PAN)
 			mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_HIDDEN);
 		mlx_get_mouse_pos(ctx->mlx, &original_pos->x, &original_pos->y);
 		*previous_pos = *original_pos;

@@ -2,6 +2,7 @@
 # define MINIRT_DEFINES_H
 
 # include <pthread.h>
+# include <stdatomic.h>
 
 # include "MLX42.h"
 
@@ -32,7 +33,6 @@ typedef enum e_err_code		t_err_code;
 typedef struct s_context	t_context;
 typedef struct s_bvh_node	t_bvh_node;
 typedef struct s_aabb		t_aabb;
-typedef struct s_hit		t_hit;
 typedef struct s_object		t_object;
 typedef struct s_plane		t_plane;
 typedef struct s_sphere		t_sphere;
@@ -51,12 +51,15 @@ typedef mlx_image_t			t_image;
 typedef mlx_texture_t		t_texture;
 
 typedef void				(*t_add_entity)(t_context *, char **);
+typedef t_aabb				(*t_get_shape_bounds)(const t_object *);
+typedef bool				(*t_hit_shape)(const t_shape *, const t_ray *, t_hit *);
 
 enum e_err_code
 {
 	ERR_ARGINVL,
 	ERR_MLXINIT,
 	ERR_IMGINIT,
+	ERR_VECINIT,
 	ERR_VECADD,
 	ERR_RESIZE,
 	ERR_SSIZE,
@@ -126,21 +129,23 @@ enum e_entity
 
 struct s_material
 {
+	t_vec4			color;
+	t_texture		*texture;
+	t_texture		*normal_map;
+	float			alpha;
 	t_base_color	base_color;
 	t_surface_type	surface_type;
-	t_color			color;
 	t_pattern		pattern;
-	t_texture		*texture;
-	t_texture		normal_map;
-	float			alpha;
 	bool			double_sided;
 	bool			cast_shadows;
 	bool			receive_shadows;
+	uint8_t			padding[13];		// Optimizes to 64 bytes
 };
 
 struct s_plane
 {
 	t_vec3			dimensions;
+	uint8_t			padding[16];		// Optimizes to 32 bytes
 };
 
 struct s_sphere
@@ -148,52 +153,59 @@ struct s_sphere
 	t_vec3			center;
 	float			radius;
 	float			radius_squared;
+	uint8_t			padding[8];			// Optimizes to 32 bytes
 };
 
 struct s_cylinder
 {
 	float			radius;
 	float			height;
+	// Adjust padding later
+	uint8_t			padding[24];		// Optimizes to 32 bytes
 };
 
 union u_shape
 {
 	t_plane			plane;
 	t_sphere		sphere;
-	t_cylinder		cylinder;
+	t_cylinder		cylinder;			// 32 bytes
 };
 
 struct s_object
 {
-	t_transform		transform;
 	t_material		material;
-	t_float2		uv;
-	t_obj_type		type;
+	t_transform		transform;
 	t_shape			shape;
 	t_vec3			bounds_center;
+	t_vec2			uv;
+	t_obj_type		type;
+	uint8_t			padding[4];			// Optimizes to 176 bytes
 };
 
 struct s_light
 {
 	t_transform		transform;
-	t_light_type	type;
 	t_vec3			direction;
+	t_vec4			color;
 	float			radius;
 	float			intensity;
-	t_color			color;
+	t_light_type	type;
+	uint8_t			padding[4];			// Optimizes to 96 bytes
 };
 
 struct s_viewport
 {
-	float	width;
-	float	height;
-	float	d_u;
-	float	d_v;
-	t_vec3	pixel_00_pos;
+	t_vec3			d_u;
+	t_vec3			d_v;
+	t_vec3			pixel_00_pos;
+	float			width;
+	float			height;
+	uint8_t			padding[8];			// Optimizes to 64 bytes
 };
 
 struct s_camera
 {
+	t_viewport		viewport;
 	t_transform		transform;
 	t_transform		target;
 	t_vec3			pivot;
@@ -204,34 +216,39 @@ struct s_camera
 	float			fov;
 	float			pitch;
 	float			yaw;
-	float			roll;
 	float			distance;
-	t_cam_state		state;
-	t_viewport		viewport;
+	t_cam_state		state;				// 260 bytes -- Adjust later
 };
 
 struct s_scene
 {
 	t_camera		cam;
 	t_vector		objs;
-	t_bvh_node		*bvh_root;
 	t_vector		lights;
+	t_bvh_node		*bvh_root;
 	t_texture		*skydome;
 	t_light			ambient_light;
-	t_light			directional_light;
+	t_light			directional_light;	// 596 bytes -- Adjust later
 };
 
 struct s_renderer
 {
-	_Atomic int		jobs;
-	pthread_t		*threads;
-	long			threads_init;
-	long			threads_amount;
-	_Atomic bool	active;
-	_Atomic bool	paused;
-	_Atomic bool	finished;
-	_Atomic int		pass;
-	float			*buffer;
+	_Atomic uint32_t	pixel_index;		// High contention writes
+	_Atomic uint32_t	pixels_done;
+	uint8_t				padding_2[56];		// Optimizes to 64 bytes
+	t_vec3				*buffer;			// Frequent reads, singular writes
+	pthread_t			*threads;
+	long				threads_init;
+	long				threads_amount;
+	uint32_t			width;
+	uint32_t			height;
+	uint32_t			pixels;
+	_Atomic int			pass;
+	_Atomic int			step;
+	_Atomic bool		finished;
+	_Atomic bool		paused;
+	_Atomic bool		active;
+	uint8_t				padding_1[9];		// Optimizes to 64 bytes
 };
 
 struct s_editor
@@ -239,19 +256,10 @@ struct s_editor
 	t_object		*selected_object;
 };
 
-struct s_hit
-{
-	float			t;
-	t_vec3			point;
-	t_vec3			normal;
-	t_vec4			color;
-	bool			front_face;
-};
-
 struct s_aabb
 {
 	t_vec3			min;
-	t_vec3			max;
+	t_vec3			max;				// 32 bytes
 };
 
 struct s_bvh_node
@@ -261,15 +269,16 @@ struct s_bvh_node
 	t_bvh_node		*right;
 	t_object		*obj;
 	int				axis;
+	uint8_t			padding[4];			// Optimizes to 64 bytes
 };
 
 struct s_context
 {
-	mlx_t			*mlx;
-	t_image			*img;
+	t_renderer		renderer;
 	t_scene			scene;
 	t_editor		editor;
-	t_renderer		renderer;
+	mlx_t			*mlx;
+	t_image			*img;
 	int				fd;
 };
 

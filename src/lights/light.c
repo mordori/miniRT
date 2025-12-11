@@ -23,10 +23,11 @@ static inline t_light	init_light(char **params)
 	t_light	light;
 
 	(void)params;
+	light = (t_light){0};
 	// light.type = :
 	// light.transform.pos = ;
 	// light.intensity = ;
-	light.color = (t_color){(255 << 24) | (255 << 16) | (255 << 8) | 0xFF}; // {R | G | B | A} 32bit uint combined
+	// light.color = (t_color){(255 << 24) | (255 << 16) | (255 << 8) | 0xFF}; // {R | G | B | A} 32bit uint combined
 	return (light);
 }
 

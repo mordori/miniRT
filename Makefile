@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/10 08:39:12 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/11 06:04:26 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
-				mouse.c keys.c)
+				input.c mouse.c keys.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				light.c ambient.c directional.c point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
@@ -71,7 +71,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				renderer.c shadows.c tracer.c post_processing.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validator.c skydome.c bvh.c aabb.c)
+				scene.c validator.c skydome.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c rays.c bounds.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
@@ -104,7 +104,7 @@ $(MLX42):
 	@make -j4 -C $(DIR_MLX)build > /dev/null
 	@echo "$(YELLOW) [✔] mlx42.a created$(COLOR)"
 
-$(NAME): $(CONF) $(LIBFT) $(MLX42) $(OBJS)
+$(NAME): $(CONF) $(LIBFT) $(MLX42) $(OBJS) $(ASS)
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) $(MLX42) $(LDFLAGS)
 	@$(call output)
 
@@ -116,7 +116,7 @@ $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT) $(MLX42)
 clean:
 	@make -C $(DIR_LIBFT) clean
 	@$(call rm_dir,$(DIR_OBJ))
-# REMOVE FOLLOWING BEFORE SUBMISSION:
+# Remove before submission
 	@$(call rm_file,$(CONF))
 	@$(call rm_file,$(NAME))
 

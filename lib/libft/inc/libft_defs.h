@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/09 03:47:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/11 04:14:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@
 # endif
 
 # ifndef M_INF
+// FLT_MAX interpret as infinity when using --ffast-math flag
 #  define M_INF			FLT_MAX
 # endif
 
@@ -91,6 +92,7 @@ typedef struct s_vertex		t_vertex;
 typedef struct s_transform	t_transform;
 typedef struct s_arena		t_arena;
 typedef struct s_ray		t_ray;
+typedef struct s_hit		t_hit;
 
 typedef union u_vec3		t_vec3;
 typedef union u_vec3		t_float3;

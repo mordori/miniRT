@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "rendering.h"
 
 void	add_camera(t_context *ctx, char **params)
 {
@@ -8,11 +9,13 @@ void	add_camera(t_context *ctx, char **params)
 	cam = &ctx->scene.cam;
 	cam->state = CAM_DEFAULT;
 	cam->transform.pos = (t_vec3){{0.0f, 0.0f, -5.0f}};
+	cam->target.pos = (t_vec3){{0.0f, 0.0f, 0.0f}};
 	// cam->target.pos = vec3_add(cam->transform.pos, vec3(x, y, z));
-	// cam->fov = ;
+	cam->up = (t_vec3){{0.0f, 1.0f, 0.0f}};
+	cam->yaw = 0.0f;
+	cam->pitch = 0.0f;
+	cam->fov = M_PI / 2.5f;
 	cam->focal_length = 1.0f;
-
-	update_cam(ctx);
 }
 
 void	update_viewport(t_context *ctx)
@@ -22,17 +25,21 @@ void	update_viewport(t_context *ctx)
 	vp = &ctx->scene.cam.viewport;
 	vp->height = 2.0f;
 	vp->width = vp->height * ((float)ctx->img->width / ctx->img->height);
-	vp->d_u = vp->width / (float)ctx->img->width;
-	vp->d_v = vp->height / (float)ctx->img->height;
+	vp->d_u = (t_vec3){{vp->width / (float)ctx->img->width, 0.0f, 0.0f}};
+	vp->d_v = (t_vec3){{0.0f, vp->height / (float)ctx->img->height, 0.0f}};
+
+	// Trigger rendering
+	// render(ctx);
 }
 
-void	update_cam(t_context *ctx)
+void	update_camera(t_context *ctx)
 {
 	const float	limit = M_PI_2 - 0.001f;
 	t_vec3		dir;
 	t_camera	*cam;
 
 	cam = &ctx->scene.cam;
+	cam->aspect = (float)ctx->img->width / ctx->img->height;
 	if (ctx->editor.selected_object)
 		cam->pivot = ctx->editor.selected_object->transform.pos;
 	else
@@ -45,7 +52,9 @@ void	update_cam(t_context *ctx)
 	dir.x = cosf(cam->pitch) * sinf(cam->yaw);
 	dir.y = sinf(cam->pitch);
 	dir.z = cosf(cam->pitch) * cosf(cam->yaw);
-	cam->transform.pos = vec3_add(cam->target.pos, vec3_scale(dir, cam->distance));
+	(void)dir;
+	// cam->transform.pos = vec3_add(cam->target.pos, vec3_scale(dir, cam->distance));
+	update_viewport(ctx);
 }
 
 // void	compute_distance(t_context *ctx)

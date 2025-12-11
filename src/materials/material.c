@@ -7,8 +7,7 @@ t_material	set_material(char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		mat.color = (t_color){RED};
-		mat.alpha = 1.0f;
+		mat.color = (t_vec4){{0.0f, 0.0f, 1.0f, 1.0f}};
 	// -----------------------
 
 	// set_texture();

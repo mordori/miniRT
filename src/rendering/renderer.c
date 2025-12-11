@@ -2,8 +2,8 @@
 #include "utils.h"
 
 static inline void	*worker(void *arg);
-static inline void	render_pixel(t_context *ctx, int x, int y);
-// static inline void	put_pixel(float *buffer, int x, int y, t_vec4 *color);
+static inline void	render_pixel(t_context *ctx, const uint32_t x, const uint32_t y);
+static inline void	blit(t_image *img, t_renderer *r);
 
 bool	init_renderer(t_context *ctx)
 {
@@ -31,53 +31,63 @@ static inline void	*worker(void *arg)
 {
 	t_context	*ctx;
 	t_renderer	*r;
+	uint32_t	i;
 
 	ctx = (t_context *)arg;
 	r = &ctx->renderer;
 	while (r->active)
 	{
-		while (r->paused || (r->pass == 0 && r->finished))
+		i = atomic_fetch_add(&r->pixel_index, 1);
+		if (i >= r->pixels)
 		{
 			usleep(2000);
 			continue ;
 		}
-		get_render_job(ctx);
-		// render_pixel(ctx);
-		if (r->finished)
+		render_pixel(ctx, i % r->width, i / r->width);
+		if (atomic_fetch_add(&r->pixels_done, 1) == r->pixels - 1)
 		{
+			r->finished = true;
 			post_process(ctx->renderer.buffer);
-			// copy_pixels(&ctx->img, ctx->renderer.buffer);
+			blit(ctx->img, r);
 		}
 	}
 	return (NULL);
 }
 
-static inline void	render_pixel(t_context *ctx, int x, int y)
+static inline void	render_pixel(t_context *ctx, const uint32_t x, const uint32_t y)
 {
-	t_vec4	color;
-	int		idx;
+	t_vec4		color;
+	uint32_t	i;
 
-	color = trace(&ctx->scene, x, y);
-	idx = x + y * ctx->img->width;
-	ctx->renderer.buffer[idx] = color.r;
-	ctx->renderer.buffer[++idx] = color.b;
-	ctx->renderer.buffer[++idx] = color.g;
-	ctx->renderer.buffer[++idx] = color.a;
+	color = trace_ray(&ctx->scene, x, y);
+	i = (y * ctx->img->width + x);
+	ctx->renderer.buffer[i] = color.rgb;
 }
 
-void	restart_render_queue(t_context *ctx)
+bool	render(t_renderer *r)
 {
-	(void)ctx;
+	atomic_store(&r->pixel_index, 0);
+	atomic_store(&r->pixels_done, 0);
+	r->finished = false;
+	return (true);
 }
 
-void	get_render_job(t_context *ctx)
+static inline void	blit(t_image *img, t_renderer *r)
 {
-	t_renderer	*r;
+	uint32_t	*pixels;
+	uint32_t	color;
+	uint32_t	i;
 
-	r = &ctx->renderer;
-	if (r->pass != 0 && r->jobs == 0)
+	pixels = (uint32_t *)img->pixels;
+	i = 0;
+	while (i < r->pixels)
 	{
-		r->pass--;
-		restart_render_queue(ctx);
+		color = \
+((0xFF << 24) | \
+((uint32_t)(ft_clamp01(r->buffer[i].b) * 255.0f + 0.5f) << 16) | \
+((uint32_t)(ft_clamp01(r->buffer[i].g) * 255.0f + 0.5f) << 8) | \
+((uint32_t)(ft_clamp01(r->buffer[i].r) * 255.0f + 0.5f)));
+		pixels[i] = color;
+		++i;
 	}
 }
