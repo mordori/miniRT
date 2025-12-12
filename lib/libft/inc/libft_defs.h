@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/11 04:14:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/12 10:13:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,6 @@
 #  define M_PI_2		1.57079632679489661923
 # endif
 
-# ifndef M_PI_INV
-#  define M_PI_INV		0.31830988618379067154
-# endif
-
-# ifndef M_2_PI_INV
-#  define M_2_PI_INV	0.15915494309189533577
-# endif
-
 # ifndef M_INF
 // FLT_MAX interpret as infinity when using --ffast-math flag
 #  define M_INF			FLT_MAX
@@ -83,9 +75,7 @@
 
 typedef struct s_list		t_list;
 typedef struct s_vec2i		t_vec2i;
-typedef struct s_vec2		t_vec2;
-typedef struct s_vec2		t_float2;
-typedef struct s_vec2		t_point;
+typedef struct s_vec2i		t_int2;
 typedef struct s_mat4		t_mat4;
 typedef struct s_quad		t_quad;
 typedef struct s_vertex		t_vertex;
@@ -94,6 +84,9 @@ typedef struct s_arena		t_arena;
 typedef struct s_ray		t_ray;
 typedef struct s_hit		t_hit;
 
+typedef union u_vec2		t_point;
+typedef union u_vec2		t_float2;
+typedef union u_vec2		t_vec2;
 typedef union u_vec3		t_vec3;
 typedef union u_vec3		t_float3;
 typedef union u_vec4		t_vec4;

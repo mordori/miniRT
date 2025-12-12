@@ -24,9 +24,9 @@ void	init_scene(t_context *ctx)
 		add_camera(ctx, params);
 		add_light(ctx, params);
 		add_object(ctx, params);
+		init_skydome(ctx, "assets/textures/sky.png");
 	// -----------------------
 
-	init_skydome(ctx);
 	// try_gnl(ctx, ctx->fd, &line);
 	// while (line)
 	// {
@@ -84,4 +84,5 @@ void	clean_scene(t_context *ctx)
 {
 	clean_bvh(ctx->scene.bvh_root);
 	vector_free(&ctx->scene.objs, &ctx->scene.lights, NULL);
+	free_texture(ctx->scene.skydome);
 }

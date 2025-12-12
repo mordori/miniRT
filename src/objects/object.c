@@ -14,6 +14,12 @@ void	add_object(t_context *ctx, char **params)
 	if (!obj)
 		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
 	*obj = init_object(params);
+
+	// For testing rendering
+	// -----------------------
+		obj->type = OBJ_SPHERE;
+	// -----------------------
+
 	vector_try_add(ctx, &ctx->scene.objs, obj);
 }
 
@@ -22,7 +28,6 @@ static inline t_object	init_object(char **params)
 	t_object	obj;
 
 	obj = (t_object){0};
-	(void)params;
 	obj.transform = set_transform(params);
 	obj.material = set_material(params);
 	obj.shape = set_shape(&obj, params);
@@ -33,13 +38,14 @@ static inline t_transform	set_transform(char **params)
 {
 	t_transform	transform;
 
-	transform.scale = (t_vec3){{1.0f, 1.0f, 1.0f}};
-	transform.rot = (t_vec3){{0.0f, 0.0f, 0.0f}};
+	transform.pos =  vec3_n(0.0f);
+	transform.rot =  vec3_n(0.0f);
+	transform.scale = vec3_n(1.0f);
 
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		transform.pos = (t_vec3){{1.0f, 0.0f, 0.0f}};
+		transform.pos = (t_vec3){{0.0f, 0.0f, 5.0f}};
 	// -----------------------
 
 	return (transform);
@@ -68,7 +74,7 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 	bool	result;
 
 	result = functions[obj->type](&obj->shape, ray, hit);
-	// if (result)
-		// hit->color = get_mat_color();
+	if (result)
+		hit->color = obj->material.color;
 	return (result);
 }

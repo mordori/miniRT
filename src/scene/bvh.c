@@ -10,22 +10,14 @@ void	init_bvh(t_context *ctx)
 	t_scene		*scene;
 	t_object	**objs;
 	size_t		n;
-	size_t		i;
 
 	scene = &ctx->scene;
 	n = vector_total(&scene->objs);
 	objs = malloc(sizeof(*objs) * n);
 	if (!objs)
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-	i = 0;
-	while (i < n)
-	{
-		objs[i] = (t_object *)vector_get(&scene->objs, i);
-		++i;
-	}
-	*objs = vector_get(&scene->objs, 0);
+	objs = (t_object **)scene->objs.items;
 	scene->bvh_root = build_bvh(ctx, (const t_object **)objs, n);
-	free(objs);
 }
 
 t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
@@ -35,10 +27,7 @@ t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
 
 	node = malloc(sizeof(*node));
 	if (!node)
-	{
-		free(objs);
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-	}
 	*node = (t_bvh_node){0};
 	if (n == 1)
 	{

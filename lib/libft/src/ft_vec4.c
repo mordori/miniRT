@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 14:46:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 21:10:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/11 22:06:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,12 @@ t_vec4	vec4_n(float n)
  */
 t_vec4	vec4_add(t_vec4 a, t_vec4 b)
 {
-	return ((t_vec4){{a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w}});
+	return ((t_vec4){{
+		a.x + b.x,
+		a.y + b.y,
+		a.z + b.z,
+		a.w + b.w
+	}});
 }
 
 /**
@@ -60,7 +65,12 @@ t_vec4	vec4_add(t_vec4 a, t_vec4 b)
  */
 t_vec4	vec4_sub(t_vec4 a, t_vec4 b)
 {
-	return ((t_vec4){{a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w}});
+	return ((t_vec4){{
+		a.x - b.x,
+		a.y - b.y,
+		a.z - b.z,
+		a.w - b.w
+	}});
 }
 
 /**
@@ -74,5 +84,10 @@ t_vec4	vec4_sub(t_vec4 a, t_vec4 b)
  */
 t_vec4	vec4_scale(t_vec4 v, float s)
 {
-	return ((t_vec4){{v.x * s, v.y * s, v.z * s, v.w * s}});
+	return ((t_vec4){{
+		v.x * s,
+		v.y * s,
+		v.z * s,
+		v.w * s
+	}});
 }

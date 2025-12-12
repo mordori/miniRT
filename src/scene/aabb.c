@@ -48,7 +48,7 @@ static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
 	return (result);
 }
 
-bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, const float closest_t)
+bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t)
 {
 	float	t_min;
 	float	t_max;

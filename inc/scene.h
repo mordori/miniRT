@@ -6,9 +6,8 @@
 void	validate_file_type(char *file);
 void	init_scene(t_context *ctx);
 void	clean_scene(t_context *ctx);
-void	init_skydome(t_context *ctx);
-void	add_skydome_tex(t_context *ctx, char *file);
-bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, const float closest_t);
+void	init_skydome(t_context *ctx, char *file);
+bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t);
 bool	hit_bvh(t_bvh_node *node, const t_ray *ray, t_hit *hit);
 void	init_bvh(t_context *ctx);
 void	clean_bvh(t_bvh_node *node);

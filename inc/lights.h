@@ -5,5 +5,6 @@
 
 void	add_light(t_context *ctx, char **params);
 t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit);
+void	init_point_light(t_context *ctx, t_light light);
 
 #endif

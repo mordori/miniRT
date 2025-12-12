@@ -9,8 +9,9 @@
 # include "defines.h"
 
 bool	init_renderer(t_context *ctx);
-t_vec4	trace_ray(const t_scene *scene, const uint32_t x, const uint32_t y);
+t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y);
 void	post_process(t_vec3 *buffer);
-bool	render(t_renderer *r);
+bool	start_render(t_renderer *r);
+void	blit(t_image *img, t_renderer *r);
 
 #endif

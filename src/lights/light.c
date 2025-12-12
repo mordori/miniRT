@@ -8,14 +8,12 @@ void	add_light(t_context *ctx, char **params)
 	t_light	light;
 
 	light = init_light(params);
-	(void)light;
-	(void)ctx;
-	// if (*params == LIGHT_AMBIENT)
+	// if (light.type == LIGHT_AMBIENT)
 	// 	init_ambient_light();
-	// else if (*params == LIGHT_DIRECTIONAL)
+	// else if (light.type  == LIGHT_DIRECTIONAL)
 	// 	init_directional_light();
-	// else if (*params == LIGHT_POINT)
-	// 	init_point_light();
+	// else if (light.type  == LIGHT_POINT)
+		init_point_light(ctx, light);
 }
 
 static inline t_light	init_light(char **params)
@@ -24,19 +22,39 @@ static inline t_light	init_light(char **params)
 
 	(void)params;
 	light = (t_light){0};
-	// light.type = :
-	// light.transform.pos = ;
-	// light.intensity = ;
-	// light.color = (t_color){(255 << 24) | (255 << 16) | (255 << 8) | 0xFF}; // {R | G | B | A} 32bit uint combined
+
+	// For testing rendering
+	// -----------------------
+		light.type = LIGHT_POINT;
+		light.intensity = 1.4f;
+		light.transform.pos = (t_vec3){{4.5f, 3.0f, 3.0f}};
+		light.color = (t_vec4){{0.5f, 0.2f, 6.5f, 1.0f}};
+	// -----------------------
+
 	return (light);
 }
 
 t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit)
 {
-	t_vec4	color;
+	t_light		*light;
+	t_vec4		color;
+	t_light		**lights;
+	float		ndotl;
+	uint32_t	i;
 
-	(void)scene;
-	(void)hit;
+	// Quick and dirty lighting test
 	color = (t_vec4){0};
+	lights = (t_light **)scene->lights.items;
+	i = 0;
+	while (i < scene->lights.total)
+	{
+		light = lights[i];
+		ndotl = vec3_dot(hit->normal, vec3_normalize(vec3_sub(light->transform.pos, hit->point)));
+		if (ndotl > 0.0f)
+		{
+			color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(light->color.rgb, hit->color.rgb), light->intensity * ndotl));
+		}
+		++i;
+	}
 	return (color);
 }

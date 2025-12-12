@@ -39,21 +39,24 @@ void	cursor_hook(double xpos, double ypos, void* param)
 void	resize_hook(int width, int height, void *param)
 {
 	t_context	*ctx;
+	t_renderer	*r;
 
 	ctx = param;
 	if (!ctx || !ctx->mlx || !ctx->img || width == 0 || height == 0)
 		return ;
-	if (ctx->renderer.buffer)
-		free(ctx->renderer.buffer);
-	ctx->renderer.buffer = malloc(sizeof(t_vec3) * (width * height));
-	if (!ctx->renderer.buffer || !mlx_resize_image(ctx->img, width, height))
+	r = &ctx->renderer;
+	if (r->buffer)
+		free(r->buffer);
+	r->buffer = malloc(sizeof(t_vec3) * (width * height));
+	if (!r->buffer || !mlx_resize_image(ctx->img, width, height))
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
-	*ctx->renderer.buffer = (t_vec3){0};
-	ctx->renderer.width = width;
-	ctx->renderer.height = height;
-	ctx->renderer.pixels = width * height;
-	// update_cam();
-	// update_viewport();
+	*r->buffer = (t_vec3){0};
+	r->width = width;
+	r->height = height;
+	r->pixels = width * height;
+	update_camera(ctx);
+	if (r->threads_init == r->threads_amount)
+		start_render(r);
 }
 
 void	update_hook(void *param)
@@ -61,5 +64,9 @@ void	update_hook(void *param)
 	t_context	*ctx;
 
 	ctx = (t_context *)param;
-	process_input(ctx);
+	if (process_input(ctx))
+		start_render(&ctx->renderer);
+	if (ctx->renderer.finished)
+		post_process(ctx->renderer.buffer);
+	blit(ctx->img, &ctx->renderer);
 }

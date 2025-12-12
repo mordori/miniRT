@@ -31,5 +31,7 @@ int 	cmp_bounds_x(const void *a, const void *b);
 int 	cmp_bounds_y(const void *a, const void *b);
 int 	cmp_bounds_z(const void *a, const void *b);
 t_vec3	get_point(t_ray *ray, float t);
+t_texture	*load_texture(t_context *ctx, char *file);
+void	free_texture(t_texture *tex);
 
 #endif

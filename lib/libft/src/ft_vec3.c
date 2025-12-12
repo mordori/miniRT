@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 03:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/10 08:45:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/12 01:25:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ t_vec3	vec3_n(float n)
  */
 t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 {
-	return ((t_vec3){{a.x + b.x, a.y + b.y, a.z + b.z}});
+	return ((t_vec3){{
+		a.x + b.x,
+		a.y + b.y,
+		a.z + b.z
+	}});
 }
 
 /**
@@ -59,7 +63,11 @@ t_vec3	vec3_add(t_vec3 a, t_vec3 b)
  */
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
 {
-	return ((t_vec3){{a.x - b.x, a.y - b.y, a.z - b.z}});
+	return ((t_vec3){{
+		a.x - b.x,
+		a.y - b.y,
+		a.z - b.z
+	}});
 }
 
 /**
@@ -73,5 +81,9 @@ t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
  */
 t_vec3	vec3_scale(t_vec3 v, float s)
 {
-	return ((t_vec3){{v.x * s, v.y * s, v.z * s}});
+	return ((t_vec3){{
+		v.x * s,
+		v.y * s,
+		v.z * s
+	}});
 }

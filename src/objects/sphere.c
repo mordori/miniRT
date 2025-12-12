@@ -10,7 +10,7 @@ t_shape	init_sphere(const t_object *obj, char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		sphere.radius = 1.0f;
+		sphere.radius = 0.5f;
 	// -----------------------
 
 	sphere.radius_squared = sphere.radius * sphere.radius;
@@ -25,8 +25,10 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	float		t;
 
 	sphere = shape->sphere;
+	if (sphere.radius < 1e-6f)
+		return (false);
 	t = solve_quadratic(&sphere, ray, hit->t);
-	if (t > hit->t)
+	if (t >= hit->t)
 		return (false);
 	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
