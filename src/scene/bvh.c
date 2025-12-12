@@ -12,10 +12,7 @@ void	init_bvh(t_context *ctx)
 	size_t		n;
 
 	scene = &ctx->scene;
-	n = vector_total(&scene->objs);
-	objs = malloc(sizeof(*objs) * n);
-	if (!objs)
-		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+	n = scene->objs.total;
 	objs = (t_object **)scene->objs.items;
 	scene->bvh_root = build_bvh(ctx, (const t_object **)objs, n);
 }
