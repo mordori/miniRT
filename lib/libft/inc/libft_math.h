@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/11 04:05:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/12 08:03:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,18 @@ struct s_vec2i
 	int32_t	y;
 };
 
-struct s_vec2
+union u_vec2
 {
-	float	x;
-	float	y;
+	struct
+	{
+		float	x;
+		float	y;
+	};
+	struct
+	{
+		float	u;
+		float	v;
+	};
 };
 
 union u_vec3
@@ -111,5 +119,6 @@ t_vec4	vec4_scale(t_vec4 v, float s);
 size_t	ft_pow(size_t n, size_t e);
 bool	ft_is_pot(size_t n);
 float	degrees_to_rad(float degrees);
+t_vec3	vec3_mul(t_vec3 a, t_vec3 b);
 
 #endif

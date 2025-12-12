@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 14:32:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/05 03:00:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/11 22:04:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ t_vec2i	vec2i_n(int32_t n)
  */
 t_vec2i	vec2i_add(t_vec2i a, t_vec2i b)
 {
-	return ((t_vec2i){a.x + b.x, a.y + b.y});
+	return ((t_vec2i){
+		a.x + b.x,
+		a.y + b.y
+	});
 }
 
 /**
@@ -57,7 +60,10 @@ t_vec2i	vec2i_add(t_vec2i a, t_vec2i b)
  */
 t_vec2i	vec2i_sub(t_vec2i a, t_vec2i b)
 {
-	return ((t_vec2i){a.x - b.x, a.y - b.y});
+	return ((t_vec2i){
+		a.x - b.x,
+		a.y - b.y
+	});
 }
 
 /**
@@ -72,5 +78,8 @@ t_vec2i	vec2i_sub(t_vec2i a, t_vec2i b)
  */
 t_vec2i	vec2i_scale(t_vec2i v, float s)
 {
-	return ((t_vec2i){(int)((float)v.x * s), (int)((float)v.y * s)});
+	return ((t_vec2i){
+		(int)((float)v.x * s),
+		(int)((float)v.y * s)
+	});
 }

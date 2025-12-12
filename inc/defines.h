@@ -20,6 +20,7 @@
 # define SENS_ZOOM		0.0018f
 # define SENS_PAN		0.0006f
 # define RENDER_TILE	8
+# define INV_255F		0.003921568627451f
 
 typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
@@ -197,7 +198,7 @@ struct s_viewport
 {
 	t_vec3			d_u;
 	t_vec3			d_v;
-	t_vec3			pixel_00_pos;
+	t_vec3			pixel_00_loc;
 	float			width;
 	float			height;
 	uint8_t			padding[8];			// Optimizes to 64 bytes
@@ -211,6 +212,7 @@ struct s_camera
 	t_vec3			pivot;
 	t_vec3			up;
 	t_vec3			right;
+	t_vec3			forward;
 	float			aspect;
 	float			focal_length;
 	float			fov;
@@ -235,7 +237,7 @@ struct s_renderer
 {
 	_Atomic uint32_t	pixel_index;		// High contention writes
 	_Atomic uint32_t	pixels_done;
-	uint8_t				padding_2[56];		// Optimizes to 64 bytes
+	uint8_t				padding_1[56];		// Optimizes to 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;
 	long				threads_init;
@@ -248,7 +250,7 @@ struct s_renderer
 	_Atomic bool		finished;
 	_Atomic bool		paused;
 	_Atomic bool		active;
-	uint8_t				padding_1[9];		// Optimizes to 64 bytes
+	uint8_t				padding_2[9];		// Optimizes to 64 bytes
 };
 
 struct s_editor

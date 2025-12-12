@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/09 02:02:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/11 22:13:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,16 @@ t_vec3	vec3_cross(t_vec3 a, t_vec3 b)
  */
 float	vec3_dot(t_vec3 a, t_vec3 b)
 {
-	return (a.x * b.x + a.y * b.y + a.z * b.z);
+	return (
+		a.x * b.x +
+		a.y * b.y +
+		a.z * b.z
+	);
 }
 
 t_vec3	vec3_div(t_vec3 v, float div)
 {
-	if (div == 0.0f)
+	if (div < 1e-6f)
 		return (vec3_n(0.0f));
 	return ((t_vec3){{
 		v.x / div,

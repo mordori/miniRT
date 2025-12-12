@@ -1,9 +1,8 @@
 #include "rendering.h"
 #include "utils.h"
 
-static inline void	*worker(void *arg);
+static inline void	*render_routine(void *arg);
 static inline void	render_pixel(t_context *ctx, const uint32_t x, const uint32_t y);
-static inline void	blit(t_image *img, t_renderer *r);
 
 bool	init_renderer(t_context *ctx)
 {
@@ -20,14 +19,14 @@ bool	init_renderer(t_context *ctx)
 	r->paused = false;
 	while (r->threads_init < r->threads_amount)
 	{
-		if (pthread_create(&r->threads[r->threads_init], NULL, worker, ctx))
+		if (pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
 			break ;
 		++r->threads_init;
 	}
 	return (r->threads_init == r->threads_amount);
 }
 
-static inline void	*worker(void *arg)
+static inline void	*render_routine(void *arg)
 {
 	t_context	*ctx;
 	t_renderer	*r;
@@ -45,11 +44,7 @@ static inline void	*worker(void *arg)
 		}
 		render_pixel(ctx, i % r->width, i / r->width);
 		if (atomic_fetch_add(&r->pixels_done, 1) == r->pixels - 1)
-		{
 			r->finished = true;
-			post_process(ctx->renderer.buffer);
-			blit(ctx->img, r);
-		}
 	}
 	return (NULL);
 }
@@ -64,7 +59,7 @@ static inline void	render_pixel(t_context *ctx, const uint32_t x, const uint32_t
 	ctx->renderer.buffer[i] = color.rgb;
 }
 
-bool	render(t_renderer *r)
+bool	start_render(t_renderer *r)
 {
 	atomic_store(&r->pixel_index, 0);
 	atomic_store(&r->pixels_done, 0);
@@ -72,7 +67,7 @@ bool	render(t_renderer *r)
 	return (true);
 }
 
-static inline void	blit(t_image *img, t_renderer *r)
+void	blit(t_image *img, t_renderer *r)
 {
 	uint32_t	*pixels;
 	uint32_t	color;

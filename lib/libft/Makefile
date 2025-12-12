@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/10 08:41:45 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/12 01:23:11 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ SRCS		:=$(addprefix $(DIR_SRC), \
 			ft_vector_utils.c ft_math.c ft_matrix.c ft_matrix_transforms.c \
 			ft_vec4.c ft_vec3.c ft_vec3_2.c ft_matrix_utils.c \
 			ft_vec2.c ft_vec4_2.c ft_vec2i.c ft_vec2i_2.c ft_math_2.c \
-			ft_colors.c ft_vector_utils_2.c)
+			ft_colors.c ft_vector_utils_2.c ft_vec3_3.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_DEP)%.d, $(SRCS))
 

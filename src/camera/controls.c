@@ -58,21 +58,27 @@ static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i 
 
 static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
 {
-	float	speed;
-	t_vec2i	delta;
+	float		speed;
+	t_vec2i		delta;
+	static bool	init;
 
 	if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 	{
-		delta = vec2i_sub(pos, *previous_pos);
-		speed = ctx->mlx->delta_time * 60.0f * SENS_ORBIT;
-		ctx->scene.cam.yaw -= delta.x * speed;
-		ctx->scene.cam.pitch += delta.y * speed;
+		if (init)
+		{
+			delta = vec2i_sub(pos, *previous_pos);
+			speed = ctx->mlx->delta_time * 60.0f * SENS_ORBIT;
+			ctx->scene.cam.yaw += delta.x * speed;
+			ctx->scene.cam.pitch -= delta.y * speed;
+		}
 		*previous_pos = pos;
+		init = true;
 	}
 	else
 	{
 		ctx->scene.cam.state = CAM_DEFAULT;
 		mlx_set_mouse_pos(ctx->mlx, original_pos.x, original_pos.y);
+		init = false;
 	}
 }
 

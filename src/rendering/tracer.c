@@ -2,10 +2,10 @@
 #include "scene.h"
 #include "lights.h"
 
-static inline t_ray	new_ray(const t_viewport *vp, const t_vec3 origin, const uint32_t x, const uint32_t y);
-static inline t_vec4	backgroud_color(const t_scene *scene, const t_ray *ray);
+static inline t_ray		new_ray(const t_viewport *vp, t_vec3 origin, uint32_t x, uint32_t y);
+static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray);
 
-t_vec4	trace_ray(const t_scene *scene, const uint32_t x, const uint32_t y)
+t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 {
 	t_ray	ray;
 	t_hit	hit;
@@ -15,20 +15,20 @@ t_vec4	trace_ray(const t_scene *scene, const uint32_t x, const uint32_t y)
 	hit.t = M_INF;
 	if (hit_bvh(scene->bvh_root, &ray, &hit))
 		return (calculate_lighting(scene, &hit));
-	return (backgroud_color(scene, &ray));
+	return (background_color(scene->skydome, &ray));
 }
 
 // If the direction axis is nearing zero, we explicitly set it to +-FLT_MAX.
 // -ffast-math optimization doesn't support infinity and float division by 0.
 // This also avoids nan in the case of (0-0) / 0.
-static inline t_ray	new_ray(const t_viewport *vp, const t_vec3 origin, const uint32_t x, const uint32_t y)
+static inline t_ray	new_ray(const t_viewport *vp, t_vec3 origin, uint32_t x, uint32_t y)
 {
 	t_ray	ray;
 	t_vec3	pixel_center;
 	t_vec3	offset;
 
 	offset = vec3_add(vec3_scale(vp->d_u, (float)x), vec3_scale(vp->d_v, (float)y));
-	pixel_center = vec3_add(vp->pixel_00_pos, offset);
+	pixel_center = vec3_add(vp->pixel_00_loc, offset);
 	ray.origin = origin;
 	ray.dir = vec3_normalize(vec3_sub(pixel_center, ray.origin));
 	if (fabsf(ray.dir.x) < 1e-6f)
@@ -49,24 +49,27 @@ static inline t_ray	new_ray(const t_viewport *vp, const t_vec3 origin, const uin
 	return (ray);
 }
 
-static inline t_vec4	backgroud_color(const t_scene *scene, const t_ray *ray)
+static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 {
-	uint32_t	u;
-	uint32_t	v;
-	uint32_t	width;
-	uint32_t	height;
+	float		phi;
+	float		theta;
+	t_float2	uv;
+	t_int2		xy;
 	uint32_t	i;
 
-	if (!scene->skydome)
+	if (!tex)
 		return ((t_vec4){{0.2f, 0.5f, 0.0f, 1.0f}});
-	width = scene->skydome->width;
-	height = scene->skydome->height;
-	u = width * atan2f(ray->dir.z, ray->dir.x) * M_2_PI_INV - 0.5f;
-	v = height * acos(ray->dir.y) * M_PI_INV - 0.5f;
-	i = (v * width + u) % (width * height);
-	return ((t_vec4){{\
-(float)scene->skydome->pixels[i], \
-(float)scene->skydome->pixels[++i], \
-(float)scene->skydome->pixels[++i], \
-(float)scene->skydome->pixels[++i]}});
+	phi = atan2f(ray->dir.z, ray->dir.x);
+	theta = acosf(ray->dir.y);
+	uv.x = (phi + M_PI) * M_1_PI * 0.5f;
+	uv.v = theta * M_1_PI;
+	xy.x = (uint32_t)(uv.u * (tex->width - 1));
+	xy.y = (uint32_t)(uv.v * (tex->height - 1));
+	i = (xy.y * tex->width + xy.x) * 4;
+	return ((t_vec4){{
+		(float)tex->pixels[i] * INV_255F,
+		(float)tex->pixels[++i] * INV_255F,
+		(float)tex->pixels[++i] * INV_255F,
+		1.0f}
+	});
 }

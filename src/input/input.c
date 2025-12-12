@@ -1,9 +1,15 @@
 #include "input.h"
 #include "camera.h"
 
-void	process_input(t_context *ctx)
+bool	process_input(t_context *ctx)
 {
+	bool	dirty;
+
+	dirty = false;
 	if (control_camera(ctx))
+	{
+		dirty = true;
 		update_camera(ctx);
-	// if ()
+	}
+	return (dirty);
 }

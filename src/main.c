@@ -46,7 +46,7 @@ static inline void	setup_mlx(t_context *ctx)
 	if (\
 mlx_loop_hook(ctx->mlx, update_hook, ctx) && \
 init_renderer(ctx) && \
-render(&ctx->renderer))
+start_render(&ctx->renderer))
 		mlx_loop(ctx->mlx);
 }
 
