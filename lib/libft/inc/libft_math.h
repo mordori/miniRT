@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/12 08:03:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/13 02:00:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,6 @@ size_t	ft_pow(size_t n, size_t e);
 bool	ft_is_pot(size_t n);
 float	degrees_to_rad(float degrees);
 t_vec3	vec3_mul(t_vec3 a, t_vec3 b);
+uint32_t	ft_uint_min(uint32_t a, uint32_t b);
 
 #endif

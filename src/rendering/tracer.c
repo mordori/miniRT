@@ -1,6 +1,7 @@
 #include "rendering.h"
 #include "scene.h"
 #include "lights.h"
+#include "utils.h"
 
 static inline t_ray		new_ray(const t_viewport *vp, t_vec3 origin, uint32_t x, uint32_t y);
 static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray);
@@ -15,7 +16,7 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 	hit.t = M_INF;
 	if (hit_bvh(scene->bvh_root, &ray, &hit))
 		return (calculate_lighting(scene, &hit));
-	return (background_color(scene->skydome, &ray));
+	return (background_color(&scene->skydome, &ray));
 }
 
 // If the direction axis is nearing zero, we explicitly set it to +-FLT_MAX.
@@ -61,15 +62,12 @@ static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 		return ((t_vec4){{0.2f, 0.5f, 0.0f, 1.0f}});
 	phi = atan2f(ray->dir.z, ray->dir.x);
 	theta = acosf(ray->dir.y);
-	uv.x = (phi + M_PI) * M_1_PI * 0.5f;
+	uv.u = (phi + M_PI) * M_1_PI * 0.5f;
 	uv.v = theta * M_1_PI;
 	xy.x = (uint32_t)(uv.u * (tex->width - 1));
 	xy.y = (uint32_t)(uv.v * (tex->height - 1));
 	i = (xy.y * tex->width + xy.x) * 4;
 	return ((t_vec4){{
-		(float)tex->pixels[i] * INV_255F,
-		(float)tex->pixels[++i] * INV_255F,
-		(float)tex->pixels[++i] * INV_255F,
-		1.0f}
-	});
+		tex->pixels[i], tex->pixels[i + 1], tex->pixels[i + 2], 1.0f
+	}});
 }

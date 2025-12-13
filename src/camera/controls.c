@@ -36,7 +36,7 @@ bool	control_camera(t_context *ctx)
 
 static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos)
 {
-	t_camera		*cam;
+	t_camera	*cam;
 
 	cam = &ctx->scene.cam;
 	if (cam->state == CAM_DEFAULT && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))

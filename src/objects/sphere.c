@@ -10,7 +10,7 @@ t_shape	init_sphere(const t_object *obj, char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		sphere.radius = 0.5f;
+		sphere.radius = 1.0f;
 	// -----------------------
 
 	sphere.radius_squared = sphere.radius * sphere.radius;

@@ -19,7 +19,7 @@
 # define SENS_ORBIT		0.0025f
 # define SENS_ZOOM		0.0018f
 # define SENS_PAN		0.0006f
-# define RENDER_TILE	8
+# define TILE_SIZE		32
 # define INV_255F		0.003921568627451f
 
 typedef enum e_obj_type		t_obj_type;
@@ -41,6 +41,7 @@ typedef struct s_cylinder	t_cylinder;
 typedef struct s_light		t_light;
 typedef struct s_scene		t_scene;
 typedef struct s_camera		t_camera;
+typedef struct s_texture	t_texture;
 typedef struct s_material	t_material;
 typedef struct s_renderer	t_renderer;
 typedef struct s_editor		t_editor;
@@ -49,7 +50,6 @@ typedef struct s_viewport	t_viewport;
 typedef union u_shape		t_shape;
 
 typedef mlx_image_t			t_image;
-typedef mlx_texture_t		t_texture;
 
 typedef void				(*t_add_entity)(t_context *, char **);
 typedef t_aabb				(*t_get_shape_bounds)(const t_object *);
@@ -128,11 +128,19 @@ enum e_entity
 	ENT_OBJECT
 };
 
+struct s_texture
+{
+	mlx_texture_t	*tex;
+	float			*pixels;
+	uint32_t		width;
+	uint32_t		height;
+};
+
 struct s_material
 {
 	t_vec4			color;
-	t_texture		*texture;
-	t_texture		*normal_map;
+	t_texture		texture;
+	t_texture		normal_map;
 	float			alpha;
 	t_base_color	base_color;
 	t_surface_type	surface_type;
@@ -228,29 +236,29 @@ struct s_scene
 	t_vector		objs;
 	t_vector		lights;
 	t_bvh_node		*bvh_root;
-	t_texture		*skydome;
+	t_texture		skydome;
 	t_light			ambient_light;
 	t_light			directional_light;	// 596 bytes -- Adjust later
 };
 
 struct s_renderer
 {
-	_Atomic uint32_t	pixel_index;		// High contention writes
-	_Atomic uint32_t	pixels_done;
+	_Atomic uint32_t	tile_index;			// High contention writes
+	_Atomic uint32_t	tiles_done;
 	uint8_t				padding_1[56];		// Optimizes to 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;
 	long				threads_init;
 	long				threads_amount;
+	t_int2				tiles;
 	uint32_t			width;
 	uint32_t			height;
 	uint32_t			pixels;
-	_Atomic int			pass;
-	_Atomic int			step;
+	uint32_t			tiles_total;
 	_Atomic bool		finished;
-	_Atomic bool		paused;
+	_Atomic bool		resize_pending;
 	_Atomic bool		active;
-	uint8_t				padding_2[9];		// Optimizes to 64 bytes
+	// uint8_t				padding_2[17];		// Optimizes to 64 bytes
 };
 
 struct s_editor
