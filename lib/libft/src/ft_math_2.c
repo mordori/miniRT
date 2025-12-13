@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 19:39:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/07 05:06:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/13 01:59:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,11 @@ float	ft_clamp(float value, float min, float max)
 float	degrees_to_rad(float degrees)
 {
 	return (degrees * M_PI / 180.0f);
+}
+
+uint32_t	ft_uint_min(uint32_t a, uint32_t b)
+{
+	if (a < b)
+		return (a);
+	return (b);
 }

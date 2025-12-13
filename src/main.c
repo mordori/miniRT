@@ -43,8 +43,9 @@ static inline void	setup_mlx(t_context *ctx)
 	mlx_mouse_hook(ctx->mlx, mouse_hook, ctx);
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
+	resize_window(ctx);
 	if (\
-mlx_loop_hook(ctx->mlx, update_hook, ctx) && \
+mlx_loop_hook(ctx->mlx, loop_hook, ctx) && \
 init_renderer(ctx) && \
 start_render(&ctx->renderer))
 		mlx_loop(ctx->mlx);
@@ -56,7 +57,8 @@ void	clean(t_context *ctx)
 		return ;
 	if (ctx->fd != ERROR)
 		close(ctx->fd);
-	ctx->renderer.active = false;
+	atomic_store(&ctx->renderer.resize_pending, false);
+	atomic_store(&ctx->renderer.active, false);
 	while (ctx->renderer.threads_init--)
 		pthread_join(ctx->renderer.threads[ctx->renderer.threads_init], NULL);
 	free(ctx->renderer.threads);
@@ -89,3 +91,4 @@ void	clean(t_context *ctx)
 // save render .png
 // json file for extended objects
 // bouncing ball animation, squash strect
+// bilinear filterin for textures

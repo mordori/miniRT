@@ -16,7 +16,7 @@ void	key_hook(mlx_key_data_t keydata, void *param);
 void	resize_hook(int width, int height, void *param);
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param);
 void	cursor_hook(double xpos, double ypos, void* param);
-void	update_hook(void *param);
+void	loop_hook(void *param);
 void	clean(t_context *ctx);
 void	vector_try_init(\
 t_context *ctx, t_vector *vec, bool is_shrink, void (*del)(void *));
@@ -31,7 +31,10 @@ int 	cmp_bounds_x(const void *a, const void *b);
 int 	cmp_bounds_y(const void *a, const void *b);
 int 	cmp_bounds_z(const void *a, const void *b);
 t_vec3	get_point(t_ray *ray, float t);
-t_texture	*load_texture(t_context *ctx, char *file);
+t_texture	load_texture(t_context *ctx, char *file);
 void	free_texture(t_texture *tex);
+void	resize_window(t_context *ctx);
+float	srgb_to_linear(float c);
+void	tex_to_linear(t_texture *texture);
 
 #endif

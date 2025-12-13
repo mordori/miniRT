@@ -84,5 +84,5 @@ void	clean_scene(t_context *ctx)
 {
 	clean_bvh(ctx->scene.bvh_root);
 	vector_free(&ctx->scene.objs, &ctx->scene.lights, NULL);
-	free_texture(ctx->scene.skydome);
+	free_texture(&ctx->scene.skydome);
 }

@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/11 21:25:18 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/12 23:15:52 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c skydome.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c rays.c bounds.c \
-				textures.c)
+				textures.c renderer.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
