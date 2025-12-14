@@ -1,6 +1,6 @@
 #include "rendering.h"
 
-static inline t_vec3	tonemap(t_vec3 color);
+static inline t_vec3	tonemap_aces(t_vec3 color);
 // static inline t_vec3	anti_alias(t_vec3 color);
 
 t_vec3	post_process(t_vec3 c)
@@ -11,7 +11,7 @@ t_vec3	post_process(t_vec3 c)
 	c.r = fmaxf(0.0f, c.r);
 	c.g = fmaxf(0.0f, c.g);
 	c.b = fmaxf(0.0f, c.b);
-	c = tonemap(c);
+	c = tonemap_aces(c);
 	// c.r = powf(c.r, e);
 	// c.g = powf(c.g, e);
 	// c.b = powf(c.b, e);
@@ -22,7 +22,7 @@ t_vec3	post_process(t_vec3 c)
 	return (c);
 }
 
-static inline t_vec3	tonemap(t_vec3 c)
+static inline t_vec3	tonemap_aces(t_vec3 c)
 {
 	t_vec4	val;
 	t_vec3	result;

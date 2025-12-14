@@ -1,5 +1,7 @@
 #include "utils.h"
 
+static inline float	srgb_to_linear(float c);
+
 t_texture	load_texture(t_context *ctx, char *file)
 {
 	t_texture	texture;
@@ -33,6 +35,11 @@ void	tex_to_linear(t_texture *texture)
 		texture->pixels[i + 3] = srgb_to_linear((float)texture->tex->pixels[i + 3] * INV_255F);
 		i += 4;
 	}
+}
+
+static inline float	srgb_to_linear(float c)
+{
+	return (powf(c, 2.2f));
 }
 
 void	free_texture(t_texture *texture)

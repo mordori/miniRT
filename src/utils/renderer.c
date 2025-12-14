@@ -20,8 +20,3 @@ void	resize_window(t_context *ctx)
 		start_render(r);
 	atomic_store(&r->resize_pending, false);
 }
-
-float	srgb_to_linear(float c)
-{
-	return (powf(c, 2.2f));
-}

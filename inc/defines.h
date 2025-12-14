@@ -19,8 +19,12 @@
 # define SENS_ORBIT		0.0025f
 # define SENS_ZOOM		0.0018f
 # define SENS_PAN		0.0006f
-# define TILE_SIZE		32
+# define TILE_SIZE		64
 # define INV_255F		0.003921568627451f
+
+# ifndef M_1_2PI
+#  define M_1_2PI		0.15915494309189533577f
+# endif
 
 typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
@@ -134,6 +138,7 @@ struct s_texture
 	float			*pixels;
 	uint32_t		width;
 	uint32_t		height;
+	uint8_t			padding[8];			// 32 bytes
 };
 
 struct s_material
@@ -148,13 +153,13 @@ struct s_material
 	bool			double_sided;
 	bool			cast_shadows;
 	bool			receive_shadows;
-	uint8_t			padding[13];		// Optimizes to 64 bytes
+	uint8_t			padding[13];		// 64 bytes
 };
 
 struct s_plane
 {
 	t_vec3			dimensions;
-	uint8_t			padding[16];		// Optimizes to 32 bytes
+	uint8_t			padding[16];		// 32 bytes
 };
 
 struct s_sphere
@@ -162,7 +167,7 @@ struct s_sphere
 	t_vec3			center;
 	float			radius;
 	float			radius_squared;
-	uint8_t			padding[8];			// Optimizes to 32 bytes
+	uint8_t			padding[8];			// 32 bytes
 };
 
 struct s_cylinder
@@ -170,7 +175,7 @@ struct s_cylinder
 	float			radius;
 	float			height;
 	// Adjust padding later
-	uint8_t			padding[24];		// Optimizes to 32 bytes
+	uint8_t			padding[24];		// 32 bytes
 };
 
 union u_shape
@@ -188,7 +193,7 @@ struct s_object
 	t_vec3			bounds_center;
 	t_vec2			uv;
 	t_obj_type		type;
-	uint8_t			padding[4];			// Optimizes to 176 bytes
+	uint8_t			padding[4];			// 176 bytes
 };
 
 struct s_light
@@ -199,7 +204,7 @@ struct s_light
 	float			radius;
 	float			intensity;
 	t_light_type	type;
-	uint8_t			padding[4];			// Optimizes to 96 bytes
+	uint8_t			padding[4];			// 96 bytes
 };
 
 struct s_viewport
@@ -209,7 +214,7 @@ struct s_viewport
 	t_vec3			pixel_00_loc;
 	float			width;
 	float			height;
-	uint8_t			padding[8];			// Optimizes to 64 bytes
+	uint8_t			padding[8];			// 64 bytes
 };
 
 struct s_camera
@@ -235,17 +240,16 @@ struct s_scene
 	t_camera		cam;
 	t_vector		objs;
 	t_vector		lights;
-	t_bvh_node		*bvh_root;
 	t_texture		skydome;
 	t_light			ambient_light;
 	t_light			directional_light;	// 596 bytes -- Adjust later
+	t_bvh_node		*bvh_root;
 };
 
 struct s_renderer
 {
 	_Atomic uint32_t	tile_index;			// High contention writes
-	_Atomic uint32_t	tiles_done;
-	uint8_t				padding_1[56];		// Optimizes to 64 bytes
+	uint8_t				padding_1[60];		// 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;
 	long				threads_init;
@@ -255,10 +259,9 @@ struct s_renderer
 	uint32_t			height;
 	uint32_t			pixels;
 	uint32_t			tiles_total;
-	_Atomic bool		finished;
 	_Atomic bool		resize_pending;
 	_Atomic bool		active;
-	// uint8_t				padding_2[17];		// Optimizes to 64 bytes
+	// uint8_t				padding_2[17];		// 64 bytes
 };
 
 struct s_editor
@@ -279,7 +282,7 @@ struct s_bvh_node
 	t_bvh_node		*right;
 	t_object		*obj;
 	int				axis;
-	uint8_t			padding[4];			// Optimizes to 64 bytes
+	uint8_t			padding[4];			// 64 bytes
 };
 
 struct s_context
