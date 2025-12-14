@@ -48,13 +48,11 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit)
 	i = 0;
 	while (i < scene->lights.total)
 	{
-		light = lights[i];
+		light = lights[i++];
 		ndotl = vec3_dot(hit->normal, vec3_normalize(vec3_sub(light->transform.pos, hit->point)));
-		if (ndotl > 0.0f)
-		{
-			color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(light->color.rgb, hit->color.rgb), light->intensity * ndotl));
-		}
-		++i;
+		if (ndotl <= 0.0f)
+			continue ;
+		color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(light->color.rgb, hit->color.rgb), light->intensity * ndotl));
 	}
 	return (color);
 }

@@ -60,8 +60,6 @@ static inline void	*render_routine(void *arg)
 			}
 			++idx.y;
 		}
-		if (atomic_fetch_add(&r->tiles_done, 1) >= r->tiles_total)
-			atomic_store(&r->finished, true);
 	}
 	return (NULL);
 }
@@ -72,8 +70,6 @@ bool	start_render(t_renderer *r)
 	r->tiles.y = (r->height + TILE_SIZE - 1) / TILE_SIZE;
 	r->tiles_total = r->tiles.x * r->tiles.y;
 	atomic_store(&r->tile_index, 0);
-	atomic_store(&r->tiles_done, 0);
-	atomic_store(&r->finished, false);
 	return (true);
 }
 
@@ -87,11 +83,11 @@ void	blit(t_image *img, t_renderer *r)
 	i = 0;
 	while (i < r->pixels)
 	{
-		color = \
-((0xFF << 24) | \
-((uint32_t)(ft_clamp01(r->buffer[i].b) * 255.0f + 0.5f) << 16) | \
-((uint32_t)(ft_clamp01(r->buffer[i].g) * 255.0f + 0.5f) << 8) | \
-((uint32_t)(ft_clamp01(r->buffer[i].r) * 255.0f + 0.5f)));
+		color =
+			((uint32_t)(0xFF << 24) |
+			((uint32_t)(r->buffer[i].b * 255.0f + 0.5f) << 16) |
+			((uint32_t)(r->buffer[i].g * 255.0f + 0.5f) << 8) |
+			((uint32_t)(r->buffer[i].r * 255.0f + 0.5f)));
 		pixels[i] = color;
 		++i;
 	}

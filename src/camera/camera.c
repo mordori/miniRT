@@ -11,11 +11,13 @@ void	add_camera(t_context *ctx, char **params)
 	cam = &ctx->scene.cam;
 	cam->state = CAM_DEFAULT;
 	cam->transform.pos = (t_vec3){{0.0f, 0.0f, 0.0f}};
+	cam->pivot = (t_vec3){0};
 	cam->target.pos = (t_vec3){{0.0f, 0.0f, 0.0f}};
 	cam->yaw = 0.0f;
 	cam->pitch = 0.0f;
 	cam->fov = degrees_to_rad(60.0f);
 	cam->focal_length = 1.0f;
+	cam->distance = vec3_length(vec3_sub(cam->transform.pos, cam->pivot));
 }
 
 void	update_camera(t_context *ctx)

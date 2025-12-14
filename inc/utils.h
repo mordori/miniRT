@@ -34,7 +34,6 @@ t_vec3	get_point(t_ray *ray, float t);
 t_texture	load_texture(t_context *ctx, char *file);
 void	free_texture(t_texture *tex);
 void	resize_window(t_context *ctx);
-float	srgb_to_linear(float c);
 void	tex_to_linear(t_texture *texture);
 
 #endif
