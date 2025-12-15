@@ -3,7 +3,7 @@
 #include "rendering.h"
 #include "scene.h"
 
-static inline void	setup_mlx(t_context *ctx);
+static inline void	initialize(t_context *ctx);
 
 /**
  * @brief	Entry point to the program.
@@ -23,15 +23,14 @@ int	main(int argc, char *argv[])
 	file = argv[1];
 	validate_file_type(file);
 	ctx.fd = try_open(file, O_RDONLY, 0);
-	init_scene(&ctx);
-	setup_mlx(&ctx);
+	initialize(&ctx);
 	clean(&ctx);
 	return (EXIT_SUCCESS);
 }
 
-static inline void	setup_mlx(t_context *ctx)
+static inline void	initialize(t_context *ctx)
 {
-	mlx_set_setting(MLX_MAXIMIZED, true);
+	// mlx_set_setting(MLX_FULLSCREEN, true);
 	ctx->mlx = mlx_init(WIDTH, HEIGHT, "miniRT", true);
 	if (!ctx->mlx)
 		fatal_error(ctx, errors(ERR_MLXINIT), __FILE__, __LINE__);
@@ -43,6 +42,7 @@ static inline void	setup_mlx(t_context *ctx)
 	mlx_mouse_hook(ctx->mlx, mouse_hook, ctx);
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
+	init_scene(ctx);
 	resize_window(ctx);
 	if (\
 mlx_loop_hook(ctx->mlx, loop_hook, ctx) && \

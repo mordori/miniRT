@@ -16,7 +16,7 @@ void	resize_window(t_context *ctx)
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
 	*r->buffer = (t_vec3){0};
 	update_camera(ctx);
+	atomic_store(&r->resize_pending, false);
 	if (r->threads_init == r->threads_amount)
 		start_render(r);
-	atomic_store(&r->resize_pending, false);
 }

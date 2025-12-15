@@ -8,9 +8,9 @@ bool	init_renderer(t_context *ctx)
 	t_renderer	*r;
 
 	r = &ctx->renderer;
-	r->threads_amount = sysconf(_SC_NPROCESSORS_ONLN);
-	if (r->threads_amount == ERROR)
-		r->threads_amount = THREADS_DFL;
+	// r->threads_amount = sysconf(_SC_NPROCESSORS_ONLN);
+	// if (r->threads_amount == ERROR)
+		r->threads_amount = 16;
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->threads)
 		fatal_error(ctx, errors(ERR_RENINIT), __FILE__, __LINE__);
@@ -18,7 +18,10 @@ bool	init_renderer(t_context *ctx)
 	while (r->threads_init < r->threads_amount)
 	{
 		if (pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
+		{
+			atomic_store(&r->active, false);
 			break ;
+		}
 		++r->threads_init;
 	}
 	return (r->threads_init == r->threads_amount);
@@ -36,12 +39,16 @@ static inline void	*render_routine(void *arg)
 
 	ctx = (t_context *)arg;
 	r = &ctx->renderer;
+	atomic_fetch_add(&r->threads_active, 1);
+	while (atomic_load(&r->active) && \
+atomic_load(&r->threads_active) != r->threads_amount)
+		usleep(2000);
 	while (atomic_load(&r->active))
 	{
 		tile_id = atomic_fetch_add(&r->tile_index, 1);
 		if (atomic_load(&r->resize_pending) || tile_id >= r->tiles_total)
 		{
-			usleep(2000);
+			usleep(1000);
 			continue ;
 		}
 		start.x = (tile_id % r->tiles.x) * TILE_SIZE;

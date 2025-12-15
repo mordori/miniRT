@@ -19,7 +19,7 @@
 # define SENS_ORBIT		0.0025f
 # define SENS_ZOOM		0.0018f
 # define SENS_PAN		0.0006f
-# define TILE_SIZE		64
+# define TILE_SIZE		32
 # define INV_255F		0.003921568627451f
 
 # ifndef M_1_2PI
@@ -252,8 +252,9 @@ struct s_renderer
 	uint8_t				padding_1[60];		// 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;
+	_Atomic long		threads_active;
+	_Atomic long		threads_amount;
 	long				threads_init;
-	long				threads_amount;
 	t_int2				tiles;
 	uint32_t			width;
 	uint32_t			height;

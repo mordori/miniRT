@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/12 01:23:11 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/15 15:14:16 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME		:=libft.a
 CONF		:=.config
 BUILD_TYPE	?=RELEASE
 
+AR			:=gcc-ar
 CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt -flto
@@ -59,7 +60,7 @@ config:
 	@$(call check_config,$(BUILD_TYPE))
 
 $(NAME): $(CONF) $(OBJS)
-	@ar -rcs $@ $(OBJS)
+	@$(AR) -rcs $@ $(OBJS)
 	@$(call output)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF)
