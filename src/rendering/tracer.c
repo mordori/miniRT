@@ -59,7 +59,7 @@ static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 	uint32_t	i;
 
 	if (!tex)
-		return ((t_vec4){{0.2f, 0.5f, 0.0f, 1.0f}});
+		return ((t_vec4){{1.0f, 0.0f, 0.0f, 1.0f}});
 	phi = atan2f(ray->dir.z, ray->dir.x);
 	theta = acosf(ray->dir.y);
 	uv.u = (phi + M_PI) * M_1_2PI;

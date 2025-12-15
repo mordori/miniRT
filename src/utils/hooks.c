@@ -58,9 +58,14 @@ void	resize_hook(int width, int height, void *param)
 void	loop_hook(void *param)
 {
 	t_context	*ctx;
+	t_renderer	*r;
 
 	ctx = (t_context *)param;
-	if (process_input(ctx))
-		start_render(&ctx->renderer);
-	blit(ctx->img, &ctx->renderer);
+	r = &ctx->renderer;
+	if (!atomic_load(&r->resize_pending))
+	{
+		if (process_input(ctx))
+			start_render(r);
+		blit(ctx->img, r);
+	}
 }

@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/12 23:15:52 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/15 15:21:17 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
 CC			:=cc
-WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
+# WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
+WFLAGS		:=
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math -flto
@@ -105,8 +106,9 @@ $(MLX42):
 	@make -j4 -C $(DIR_MLX)build > /dev/null
 	@echo "$(YELLOW) [✔] mlx42.a created$(COLOR)"
 
-$(NAME): $(CONF) $(LIBFT) $(MLX42) $(OBJS) $(ASS)
-	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) $(MLX42) $(LDFLAGS)
+$(NAME): $(CONF) $(LIBFT) $(MLX42) $(OBJS)
+# CHANGE THIS!
+	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(DIR_LIBFT)/obj/*.o $(MLX42) $(LDFLAGS)
 	@$(call output)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT) $(MLX42)
