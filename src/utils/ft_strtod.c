@@ -1,7 +1,7 @@
 #include "libft_utils.h"
 #include "libft_string.h"
 
-static float	skip_whitespace_and_sign(const char **str)
+static double	skip_whitespace_and_sign(const char **str)
 {
 	while (ft_isspace(**str))
 		(*str)++;
@@ -10,55 +10,57 @@ static float	skip_whitespace_and_sign(const char **str)
 		if (**str == '-')
 		{
 			(*str)++;
-			return (-1.0f);
+			return (-1.0);
 		}
 		(*str)++;
 	}
-	return (1.0f);
+	return (1.0);
 }
 
-static float	parse_integer_part(const char **str)
+static double	parse_integer_part(const char **str)
 {
-	float	result;
+	double	result;
 
-	result = 0.0f;
+	result = 0.0;
 	while (ft_isdigit(**str))
-		result = result * 10.0f + (*(*str)++ - 48);
+		result = result * 10.0 + (*(*str)++ - 48);
 	return (result);
 }
 
-static float	parse_fraction(const char **str)
+static double	parse_fraction(const char **str)
 {
-	float	fraction;
+	double	fraction;
 	int		divisor;
 
-	fraction = 0.0f;
+	fraction = 0.0;
 	divisor = 1;
 	(*str)++;
 	while (ft_isdigit(**str))
 	{
-		fraction = fraction * 10.0f + (**str - 48);
+		fraction = fraction * 10.0 + (**str - 48);
 		divisor *= 10;
 		(*str)++;
 	}
 	return (fraction / divisor);
 }
 
+// Sets the end pointer to the appropriate position in the string.
+// If no valid conversion was performed, it points to the start of the string.
 static void	set_end_pointer(const char *start, const char *current, char **endptr)
 {
 	if (!endptr)
-		return ;
+	return ;
 	if (current == start || (current == start + 1
-			&& (*start == '-' || *start == '+')))
+		&& (*start == '-' || *start == '+')))
 		*endptr = (char *)start;
 	else
 		*endptr = (char *)current;
 }
 
-float	ft_atof(const char *str, char **endptr)
+double	ft_strtod(const char *str, char **endptr)
 {
-	float		result;
-	float		sign;
+	double		result;
+	double		sign;
 	const char	*start;
 
 	start = str;

@@ -1,16 +1,28 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-#include "defines.h"
+# include "defines.h"
+
+typedef enum e_parse_error
+{
+	PARSE_OK = 0,           /* Successfully parsed                          */
+	PARSE_ERR_EMPTY,        /* Empty or whitespace-only line (skip it)      */
+	PARSE_ERR_UNKNOWN_ID,   /* Unknown element identifier                   */
+	PARSE_ERR_MISSING_ARGS, /* Not enough arguments for element             */
+	PARSE_ERR_INVALID_NUM,  /* Could not parse number                       */
+	PARSE_ERR_RANGE,        /* Value out of valid range                     */
+	PARSE_ERR_DUPLICATE,    /* Duplicate unique element (A, C, or L)        */
+	PARSE_ERR_MALLOC        /* Memory allocation failed                     */
+}	t_parse_error;
 
 typedef struct s_parser
 {
-    int line; // current line number
+    int line_num; // current line number
     bool has_light;
     bool has_ambient;
     bool has_camera;
 } t_parser;
 
-
+bool parse_scene(t_context *ctx, int fd);
 
 #endif
