@@ -20,10 +20,6 @@ void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	t_context	*ctx;
 
 	ctx = (t_context *)param;
-	if (atomic_load(&ctx->renderer.resize_pending) &&
-		button == MLX_MOUSE_BUTTON_LEFT &&
-		action == MLX_RELEASE)
-		resize_window(ctx);
 	(void)ctx;
 	(void)button;
 	(void)action;
@@ -50,6 +46,7 @@ void	resize_hook(int width, int height, void *param)
 		return ;
 	r = &ctx->renderer;
 	atomic_store(&r->resize_pending, true);
+	ctx->resize_time = time_now();
 	r->width = width;
 	r->height = height;
 	r->pixels = width * height;
@@ -68,4 +65,6 @@ void	loop_hook(void *param)
 			start_render(r);
 		blit(ctx->img, r);
 	}
+	else if (resize_timer(ctx))
+		resize_window(ctx);
 }

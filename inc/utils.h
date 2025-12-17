@@ -7,6 +7,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/time.h>
 
 # include "defines.h"
 
@@ -35,5 +36,7 @@ t_texture	load_texture(t_context *ctx, char *file);
 void	free_texture(t_texture *tex);
 void	resize_window(t_context *ctx);
 void	tex_to_linear(t_texture *texture);
+bool	resize_timer(t_context *ctx);
+uint32_t	time_now(void);
 
 #endif

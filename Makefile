@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/15 15:21:17 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/17 05:11:03 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,7 @@ CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
 CC			:=cc
-# WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
-WFLAGS		:=
+WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math -flto
@@ -32,7 +31,6 @@ DIR_OBJ		:=obj/
 DIR_DEP		:=dep/
 DIR_UTILS	:=utils/
 
-DIR_LIBFT	:=$(DIR_LIB)libft/
 DIR_MLX		:=$(DIR_LIB)MLX42/
 
 DIR_CAM		:=camera/
@@ -44,16 +42,15 @@ DIR_OBJECTS	:=objects/
 DIR_RENDER	:=rendering/
 DIR_SCENE	:=scene/
 DIR_UTILS	:=utils/
-
-LIBFT		:=$(DIR_LIBFT)libft.a
+DIR_LIBFT	:=libft/
 
 URL_MLX		:=https://github.com/codam-coding-college/MLX42.git
 MLX42		:=$(DIR_MLX)build/libmlx42.a
 
 INCS		:=$(addprefix -I, \
 				$(DIR_MLX)include/MLX42 \
-				$(DIR_LIBFT)$(DIR_INC) \
-				$(DIR_INC))
+				$(DIR_INC) \
+				$(DIR_INC)$(DIR_LIBFT))
 
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
@@ -76,6 +73,24 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c rays.c bounds.c \
 				textures.c renderer.c)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
+			ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
+			ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
+			ft_calloc.c ft_isdigit.c ft_memcmp.c ft_putchar_fd.c \
+			ft_isalnum.c ft_isprint.c ft_memcpy.c ft_putendl_fd.c \
+			ft_strdup.c ft_strlcpy.c ft_strnstr.c ft_tolower.c \
+			ft_putstr_fd.c ft_striteri.c ft_strlen.c ft_strrchr.c \
+			ft_split.c ft_strjoin.c ft_strmapi.c ft_strtrim.c \
+			ft_strchr.c ft_strlcat.c ft_strncmp.c ft_substr.c \
+			ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c \
+			ft_lstclear_bonus.c ft_lstdelone_bonus.c \
+			ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c \
+			ft_lstnew_bonus.c ft_lstsize_bonus.c ft_printf.c ft_uitoa.c \
+			ft_countdigits.c ft_strchrdup.c ft_get_next_line.c ft_vector.c \
+			ft_vector_utils.c ft_math.c ft_matrix.c ft_matrix_transforms.c \
+			ft_vec4.c ft_vec3.c ft_vec3_2.c ft_matrix_utils.c \
+			ft_vec2.c ft_vec4_2.c ft_vec2i.c ft_vec2i_2.c ft_math_2.c \
+			ft_colors.c ft_vector_utils_2.c ft_vec3_3.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
@@ -85,16 +100,10 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
-all: config $(LIBFT) $(MLX42) $(NAME)
+all: config $(MLX42) $(NAME)
 
 config:
 	@$(call check_config,$(BUILD_TYPE))
-
-$(LIBFT): $(CONF)
-	@if [ ! -e "$(LIBFT)" ] || [ "$$(head -n 1 $(DIR_LIBFT)$(CONF))" != "$(BUILD_TYPE)" ]; then \
-		echo "$(GREEN) [+]$(COLOR) compiling libft.a"; \
-		make -C $(DIR_LIBFT) BUILD_TYPE="$(BUILD_TYPE)" CFLAGS="$(CFLAGS)"; \
-	fi
 
 $(MLX42):
 	@if [ ! -d "$(DIR_MLX)" ]; then \
@@ -106,26 +115,20 @@ $(MLX42):
 	@make -j4 -C $(DIR_MLX)build > /dev/null
 	@echo "$(YELLOW) [✔] mlx42.a created$(COLOR)"
 
-$(NAME): $(CONF) $(LIBFT) $(MLX42) $(OBJS)
-# CHANGE THIS!
-	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(DIR_LIBFT)/obj/*.o $(MLX42) $(LDFLAGS)
+$(NAME): $(CONF) $(MLX42) $(OBJS)
+	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(MLX42) $(LDFLAGS)
 	@$(call output)
 
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT) $(MLX42)
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(MLX42)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
 	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 	@echo "$(GREEN) [+]$(COLOR) compiling $@"
 
 clean:
-	@make -C $(DIR_LIBFT) clean
 	@$(call rm_dir,$(DIR_OBJ))
-# Remove before submission
-	@$(call rm_file,$(CONF))
-	@$(call rm_file,$(NAME))
 
 fclean: clean
-	@make -C $(DIR_LIBFT) fclean
-	@$(call rm_dir,$(DIR_MLX))
+	@$(call rm_dir,$(DIR_LIB))
 	@$(call rm_dir,$(DIR_DEP))
 	@$(call rm_file,$(CONF))
 	@$(call rm_file,$(NAME))
@@ -167,6 +170,7 @@ define check_config
 endef
 
 define output
+	echo "$(YELLOW) [✔] $(NAME) created$(COLOR)"
 	echo "$(GREEN) [/] usage: $(YELLOW)./$(NAME) 'assets/scenes/scene_name.rt$(COLOR)'"; \
 	if [ "$(BUILD_TYPE)" = "DEBUG" ]; then \
 		echo "$(YELLOW) [DEBUG]$(COLOR)"; \
