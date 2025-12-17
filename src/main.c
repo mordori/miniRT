@@ -30,7 +30,6 @@ int	main(int argc, char *argv[])
 
 static inline void	initialize(t_context *ctx)
 {
-	// mlx_set_setting(MLX_FULLSCREEN, true);
 	ctx->mlx = mlx_init(WIDTH, HEIGHT, "miniRT", true);
 	if (!ctx->mlx)
 		fatal_error(ctx, errors(ERR_MLXINIT), __FILE__, __LINE__);

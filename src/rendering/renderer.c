@@ -8,9 +8,9 @@ bool	init_renderer(t_context *ctx)
 	t_renderer	*r;
 
 	r = &ctx->renderer;
-	// r->threads_amount = sysconf(_SC_NPROCESSORS_ONLN);
-	// if (r->threads_amount == ERROR)
-		r->threads_amount = 16;
+	r->threads_amount = sysconf(_SC_NPROCESSORS_ONLN);
+	if (r->threads_amount == ERROR)
+		r->threads_amount = 4;
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->threads)
 		fatal_error(ctx, errors(ERR_RENINIT), __FILE__, __LINE__);

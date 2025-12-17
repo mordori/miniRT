@@ -293,6 +293,7 @@ struct s_context
 	t_editor		editor;
 	mlx_t			*mlx;
 	t_image			*img;
+	uint32_t		resize_time;
 	int				fd;
 };
 
