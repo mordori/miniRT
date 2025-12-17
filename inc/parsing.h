@@ -24,5 +24,9 @@ typedef struct s_parser
 } t_parser;
 
 bool parse_scene(t_context *ctx, int fd);
+bool parse_float(char *str, float *out);
+bool parse_color(char *str, t_color *color);
+int count_tokens(char **tokens);
+void free_tokens(char **tokens);
 
 #endif
