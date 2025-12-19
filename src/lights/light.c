@@ -28,7 +28,7 @@ static inline t_light	init_light(char **params)
 		light.type = LIGHT_POINT;
 		light.intensity = 1.4f;
 		light.transform.pos = (t_vec3){{4.5f, 3.0f, 3.0f}};
-		light.color = (t_vec4){{0.5f, 0.2f, 6.5f, 1.0f}};
+		light.color = (t_vec4){{0.0f, 0.2f, 6.5f, 1.0f}};
 	// -----------------------
 
 	return (light);
@@ -54,5 +54,6 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit)
 			continue ;
 		color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(light->color.rgb, hit->color.rgb), light->intensity * ndotl));
 	}
+	color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(scene->ambient_light.color.rgb, hit->color.rgb), scene->ambient_light.intensity));
 	return (color);
 }

@@ -20,8 +20,8 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 }
 
 // If the direction axis is nearing zero, we explicitly set it to +-FLT_MAX.
-// -ffast-math optimization doesn't support infinity and float division by 0.
-// This also avoids nan in the case of (0-0) / 0.
+// -ffast-math doesn't support inf and float division by 0.
+// This also avoids nan in the case of 0/0.
 static inline t_ray	new_ray(const t_viewport *vp, t_vec3 origin, uint32_t x, uint32_t y)
 {
 	t_ray	ray;
@@ -68,6 +68,9 @@ static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 	xy.y = (uint32_t)(uv.v * (tex->height - 1));
 	i = (xy.y * tex->width + xy.x) * 4;
 	return ((t_vec4){{
-		tex->pixels[i], tex->pixels[i + 1], tex->pixels[i + 2], 1.0f
+		tex->pixels[i],
+		tex->pixels[i + 1],
+		tex->pixels[i + 2],
+		1.0f
 	}});
 }
