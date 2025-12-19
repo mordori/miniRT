@@ -21,6 +21,18 @@ void	add_object(t_context *ctx, char **params)
 	// -----------------------
 
 	vector_try_add(ctx, &ctx->scene.objs, obj);
+
+	obj = malloc(sizeof(*obj));
+	if (!obj)
+		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
+	*obj = init_object(params);
+
+	// For testing rendering
+	// -----------------------
+		obj->type = OBJ_SPHERE;
+	// -----------------------
+
+	vector_try_add(ctx, &ctx->scene.objs, obj);
 }
 
 static inline t_object	init_object(char **params)
@@ -36,6 +48,7 @@ static inline t_object	init_object(char **params)
 
 static inline t_transform	set_transform(char **params)
 {
+	static int i = 0;
 	t_transform	transform;
 
 	transform.pos =  vec3_n(0.0f);
@@ -45,9 +58,9 @@ static inline t_transform	set_transform(char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		transform.pos = (t_vec3){{0.0f, 0.0f, 5.0f}};
+		transform.pos = (t_vec3){{i * -2.2f, 0.0f, 5.0f}};
 	// -----------------------
-
+	++i;
 	return (transform);
 }
 

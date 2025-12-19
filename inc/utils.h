@@ -38,5 +38,6 @@ void	resize_window(t_context *ctx);
 void	tex_to_linear(t_texture *texture);
 bool	resize_timer(t_context *ctx);
 uint32_t	time_now(void);
+void	clean_bvh(t_bvh_node *node);
 
 #endif

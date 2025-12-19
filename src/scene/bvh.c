@@ -80,16 +80,25 @@ bool	hit_bvh(t_bvh_node *node, const t_ray *ray, t_hit *hit)
 	}
 }
 
-void	clean_bvh(t_bvh_node *node)
+bool	hit_bvh_shadow(t_bvh_node *node, const t_ray *ray, t_hit *hit)
 {
-	if (!node)
-		return ;
-	if (node->obj)
+	bool	left;
+	bool	right;
+
+	if (!hit_aabb(&node->aabb, ray, hit->t))
+		return (false);
+	if (!node->left && !node->right)
+		return (hit_object(node->obj, ray, hit));
+	if (ray->sign[node->axis])
 	{
-		free(node);
-		return ;
+		right = hit_bvh(node->right, ray, hit);
+		left = hit_bvh(node->left, ray, hit);
+		return (right || left);
 	}
-	clean_bvh(node->left);
-	clean_bvh(node->right);
-	free(node);
+	else
+	{
+		left = hit_bvh(node->left, ray, hit);
+		right = hit_bvh(node->right, ray, hit);
+		return (left || right);
+	}
 }

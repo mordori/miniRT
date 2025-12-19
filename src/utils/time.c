@@ -5,7 +5,7 @@ bool	resize_timer(t_context *ctx)
 	uint32_t	time;
 
 	time = time_now() - ctx->resize_time;
-	return (time > 200);
+	return (time > 100);
 }
 
 /**
