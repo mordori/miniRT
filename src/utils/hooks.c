@@ -65,6 +65,6 @@ void	loop_hook(void *param)
 			start_render(r);
 		blit(ctx->img, r);
 	}
-	else if (resize_timer(ctx))
+	else if (ctx->resize_time != 0 && resize_timer(ctx))
 		resize_window(ctx);
 }

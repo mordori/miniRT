@@ -25,6 +25,8 @@ void	init_scene(t_context *ctx)
 		add_light(ctx, params);
 		add_object(ctx, params);
 		init_skydome(ctx, "assets/textures/sky.png");
+		ctx->scene.ambient_light.color = (t_vec4){{1.0f, 0.0f, 0.0f, 1.0f}};
+		ctx->scene.ambient_light.intensity = 0.1f;
 	// -----------------------
 
 	// try_gnl(ctx, ctx->fd, &line);
@@ -40,16 +42,6 @@ void	init_scene(t_context *ctx)
 	ctx->fd = ERROR;
 	init_bvh(ctx);
 }
-
-// static inline char	**split_line(t_context *ctx, char *line)
-// {
-// 	char	**result;
-
-// 	(void)ctx;
-// 	(void)line;
-// 	result = NULL;
-// 	return (result);
-// }
 
 // static inline void	add_entity(t_context *ctx, char **params)
 // {

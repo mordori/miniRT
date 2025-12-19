@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/16 00:06:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/17 05:31:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@
 # endif
 
 # ifndef M_INF
-// FLT_MAX interpret as infinity when using --ffast-math flag
+// FLT_MAX interpret as infinity when using --ffast-math
 #  define M_INF			FLT_MAX
 # endif
 

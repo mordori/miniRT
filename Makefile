@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/30 19:17:42 by myli-pen          #+#    #+#              #
-#    Updated: 2025/12/17 05:11:03 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/12/19 02:06:37 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c skydome.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c rays.c bounds.c \
-				textures.c renderer.c)
+				textures.c renderer.c time.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 			ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 			ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
