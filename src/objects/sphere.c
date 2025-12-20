@@ -7,15 +7,18 @@ t_shape	init_sphere(const t_object *obj, char **params)
 	t_sphere	sphere;
 	t_shape		shape;
 
+	static int i;
+
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		sphere.radius = 1.0f;
+		sphere.radius = 0.2f + i * 1.0f;
 	// -----------------------
 
 	sphere.radius_squared = sphere.radius * sphere.radius;
 	sphere.center = obj->transform.pos;
 	shape.sphere = sphere;
+	i++;
 	return (shape);
 }
 

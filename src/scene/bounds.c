@@ -1,13 +1,13 @@
 #include "scene.h"
 
+// TODO: verify
 t_aabb	plane_bounds(const t_object *obj)
 {
 	t_aabb	aabb;
-	t_plane	plane;
 
-	plane = obj->shape.plane;
-	aabb.min = vec3_sub(obj->transform.pos, plane.dimensions);
-	aabb.max = vec3_add(obj->transform.pos, plane.dimensions);
+	(void)obj;
+	aabb.min = (t_vec3){{-1000, -1000, -1000}};
+	aabb.max = (t_vec3){{1000, 1000, 1000}};
 	return (aabb);
 }
 
@@ -24,16 +24,16 @@ t_aabb	sphere_bounds(const t_object *obj)
 	return (aabb);
 }
 
+// TODO: rotation
 t_aabb	cylinder_bounds(const t_object *obj)
 {
 	t_aabb		aabb;
 	t_cylinder	cylinder;
-	t_vec3		r;
+	t_vec3		half;
 
 	cylinder = obj->shape.cylinder;
-	r = (t_vec3){{cylinder.radius, 0.0f, cylinder.radius}};
-	aabb.min = vec3_sub(obj->transform.pos, r);
-	r = (t_vec3){{cylinder.radius, cylinder.height, cylinder.radius}};
-	aabb.max = vec3_add(obj->transform.pos, r);
+	half = (t_vec3){{cylinder.radius, cylinder.height / 2.0f, cylinder.radius}};
+	aabb.min = vec3_sub(obj->transform.pos, half);
+	aabb.max = vec3_add(obj->transform.pos, half);
 	return (aabb);
 }

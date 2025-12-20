@@ -25,8 +25,8 @@ void	init_scene(t_context *ctx)
 		add_light(ctx, params);
 		add_object(ctx, params);
 		init_skydome(ctx, "assets/textures/sky.png");
-		ctx->scene.ambient_light.color = (t_vec4){{1.0f, 0.0f, 0.0f, 1.0f}};
-		ctx->scene.ambient_light.intensity = 0.1f;
+		ctx->scene.ambient_light.color = (t_vec4){{1.0f, 1.0f, 1.0f, 1.0f}};
+		ctx->scene.ambient_light.intensity = 0.12f;
 	// -----------------------
 
 	// try_gnl(ctx, ctx->fd, &line);
