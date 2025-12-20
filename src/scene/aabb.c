@@ -1,7 +1,6 @@
 #include "scene.h"
 #include "libft_list.h"
 
-static inline t_aabb	get_object_bounds(const t_object *obj);
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b);
 
 t_aabb	get_volume_bounds(t_object **objs, size_t n)
@@ -23,7 +22,7 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n)
 	return (result);
 }
 
-static inline t_aabb	get_object_bounds(const t_object *obj)
+t_aabb	get_object_bounds(const t_object *obj)
 {
 	static const t_get_shape_bounds	functions[] =
 	{

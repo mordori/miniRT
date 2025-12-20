@@ -44,17 +44,17 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit)
 	// float		attenuation;
 
 	color = (t_vec4){0};
+	color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(scene->ambient_light.color.rgb, hit->color.rgb), scene->ambient_light.intensity));
 	lights = (t_light **)scene->lights.items;
 	i = 0;
 	while (i < scene->lights.total)
 	{
 		light = lights[i++];
 		ndotl = vec3_dot(hit->normal, vec3_normalize(vec3_sub(light->transform.pos, hit->point)));
-		if (ndotl <= 0.0f || in_shadow(scene, hit, light))
+		if (ndotl <= 0.0f || hit_shadow(scene, hit, light))
 			continue ;
 		// attenuation + beers law
 		color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(light->color.rgb, hit->color.rgb), light->intensity * ndotl));
 	}
-	color.rgb = vec3_add(color.rgb, vec3_scale(vec3_mul(scene->ambient_light.color.rgb, hit->color.rgb), scene->ambient_light.intensity));
 	return (color);
 }

@@ -2,15 +2,14 @@
 #include "rendering.h"
 #include "scene.h"
 
-bool	in_shadow(const t_scene *scene, const t_hit *surf, t_light *light)
+bool	hit_shadow(const t_scene *scene, const t_hit *hit, t_light *light)
 {
-	t_ray	ray;
-	t_hit	hit;
+	t_ray	ray_shadow;
+	t_vec3	origin;
+	float	dist;
 
-	ray = new_ray(surf->point, light->transform.pos);
-	hit = (t_hit){0};
-	hit.t = vec3_length(vec3_sub(light->transform.pos, surf->point));
-	if (hit_bvh(scene->bvh_root, &ray, &hit))
-		return (true);
-	return (false);
+	origin = vec3_add(hit->point, vec3_scale(hit->normal, 1e-4f));
+	ray_shadow = new_ray(origin, light->transform.pos);
+	dist = vec3_length(vec3_sub(light->transform.pos, origin));
+	return (hit_bvh_shadow(scene->bvh_root, &ray_shadow, dist));
 }

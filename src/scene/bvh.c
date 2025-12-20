@@ -29,6 +29,7 @@ t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
 	if (n == 1)
 	{
 		node->obj = (t_object *)objs[0];
+		node->aabb = get_object_bounds(node->obj);
 		return (node);
 	}
 	node->aabb = get_volume_bounds((t_object **)objs, n);
@@ -59,46 +60,51 @@ static inline void	sort_objects(t_bvh_node *node, const t_object **objs, size_t 
 
 bool	hit_bvh(t_bvh_node *node, const t_ray *ray, t_hit *hit)
 {
+	t_hit	temp;
 	bool	left;
 	bool	right;
+	bool	result;
 
 	if (!hit_aabb(&node->aabb, ray, hit->t))
 		return (false);
 	if (!node->left && !node->right)
-		return (hit_object(node->obj, ray, hit));
+	{
+		temp.t = hit->t;
+		result = hit_object(node->obj, ray, &temp);
+		if (result)
+			*hit = temp;
+		return (result);
+	}
 	if (ray->sign[node->axis])
 	{
 		right = hit_bvh(node->right, ray, hit);
 		left = hit_bvh(node->left, ray, hit);
 		return (right || left);
 	}
-	else
-	{
-		left = hit_bvh(node->left, ray, hit);
-		right = hit_bvh(node->right, ray, hit);
-		return (left || right);
-	}
+	left = hit_bvh(node->left, ray, hit);
+	right = hit_bvh(node->right, ray, hit);
+	return (left || right);
 }
 
-bool	hit_bvh_shadow(t_bvh_node *node, const t_ray *ray, t_hit *hit)
+bool	hit_bvh_shadow(t_bvh_node *node, const t_ray *ray, float dist)
 {
-	bool	left;
-	bool	right;
+	t_hit	temp;
 
-	if (!hit_aabb(&node->aabb, ray, hit->t))
+	if (!hit_aabb(&node->aabb, ray, dist))
 		return (false);
 	if (!node->left && !node->right)
-		return (hit_object(node->obj, ray, hit));
+	{
+		temp.t = dist;
+		return (hit_object(node->obj, ray, &temp));
+	}
 	if (ray->sign[node->axis])
 	{
-		right = hit_bvh(node->right, ray, hit);
-		left = hit_bvh(node->left, ray, hit);
-		return (right || left);
+		return (hit_bvh_shadow(node->right, ray, dist) ||
+				hit_bvh_shadow(node->left, ray, dist));
 	}
 	else
 	{
-		left = hit_bvh(node->left, ray, hit);
-		right = hit_bvh(node->right, ray, hit);
-		return (left || right);
+		return (hit_bvh_shadow(node->left, ray, dist) ||
+				hit_bvh_shadow(node->right, ray, dist));
 	}
 }
