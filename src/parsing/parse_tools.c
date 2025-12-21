@@ -12,7 +12,7 @@ bool parse_float(char *str, float *out)
 
     if (!str || !out)
         return (false);
-
+    end = NULL;
     while (ft_isspace(*str))
         str++;
     if (*str == '\0')
@@ -50,6 +50,7 @@ bool parse_color(char *str, t_color *color)
             && parse_float(components[1], &g)
             && parse_float(components[2], &b))
         {
+            // normalize to 0-1 range
             if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
             {
                 color->r = r / 255.0f;
@@ -59,6 +60,28 @@ bool parse_color(char *str, t_color *color)
                 ret = true;
             }
         }
+    }
+    free_tokens(components);
+    return (ret);
+}
+
+// Parse a vec3 from a string in the format "x,y,z"
+bool parse_vec3(char *str, t_vec3 *vec)
+{
+    char **components;
+    bool ret;
+
+    ret = false;
+    if (!str || !vec)
+        return (ret);
+    components = ft_split(str, ',');
+    if (!components)
+        return (ret);
+    if (count_tokens(components) == 3)
+    {
+        ret = parse_float(components[0], &vec->x)
+            && parse_float(components[1], &vec->y)
+            && parse_float(components[2], &vec->z);
     }
     free_tokens(components);
     return (ret);
