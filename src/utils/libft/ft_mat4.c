@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_matrix.c                                        :+:      :+:    :+:   */
+/*   ft_mat4.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 22:44:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 21:18:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/22 00:16:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,27 @@ t_mat4	mat4_identity(void)
 	matrix.m[2][2] = 1.0f;
 	matrix.m[3][3] = 1.0f;
 	return (matrix);
+}
+
+t_mat4	mat4_transpose(t_mat4 m)
+{
+	t_mat4	result;
+	int		i;
+	int		j;
+
+	result = (t_mat4){0};
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			result.m[i][j] = m.m[j][i];
+			++j;
+		}
+		++i;
+	}
+	return (result);
 }
 
 /**
@@ -87,19 +108,4 @@ t_vec4	mat4_mul_vec4(t_mat4 m, t_vec4 v)
 	result.w = v.x * m.m[3][0] + v.y * m.m[3][1];
 	result.w += v.z * m.m[3][2] + v.w * m.m[3][3];
 	return (result);
-}
-
-/**
- * Multiplies a 4x4 matrix with a temporary vec4. Discards the last element.
- *
- * @param m 4x4 matrix.
- * @param v Vec3.
- * @return Result of the matrix applied to a vec3.
- */
-t_vec3	mat4_mul_vec3(t_mat4 model, t_vec3 v)
-{
-	t_vec4	vec;
-
-	vec = mat4_mul_vec4(model, vec4_3(v, 0.0f));
-	return (vec.xyz);
 }

@@ -4,7 +4,7 @@
 // static inline t_light	init_light(char **params);
 static inline t_vec3	calculate_light(const t_light *light, t_vec4 color, float ndotl, float dist);
 
-// void	add_light(t_context *ctx, char **params)
+// void	new_light(t_context *ctx, char **params)
 // {
 // 	t_light		light;
 
@@ -52,27 +52,30 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, fl
 		light = lights[idx++];
 		dir = vec3_sub(light->transform.pos, hit->point);
 		dist = vec3_length(dir);
-		if (dist < 1e-6f)
+		if (dist < M_EPSILON)
 			continue ;
 		ndotl = vec3_dot(hit->normal, vec3_scale(dir, 1.0f / dist));
 		if (ndotl <= 0.0f || hit_shadow(scene, hit, light, dist))
 			continue ;
-		color.rgb = vec3_add(color.rgb, calculate_light(light, hit->color, ndotl, dist));
+		color.rgb = vec3_add(color.rgb, add_light(light, hit->color, ndotl, dist));
 	}
 	return (color);
 }
 
-static inline t_vec3	calculate_light(const t_light *light, t_vec4 color, float ndotl, float dist)
+static inline t_vec3	add_light(const t_light *light, t_vec4 color, float ndotl, float dist)
 {
-	t_vec4		result;
-	float		factor;
+	// static const float	kc = 1.0f;
+	// static const float	kl = 0.09f;
+	// static const float	kq = 0.032f;
+	t_vec4				result;
+	float				factor;
 
 	// Bonus
 	factor = (light->intensity * ndotl) / (dist * dist);
 
 	// Mandatory
-	// factor = (light->intensity * ndotl / (1.0f + (0.9f * dist) + (0.032f * dist * dist)));
-
-	result.rgb = vec3_scale(vec3_mul(light->color.rgb, color.rgb), factor);
+	// factor = (light->intensity * ndotl / (kc + (kl * dist) + (kq * dist * dist)));
+	result.rgb = vec3_mul(light->color.rgb, color.rgb);
+	result.rgb = vec3_scale(result.rgb, factor);
 	return (result.rgb);
 }

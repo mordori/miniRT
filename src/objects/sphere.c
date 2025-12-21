@@ -26,7 +26,7 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	float		t;
 
 	sphere = shape->sphere;
-	if (sphere.radius < 1e-6f)
+	if (sphere.radius < M_EPSILON)
 		return (false);
 	t = solve_quadratic(&sphere, ray, hit->t);
 	if (t >= hit->t)
@@ -52,10 +52,10 @@ static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, fl
 		return (M_INF);
 	sqrt_d = sqrtf(d);
 	root = -half_b - sqrt_d;
-	if (root <= 1e-3f || root >= t_max)
+	if (root <= G_EPSILON || root >= t_max)
 	{
 		root = -half_b + sqrt_d;
-		if (root <= 1e-3f || root >= t_max)
+		if (root <= G_EPSILON || root >= t_max)
 			return (M_INF);
 	}
 	return (root);

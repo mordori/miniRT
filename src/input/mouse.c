@@ -1,15 +1,5 @@
 #include "input.h"
 
-/**
- * Wraps the mouse horizontally across the screen boundaries.
- *
- * If the mouse reaches the right or left edge of the window, it is
- * repositioned to the opposite side. The number of wraps is tracked internally.
- *
- * @param ctx Rendering context containing mlx context and render image.
- * @param pos Current mouse screen position.
- * @return The total horizontal displacement: wraps × (window width - 2)
- */
 int	wrap_mouse_x(const t_context *ctx, t_vec2i *pos)
 {
 	static int32_t	wraps_x = {0};
@@ -29,16 +19,6 @@ int	wrap_mouse_x(const t_context *ctx, t_vec2i *pos)
 	return (wraps_x * (ctx->img->width - 2));
 }
 
-/**
- * Wraps the mouse vertically across the screen boundaries.
- *
- * If the mouse reaches the top or bottom edge of the window, it is
- * repositioned to the opposite side. The number of wraps is tracked internally.
- *
- * @param ctx Rendering context containing mlx context and render image.
- * @param pos Current mouse screen position.
- * @return The total vertical displacement: wraps × (window height - 2).
- */
 int	wrap_mouse_y(const t_context *ctx, t_vec2i *pos)
 {
 	static int32_t	wraps_y = {0};
