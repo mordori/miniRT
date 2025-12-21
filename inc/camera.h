@@ -3,7 +3,7 @@
 
 # include "defines.h"
 
-void	add_camera(t_context *ctx, char **params);
+void	new_camera(t_context *ctx, char **params);
 void	update_camera(t_context *ctx);
 bool	control_camera(t_context *ctx);
 

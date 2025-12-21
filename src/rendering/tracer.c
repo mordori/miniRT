@@ -24,24 +24,21 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 	return (background_color(&scene->skydome, &ray));
 }
 
-// If the direction axis is nearing zero, we explicitly set it to +-FLT_MAX.
-// -ffast-math doesn't support inf and float division by 0.
-// This also avoids nan in the case of 0/0.
 t_ray	new_ray(t_vec3 origin, t_vec3 dest)
 {
 	t_ray		ray;
 
 	ray.origin = origin;
 	ray.dir = vec3_normalize(vec3_sub(dest, ray.origin));
-	if (fabsf(ray.dir.x) < 1e-6f)
+	if (fabsf(ray.dir.x) < M_EPSILON)
 		ray.inv_dir.x = copysignf(M_INF, ray.dir.x);
 	else
 		ray.inv_dir.x = 1.0f / ray.dir.x;
-	if (fabsf(ray.dir.y) < 1e-6f)
+	if (fabsf(ray.dir.y) < M_EPSILON)
 		ray.inv_dir.y = copysignf(M_INF, ray.dir.y);
 	else
 		ray.inv_dir.y = 1.0f / ray.dir.y;
-	if (fabsf(ray.dir.z) < 1e-6f)
+	if (fabsf(ray.dir.z) < M_EPSILON)
 		ray.inv_dir.z = copysignf(M_INF, ray.dir.z);
 	else
 		ray.inv_dir.z = 1.0f / ray.dir.z;

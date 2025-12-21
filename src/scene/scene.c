@@ -21,9 +21,9 @@ void	init_scene(t_context *ctx)
 	// -----------------------
 		(void)line;
 		params = NULL;
-		add_camera(ctx, params);
-		add_light(ctx, params);
-		add_object(ctx, params);
+		new_camera(ctx, params);
+		new_light(ctx, params);
+		new_object(ctx, params);
 		init_skydome(ctx, "assets/textures/sky.png");
 		ctx->scene.ambient_light.color = (t_vec4){{1.0f, 1.0f, 1.0f, 1.0f}};
 		ctx->scene.ambient_light.intensity = 0.12f;
@@ -47,9 +47,9 @@ void	init_scene(t_context *ctx)
 // {
 // 	static const t_add_entity	functions[] =
 // 	{
-// 		add_camera,
-// 		add_light,
-// 		add_object
+// 		new_camera,
+// 		new_light,
+// 		new_object
 // 	};
 
 // 	if (!params || !*params)

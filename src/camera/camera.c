@@ -3,7 +3,7 @@
 
 static inline void	update_viewport(const t_camera *cam, float img_width, float img_height);
 
-void	add_camera(t_context *ctx, char **params)
+void	new_camera(t_context *ctx, char **params)
 {
 	t_camera	*cam;
 

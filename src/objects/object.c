@@ -6,7 +6,7 @@ static inline t_object		init_object(char **params);
 static inline t_transform	set_transform(char **params);
 static inline t_shape		set_shape(const t_object *obj, char **params);
 
-void	add_object(t_context *ctx, char **params)
+void	new_object(t_context *ctx, char **params)
 {
 	t_object		*obj;
 

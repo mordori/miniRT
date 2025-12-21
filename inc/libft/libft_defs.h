@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/17 05:31:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/21 18:04:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,18 @@
 # endif
 
 # ifndef M_INF
-// FLT_MAX interpret as infinity when using --ffast-math
 #  define M_INF			FLT_MAX
+# endif
+
+# ifndef M_EPSILON
+#  define M_EPSILON		1e-6f
 # endif
 
 typedef struct s_list		t_list;
 typedef struct s_vec2i		t_vec2i;
 typedef struct s_vec2i		t_int2;
+typedef struct s_mat2		t_mat2;
+typedef struct s_mat3		t_mat3;
 typedef struct s_mat4		t_mat4;
 typedef struct s_quad		t_quad;
 typedef struct s_vertex		t_vertex;
