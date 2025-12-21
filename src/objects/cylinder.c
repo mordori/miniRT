@@ -2,8 +2,8 @@
 
 bool	hit_cylinder(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {
-	t_cylinder	cylinder;
-	float		t;
+	t_cylinder		cylinder;
+	float			t;
 
 	(void)t;
 	(void)cylinder;

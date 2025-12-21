@@ -84,8 +84,8 @@ static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_v
 
 static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
 {
-	float	speed;
-	t_vec2i	delta;
+	float		speed;
+	t_vec2i		delta;
 
 	if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 	{
@@ -103,8 +103,8 @@ static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_ve
 
 static inline void	pan(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos)
 {
-	float	speed;
-	t_vec2i	delta;
+	float		speed;
+	t_vec2i		delta;
 
 	if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
 	{

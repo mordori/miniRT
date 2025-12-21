@@ -10,17 +10,17 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 	const t_viewport	*vp;
 	t_ray				ray;
 	t_hit				hit;
-	t_vec3				dest;
+	t_vec3				pixel_loc;
 	t_vec3				offset;
 
 	vp = &scene->cam.viewport;
 	offset = vec3_add(vec3_scale(vp->d_u, x), vec3_scale(vp->d_v, y));
-	dest = vec3_add(vp->pixel_00_loc, offset);
-	ray = new_ray(scene->cam.transform.pos, dest);
+	pixel_loc = vec3_add(vp->pixel_00_loc, offset);
+	ray = new_ray(scene->cam.transform.pos, pixel_loc);
 	hit = (t_hit){0};
 	hit.t = M_INF;
 	if (hit_bvh(scene->bvh_root, &ray, &hit))
-		return (calculate_lighting(scene, &hit));
+		return (calculate_lighting(scene, &hit, (size_t)x, (float)y));
 	return (background_color(&scene->skydome, &ray));
 }
 
@@ -29,7 +29,7 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 // This also avoids nan in the case of 0/0.
 t_ray	new_ray(t_vec3 origin, t_vec3 dest)
 {
-	t_ray	ray;
+	t_ray		ray;
 
 	ray.origin = origin;
 	ray.dir = vec3_normalize(vec3_sub(dest, ray.origin));

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/11 22:13:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/21 05:32:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,9 @@ float	vec3_dot(t_vec3 a, t_vec3 b)
 
 t_vec3	vec3_div(t_vec3 v, float div)
 {
-	if (div < 1e-6f)
+	if (fabsf(div) < 1e-6f)
 		return (vec3_n(0.0f));
-	return ((t_vec3){{
-		v.x / div,
-		v.y / div,
-		v.z / div
-	}});
+	return (vec3_scale(v, 1.0f / div));
 }
 
 /**

@@ -42,7 +42,7 @@ t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
 
 static inline void	sort_objects(t_bvh_node *node, const t_object **objs, size_t n)
 {
-	t_vec3	size;
+	t_vec3		size;
 
 	size = vec3_sub(node->aabb.max, node->aabb.min);
 	node->axis = 0;
@@ -60,10 +60,10 @@ static inline void	sort_objects(t_bvh_node *node, const t_object **objs, size_t 
 
 bool	hit_bvh(t_bvh_node *node, const t_ray *ray, t_hit *hit)
 {
-	t_hit	temp;
-	bool	left;
-	bool	right;
-	bool	result;
+	t_hit		temp;
+	bool		left;
+	bool		right;
+	bool		result;
 
 	if (!hit_aabb(&node->aabb, ray, hit->t))
 		return (false);
@@ -88,7 +88,7 @@ bool	hit_bvh(t_bvh_node *node, const t_ray *ray, t_hit *hit)
 
 bool	hit_bvh_shadow(t_bvh_node *node, const t_ray *ray, float dist)
 {
-	t_hit	temp;
+	t_hit		temp;
 
 	if (!hit_aabb(&node->aabb, ray, dist))
 		return (false);

@@ -2,8 +2,8 @@
 
 t_material	set_material(char **params)
 {
-	t_material	mat;
-	static int i = 0;
+	t_material		mat;
+	static int		i = 0;
 
 	// For testing rendering
 	// -----------------------

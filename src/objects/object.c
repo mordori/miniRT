@@ -8,7 +8,7 @@ static inline t_shape		set_shape(const t_object *obj, char **params);
 
 void	add_object(t_context *ctx, char **params)
 {
-	t_object	*obj;
+	t_object		*obj;
 
 	obj = malloc(sizeof(*obj));
 	if (!obj)
@@ -25,7 +25,7 @@ void	add_object(t_context *ctx, char **params)
 
 static inline t_object	init_object(char **params)
 {
-	t_object	obj;
+	t_object		obj;
 
 	obj = (t_object){0};
 	obj.transform = set_transform(params);
@@ -42,8 +42,8 @@ static inline t_object	init_object(char **params)
 
 static inline t_transform	set_transform(char **params)
 {
-	static int i = 0;
-	t_transform	transform;
+	static int		i = 0;
+	t_transform		transform;
 
 	transform.pos =  vec3_n(0.0f);
 	transform.rot =  vec3_n(0.0f);
@@ -52,7 +52,7 @@ static inline t_transform	set_transform(char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		transform.pos = (t_vec3){{i * -2.0f, 0.0f, 5.0f + i}};
+		transform.pos = (t_vec3){{0.0f - i * 2.0f, 0.0f, 5.0f}};
 	// -----------------------
 	++i;
 	return (transform);
@@ -60,7 +60,7 @@ static inline t_transform	set_transform(char **params)
 
 static inline t_shape	set_shape(const t_object *obj, char **params)
 {
-	t_shape	shape;
+	t_shape		shape;
 
 	// For testing rendering
 	// -----------------------
