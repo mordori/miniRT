@@ -4,9 +4,9 @@
 
 ssize_t	try_write(t_context *ctx, int fd, char *src)
 {
-	ssize_t	bytes;
-	ssize_t	len;
-	size_t	ulen;
+	ssize_t		bytes;
+	ssize_t		len;
+	size_t		ulen;
 
 	ulen = ft_strlen(src);
 	if (ulen > SSIZE_MAX)
@@ -23,7 +23,7 @@ ssize_t	try_write(t_context *ctx, int fd, char *src)
 
 ssize_t	try_write_endl(t_context *ctx, int fd, char *src)
 {
-	ssize_t	bytes;
+	ssize_t		bytes;
 
 	bytes = try_write(ctx, fd, src);
 	bytes += try_write(ctx, fd, "\n");
@@ -32,7 +32,7 @@ ssize_t	try_write_endl(t_context *ctx, int fd, char *src)
 
 int	try_open(char *file, int o_flag, int p_flag)
 {
-	int	fd;
+	int		fd;
 
 	fd = open(file, o_flag, p_flag);
 	if (fd == ERROR)
@@ -42,7 +42,7 @@ int	try_open(char *file, int o_flag, int p_flag)
 
 ssize_t	try_read(t_context *ctx, int fd, char *buf, size_t n_bytes)
 {
-	ssize_t	bytes;
+	ssize_t		bytes;
 
 	bytes = read(fd, buf, n_bytes);
 	if (bytes == ERROR)
@@ -55,7 +55,7 @@ ssize_t	try_read(t_context *ctx, int fd, char *buf, size_t n_bytes)
 
 int	try_gnl(t_context *ctx, int fd, char **line)
 {
-	int	status;
+	int		status;
 
 	status = get_next_line(fd, line);
 	if (status == GNL_ERROR)

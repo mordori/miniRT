@@ -11,8 +11,8 @@
 
 void	init_scene(t_context *ctx)
 {
-	char	*line;
-	char	**params;
+	char		*line;
+	char		**params;
 
 	vector_try_init(ctx, &ctx->scene.objs, false, free);
 	vector_try_init(ctx, &ctx->scene.lights, false, free);

@@ -5,9 +5,9 @@ static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b);
 
 t_aabb	get_volume_bounds(t_object **objs, size_t n)
 {
-	t_aabb	result;
-	t_aabb	aabb;
-	size_t	i;
+	t_aabb		result;
+	t_aabb		aabb;
+	size_t		i;
 
 	result = get_object_bounds(objs[0]);
 	objs[0]->bounds_center = vec3_div(vec3_add(result.min, result.max), 2.0f);
@@ -36,7 +36,7 @@ t_aabb	get_object_bounds(const t_object *obj)
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
 {
-	t_aabb	result;
+	t_aabb		result;
 
 	result.min.x = fminf(a->min.x, b->min.x);
 	result.min.y = fminf(a->min.y, b->min.y);
@@ -49,10 +49,10 @@ static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
 
 bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t)
 {
-	float	t_min;
-	float	t_max;
-	float	min;
-	float	max;
+	float		t_min;
+	float		t_max;
+	float		min;
+	float		max;
 
 	t_min = 0.0f;
 	t_max = closest_t;

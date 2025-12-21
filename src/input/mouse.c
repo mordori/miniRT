@@ -10,7 +10,7 @@
  * @param pos Current mouse screen position.
  * @return The total horizontal displacement: wraps × (window width - 2)
  */
-int	wrap_mouse_x(t_context *ctx, t_vec2i *pos)
+int	wrap_mouse_x(const t_context *ctx, t_vec2i *pos)
 {
 	static int32_t	wraps_x = {0};
 
@@ -39,7 +39,7 @@ int	wrap_mouse_x(t_context *ctx, t_vec2i *pos)
  * @param pos Current mouse screen position.
  * @return The total vertical displacement: wraps × (window height - 2).
  */
-int	wrap_mouse_y(t_context *ctx, t_vec2i *pos)
+int	wrap_mouse_y(const t_context *ctx, t_vec2i *pos)
 {
 	static int32_t	wraps_y = {0};
 

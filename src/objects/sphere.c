@@ -12,7 +12,7 @@ t_shape	init_sphere(const t_object *obj, char **params)
 	// For testing rendering
 	// -----------------------
 		(void)params;
-		sphere.radius = 0.2f + i * 1.0f;
+		sphere.radius = 0.3f + i * 0.5f;
 	// -----------------------
 
 	sphere.radius_squared = sphere.radius * sphere.radius;
@@ -41,11 +41,11 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max)
 {
-	t_vec3	oc;
-	float	half_b;
-	float	d;
-	float	sqrt_d;
-	float	root;
+	t_vec3		oc;
+	float		half_b;
+	float		d;
+	float		sqrt_d;
+	float		root;
 
 	oc = vec3_sub(ray->origin, sphere->center);
 	half_b = vec3_dot(ray->dir, oc);
@@ -54,10 +54,10 @@ static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, fl
 		return (M_INF);
 	sqrt_d = sqrtf(d);
 	root = -half_b - sqrt_d;
-	if (root <= 0.001f || root >= t_max)
+	if (root <= 1e-3f || root >= t_max)
 	{
 		root = -half_b + sqrt_d;
-		if (root <= 0.001f || root >= t_max)
+		if (root <= 1e-3f || root >= t_max)
 			return (M_INF);
 	}
 	return (root);

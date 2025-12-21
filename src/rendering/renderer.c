@@ -5,7 +5,7 @@ static inline void	*render_routine(void *arg);
 
 bool	init_renderer(t_context *ctx)
 {
-	t_renderer	*r;
+	t_renderer		*r;
 
 	r = &ctx->renderer;
 	r->threads_amount = sysconf(_SC_NPROCESSORS_ONLN);
@@ -29,13 +29,13 @@ bool	init_renderer(t_context *ctx)
 
 static inline void	*render_routine(void *arg)
 {
-	t_context	*ctx;
-	t_renderer	*r;
-	t_vec3		*ptr;
-	t_int2		idx;
-	t_int2		start;
-	t_int2		end;
-	uint32_t	tile_id;
+	t_context		*ctx;
+	t_renderer		*r;
+	t_vec3			*ptr;
+	t_int2			idx;
+	t_int2			start;
+	t_int2			end;
+	uint32_t		tile_id;
 
 	ctx = (t_context *)arg;
 	r = &ctx->renderer;
