@@ -25,6 +25,14 @@
 #  define M_1_2PI		0.15915494309189533577f
 # endif
 
+# ifndef G_EPSILON
+#  define G_EPSILON		1e-3f
+# endif
+
+# ifndef SHADOW_BIAS
+#  define SHADOW_BIAS	1e-4f
+# endif
+
 typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
 typedef enum e_cam_state	t_cam_state;

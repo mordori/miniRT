@@ -102,9 +102,6 @@ bool	hit_bvh_shadow(t_bvh_node *node, const t_ray *ray, float dist)
 		return (hit_bvh_shadow(node->right, ray, dist) ||
 				hit_bvh_shadow(node->left, ray, dist));
 	}
-	else
-	{
-		return (hit_bvh_shadow(node->left, ray, dist) ||
-				hit_bvh_shadow(node->right, ray, dist));
-	}
+	return (hit_bvh_shadow(node->left, ray, dist) ||
+			hit_bvh_shadow(node->right, ray, dist));
 }
