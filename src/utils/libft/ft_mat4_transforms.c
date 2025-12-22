@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 22:54:07 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/21 17:58:51 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/22 11:55:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 /**
  * Creates a translation matrix that translates by vector t (x, y, z).
  *
- * [ 1	0	0	tx ]
- * [ 0	1	0	ty ]
- * [ 0	0	1	tz ]
- * [ 0	0	0	1  ]
+ * [ 1		0		0		tx ]
+ * [ 0		1		0		ty ]
+ * [ 0		0		1		tz ]
+ * [ 0		0		0		1  ]
  *
  * @param s Vec3 position vector.
  * @return 4x4 matrix product.
@@ -37,10 +37,10 @@ t_mat4	mat4_translate(t_vec3 t)
 /**
  * Creates a scaling matrix that scales by vector s (x, y, z).
  *
- * [ sx	0	0	0 ]
- * [ 0	sy	0	0 ]
- * [ 0	0	sz	0 ]
- * [ 0	0	0	1 ]
+ * [ sx		0		0		0 ]
+ * [ 0		sy		0		0 ]
+ * [ 0		0		sz		0 ]
+ * [ 0		0		0		1 ]
  *
  * @param s Vec3 factor vector.
  * @return 4x4 matrix product.
@@ -64,18 +64,18 @@ t_mat4	mat4_scale(t_vec3 s)
  * [ 0		sin		cos		0 ]
  * [ 0		0		0		1 ]
  *
- * @param angle_rad Angle in radians.
+ * @param rad Angle in radians.
  * @return 4x4 matrix product.
  */
-t_mat4	mat4_rot_x(float angle_rad)
+t_mat4	mat4_rot_x(float rad)
 {
 	t_mat4	matrix;
 	float	cos;
 	float	sin;
 
 	matrix = mat4_identity();
-	cos = cosf(angle_rad);
-	sin = sinf(angle_rad);
+	cos = cosf(rad);
+	sin = sinf(rad);
 	matrix.m[1][1] = cos;
 	matrix.m[1][2] = -sin;
 	matrix.m[2][1] = sin;
@@ -91,18 +91,18 @@ t_mat4	mat4_rot_x(float angle_rad)
  * [ -sin	0		cos		0 ]
  * [ 0		0		0		1 ]
  *
- * @param angle_rad Angle in radians.
+ * @param rad Angle in radians.
  * @return 4x4 matrix product.
  */
-t_mat4	mat4_rot_y(float angle_rad)
+t_mat4	mat4_rot_y(float rad)
 {
 	t_mat4	matrix;
 	float	cos;
 	float	sin;
 
 	matrix = mat4_identity();
-	cos = cosf(angle_rad);
-	sin = sinf(angle_rad);
+	cos = cosf(rad);
+	sin = sinf(rad);
 	matrix.m[0][0] = cos;
 	matrix.m[0][2] = sin;
 	matrix.m[2][0] = -sin;
@@ -118,18 +118,18 @@ t_mat4	mat4_rot_y(float angle_rad)
  * [ 0		0		1		0 ]
  * [ 0		0		0		1 ]
  *
- * @param angle_rad Angle in radians.
+ * @param rad Angle in radians.
  * @return 4x4 matrix product.
  */
-t_mat4	mat4_rot_z(float angle_rad)
+t_mat4	mat4_rot_z(float rad)
 {
 	t_mat4	matrix;
 	float	cos;
 	float	sin;
 
 	matrix = mat4_identity();
-	cos = cosf(angle_rad);
-	sin = sinf(angle_rad);
+	cos = cosf(rad);
+	sin = sinf(rad);
 	matrix.m[0][0] = cos;
 	matrix.m[0][1] = -sin;
 	matrix.m[1][0] = sin;
