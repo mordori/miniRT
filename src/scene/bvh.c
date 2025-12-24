@@ -13,6 +13,11 @@ void	init_bvh(t_context *ctx)
 
 	scene = &ctx->scene;
 	n = scene->objs.total;
+	if (n == 0)
+	{
+		scene->bvh_root = NULL;
+		return ;
+	}
 	objs = (t_object **)scene->objs.items;
 	scene->bvh_root = build_bvh(ctx, (const t_object **)objs, n);
 }

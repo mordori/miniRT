@@ -6,11 +6,16 @@
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
 	t_context	*ctx;
+	t_renderer	*r;
 
 	ctx = (t_context *)param;
+	r = &ctx->renderer;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 	{
-		atomic_store(&ctx->renderer.active, false);
+		pthread_mutex_lock(&r->mutex);
+		r->active = false;
+		pthread_cond_broadcast(&r->cond);
+		pthread_mutex_unlock(&r->mutex);
 		mlx_close_window(ctx->mlx);
 	}
 }
@@ -45,7 +50,10 @@ void	resize_hook(int width, int height, void *param)
 	if (!ctx || !ctx->mlx || !ctx->img || width == 0 || height == 0)
 		return ;
 	r = &ctx->renderer;
-	atomic_store(&r->resize_pending, true);
+	pthread_mutex_lock(&r->mutex);
+	r->resize_pending = true;
+	pthread_cond_broadcast(&r->cond);
+	pthread_mutex_unlock(&r->mutex);
 	ctx->resize_time = time_now();
 	r->width = width;
 	r->height = height;

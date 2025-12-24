@@ -259,6 +259,8 @@ struct s_renderer
 	uint8_t				padding_1[60];		// 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;
+	pthread_cond_t		cond;
+	pthread_mutex_t		mutex;
 	_Atomic long		threads_active;
 	_Atomic long		threads_amount;
 	long				threads_init;
@@ -267,8 +269,10 @@ struct s_renderer
 	uint32_t			height;
 	uint32_t			pixels;
 	uint32_t			tiles_total;
-	_Atomic bool		resize_pending;
-	_Atomic bool		active;
+	bool				resize_pending;
+	bool				active;
+	bool				init_mutex;
+	bool				init_cond;
 	// uint8_t				padding_2[17];		// 64 bytes
 };
 
