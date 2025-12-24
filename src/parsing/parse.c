@@ -92,11 +92,11 @@ static t_parse_error identify_input(t_context *ctx, t_parser *parser, char **tok
         return (PARSE_ERR_MALLOC);
     id = tokens[0];
     if (ft_strcmp(id, "A") == 0)
-        return (parse_ambient(ctx, parser, tokens)); // TODO
+        return (parse_ambient(ctx, parser, tokens));
     else if (ft_strcmp(id, "L") == 0)
-        return (parse_light(ctx, parser, tokens)); // TODO
+        return (parse_light(ctx, parser, tokens));
     else if (ft_strcmp(id, "C") == 0)
-        return (parse_camera(ctx, parser, tokens)); // TODO
+        return (parse_camera(ctx, parser, tokens));
     // Still need to check for other elements like spheres, planes, etc..
     return (PARSE_ERR_UNKNOWN_ID);
 }

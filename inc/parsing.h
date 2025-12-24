@@ -26,7 +26,12 @@ typedef struct s_parser
 bool parse_scene(t_context *ctx, int fd);
 bool parse_float(char *str, float *out);
 bool parse_color(char *str, t_color *color);
+bool parse_vec3(char *str, t_vec3 *vec);
 int count_tokens(char **tokens);
 void free_tokens(char **tokens);
+
+t_parse_error parse_ambient(t_context *ctx, t_parser *p, char **tokens);
+t_parse_error parse_light(t_context *ctx, t_parser *p, char **tokens);
+t_parse_error parse_camera(t_context *ctx, t_parser *p, char **tokens);
 
 #endif

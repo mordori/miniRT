@@ -32,7 +32,7 @@ bool parse_float(char *str, float *out)
 
 bool parse_color(char *str, t_color *color)
 {
-    char **components;
+    char **tokens;
     float r;
     float g;
     float b;
@@ -40,15 +40,15 @@ bool parse_color(char *str, t_color *color)
 
     if (!str || !color)
         return (false);
-    components = ft_split(str, ',');
+    tokens = ft_split(str, ',');
     ret = false;
-    if (!components)
+    if (!tokens)
         return (false);
-    if (count_tokens(components) == 3)
+    if (count_tokens(tokens) >= 3 && count_tokens(tokens) <= 4)
     {
-        if (parse_float(components[0], &r)
-            && parse_float(components[1], &g)
-            && parse_float(components[2], &b))
+        if (parse_float(tokens[0], &r)
+            && parse_float(tokens[1], &g)
+            && parse_float(tokens[2], &b))
         {
             // normalize to 0-1 range
             if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
@@ -61,29 +61,29 @@ bool parse_color(char *str, t_color *color)
             }
         }
     }
-    free_tokens(components);
+    free_tokens(tokens);
     return (ret);
 }
 
 // Parse a vec3 from a string in the format "x,y,z"
 bool parse_vec3(char *str, t_vec3 *vec)
 {
-    char **components;
+    char **tokens;
     bool ret;
 
     ret = false;
     if (!str || !vec)
         return (ret);
-    components = ft_split(str, ',');
-    if (!components)
+    tokens = ft_split(str, ',');
+    if (!tokens)
         return (ret);
-    if (count_tokens(components) == 3)
+    if (count_tokens(tokens) >= 3 && count_tokens(tokens) <= 4)
     {
-        ret = parse_float(components[0], &vec->x)
-            && parse_float(components[1], &vec->y)
-            && parse_float(components[2], &vec->z);
+        ret = parse_float(tokens[0], &vec->x)
+            && parse_float(tokens[1], &vec->y)
+            && parse_float(tokens[2], &vec->z);
     }
-    free_tokens(components);
+    free_tokens(tokens);
     return (ret);
 }
 
