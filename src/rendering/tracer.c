@@ -27,24 +27,19 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 t_ray	new_ray(t_vec3 origin, t_vec3 dest)
 {
 	t_ray		ray;
+	t_f_int		sign;
 
 	ray.origin = origin;
 	ray.dir = vec3_normalize(vec3_sub(dest, ray.origin));
-	if (fabsf(ray.dir.x) < M_EPSILON)
-		ray.inv_dir.x = copysignf(M_INF, ray.dir.x);
-	else
-		ray.inv_dir.x = 1.0f / ray.dir.x;
-	if (fabsf(ray.dir.y) < M_EPSILON)
-		ray.inv_dir.y = copysignf(M_INF, ray.dir.y);
-	else
-		ray.inv_dir.y = 1.0f / ray.dir.y;
-	if (fabsf(ray.dir.z) < M_EPSILON)
-		ray.inv_dir.z = copysignf(M_INF, ray.dir.z);
-	else
-		ray.inv_dir.z = 1.0f / ray.dir.z;
-	ray.sign[0] = (ray.dir.x < 0);
-	ray.sign[1] = (ray.dir.y < 0);
-	ray.sign[2] = (ray.dir.z < 0);
+	ray.inv_dir.x = 1.0f / ray.dir.x + 1e-20f;
+	ray.inv_dir.y = 1.0f / ray.dir.y + 1e-20f;
+	ray.inv_dir.z = 1.0f / ray.dir.z + 1e-20f;
+	sign.f = ray.inv_dir.x;
+	ray.sign[0] = sign.i >> 31;
+	sign.f = ray.inv_dir.y;
+	ray.sign[1] = sign.i >> 31;
+	sign.f = ray.inv_dir.z;
+	ray.sign[2] = sign.i >> 31;
 	return (ray);
 }
 

@@ -81,7 +81,8 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 			ft_vector_utils.c ft_math.c ft_mat4.c ft_mat4_transforms.c \
 			ft_vec4.c ft_vec3.c ft_vec3_2.c ft_mat4_utils.c ft_mat4_2.c \
 			ft_vec2.c ft_vec4_2.c ft_vec2i.c ft_vec2i_2.c ft_math_2.c \
-			ft_colors.c ft_vector_utils_2.c ft_vec3_3.c ft_mat2.c ft_mat3.c)
+			ft_colors.c ft_vector_utils_2.c ft_vec3_3.c ft_mat2.c ft_mat3.c \
+			ft_mat4_transforms_2.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 

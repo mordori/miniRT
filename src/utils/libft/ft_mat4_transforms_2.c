@@ -1,14 +1,14 @@
 #include "libft_matrix.h"
 
 /**
- * Creates a translation matrix that translates by vector t (x, y, z).
+ *
  *
  * [ 1		xy		xz		0 ]
  * [ yx		1		yz		0 ]
  * [ zx		zy		1		0 ]
  * [ 0		0		0		1 ]
  *
- * @param s Vec3 position vector.
+ * @param
  * @return 4x4 matrix product.
  */
 t_mat4	mat4_shear(t_vec3 x, t_vec3 y, t_vec3 z)

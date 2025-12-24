@@ -24,7 +24,9 @@ bool	init_renderer(t_context *ctx)
 		}
 		++r->threads_init;
 	}
-	return (r->threads_init == r->threads_amount);
+	r->init_mutex = !pthread_mutex_init(&r->mutex, NULL);
+	r->init_cond = !pthread_cond_init(&r->cond, NULL);
+	return (r->threads_init == r->threads_amount && r->init_mutex && r->init_cond);
 }
 
 static inline void	*render_routine(void *arg)
@@ -42,15 +44,19 @@ static inline void	*render_routine(void *arg)
 	atomic_fetch_add(&r->threads_active, 1);
 	while (atomic_load(&r->active) && \
 atomic_load(&r->threads_active) != r->threads_amount)
-		usleep(2000);
-	while (atomic_load(&r->active))
+		usleep(50);
+	while (true)
 	{
-		tile_id = atomic_fetch_add(&r->tile_index, 1);
-		if (atomic_load(&r->resize_pending) || tile_id >= r->tiles_total)
+		pthread_mutex_lock(&r->mutex);
+		while (!r->active && !r->resize_pending)
+			pthread_cond_wait(&r->cond, &r->mutex);
+		if (!r->active)
 		{
-			usleep(1000);
-			continue ;
+			pthread_mutex_unlock(&r->mutex);
+			break ;
 		}
+		pthread_mutex_unlock(&r->mutex);
+		tile_id = atomic_fetch_add(&r->tile_index, 1);
 		start.x = (tile_id % r->tiles.x) * TILE_SIZE;
 		start.y = (tile_id / r->tiles.x) * TILE_SIZE;
 		end.x = ft_uint_min(start.x + TILE_SIZE, r->width);
