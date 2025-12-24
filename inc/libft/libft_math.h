@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/13 02:00:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/12/23 17:50:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 # include <math.h>
 
 # include "libft_defs.h"
+
+union u_f_int
+{
+	float		f;
+	uint32_t	i;
+};
 
 struct s_vec2i
 {

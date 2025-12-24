@@ -52,18 +52,28 @@ start_render(&ctx->renderer))
 
 void	clean(t_context *ctx)
 {
+	t_renderer	*r;
+
 	if (!ctx)
 		return ;
+	r = &ctx->renderer;
 	if (ctx->fd != ERROR)
 		close(ctx->fd);
-	atomic_store(&ctx->renderer.resize_pending, false);
-	atomic_store(&ctx->renderer.active, false);
-	while (ctx->renderer.threads_init--)
-		pthread_join(ctx->renderer.threads[ctx->renderer.threads_init], NULL);
-	free(ctx->renderer.threads);
+	pthread_mutex_lock(&r->mutex);
+		r->active = false;
+		r->resize_pending = false;
+	pthread_cond_broadcast(&r->cond);
+	pthread_mutex_unlock(&r->mutex);
+	while (r->threads_init--)
+		pthread_join(r->threads[r->threads_init], NULL);
+	if (r->init_cond)
+		pthread_cond_destroy(&r->cond);
+	if (r->init_mutex)
+		pthread_mutex_destroy(&r->mutex);
+	free(r->threads);
 	clean_scene(ctx);
-	if (ctx->renderer.buffer)
-		free(ctx->renderer.buffer);
+	if (r->buffer)
+		free(r->buffer);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
 	if (ctx->mlx)
