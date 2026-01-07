@@ -1,5 +1,5 @@
+#include "libft_str.h"
 #include "libft_utils.h"
-#include "libft_string.h"
 
 static float	skip_whitespace_and_sign(const char **str)
 {
@@ -44,12 +44,13 @@ static float	parse_fraction(const char **str)
 	return (fraction / divisor);
 }
 
-static void	set_end_pointer(const char *start, const char *current, char **endptr)
+static void	set_end_pointer(const char *start, const char *current,
+		char **endptr)
 {
-	if (!endptr)
+	if (!endptr || !start || !current)
 		return ;
-	if (current == start || (current == start + 1
-			&& (*start == '-' || *start == '+')))
+	if (current == start || (current == start + 1 && (*start == '-'
+				|| *start == '+')))
 		*endptr = (char *)start;
 	else
 		*endptr = (char *)current;
@@ -61,6 +62,8 @@ float	ft_atof(const char *str, char **endptr)
 	float		sign;
 	const char	*start;
 
+	if (!str || !endptr)
+		return (0.0f);
 	start = str;
 	sign = skip_whitespace_and_sign(&str);
 	result = parse_integer_part(&str);

@@ -6,6 +6,10 @@ obj/
 *.d
 libft.a
 .config
+.clangd
 a.out
 miniRT
 lib/MLX42
+compile_commands.json
+gen_compile_commands.py
+generate_compile_commands.sh

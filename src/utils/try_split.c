@@ -1,13 +1,13 @@
-#include <stdlib.h>
 #include "libft_str.h"
 #include "libft_utils.h"
+#include <stdlib.h>
 
-static size_t count_words(const char *s)
+static size_t	count_words(const char *s)
 {
-	size_t count;
+	size_t	count;
 
 	count = 0;
-	while (*s)
+	while (s && *s)
 	{
 		while (*s && ft_isspace(*s))
 			s++;
@@ -19,30 +19,30 @@ static size_t count_words(const char *s)
 	return (count);
 }
 
-static size_t word_len(const char **s)
+static size_t	word_len(const char **s)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
-	while (**s && ft_isspace(**s))
+	while (s && **s && ft_isspace(**s))
 		(*s)++;
-	while ((*s)[len] && !ft_isspace((*s)[len]))
+	while (s && (*s)[len] && !ft_isspace((*s)[len]))
 		len++;
 	*s += len;
 	return (len);
 }
 
-char **try_split(char const *s)
+char	**try_split(char const *s)
 {
-	char **strs;
-	size_t words;
-	size_t w_len;
-	size_t i;
+	char	**strs;
+	size_t	words;
+	size_t	w_len;
+	size_t	i;
 
 	if (!s)
 		return (NULL);
 	words = count_words(s);
-	strs = malloc((words + 1) * sizeof(char *));
+	strs = calloc((words + 1), sizeof(char *));
 	if (!strs)
 		return (NULL);
 	i = 0;

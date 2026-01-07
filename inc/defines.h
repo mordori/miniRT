@@ -5,7 +5,6 @@
 # include <stdatomic.h>
 
 # include "MLX42.h"
-
 # include "libft_defs.h"
 # include "libft_vector.h"
 # include "libft_colors.h"

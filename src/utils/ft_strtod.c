@@ -1,5 +1,5 @@
+#include "libft_str.h"
 #include "libft_utils.h"
-#include "libft_string.h"
 
 static double	skip_whitespace_and_sign(const char **str)
 {
@@ -44,14 +44,13 @@ static double	parse_fraction(const char **str)
 	return (fraction / divisor);
 }
 
-// Sets the end pointer to the appropriate position in the string.
-// If no valid conversion was performed, it points to the start of the string.
-static void	set_end_pointer(const char *start, const char *current, char **endptr)
+static void	set_end_pointer(const char *start, const char *current,
+		char **endptr)
 {
 	if (!endptr)
-	return ;
-	if (current == start || (current == start + 1
-		&& (*start == '-' || *start == '+')))
+		return ;
+	if (current == start || (current == start + 1 && (*start == '-'
+				|| *start == '+')))
 		*endptr = (char *)start;
 	else
 		*endptr = (char *)current;
