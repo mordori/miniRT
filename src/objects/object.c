@@ -1,74 +1,83 @@
 #include "objects.h"
+#include "parsing.h"
 #include "utils.h"
 #include "materials.h"
 
-static inline t_object		init_object(char **params);
-static inline t_transform	set_transform(char **params);
-static inline t_shape		set_shape(const t_object *obj, char **params);
+// static inline t_object		init_object(char **params);
+// static inline t_transform	set_transform(char **params);
+// static inline t_shape		set_shape(const t_object *obj, char **params);
 
-void	add_object(t_context *ctx, char **params)
+t_parse_error add_object(t_context *ctx, t_object *obj)
 {
-	t_object		*obj;
+	t_object *new_obj;
 
-	obj = malloc(sizeof(*obj));
-	if (!obj)
-		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
-	*obj = init_object(params);
-	vector_try_add(ctx, &ctx->scene.objs, obj);
-
-	obj = malloc(sizeof(*obj));
-	if (!obj)
-		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
-	*obj = init_object(params);
-	vector_try_add(ctx, &ctx->scene.objs, obj);
+	new_obj = malloc(sizeof(t_object));
+	if (!new_obj)
+	fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
+	*new_obj = *obj;
+	// *obj = init_object(obj);
+	vector_try_add(ctx, &ctx->scene.objs, new_obj);
+	return (PARSE_OK);
 }
 
-static inline t_object	init_object(char **params)
-{
-	t_object		obj;
+// void	add_object(t_context *ctx, char **params)
+// {
+// 	t_object		*obj;
 
-	obj = (t_object){0};
-	obj.transform = set_transform(params);
-	obj.material = set_material(params);
-
-	// For testing rendering
-	// -----------------------
-		obj.type = OBJ_SPHERE;
-	// -----------------------
-
-	obj.shape = set_shape(&obj, params);
-	return (obj);
-}
-
-static inline t_transform	set_transform(char **params)
-{
-	static int		i = 0;
-	t_transform		transform;
-
-	transform.pos =  vec3_n(0.0f);
-	transform.rot =  vec3_n(0.0f);
-	transform.scale = vec3_n(1.0f);
-
-	// For testing rendering
-	// -----------------------
-		(void)params;
-		transform.pos = (t_vec3){{0.0f - i * 2.0f, 0.0f, 5.0f}};
-	// -----------------------
-	++i;
-	return (transform);
-}
-
-static inline t_shape	set_shape(const t_object *obj, char **params)
-{
-	t_shape		shape;
-
-	// For testing rendering
-	// -----------------------
-		shape = init_sphere(obj, params);
-	// -----------------------
-
-	return (shape);
-}
+// 	obj = malloc(sizeof(*obj));
+// 	if (!obj)
+// 		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
+// 	*obj = init_object(params);
+// 	vector_try_add(ctx, &ctx->scene.objs, obj);
+// }
+//
+// static inline t_object	init_object(char **params)
+// {
+// 	t_object		obj;
+//
+// 	obj = (t_object){0};
+// 	obj.transform = set_transform(params);
+// 	obj.material = set_material(params);
+//
+// 	// For testing rendering
+// 	// -----------------------
+// 		obj.type = OBJ_SPHERE;
+// 	// -----------------------
+//
+// 	obj.shape = set_shape(&obj, params);
+// 	return (obj);
+// }
+//
+// static inline t_transform	set_transform(char **params)
+// {
+// 	// static int		i = 0;
+// 	t_transform		transform;
+//
+// 	transform.pos =  vec3_n(0.0f);
+// 	transform.rot =  vec3_n(0.0f);
+// 	transform.scale = vec3_n(1.0f);
+//
+// 	// For testing rendering
+// 	// -----------------------
+// 	// 	(void)params;
+// 	// 	transform.pos = (t_vec3){{0.0f - i * 2.0f, 0.0f, 5.0f}};
+// 	// -----------------------
+// 	// ++i;
+// 	(void)params;
+// 	return (transform);
+// }
+//
+// static inline t_shape	set_shape(const t_object *obj, char **params)
+// {
+// 	t_shape		shape;
+//
+// 	// For testing rendering
+// 	// -----------------------
+// 		shape = init_sphere(obj, params);
+// 	// -----------------------
+//
+// 	return (shape);
+// }
 
 bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 {

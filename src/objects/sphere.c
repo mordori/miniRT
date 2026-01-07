@@ -1,25 +1,23 @@
 #include "objects.h"
+#include "materials.h"
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
-t_shape	init_sphere(const t_object *obj, char **params)
+t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_color color)
 {
-	t_sphere	sphere;
-	t_shape		shape;
+	t_object	obj;
+	float		radius;
 
-	static int i;
-
-	// For testing rendering
-	// -----------------------
-		(void)params;
-		sphere.radius = 0.3f + i * 0.5f;
-	// -----------------------
-
-	sphere.radius_squared = sphere.radius * sphere.radius;
-	sphere.center = obj->transform.pos;
-	shape.sphere = sphere;
-	i++;
-	return (shape);
+	radius = diameter / 2.0f;
+	obj = (t_object){0};
+	obj.type = OBJ_SPHERE;
+	obj.transform.pos = center;
+	obj.shape.sphere.center = center;
+	obj.shape.sphere.radius = radius;
+	obj.shape.sphere.radius_squared = radius * radius;
+	obj.material.color = (t_vec4){{color.r, color.g, color.b, 1.0f}};
+	obj.material.base_color = BASE_COLOR;
+	return (add_object(ctx, &obj));
 }
 
 bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)

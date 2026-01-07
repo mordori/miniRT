@@ -1,39 +1,39 @@
 #include "lights.h"
 #include "utils.h"
 
-static inline t_light	init_light(char **params);
+// static inline t_light	init_light(char **params);
 static inline t_vec3	calculate_light(const t_light *light, t_vec4 color, float ndotl, float dist);
 
-void	add_light(t_context *ctx, char **params)
-{
-	t_light		light;
+// void	add_light(t_context *ctx, char **params)
+// {
+// 	t_light		light;
 
-	light = init_light(params);
-	// if (light.type == LIGHT_AMBIENT)
-	// 	init_ambient_light();
-	// else if (light.type  == LIGHT_DIRECTIONAL)
-	// 	init_directional_light();
-	// else if (light.type  == LIGHT_POINT)
-		init_point_light(ctx, &light);
-}
+// 	light = init_light(params);
+// 	// if (light.type == LIGHT_AMBIENT)
+// 	// 	init_ambient_light();
+// 	// else if (light.type  == LIGHT_DIRECTIONAL)
+// 	// 	init_directional_light();
+// 	// else if (light.type  == LIGHT_POINT)
+// 		init_point_light(ctx, &light);
+// }
 
-static inline t_light	init_light(char **params)
-{
-	t_light		light;
+// static inline t_light	init_light(char **params)
+// {
+// 	t_light		light;
 
-	(void)params;
-	light = (t_light){0};
+// 	(void)params;
+// 	light = (t_light){0};
 
-	// For testing rendering
-	// -----------------------
-		light.type = LIGHT_POINT;
-		light.intensity = 100.0f;
-		light.transform.pos = (t_vec3){{2.0f, 0.0f, 5.0f}};
-		light.color = (t_vec4){{0.0f, 0.2f, 6.5f, 1.0f}};
-	// -----------------------
+// 	// For testing rendering
+// 	// -----------------------
+// 		light.type = LIGHT_POINT;
+// 		light.intensity = 100.0f;
+// 		light.transform.pos = (t_vec3){{2.0f, 0.0f, 5.0f}};
+// 		light.color = (t_vec4){{0.0f, 0.2f, 6.5f, 1.0f}};
+// 	// -----------------------
 
-	return (light);
-}
+// 	return (light);
+// }
 
 t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, float ndotl)
 {

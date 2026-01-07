@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "lights.h"
 #include "objects.h"
+#include "parsing.h"
 #include "libft_io.h"
 #include "utils.h"
 
@@ -11,24 +12,22 @@
 
 void	init_scene(t_context *ctx)
 {
-	char		*line;
-	char		**params;
-
 	vector_try_init(ctx, &ctx->scene.objs, false, free);
 	vector_try_init(ctx, &ctx->scene.lights, false, free);
-
+	init_skydome(ctx, "assets/textures/sky.png"); //TODO: to be add into .rt and parsed with ambient light
+	if (!parse_scene(ctx, ctx->fd))	
+		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
 	// For testing rendering
 	// -----------------------
-		(void)line;
-		params = NULL;
-		add_camera(ctx, params);
-		add_light(ctx, params);
-		add_object(ctx, params);
-		init_skydome(ctx, "assets/textures/sky.png");
-		ctx->scene.ambient_light.color = (t_vec4){{1.0f, 1.0f, 1.0f, 1.0f}};
-		ctx->scene.ambient_light.intensity = 0.12f;
+	// 	char *line;
+	// 	char **params = NULL;
+	// 	(void)line;
+	// 	add_camera(ctx, params);
+	// 	add_light(ctx, params);
+	// 	add_object(ctx, params);
+	// 	ctx->scene.ambient_light.color = (t_vec4){{1.0f, 1.0f, 1.0f, 1.0f}};
+	// 	ctx->scene.ambient_light.intensity = 0.12f;
 	// -----------------------
-
 	// try_gnl(ctx, ctx->fd, &line);
 	// while (line)
 	// {
@@ -37,7 +36,6 @@ void	init_scene(t_context *ctx)
 	// 	free(line);
 	// 	try_gnl(ctx, ctx->fd, &line);
 	// }
-
 	close(ctx->fd);
 	ctx->fd = ERROR;
 	init_bvh(ctx);
