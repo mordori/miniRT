@@ -45,8 +45,9 @@ static inline void	initialize(t_context *ctx)
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
 	resize_window(ctx);
-	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx) && start_render(&ctx->renderer))
+	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx))
 		mlx_loop(ctx->mlx);
+	stop_render(&ctx->renderer);
 }
 
 void	clean(t_context *ctx)
@@ -58,11 +59,7 @@ void	clean(t_context *ctx)
 	r = &ctx->renderer;
 	if (ctx->fd != ERROR)
 		close(ctx->fd);
-	pthread_mutex_lock(&r->mutex);
-		r->active = false;
-		r->resize_pending = false;
-	pthread_cond_broadcast(&r->cond);
-	pthread_mutex_unlock(&r->mutex);
+	stop_render(r);
 	while (r->threads_init--)
 		pthread_join(r->threads[r->threads_init], NULL);
 	if (r->init_cond)

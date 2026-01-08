@@ -255,7 +255,7 @@ struct s_scene
 
 struct s_renderer
 {
-	_Atomic uint32_t	tile_index;			// High contention writes
+	uint32_t			tile_index;			// High contention writes
 	uint8_t				padding_1[60];		// 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;

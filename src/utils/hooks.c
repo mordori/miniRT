@@ -6,18 +6,10 @@
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
 	t_context	*ctx;
-	t_renderer	*r;
 
 	ctx = (t_context *)param;
-	r = &ctx->renderer;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
-	{
-		pthread_mutex_lock(&r->mutex);
-		r->active = false;
-		pthread_cond_broadcast(&r->cond);
-		pthread_mutex_unlock(&r->mutex);
 		mlx_close_window(ctx->mlx);
-	}
 }
 
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)

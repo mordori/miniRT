@@ -2,6 +2,7 @@
 #include "utils.h"
 
 static inline void	*render_routine(void *arg);
+static inline void	render_tile(const t_renderer *r, t_vec3 *buf, uint32_t tile_id, const t_scene *scene);
 
 bool	init_renderer(t_context *ctx)
 {
@@ -35,13 +36,7 @@ static inline void	*render_routine(void *arg)
 {
 	t_context		*ctx;
 	t_renderer		*r;
-	t_vec3			*pixel;
-	t_int2			idx;
-	t_int2			start;
-	t_int2			end;
 	uint32_t		tile_id;
-	t_vec3			*buf;
-	uint32_t		width;
 
 	ctx = (t_context *)arg;
 	r = &ctx->renderer;
@@ -58,26 +53,37 @@ static inline void	*render_routine(void *arg)
 		tile_id = r->tile_index;
 		++r->tile_index;
 		pthread_mutex_unlock(&r->mutex);
-		start.x = (tile_id % r->tiles.x) * TILE_SIZE;
-		start.y = (tile_id / r->tiles.x) * TILE_SIZE;
-		end.x = ft_uint_min(start.x + TILE_SIZE, r->width);
-		end.y = ft_uint_min(start.y + TILE_SIZE, r->height);
-		idx.y = start.y;
-		buf = r->buffer;
-		width = r->width;
-		while (idx.y < end.y)
-		{
-			pixel = &buf[idx.y * width + start.x];
-			idx.x = start.x;
-			while (idx.x < end.x)
-			{
-				*pixel = post_process(trace_ray(&ctx->scene, idx.x++, idx.y).rgb);
-				++pixel;
-			}
-			++idx.y;
-		}
+		render_tile(r, r->buffer, tile_id, &ctx->scene);
 	}
 	return (NULL);
+}
+
+static inline void	render_tile(const t_renderer *r, t_vec3 *buf, uint32_t tile_id, const t_scene *scene)
+{
+	t_vec3			*pixel;
+	t_int2			idx;
+	t_int2			start;
+	t_int2			end;
+	uint32_t		width;
+
+	start.x = (tile_id % r->tiles.x) * TILE_SIZE;
+	start.y = (tile_id / r->tiles.x) * TILE_SIZE;
+	end.x = ft_uint_min(start.x + TILE_SIZE, r->width);
+	end.y = ft_uint_min(start.y + TILE_SIZE, r->height);
+	idx.y = start.y;
+	width = r->width;
+	buf = __builtin_assume_aligned(buf, 64);
+	while (idx.y < end.y)
+	{
+		pixel = &buf[idx.y * width + start.x];
+		idx.x = start.x;
+		while (idx.x < end.x)
+		{
+			*pixel = post_process(trace_ray(scene, idx.x++, idx.y).rgb);
+			++pixel;
+		}
+		++idx.y;
+	}
 }
 
 bool	start_render(t_renderer *r)
