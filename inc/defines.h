@@ -261,10 +261,11 @@ struct s_renderer
 	pthread_t			*threads;
 	pthread_cond_t		cond;
 	pthread_mutex_t		mutex;
-	_Atomic long		threads_active;
-	_Atomic long		threads_amount;
+	long				threads_amount;
 	long				threads_init;
 	t_int2				tiles;
+	uint32_t			new_width;
+	uint32_t			new_height;
 	uint32_t			width;
 	uint32_t			height;
 	uint32_t			pixels;

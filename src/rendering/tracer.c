@@ -45,25 +45,21 @@ t_ray	new_ray(t_vec3 origin, t_vec3 dest)
 
 static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 {
-	float		phi;
-	float		theta;
 	t_float2	uv;
 	t_int2		xy;
 	uint32_t	i;
+	t_vec4		result;
+	const float	*pixels;
 
 	if (!tex || !tex->pixels)
 		return ((t_vec4){{0.0f, 0.0f, 0.0f, 1.0f}});
-	phi = atan2f(ray->dir.z, ray->dir.x);
-	theta = acosf(ray->dir.y);
-	uv.u = (phi + M_PI) * M_1_2PI;
-	uv.v = theta * M_1_PI;
+	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64);
+	uv.u = (atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI;
+	uv.v = acosf(ray->dir.y) * M_1_PI;
 	xy.x = (uint32_t)(uv.u * (tex->width - 1));
 	xy.y = (uint32_t)(uv.v * (tex->height - 1));
 	i = (xy.y * tex->width + xy.x) * 4;
-	return ((t_vec4){{
-		tex->pixels[i],
-		tex->pixels[i + 1],
-		tex->pixels[i + 2],
-		1.0f
-	}});
+	memcpy(&result, &pixels[i], sizeof(t_vec4));
+	result.a = 1.0f;
+	return (result);
 }

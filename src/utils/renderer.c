@@ -5,18 +5,29 @@
 void	resize_window(t_context *ctx)
 {
 	t_renderer	*r;
+	size_t		size;
 
 	if (!ctx || !ctx->mlx || !ctx->img)
 		return ;
 	r = &ctx->renderer;
+	pthread_mutex_lock(&r->mutex);
+	r->width = r->new_width;
+	r->height = r->new_height;
+	r->pixels = r->width * r->height;
 	if (r->buffer)
 		free(r->buffer);
-	r->buffer = malloc(sizeof(t_vec3) * (r->width * r->height));
+	size = (sizeof(t_vec3) * r->pixels + 63) & ~63;
+	r->buffer = aligned_alloc(64, size);
 	if (!r->buffer || !mlx_resize_image(ctx->img, r->width, r->height))
+	{
+		pthread_mutex_unlock(&r->mutex);
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
-	*r->buffer = (t_vec3){0};
+	}
+	memset(r->buffer, 0, size);
 	update_camera(ctx);
-	atomic_store(&r->resize_pending, false);
+	r->resize_pending = false;
+	pthread_cond_broadcast(&r->cond);
+	pthread_mutex_unlock(&r->mutex);
 	if (r->threads_init == r->threads_amount)
 		start_render(r);
 }
