@@ -40,6 +40,7 @@ void	tex_to_linear(t_texture *texture);
 bool	resize_timer(t_context *ctx);
 uint32_t	time_now(void);
 void	clean_bvh(t_bvh_node *node);
+void	stop_render(t_renderer *r);
 float	ft_atof(const char *str, char **endptr);
 double	ft_strtod(const char *str, char **endptr);
 char	**try_split(char const *s);

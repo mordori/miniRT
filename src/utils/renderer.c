@@ -28,6 +28,14 @@ void	resize_window(t_context *ctx)
 	r->resize_pending = false;
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
-	if (r->threads_init == r->threads_amount)
-		start_render(r);
+	start_render(r);
+}
+
+void	stop_render(t_renderer *r)
+{
+	pthread_mutex_lock(&r->mutex);
+	r->active = false;
+	r->resize_pending = false;
+	pthread_cond_broadcast(&r->cond);
+	pthread_mutex_unlock(&r->mutex);
 }
