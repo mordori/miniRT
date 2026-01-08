@@ -40,13 +40,12 @@ static inline void	initialize(t_context *ctx)
 	mlx_cursor_hook(ctx->mlx, cursor_hook, ctx);
 	mlx_mouse_hook(ctx->mlx, mouse_hook, ctx);
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
+	if (!init_renderer(ctx))
+		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
 	resize_window(ctx);
-	if (\
-mlx_loop_hook(ctx->mlx, loop_hook, ctx) && \
-init_renderer(ctx) && \
-start_render(&ctx->renderer))
+	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx) && start_render(&ctx->renderer))
 		mlx_loop(ctx->mlx);
 }
 

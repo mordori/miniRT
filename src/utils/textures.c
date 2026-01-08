@@ -1,15 +1,17 @@
 #include "utils.h"
 
-static inline float	srgb_to_linear(float c);
+static inline float	srgb_to_linear(uint8_t c);
 
 t_texture	load_texture(t_context *ctx, char *file)
 {
 	t_texture	texture;
+	size_t		size;
 
 	texture.tex = mlx_load_png(file);
 	if (!texture.tex)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
-	texture.pixels = malloc(sizeof(float) * texture.tex->width * texture.tex->height * 4);
+	size = ((sizeof(float) * texture.tex->width * texture.tex->height * 4) + 63) & ~63;
+	texture.pixels = aligned_alloc(64, size);
 	if (!texture.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	tex_to_linear(&texture);
@@ -22,24 +24,42 @@ void	tex_to_linear(t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;
+	float		*dst;
+	uint8_t		*src;
 
 	i = 0;
 	texture->width = texture->tex->width;
 	texture->height = texture->tex->height;
+	dst = texture->pixels;
+	src = texture->tex->pixels;
 	pixels_total = texture->width * texture->height * 4;
 	while (i < pixels_total)
 	{
-		texture->pixels[i] = srgb_to_linear((float)texture->tex->pixels[i] * INV_255F);
-		texture->pixels[i + 1] = srgb_to_linear((float)texture->tex->pixels[i + 1] * INV_255F);
-		texture->pixels[i + 2] = srgb_to_linear((float)texture->tex->pixels[i + 2] * INV_255F);
-		texture->pixels[i + 3] = srgb_to_linear((float)texture->tex->pixels[i + 3] * INV_255F);
+		dst[i] = srgb_to_linear(src[i]);
+		dst[i + 1] = srgb_to_linear(src[i + 1]);
+		dst[i + 2] = srgb_to_linear(src[i + 2]);
+		dst[i + 3] = ((float)src[i + 3] * INV_255F);
 		i += 4;
 	}
 }
 
-static inline float	srgb_to_linear(float c)
+static inline float	srgb_to_linear(uint8_t c)
 {
-	return (powf(c, 2.2f));
+	static float	lut[256];
+	static bool		init_lut;
+	int				i;
+
+	if (!init_lut)
+	{
+		i = 0;
+		while (i < 256)
+		{
+			lut[i] = powf((float)i * INV_255F, 2.2f);
+			++i;
+		}
+		init_lut = true;
+	}
+	return (lut[c]);
 }
 
 void	free_texture(t_texture *texture)

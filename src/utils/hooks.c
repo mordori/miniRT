@@ -52,22 +52,25 @@ void	resize_hook(int width, int height, void *param)
 	r = &ctx->renderer;
 	pthread_mutex_lock(&r->mutex);
 	r->resize_pending = true;
+	r->new_width = width;
+	r->new_height = height;
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 	ctx->resize_time = time_now();
-	r->width = width;
-	r->height = height;
-	r->pixels = width * height;
 }
 
 void	loop_hook(void *param)
 {
 	t_context	*ctx;
 	t_renderer	*r;
+	bool		resize;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
-	if (!atomic_load(&r->resize_pending))
+	pthread_mutex_lock(&r->mutex);
+	resize = r->resize_pending;
+	pthread_mutex_unlock(&r->mutex);
+	if (!resize)
 	{
 		if (process_input(ctx))
 			start_render(r);
