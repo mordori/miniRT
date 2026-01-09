@@ -35,29 +35,28 @@ static inline t_vec3	calculate_light(const t_light *light, t_vec4 color, float n
 // 	return (light);
 // }
 
-t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, float ndotl)
+t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_material *mat)
 {
 	t_light		*light;
 	t_vec4		color;
-	t_light		**lights;
 	t_vec3		dir;
 	float		dist;
+	float		ndotl;
 
 	color = (t_vec4){0};
-	color.rgb = vec3_scale(vec3_mul(scene->ambient_light.color.rgb, hit->color.rgb), scene->ambient_light.intensity);
-	lights = (t_light **)scene->lights.items;
+	color.rgb = vec3_scale(vec3_mul(scene->ambient_light.color.rgb, mat->color.rgb), scene->ambient_light.intensity);
 	idx = 0;
 	while (idx < scene->lights.total)
 	{
-		light = lights[idx++];
-		dir = vec3_sub(light->transform.pos, hit->point);
+		light = &((t_light *)scene->lights.items)[idx++];
+		dir = vec3_sub(light->pos_dir, hit->point);
 		dist = vec3_length(dir);
 		if (dist < M_EPSILON)
 			continue ;
 		ndotl = vec3_dot(hit->normal, vec3_scale(dir, 1.0f / dist));
 		if (ndotl <= 0.0f || hit_shadow(scene, hit, light, dist))
 			continue ;
-		color.rgb = vec3_add(color.rgb, add_light(light, hit->color, ndotl, dist));
+		color.rgb = vec3_add(color.rgb, add_light(light, mat->color, ndotl, dist));
 	}
 	return (color);
 }

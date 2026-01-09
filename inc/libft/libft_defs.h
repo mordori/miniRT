@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/23 17:50:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/09 05:09:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ typedef struct s_vertex		t_vertex;
 typedef struct s_transform	t_transform;
 typedef struct s_arena		t_arena;
 typedef struct s_ray		t_ray;
-typedef struct s_hit		t_hit;
 
 typedef union u_f_int		t_f_int;
 typedef union u_vec2		t_point;

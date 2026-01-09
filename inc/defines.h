@@ -33,6 +33,12 @@
 #  define SHADOW_BIAS	1e-4f
 # endif
 
+# define OBJ_VISIBLE			(1 << 0)
+# define OBJ_CAST_SHADOWS		(1 << 1)
+
+# define MAT_DOUBLE_SIDED		(1 << 0)
+# define MAT_RECEIVE_SHADOWS	(1 << 1)
+
 typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
 typedef enum e_cam_state	t_cam_state;
@@ -46,6 +52,7 @@ typedef struct s_context	t_context;
 typedef struct s_bvh_node	t_bvh_node;
 typedef struct s_aabb		t_aabb;
 typedef struct s_object		t_object;
+typedef struct s_hit		t_hit;
 typedef struct s_plane		t_plane;
 typedef struct s_sphere		t_sphere;
 typedef struct s_cylinder	t_cylinder;
@@ -139,13 +146,21 @@ enum e_entity
 	ENT_OBJECT
 };
 
+struct s_hit
+{
+	t_vec3			point;
+	t_vec3			normal;
+	t_vec2			uv;
+	const t_object	*obj;
+	float			t;
+};
+
 struct s_texture
 {
 	mlx_texture_t	*tex;
 	float			*pixels;
 	uint32_t		width;
 	uint32_t		height;
-	uint8_t			padding[8];			// 32 bytes
 };
 
 struct s_material
@@ -157,10 +172,7 @@ struct s_material
 	t_base_color	base_color;
 	t_surface_type	surface_type;
 	t_pattern		pattern;
-	bool			double_sided;
-	bool			cast_shadows;
-	bool			receive_shadows;
-	uint8_t			padding[13];		// 64 bytes
+	uint32_t		flags;
 };
 
 struct s_plane
@@ -194,24 +206,24 @@ union u_shape
 
 struct s_object
 {
-	t_material		material;
 	t_transform		transform;
 	t_shape			shape;
 	t_vec3			bounds_center;
 	t_vec2			uv;
 	t_obj_type		type;
-	uint8_t			padding[4];			// 176 bytes
+	uint32_t		material_id;
+	uint32_t		flags;
+	uint8_t			padding[12];
 };
 
 struct s_light
 {
-	t_transform		transform;
-	t_vec3			direction;
+	t_vec3			pos_dir;
 	t_vec4			color;
 	float			radius;
 	float			intensity;
 	t_light_type	type;
-	uint8_t			padding[4];			// 96 bytes
+	uint8_t			padding[20];
 };
 
 struct s_viewport
@@ -221,7 +233,6 @@ struct s_viewport
 	t_vec3			pixel_00_loc;
 	float			width;
 	float			height;
-	uint8_t			padding[8];			// 64 bytes
 };
 
 struct s_camera
@@ -239,7 +250,7 @@ struct s_camera
 	float			pitch;
 	float			yaw;
 	float			distance;
-	t_cam_state		state;				// 260 bytes -- Adjust later
+	t_cam_state		state;
 };
 
 struct s_scene
@@ -247,9 +258,10 @@ struct s_scene
 	t_camera		cam;
 	t_vector		objs;
 	t_vector		lights;
+	t_vector		materials;
 	t_texture		skydome;
 	t_light			ambient_light;
-	t_light			directional_light;	// 596 bytes -- Adjust later
+	t_light			directional_light;
 	t_bvh_node		*bvh_root;
 };
 
@@ -285,7 +297,7 @@ struct s_editor
 struct s_aabb
 {
 	t_vec3			min;
-	t_vec3			max;				// 32 bytes
+	t_vec3			max;
 };
 
 struct s_bvh_node
@@ -295,7 +307,6 @@ struct s_bvh_node
 	t_bvh_node		*right;
 	t_object		*obj;
 	int				axis;
-	uint8_t			padding[4];			// 64 bytes
 };
 
 struct s_context
