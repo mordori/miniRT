@@ -3,7 +3,7 @@
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
-t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_color color)
+t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter)
 {
 	t_object	obj;
 	float		radius;
@@ -15,8 +15,6 @@ t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_color
 	obj.shape.sphere.center = center;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_squared = radius * radius;
-	obj.material.color = (t_vec4){{color.r, color.g, color.b, 1.0f}};
-	obj.material.base_color = BASE_COLOR;
 	return (add_object(ctx, &obj));
 }
 
