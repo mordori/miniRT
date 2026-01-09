@@ -20,7 +20,7 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 	hit = (t_hit){0};
 	hit.t = M_INF;
 	if (hit_bvh(scene->bvh_root, &ray, &hit))
-		return (calculate_lighting(scene, &hit, 0, &((t_material *)scene->materials.items)[hit.obj->material_id]));
+		return (calculate_lighting(scene, &hit, 0, ((t_material **)scene->materials.items)[hit.obj->material_id]));
 	return (background_color(&scene->skydome, &ray));
 }
 

@@ -45,7 +45,8 @@ char	*errors(t_err_code code)
 "renderer init failed", \
 "object add failed", \
 "point light add failed", \
-"bvh failed"
+"bvh failed", \
+"material add failed"
 	};
 
 	return (e[code]);
