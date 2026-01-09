@@ -91,6 +91,6 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 
 	result = functions[obj->type](&obj->shape, ray, hit);
 	if (result)
-		hit->color = obj->material.color;
+		hit->obj = obj;
 	return (result);
 }
