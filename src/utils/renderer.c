@@ -11,6 +11,8 @@ void	resize_window(t_context *ctx)
 		return ;
 	r = &ctx->renderer;
 	pthread_mutex_lock(&r->mutex);
+	while (r->active && r->threads_running > 0)
+		pthread_cond_wait(&r->cond, &r->mutex);
 	r->width = r->new_width;
 	r->height = r->new_height;
 	r->pixels = r->width * r->height;

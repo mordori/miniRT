@@ -37,18 +37,24 @@ void	resize_hook(int width, int height, void *param)
 {
 	t_context	*ctx;
 	t_renderer	*r;
+	bool		is_pending;
 
 	ctx = (t_context *)param;
 	if (!ctx || !ctx->mlx || !ctx->img || width == 0 || height == 0)
 		return ;
 	r = &ctx->renderer;
 	pthread_mutex_lock(&r->mutex);
-	r->resize_pending = true;
-	r->new_width = width;
-	r->new_height = height;
-	pthread_cond_broadcast(&r->cond);
+	if (r->active)
+	{
+		is_pending = r->resize_pending;
+		r->resize_pending = true;
+		r->new_width = width;
+		r->new_height = height;
+		ctx->resize_time = time_now();
+		if (!is_pending)
+			pthread_cond_broadcast(&r->cond);
+	}
 	pthread_mutex_unlock(&r->mutex);
-	ctx->resize_time = time_now();
 }
 
 void	loop_hook(void *param)

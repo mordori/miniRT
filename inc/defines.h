@@ -263,6 +263,7 @@ struct s_renderer
 	pthread_mutex_t		mutex;
 	long				threads_amount;
 	long				threads_init;
+	size_t				threads_running;
 	t_int2				tiles;
 	uint32_t			new_width;
 	uint32_t			new_height;
