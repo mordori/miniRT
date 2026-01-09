@@ -39,5 +39,5 @@ t_parse_error parse_sphere(t_context *ctx, char **tokens)
 		return (PARSE_ERR_RANGE);
 	if (!parse_color(tokens[3], &color))
 		return (PARSE_ERR_INVALID_NUM);
-	return (init_sphere(ctx, center, diameter, color)); // TODO: material parsing
+	return (init_sphere(ctx, center, diameter)); // TODO: material parsing
 }

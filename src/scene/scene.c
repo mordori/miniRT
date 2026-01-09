@@ -5,6 +5,7 @@
 #include "parsing.h"
 #include "libft_io.h"
 #include "utils.h"
+#include "materials.h"
 
 // static inline void	add_entity(t_context *ctx, char **params);
 // static inline char	**split_line(t_context *ctx, char *line);
@@ -19,25 +20,11 @@ void	init_scene(t_context *ctx)
 	init_skydome(ctx, "assets/textures/sky.png"); //TODO: to be add into .rt and parsed with ambient light
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
-	// For testing rendering
-	// -----------------------
-	// 	char *line;
-	// 	char **params = NULL;
-	// 	(void)line;
-	// 	add_camera(ctx, params);
-	// 	add_light(ctx, params);
-	// 	add_object(ctx, params);
-	// 	ctx->scene.ambient_light.color = (t_vec4){{1.0f, 1.0f, 1.0f, 1.0f}};
-	// 	ctx->scene.ambient_light.intensity = 0.12f;
-	// -----------------------
-	// try_gnl(ctx, ctx->fd, &line);
-	// while (line)
-	// {
-	// 	params = split_line(ctx, line);
-	// 	add_entity(ctx, params);
-	// 	free(line);
-	// 	try_gnl(ctx, ctx->fd, &line);
-	// }
+
+	new_material(ctx);
+	new_material(ctx);
+	new_material(ctx);
+
 	close(ctx->fd);
 	ctx->fd = ERROR;
 	init_bvh(ctx);

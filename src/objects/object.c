@@ -10,6 +10,7 @@
 t_parse_error add_object(t_context *ctx, t_object *obj)
 {
 	t_object *new_obj;
+	static int	i;
 
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
@@ -17,6 +18,8 @@ t_parse_error add_object(t_context *ctx, t_object *obj)
 	*new_obj = *obj;
 	// *obj = init_object(obj);
 	vector_try_add(ctx, &ctx->scene.objs, new_obj);
+	new_obj->material_id = i;
+	i++;
 	return (PARSE_OK);
 }
 
