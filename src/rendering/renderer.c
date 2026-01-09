@@ -40,9 +40,9 @@ static inline void	*render_routine(void *arg)
 
 	ctx = (t_context *)arg;
 	r = &ctx->renderer;
+	pthread_mutex_lock(&r->mutex);
 	while (true)
 	{
-		pthread_mutex_lock(&r->mutex);
 		while (r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
 			pthread_cond_wait(&r->cond, &r->mutex);
 		if (!r->active)
@@ -50,10 +50,14 @@ static inline void	*render_routine(void *arg)
 			pthread_mutex_unlock(&r->mutex);
 			break ;
 		}
-		tile_id = r->tile_index;
-		++r->tile_index;
+		tile_id = r->tile_index++;
+		++r->threads_running;
 		pthread_mutex_unlock(&r->mutex);
 		render_tile(r, r->buffer, tile_id, &ctx->scene);
+		pthread_mutex_lock(&r->mutex);
+		--r->threads_running;
+		if (r->threads_running == 0 && r->resize_pending)
+			pthread_cond_broadcast(&r->cond);
 	}
 	return (NULL);
 }
@@ -86,7 +90,7 @@ static inline void	render_tile(const t_renderer *r, t_vec3 *buf, uint32_t tile_i
 	}
 }
 
-bool	start_render(t_renderer *r)
+void	start_render(t_renderer *r)
 {
 	pthread_mutex_lock(&r->mutex);
 	r->tiles.x = (r->width + TILE_SIZE - 1) / TILE_SIZE;
@@ -95,7 +99,6 @@ bool	start_render(t_renderer *r)
 	r->tile_index = 0;
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
-	return (true);
 }
 
 void	blit(t_image *img, t_renderer *r)
