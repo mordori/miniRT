@@ -3,6 +3,6 @@
 
 # include "defines.h"
 
-t_material	set_material(char **params);
+void	new_material(t_context *ctx);
 
 #endif

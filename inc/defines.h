@@ -91,7 +91,8 @@ enum e_err_code
 	ERR_RENINIT,
 	ERR_OBJADD,
 	ERR_POINTLADD,
-	ERR_BVH
+	ERR_BVH,
+	ERR_MATADD
 };
 
 enum e_obj_type

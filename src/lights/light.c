@@ -48,7 +48,7 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_
 	idx = 0;
 	while (idx < scene->lights.total)
 	{
-		light = &((t_light *)scene->lights.items)[idx++];
+		light = ((t_light **)scene->lights.items)[idx++];
 		dir = vec3_sub(light->pos_dir, hit->point);
 		dist = vec3_length(dir);
 		if (dist < M_EPSILON)
