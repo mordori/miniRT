@@ -5,6 +5,8 @@
 #include "utils.h"
 #include <stdlib.h>
 
+
+///	
 // t_parse_error add_object_to_scene(t_context *ctx, t_object *obj)
 // {
 // 	t_object *new_obj;
