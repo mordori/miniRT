@@ -11,7 +11,7 @@ bool	init_renderer(t_context *ctx)
 	r = &ctx->renderer;
 	r->init_mutex = !pthread_mutex_init(&r->mutex, NULL);
 	r->init_cond = !pthread_cond_init(&r->cond, NULL);
-	r->threads_amount = sysconf(_SC_NPROCESSORS_ONLN);
+	r->threads_amount = (int32_t)sysconf(_SC_NPROCESSORS_ONLN);
 	if (r->threads_amount == ERROR)
 		r->threads_amount = 4;
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);

@@ -256,15 +256,15 @@ struct s_scene
 struct s_renderer
 {
 	uint32_t			tile_index;			// High contention writes
-	uint8_t				padding_1[60];		// 64 bytes
+	uint32_t			threads_running;
+	uint8_t				padding_1[56];		// 64 bytes
 	t_vec3				*buffer;			// Frequent reads, singular writes
 	pthread_t			*threads;
 	pthread_cond_t		cond;
 	pthread_mutex_t		mutex;
-	long				threads_amount;
-	long				threads_init;
-	size_t				threads_running;
 	t_int2				tiles;
+	int32_t				threads_amount;
+	int32_t				threads_init;
 	uint32_t			new_width;
 	uint32_t			new_height;
 	uint32_t			width;
@@ -275,7 +275,6 @@ struct s_renderer
 	bool				active;
 	bool				init_mutex;
 	bool				init_cond;
-	// uint8_t				padding_2[17];		// 64 bytes
 };
 
 struct s_editor
