@@ -53,11 +53,14 @@ static inline void	*render_routine(void *arg)
 		tile_id = r->tile_index++;
 		++r->threads_running;
 		pthread_mutex_unlock(&r->mutex);
-		render_tile(r, r->buffer, tile_id, &ctx->scene);
+		render_tile(r, r->buffer_a, tile_id, &ctx->scene);
 		pthread_mutex_lock(&r->mutex);
 		--r->threads_running;
-		if (r->threads_running == 0 && r->resize_pending)
+		if (r->threads_running == 0 && (r->resize_pending || r->tile_index >= r->tiles_total))
+		{
+			r->frame_complete = true;
 			pthread_cond_broadcast(&r->cond);
+		}
 	}
 	return (NULL);
 }
@@ -83,20 +86,21 @@ static inline void	render_tile(const t_renderer *r, t_vec3 *buf, uint32_t tile_i
 		idx.x = start.x;
 		while (idx.x < end.x)
 		{
-			*pixel = post_process(trace_ray(scene, idx.x++, idx.y).rgb);
+			*pixel = post_process(trace_ray(scene, &r->cam, idx.x++, idx.y).rgb);
 			++pixel;
 		}
 		++idx.y;
 	}
 }
 
-void	start_render(t_renderer *r)
+void	start_render(t_renderer *r, const t_camera *cam)
 {
 	pthread_mutex_lock(&r->mutex);
 	r->tiles.x = (r->width + TILE_SIZE - 1) / TILE_SIZE;
 	r->tiles.y = (r->height + TILE_SIZE - 1) / TILE_SIZE;
 	r->tiles_total = r->tiles.x * r->tiles.y;
 	r->tile_index = 0;
+	r->cam = *cam;
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 }
@@ -110,7 +114,7 @@ void	blit(t_image *img, t_renderer *r)
 	t_vec3		*buf;
 
 	pthread_mutex_lock(&r->mutex);
-	buf = __builtin_assume_aligned(r->buffer, 64);
+	buf = __builtin_assume_aligned(r->buffer_b, 64);
 	pixels = (uint32_t *)img->pixels;
 	limit = r->pixels;
 	pthread_mutex_unlock(&r->mutex);
