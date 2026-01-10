@@ -165,7 +165,7 @@ struct s_texture
 	uint32_t		height;
 };
 
-struct s_material
+struct __attribute__((aligned(16))) s_material
 {
 	t_vec4			color;
 	t_texture		texture;
@@ -177,36 +177,33 @@ struct s_material
 	uint32_t		flags;
 };
 
-struct s_plane
+struct __attribute__((aligned(32))) s_plane
 {
 	t_vec3			point;
 	t_vec3			normal;				//
 };
 
-struct s_sphere
+struct __attribute__((aligned(32))) s_sphere
 {
 	t_vec3			center;
 	float			radius;
 	float			radius_squared;
-	uint8_t			padding[8];			// 32 bytes
 };
 
-struct s_cylinder
+struct __attribute__((aligned(32))) s_cylinder
 {
 	float			radius;
 	float			height;
-	// Adjust padding later
-	uint8_t			padding[24];		// 32 bytes
 };
 
-union u_shape
+union __attribute__((aligned(32))) u_shape
 {
 	t_plane			plane;
 	t_sphere		sphere;
-	t_cylinder		cylinder;			// 32 bytes
+	t_cylinder		cylinder;
 };
 
-struct s_object
+struct __attribute__((aligned(16))) s_object
 {
 	t_transform		transform;
 	t_shape			shape;
@@ -215,20 +212,18 @@ struct s_object
 	t_obj_type		type;
 	uint32_t		material_id;
 	uint32_t		flags;
-	uint8_t			padding[12];
 };
 
-struct s_light
+struct __attribute__((aligned(16))) s_light
 {
 	t_vec3			pos_dir;
 	t_vec4			color;
 	float			radius;
 	float			intensity;
 	t_light_type	type;
-	uint8_t			padding[20];
 };
 
-struct s_viewport
+struct __attribute__((aligned(16))) s_viewport
 {
 	t_vec3			d_u;
 	t_vec3			d_v;
@@ -237,7 +232,7 @@ struct s_viewport
 	float			height;
 };
 
-struct s_camera
+struct __attribute__((aligned(16))) s_camera
 {
 	t_viewport		viewport;
 	t_transform		transform;
@@ -269,24 +264,29 @@ struct s_scene
 
 struct s_renderer
 {
-	uint32_t			tile_index;			// High contention writes
-	uint32_t			threads_running;
-	uint8_t				padding_1[56];		// 64 bytes
-	t_vec3				*buffer;			// Frequent reads, singular writes
-	pthread_t			*threads;
-	pthread_cond_t		cond;
 	pthread_mutex_t		mutex;
-	t_int2				tiles;
-	int32_t				threads_amount;
-	int32_t				threads_init;
-	uint32_t			new_width;
-	uint32_t			new_height;
+	uint32_t			tile_index;
+	uint32_t			threads_running;
+	uint32_t			tiles_total;
+	bool				active;
+	bool				resize_pending;
+	bool				frame_complete;
+	uint8_t				padding_0[9];
+	pthread_cond_t		cond;
+	uint8_t				padding_1[16];
+	t_vec3				*buffer_a;
+	t_vec3				*buffer_b;
 	uint32_t			width;
 	uint32_t			height;
 	uint32_t			pixels;
-	uint32_t			tiles_total;
-	bool				resize_pending;
-	bool				active;
+	t_int2				tiles;
+	uint8_t				padding_2[28];
+	t_camera			cam;
+	pthread_t			*threads;
+	uint32_t			new_width;
+	uint32_t			new_height;
+	int32_t				threads_amount;
+	int32_t				threads_init;
 	bool				init_mutex;
 	bool				init_cond;
 };
@@ -296,13 +296,13 @@ struct s_editor
 	t_object		*selected_object;
 };
 
-struct s_aabb
+struct __attribute__((aligned(16))) s_aabb
 {
 	t_vec3			min;
 	t_vec3			max;
 };
 
-struct s_bvh_node
+struct __attribute__((aligned(16))) s_bvh_node
 {
 	t_aabb			aabb;
 	t_bvh_node		*left;

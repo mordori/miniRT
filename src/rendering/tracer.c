@@ -5,7 +5,7 @@
 
 static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray);
 
-t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
+t_vec4	trace_ray(const t_scene *scene, const t_camera *cam, uint32_t x, uint32_t y)
 {
 	const t_viewport	*vp;
 	t_ray				ray;
@@ -16,7 +16,7 @@ t_vec4	trace_ray(const t_scene *scene, uint32_t x, uint32_t y)
 	vp = &scene->cam.viewport;
 	offset = vec3_add(vec3_scale(vp->d_u, x), vec3_scale(vp->d_v, y));
 	pixel_loc = vec3_add(vp->pixel_00_loc, offset);
-	ray = new_ray(scene->cam.transform.pos, pixel_loc);
+	ray = new_ray(cam->transform.pos, pixel_loc);
 	hit = (t_hit){0};
 	hit.t = M_INF;
 	if (hit_bvh(scene->bvh_root, &ray, &hit))
@@ -51,8 +51,8 @@ static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 	t_vec4		result;
 	const float	*pixels;
 
-	if (!tex || !tex->pixels)
-		return ((t_vec4){{0.0f, 0.0f, 0.0f, 1.0f}});
+	if (!tex)
+		return ((t_vec4){{1.0f, 0.0f, 0.0f, 1.0f}});
 	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64);
 	uv.u = (atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI;
 	uv.v = acosf(ray->dir.y) * M_1_PI;

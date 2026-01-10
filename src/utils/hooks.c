@@ -62,18 +62,31 @@ void	loop_hook(void *param)
 	t_context	*ctx;
 	t_renderer	*r;
 	bool		resize;
+	t_vec3		*temp;
+	bool		draw_frame;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
+	process_input(ctx);
 	pthread_mutex_lock(&r->mutex);
 	resize = r->resize_pending;
-	pthread_mutex_unlock(&r->mutex);
-	if (!resize)
+	if (r->frame_complete)
 	{
-		if (process_input(ctx))
-			start_render(r);
-		blit(ctx->img, r);
+		r->frame_complete = false;
+		draw_frame = true;
 	}
-	else if (ctx->resize_time != 0 && resize_timer(ctx))
+	if (!resize && draw_frame)
+	{
+		temp = r->buffer_b;
+		r->buffer_b = r->buffer_a;
+		r->buffer_a = temp;
+		r->cam = ctx->scene.cam;
+		r->tile_index = 0;
+		pthread_cond_broadcast(&r->cond);
+	}
+	pthread_mutex_unlock(&r->mutex);
+	if (resize && ctx->resize_time != 0 && resize_timer(ctx))
 		resize_window(ctx);
+	else if (draw_frame)
+		blit(ctx->img, r);
 }

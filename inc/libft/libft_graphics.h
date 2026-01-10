@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 20:12:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/09 05:09:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/10 18:45:51 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ struct s_vertex
 	float		depth;
 };
 
-struct s_transform
+struct __attribute__((aligned(16))) s_transform
 {
 	t_vec3	pos;
 	t_vec4	rot;
 	t_vec3	scale;
 };
 
-struct s_ray
+struct __attribute__((aligned(16))) s_ray
 {
 	t_vec3		origin;
 	t_vec3		dir;
