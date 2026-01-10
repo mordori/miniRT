@@ -13,7 +13,7 @@ t_vec4	trace_ray(const t_scene *scene, const t_camera *cam, uint32_t x, uint32_t
 	t_vec3				pixel_loc;
 	t_vec3				offset;
 
-	vp = &scene->cam.viewport;
+	vp = &cam->viewport;
 	offset = vec3_add(vec3_scale(vp->d_u, x), vec3_scale(vp->d_v, y));
 	pixel_loc = vec3_add(vp->pixel_00_loc, offset);
 	ray = new_ray(cam->transform.pos, pixel_loc);
