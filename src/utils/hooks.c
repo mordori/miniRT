@@ -43,6 +43,7 @@ void	resize_hook(int width, int height, void *param)
 	if (!ctx || !ctx->mlx || !ctx->img || width == 0 || height == 0)
 		return ;
 	r = &ctx->renderer;
+	is_pending = false;
 	pthread_mutex_lock(&r->mutex);
 	if (r->active)
 	{
@@ -59,30 +60,34 @@ void	resize_hook(int width, int height, void *param)
 
 void	loop_hook(void *param)
 {
-	t_context	*ctx;
-	t_renderer	*r;
-	bool		resize;
-	t_vec3		*temp;
-	bool		draw_frame;
+	t_context		*ctx;
+	t_renderer		*r;
+	bool			resize;
+	t_vec3			*temp;
+	bool			draw_frame;
+	static bool		update;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
-	process_input(ctx);
+	if (process_input(ctx))
+		update = true;
 	pthread_mutex_lock(&r->mutex);
 	resize = r->resize_pending;
+	draw_frame = false;
 	if (r->frame_complete)
-	{
-		r->frame_complete = false;
-		draw_frame = true;
-	}
-	if (!resize && draw_frame)
 	{
 		temp = r->buffer_b;
 		r->buffer_b = r->buffer_a;
 		r->buffer_a = temp;
+		r->frame_complete = false;
+		draw_frame = true;
+	}
+	if (update && !resize && r->threads_running == 0)
+	{
 		r->cam = ctx->scene.cam;
 		r->tile_index = 0;
 		pthread_cond_broadcast(&r->cond);
+		update = false;
 	}
 	pthread_mutex_unlock(&r->mutex);
 	if (resize && ctx->resize_time != 0 && resize_timer(ctx))
