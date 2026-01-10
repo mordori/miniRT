@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/23 17:50:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/10 18:42:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ union u_vec2
 	};
 };
 
-union u_vec3
+union __attribute__((aligned(16))) u_vec3
 {
 	float	data[4];		// Extra element optimizes u_vec3 to 16 bytes
 	struct
@@ -67,7 +67,7 @@ union u_vec3
 	t_vec2	xy;
 };
 
-union u_vec4
+union __attribute__((aligned(16))) u_vec4
 {
 	float	data[4];
 	struct
