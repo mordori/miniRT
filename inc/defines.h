@@ -260,6 +260,7 @@ struct s_scene
 	t_light			ambient_light;
 	t_light			directional_light;
 	t_bvh_node		*bvh_root;
+	t_object		*selected_obj;
 };
 
 struct s_renderer
@@ -293,7 +294,7 @@ struct s_renderer
 
 struct s_editor
 {
-	t_object		*selected_object;
+
 };
 
 struct __attribute__((aligned(16))) s_aabb

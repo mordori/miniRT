@@ -14,6 +14,7 @@ bool	init_renderer(t_context *ctx)
 	r->threads_amount = (int32_t)sysconf(_SC_NPROCESSORS_ONLN);
 	if (r->threads_amount == ERROR)
 		r->threads_amount = 4;
+	r->threads_amount *= 2;
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->init_mutex || !r->init_cond || !r->threads)
 		fatal_error(ctx, errors(ERR_RENINIT), __FILE__, __LINE__);

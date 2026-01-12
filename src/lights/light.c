@@ -1,41 +1,11 @@
 #include "lights.h"
 #include "utils.h"
 
-// static inline t_light	init_light(char **params);
+static inline void	compute_ambient(const t_scene *scene, t_material *mat, t_vec4 *color);
+static inline void	compute_directional(const t_scene *scene, const t_hit *hit, t_material *mat, t_vec4 *color);
 static inline t_vec3	add_light(const t_light *light, t_vec4 color, float ndotl, float dist);
 
-// void	new_light(t_context *ctx, char **params)
-// {
-// 	t_light		light;
-
-// 	light = init_light(params);
-// 	// if (light.type == LIGHT_AMBIENT)
-// 	// 	init_ambient_light();
-// 	// else if (light.type  == LIGHT_DIRECTIONAL)
-// 	// 	init_directional_light();
-// 	// else if (light.type  == LIGHT_POINT)
-// 		init_point_light(ctx, &light);
-// }
-
-// static inline t_light	init_light(char **params)
-// {
-// 	t_light		light;
-
-// 	(void)params;
-// 	light = (t_light){0};
-
-// 	// For testing rendering
-// 	// -----------------------
-// 		light.type = LIGHT_POINT;
-// 		light.intensity = 100.0f;
-// 		light.transform.pos = (t_vec3){{2.0f, 0.0f, 5.0f}};
-// 		light.color = (t_vec4){{0.0f, 0.2f, 6.5f, 1.0f}};
-// 	// -----------------------
-
-// 	return (light);
-// }
-
-t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_material *mat)
+t_vec4	compute_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_material *mat)
 {
 	t_light		*light;
 	t_vec4		color;
@@ -44,7 +14,8 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_
 	float		ndotl;
 
 	color = (t_vec4){0};
-	color.rgb = vec3_scale(vec3_mul(scene->ambient_light.color.rgb, mat->color.rgb), scene->ambient_light.intensity);
+	compute_ambient(scene, mat, &color);
+	compute_directional(scene, hit, mat, &color);
 	idx = 0;
 	while (idx < scene->lights.total)
 	{
@@ -61,19 +32,40 @@ t_vec4	calculate_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_
 	return (color);
 }
 
+static inline void	compute_ambient(const t_scene *scene, t_material *mat, t_vec4 *color)
+{
+	t_light		*light;
+	t_vec4		c;
+
+	light = (t_light *)&scene->ambient_light;
+	c.rgb = vec3_mul(light->color.rgb, mat->color.rgb);
+	c.rgb = vec3_scale(c.rgb, light->intensity);
+	color->rgb = vec3_add(color->rgb, c.rgb);
+}
+
+static inline void	compute_directional(const t_scene *scene, const t_hit *hit, t_material *mat, t_vec4 *color)
+{
+	t_light		*light;
+	t_vec4		c;
+	t_vec3		dir;
+	float		ndotl;
+
+	light = (t_light *)&scene->directional_light;
+	dir = light->pos_dir;
+	ndotl = vec3_dot(hit->normal, dir);
+	if (ndotl <= 0.0f || hit_shadow(scene, hit, light, M_INF))
+		return ;
+	c.rgb = vec3_mul(light->color.rgb, mat->color.rgb);
+	c.rgb = vec3_scale(c.rgb, light->intensity * ndotl);
+	color->rgb = vec3_add(color->rgb, c.rgb);
+}
+
 static inline t_vec3	add_light(const t_light *light, t_vec4 color, float ndotl, float dist)
 {
-	static const float	kc = 1.0f;
-	static const float	kl = 0.09f;
-	static const float	kq = 0.032f;
-	t_vec4				result;
-	float				factor;
+	t_vec4		result;
+	float		factor;
 
-	// Bonus
-	// factor = (light->intensity * ndotl) / (dist * dist);
-
-	// Mandatory
-	factor = (light->intensity * ndotl / (kc + (kl * dist) + (kq * dist * dist)));
+	factor = (light->intensity * ndotl) / (dist * dist);
 	result.rgb = vec3_mul(light->color.rgb, color.rgb);
 	result.rgb = vec3_scale(result.rgb, factor);
 	return (result.rgb);
