@@ -166,3 +166,16 @@ static inline t_vec3	background_gradient(float t)
 	result.b = (float)(((c >> 8) & 0xFF) * INV_255F);
 	return (result);
 }
+
+static inline t_vec4	background_gradient(float t)
+{
+	t_vec4		result;
+	uint32_t	c;
+
+	c = lerp_color(BLACK, WHITE, t);
+	result.r = (float)(((c >> 24) & 0xFF) * INV_255F);
+	result.g = (float)(((c >> 16) & 0xFF) * INV_255F);
+	result.b = (float)(((c >> 8) & 0xFF) * INV_255F);
+	result.a = 1.0f;
+	return (result);
+}
