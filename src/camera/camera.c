@@ -29,8 +29,8 @@ void	update_camera(t_context *ctx)
 	cam = &ctx->scene.cam;
 	cam->pitch = ft_clamp(cam->pitch, -limit, limit);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
-	if (ctx->editor.selected_object)
-		cam->pivot = ctx->editor.selected_object->transform.pos;
+	if (ctx->scene.selected_obj)
+		cam->pivot = ctx->scene.selected_obj->transform.pos;
 	else
 		cam->pivot = (t_vec3){0};
 	dir.x = cosf(cam->pitch) * sinf(cam->yaw);

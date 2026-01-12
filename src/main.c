@@ -76,23 +76,17 @@ void	clean(t_context *ctx)
 		mlx_terminate(ctx->mlx);
 }
 
-// viewport
 // antialiasing
 // dof
 // --subsampling and passes with bilinear interpolation
 // --ordered dithering bayer matrix / IGN
-// bsdf ggx
-// tonemapping
 // fog
 // tangent and bitangent
 // shadow acne
 // blue noise disk soft shadows
 // scene saving
 // parse .obj files
-// BVH
-// gamma -> srgb
 // Interleaved Gradient Noise
-// distance -> dim lights
 // save render .png
 // json file for extended objects
 // bouncing ball animation, squash strect

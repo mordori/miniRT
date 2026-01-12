@@ -25,7 +25,7 @@ typedef struct s_parser
 
 bool			parse_scene(t_context *ctx, int fd);
 bool			parse_float(char *str, float *out);
-bool			parse_color(char *str, t_color *color);
+bool			parse_color(char *str, t_vec4 *color);
 bool			parse_vec3(char *str, t_vec3 *vec);
 
 bool			validate_range(float value, float min, float max);

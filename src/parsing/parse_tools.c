@@ -31,7 +31,7 @@ bool	parse_float(char *str, float *out)
 	return (true);
 }
 
-bool	parse_color(char *str, t_color *color)
+bool	parse_color(char *str, t_vec4 *color)
 {
 	char	**tokens;
 	float	r;
@@ -52,10 +52,10 @@ bool	parse_color(char *str, t_color *color)
 		{
 			if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
 			{
-				color->r = (uint8_t)r;
-				color->g = (uint8_t)g;
-				color->b = (uint8_t)b;
-				color->a = 255; // fully opaque
+				color->r = r / 255.0f;
+				color->g = g / 255.0f;
+				color->b = b / 255.0f;
+				color->a = 1.0f; // fully opaque
 				ret = true;
 			}
 		}
