@@ -1,9 +1,11 @@
 #include "rendering.h"
 #include "scene.h"
 #include "lights.h"
+#include "objects.h"
 #include "utils.h"
 
 static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray);
+static inline t_vec4	background_gradient(float t);
 
 t_vec4	trace_ray(const t_scene *scene, const t_camera *cam, uint32_t x, uint32_t y)
 {
@@ -19,8 +21,8 @@ t_vec4	trace_ray(const t_scene *scene, const t_camera *cam, uint32_t x, uint32_t
 	ray = new_ray(cam->transform.pos, pixel_loc);
 	hit = (t_hit){0};
 	hit.t = M_INF;
-	if (hit_bvh(scene->bvh_root, &ray, &hit))
-		return (calculate_lighting(scene, &hit, 0, ((t_material **)scene->materials.items)[hit.obj->material_id]));
+	if (hit_object(scene->selected_obj, &ray, &hit) | hit_bvh(scene->bvh_root, &ray, &hit))
+		return (compute_lighting(scene, &hit, 0, ((t_material **)scene->materials.items)[hit.obj->material_id]));
 	return (background_color(&scene->skydome, &ray));
 }
 
@@ -52,14 +54,27 @@ static inline t_vec4	background_color(const t_texture *tex, const t_ray *ray)
 	const float	*pixels;
 
 	if (!tex)
-		return ((t_vec4){{1.0f, 0.0f, 0.0f, 1.0f}});
-	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64);
+		return (background_gradient((ray->dir.y + 1.0f) * 0.5f));
 	uv.u = (atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI;
 	uv.v = acosf(ray->dir.y) * M_1_PI;
 	xy.x = (uint32_t)(uv.u * (tex->width - 1));
 	xy.y = (uint32_t)(uv.v * (tex->height - 1));
 	i = (xy.y * tex->width + xy.x) * 4;
+	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64);
 	memcpy(&result, &pixels[i], sizeof(t_vec4));
+	result.a = 1.0f;
+	return (result);
+}
+
+static inline t_vec4	background_gradient(float t)
+{
+	t_vec4		result;
+	uint32_t	c;
+
+	c = lerp_color(BLACK, WHITE, t);
+	result.r = (float)(((c >> 24) & 0xFF) * INV_255F);
+	result.g = (float)(((c >> 16) & 0xFF) * INV_255F);
+	result.b = (float)(((c >> 8) & 0xFF) * INV_255F);
 	result.a = 1.0f;
 	return (result);
 }

@@ -17,6 +17,7 @@ void	init_scene(t_context *ctx)
 	vector_try_init(ctx, &ctx->scene.lights, false, free);
 	vector_try_init(ctx, &ctx->scene.materials, false, free);
 
+	init_directional_light(&ctx->scene.directional_light);
 	init_skydome(ctx, "assets/textures/sky.png"); //TODO: to be add into .rt and parsed with ambient light
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);

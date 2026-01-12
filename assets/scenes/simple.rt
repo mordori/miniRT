@@ -1,10 +1,10 @@
 # Simple test scene with ambient, camera, light and spheres
 
-A 1 255,255,255
+A 0.15 50,100,255
 
 C 0,0,0 0,0,1 70
 
-L -4,0,1 1 255,255,255
+L -1,10,-1 0.5 50,200,255
 
 # Ground plane for shadows to fall on
 pl 5,0,0 0,1,0 20,20,20 # Plane is missing
