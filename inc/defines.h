@@ -12,9 +12,9 @@
 
 # define WIDTH			1920
 # define HEIGHT			1080
+# define RENDER_FRAMES	128
+# define RENDER_BOUNCES	3
 # define THREADS_DFL	4
-# define CPU_SPIN		150
-# define RENDER_PASSES	4
 # define SENS_ORBIT		0.0025f
 # define SENS_ZOOM		0.0018f
 # define SENS_PAN		0.0006f
@@ -28,6 +28,10 @@
 
 # ifndef G_EPSILON
 #  define G_EPSILON		1e-3f
+# endif
+
+# ifndef C_EPSILON
+#  define C_EPSILON		1e-4f
 # endif
 
 # ifndef SHADOW_BIAS
@@ -48,6 +52,7 @@ typedef enum e_surface_type	t_surface_type;
 typedef enum e_pattern		t_pattern;
 typedef enum e_entity		t_entity;
 typedef enum e_err_code		t_err_code;
+typedef enum e_render_mode	t_render_mode;
 
 typedef struct s_context	t_context;
 typedef struct s_bvh_node	t_bvh_node;
@@ -65,6 +70,7 @@ typedef struct s_material	t_material;
 typedef struct s_renderer	t_renderer;
 typedef struct s_editor		t_editor;
 typedef struct s_viewport	t_viewport;
+typedef struct s_path_data	t_path_data;
 
 typedef union u_shape		t_shape;
 
@@ -148,7 +154,13 @@ enum e_entity
 	ENT_OBJECT
 };
 
-struct s_hit
+enum e_render_mode
+{
+	RENDER_PREVIEW,
+	RENDER_REFINE
+};
+
+struct __attribute__((aligned(16))) s_hit
 {
 	t_vec3			point;
 	t_vec3			normal;
@@ -167,7 +179,8 @@ struct s_texture
 
 struct __attribute__((aligned(16))) s_material
 {
-	t_vec4			color;
+	t_vec3			albedo;
+	t_vec3			emission;
 	t_texture		texture;
 	t_texture		normal_map;
 	float			alpha;
@@ -221,7 +234,7 @@ struct __attribute__((aligned(16))) s_light
 		t_vec3		pos;
 		t_vec3		dir;
 	};
-	t_vec4			color;
+	t_vec3			color;
 	float			radius;
 	float			intensity;
 	t_light_type	type;
@@ -254,6 +267,14 @@ struct __attribute__((aligned(16))) s_camera
 	t_cam_state		state;
 };
 
+struct __attribute__((aligned(16))) s_path_data
+{
+	t_hit			hit;
+	t_vec3			color;
+	t_vec3			throughput;
+	t_render_mode	mode;
+};
+
 struct s_scene
 {
 	t_camera		cam;
@@ -279,8 +300,7 @@ struct s_renderer
 	uint8_t				padding_0[9];
 	pthread_cond_t		cond;
 	uint8_t				padding_1[16];
-	t_vec3				*buffer_a;
-	t_vec3				*buffer_b;
+	t_vec3				*buffer;
 	uint32_t			width;
 	uint32_t			height;
 	uint32_t			pixels;
@@ -290,8 +310,11 @@ struct s_renderer
 	pthread_t			*threads;
 	uint32_t			new_width;
 	uint32_t			new_height;
+	uint32_t			frame;
 	int32_t				threads_amount;
 	int32_t				threads_init;
+	t_render_mode		mode;
+	uint8_t				ray_bounces;
 	bool				init_mutex;
 	bool				init_cond;
 };

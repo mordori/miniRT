@@ -63,8 +63,6 @@ void	loop_hook(void *param)
 	t_context		*ctx;
 	t_renderer		*r;
 	bool			resize;
-	t_vec3			*temp;
-	bool			draw_frame;
 	static bool		update;
 
 	ctx = (t_context *)param;
@@ -73,25 +71,35 @@ void	loop_hook(void *param)
 		update = true;
 	pthread_mutex_lock(&r->mutex);
 	resize = r->resize_pending;
-	draw_frame = false;
 	if (r->frame_complete)
 	{
-		temp = r->buffer_b;
-		r->buffer_b = r->buffer_a;
-		r->buffer_a = temp;
 		r->frame_complete = false;
-		draw_frame = true;
+		blit(ctx->img, r);
+		++r->frame;
 	}
-	if (update && !resize && r->threads_running == 0)
+	if (r->threads_running == 0 && !resize)
 	{
-		r->cam = ctx->scene.cam;
-		r->tile_index = 0;
-		pthread_cond_broadcast(&r->cond);
-		update = false;
+		if (update)
+		{
+			r->cam = ctx->scene.cam;
+			r->mode = RENDER_PREVIEW;
+			r->ray_bounces = 2;
+			r->frame = 1;
+			r->tile_index = 0;
+			update = false;
+			pthread_cond_broadcast(&r->cond);
+		}
+		else if (r->frame < RENDER_FRAMES)
+		{
+			if (r->mode == RENDER_PREVIEW)
+				r->frame = 1;
+			r->mode = RENDER_REFINE;
+			r->ray_bounces = RENDER_BOUNCES;
+			r->tile_index = 0;
+			pthread_cond_broadcast(&r->cond);
+		}
 	}
 	pthread_mutex_unlock(&r->mutex);
 	if (resize && ctx->resize_time != 0 && resize_timer(ctx))
 		resize_window(ctx);
-	else if (draw_frame)
-		blit(ctx->img, r);
 }

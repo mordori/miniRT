@@ -12,7 +12,7 @@
 t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 {
 	float	ratio;
-	t_vec4	color;
+	t_vec3	color;
 
 	if (!ctx || !p || !tokens)
 		return (PARSE_ERR_MALLOC);
@@ -42,7 +42,7 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
 	float	ratio;
 	t_vec3	position;
-	t_vec4	color;
+	t_vec3	color;
 	t_light	light;
 
 	if (!ctx || !p || !tokens)
