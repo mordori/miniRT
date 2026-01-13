@@ -1,8 +1,10 @@
 #include "rendering.h"
 #include "utils.h"
+#include "libft_random.h"
 
 static inline void	*render_routine(void *arg);
 static inline void	render_tile(const t_renderer *r, t_vec3 *buf, uint32_t tile_id, const t_scene *scene);
+static inline void render_pixel(const t_renderer *r, const t_scene *scene, t_int2 idx, t_vec3 *pixel);
 
 bool	init_renderer(t_context *ctx)
 {
@@ -13,7 +15,7 @@ bool	init_renderer(t_context *ctx)
 	r->init_cond = !pthread_cond_init(&r->cond, NULL);
 	r->threads_amount = (int32_t)sysconf(_SC_NPROCESSORS_ONLN);
 	if (r->threads_amount == ERROR)
-		r->threads_amount = 4;
+		r->threads_amount = THREADS_DFL;
 	r->threads_amount *= 2;
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->init_mutex || !r->init_cond || !r->threads)
@@ -54,7 +56,7 @@ static inline void	*render_routine(void *arg)
 		tile_id = r->tile_index++;
 		++r->threads_running;
 		pthread_mutex_unlock(&r->mutex);
-		render_tile(r, r->buffer_a, tile_id, &ctx->scene);
+		render_tile(r, r->buffer, tile_id, &ctx->scene);
 		pthread_mutex_lock(&r->mutex);
 		--r->threads_running;
 		if (r->threads_running == 0 && (r->resize_pending || r->tile_index >= r->tiles_total))
@@ -87,47 +89,36 @@ static inline void	render_tile(const t_renderer *r, t_vec3 *buf, uint32_t tile_i
 		idx.x = start.x;
 		while (idx.x < end.x)
 		{
-			*pixel = post_process(trace_ray(scene, &r->cam, idx.x++, idx.y).rgb);
+			render_pixel(r, scene, idx, pixel);
 			++pixel;
+			++idx.x;
 		}
 		++idx.y;
 	}
 }
 
-void	start_render(t_renderer *r, const t_camera *cam)
+static inline void render_pixel(const t_renderer *r, const t_scene *scene, t_int2 idx, t_vec3 *pixel)
 {
-	pthread_mutex_lock(&r->mutex);
-	r->tiles.x = (r->width + TILE_SIZE - 1) / TILE_SIZE;
-	r->tiles.y = (r->height + TILE_SIZE - 1) / TILE_SIZE;
-	r->tiles_total = r->tiles.x * r->tiles.y;
-	r->tile_index = 0;
-	r->cam = *cam;
-	pthread_cond_broadcast(&r->cond);
-	pthread_mutex_unlock(&r->mutex);
-}
+	uint32_t		seed;
+	t_vec2			uv;
+	t_vec3			color;
 
-void	blit(t_image *img, t_renderer *r)
-{
-	uint32_t	*pixels;
-	uint32_t	color;
-	uint32_t	i;
-	uint32_t	limit;
-	t_vec3		*buf;
-
-	pthread_mutex_lock(&r->mutex);
-	buf = __builtin_assume_aligned(r->buffer_b, 64);
-	pixels = (uint32_t *)img->pixels;
-	limit = r->pixels;
-	pthread_mutex_unlock(&r->mutex);
-	i = 0;
-	while (i < limit)
+	seed = hash_lowerbias32((idx.x * r->width + idx.y) ^ hash_lowerbias32(r->frame));
+	if (seed == 0)
+		seed = 1;
+	if (r->mode == RENDER_PREVIEW)
 	{
-		color =
-			((uint32_t)(0xFF << 24) |
-			((uint32_t)(buf[i].b * 255.0f + 0.5f) << 16) |
-			((uint32_t)(buf[i].g * 255.0f + 0.5f) << 8) |
-			((uint32_t)(buf[i].r * 255.0f + 0.5f)));
-		pixels[i] = color;
-		++i;
+		uv.u = (float)idx.x + 0.5f;
+		uv.v = (float)idx.y + 0.5f;
 	}
+	else
+	{
+		uv.u = (float)idx.x + randomf01(&seed);
+		uv.v = (float)idx.y + randomf01(&seed);
+	}
+	color = trace_path(scene, r, uv, &seed);
+	if (r->mode == RENDER_PREVIEW || r->frame == 1)
+		*pixel = color;
+	else
+		*pixel = vec3_add(*pixel, color);
 }

@@ -12,7 +12,7 @@
 t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 {
 	float	ratio;
-	t_vec4	color;
+	t_vec3	color;
 
 	if (count_tokens(tokens) != 3)
 		return (PARSE_ERR_MISSING_ARGS);
@@ -40,7 +40,7 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
 	float	ratio;
 	t_vec3	position;
-	t_vec4	color;
+	t_vec3	color;
 	t_light	light;
 
 	if (count_tokens(tokens) != 4)

@@ -68,8 +68,7 @@ void	clean(t_context *ctx)
 		pthread_mutex_destroy(&r->mutex);
 	free(r->threads);
 	clean_scene(ctx);
-	free(r->buffer_a);
-	free(r->buffer_b);
+	free(r->buffer);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
 	if (ctx->mlx)
