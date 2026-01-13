@@ -11,5 +11,6 @@ void	init_point_light(t_context *ctx, t_light *light)
 	*l = *light;
 	if (l->intensity < 1.01f)
 		l->intensity *= 100.0f;
+	l->type = LIGHT_POINT;
 	vector_try_add(ctx, &ctx->scene.lights, l);
 }

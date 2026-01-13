@@ -20,7 +20,7 @@ t_vec4	compute_lighting(const t_scene *scene, const t_hit *hit, size_t idx, t_ma
 	while (idx < scene->lights.total)
 	{
 		light = ((t_light **)scene->lights.items)[idx++];
-		dir = vec3_sub(light->pos_dir, hit->point);
+		dir = vec3_sub(light->pos, hit->point);
 		dist = vec3_length(dir);
 		if (dist < M_EPSILON)
 			continue ;
@@ -51,7 +51,7 @@ static inline void	compute_directional(const t_scene *scene, const t_hit *hit, t
 	float		ndotl;
 
 	light = (t_light *)&scene->directional_light;
-	dir = light->pos_dir;
+	dir = light->dir;
 	ndotl = vec3_dot(hit->normal, dir);
 	if (ndotl <= 0.0f || hit_shadow(scene, hit, light, M_INF))
 		return ;
