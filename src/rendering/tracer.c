@@ -18,7 +18,7 @@ t_vec4	trace_ray(const t_scene *scene, const t_camera *cam, uint32_t x, uint32_t
 	vp = &cam->viewport;
 	offset = vec3_add(vec3_scale(vp->d_u, x), vec3_scale(vp->d_v, y));
 	pixel_loc = vec3_add(vp->pixel_00_loc, offset);
-	ray = new_ray(cam->transform.pos, pixel_loc);
+	ray = new_ray(cam->transform.pos, vec3_normalize(vec3_sub(pixel_loc, cam->transform.pos)));
 	hit = (t_hit){0};
 	hit.t = M_INF;
 	if (hit_object(scene->selected_obj, &ray, &hit) | hit_bvh(scene->bvh_root, &ray, &hit))
@@ -26,13 +26,13 @@ t_vec4	trace_ray(const t_scene *scene, const t_camera *cam, uint32_t x, uint32_t
 	return (background_color(&scene->skydome, &ray));
 }
 
-t_ray	new_ray(t_vec3 origin, t_vec3 dest)
+t_ray	new_ray(t_vec3 origin, t_vec3 dir)
 {
 	t_ray		ray;
 	t_f_int		sign;
 
 	ray.origin = origin;
-	ray.dir = vec3_normalize(vec3_sub(dest, ray.origin));
+	ray.dir = dir;
 	ray.inv_dir.x = 1.0f / ray.dir.x + 1e-20f;
 	ray.inv_dir.y = 1.0f / ray.dir.y + 1e-20f;
 	ray.inv_dir.z = 1.0f / ray.dir.z + 1e-20f;

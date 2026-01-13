@@ -216,7 +216,11 @@ struct __attribute__((aligned(16))) s_object
 
 struct __attribute__((aligned(16))) s_light
 {
-	t_vec3			pos_dir;
+	union
+	{
+		t_vec3		pos;
+		t_vec3		dir;
+	};
 	t_vec4			color;
 	float			radius;
 	float			intensity;
