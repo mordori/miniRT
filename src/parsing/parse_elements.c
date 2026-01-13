@@ -55,7 +55,7 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 		return (PARSE_ERR_INVALID_NUM);
 	light = (t_light){0};
 	light.type = LIGHT_POINT;
-	light.pos_dir = position;
+	light.pos = position;
 	light.intensity = ratio;
 	light.color = color;
 	init_point_light(ctx, &light);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/10 18:42:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/13 00:41:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ float	vec3_dot(t_vec3 a, t_vec3 b);
 t_vec3	vec3_div(t_vec3 v, float div);
 float	vec3_length(t_vec3 v);
 t_vec3	vec3_normalize(t_vec3 v);
+t_vec3	vec3_reflect(t_vec3 v, t_vec3 n);
 t_vec4	vec4(float x, float y, float z, float w);
 t_vec4	vec4_3(t_vec3 v, float w);
 t_vec4	vec4_n(float n);
