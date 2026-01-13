@@ -4,6 +4,7 @@ A 0.0 255,255,255
 # Camera
 C 0,0,0 0,0,1 70
 
+# Camera
 C 0,0,0 0,0,1 70
 
 # Ground
@@ -26,9 +27,5 @@ sp -3,0,10 1.5 0,0,255
 # # Light positioned above and in front of spheres to cast clear shadows
 # L 0,0,10 0.7 255,255,255
 
-# # Ground plane for shadows to fall on
-# pl 1,0,0 0,1,0 20,20,20
-
-# sp 0,10,15 2 255,0,0
-# sp 3,0,10 1.5 0,255,0
-# sp -3,0,10 1.5 0,0,255
+# Spheres
+sp 0,0,3 1.4 255,255,255
