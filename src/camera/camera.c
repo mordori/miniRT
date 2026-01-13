@@ -60,5 +60,5 @@ static inline void	update_viewport(const t_camera *cam, float img_width, float i
 	vp_center = vec3_add(cam->transform.pos, vec3_scale(cam->forward, cam->focal_length));
 	vp_up_left = vec3_sub(vp_center, vec3_div(u, 2.0f));
 	vp_up_left = vec3_sub(vp_up_left, vec3_div(v, 2.0f));
-	vp->pixel_00_loc = vec3_add(vp_up_left, vec3_scale(vec3_add(vp->d_u, vp->d_v), 0.5f));
+	vp->pixel_00_loc = vp_up_left;
 }

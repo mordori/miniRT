@@ -13,9 +13,9 @@
 // ∗ R,G,B colors in the range [0-255]: 10, 0, 255
 t_parse_error parse_sphere(t_context *ctx, char **tokens)
 {
-	t_vec3		center;
-	float		diameter;
-	t_color		color;
+	t_vec3	center;
+	float	diameter;
+	t_vec3	color;
 	t_material	mat;
 
 	if (count_tokens(tokens) != 4)
