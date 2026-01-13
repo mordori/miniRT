@@ -3,7 +3,7 @@
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
-t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter)
+t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_material *mat)
 {
 	t_object	obj;
 	float		radius;
@@ -15,6 +15,7 @@ t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter)
 	obj.shape.sphere.center = center;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_squared = radius * radius;
+	obj.material_id = new_material(ctx, mat);
 	return (add_object(ctx, &obj));
 }
 

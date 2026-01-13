@@ -3,6 +3,6 @@
 
 # include "defines.h"
 
-void	new_material(t_context *ctx);
+uint32_t	new_material(t_context *ctx, t_material *mat);
 
 #endif

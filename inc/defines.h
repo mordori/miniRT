@@ -21,6 +21,7 @@
 # define TILE_SIZE		32
 # define INV_255F		0.003921568627451f
 
+
 # ifndef M_1_2PI
 #  define M_1_2PI		0.15915494309189533577f
 # endif
@@ -178,8 +179,8 @@ struct s_material
 
 struct s_plane
 {
-	t_vec3			dimensions;
-	uint8_t			padding[16];		// 32 bytes
+	t_vec3			point;
+	t_vec3			normal;				//
 };
 
 struct s_sphere

@@ -50,13 +50,12 @@ bool	parse_color(char *str, t_color *color)
 		if (parse_float(tokens[0], &r) && parse_float(tokens[1], &g)
 			&& parse_float(tokens[2], &b))
 		{
-			// normalize to 0-1 range
 			if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
 			{
-				color->r = r / 255.0f;
-				color->g = g / 255.0f;
-				color->b = b / 255.0f;
-				// color->a = 255; // fully opaque
+				color->r = (uint8_t)r;
+				color->g = (uint8_t)g;
+				color->b = (uint8_t)b;
+				color->a = 255; // fully opaque
 				ret = true;
 			}
 		}
@@ -64,6 +63,10 @@ bool	parse_color(char *str, t_color *color)
 	free_tokens(tokens);
 	return (ret);
 }
+
+// t_parse_error parse_material(t_parser *p, const char *token, t_material *mat)
+// {
+// }
 
 // Parse a vec3 from a string in the format "x,y,z"
 bool	parse_vec3(char *str, t_vec3 *vec)

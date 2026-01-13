@@ -21,10 +21,6 @@ void	init_scene(t_context *ctx)
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
 
-	new_material(ctx);
-	new_material(ctx);
-	new_material(ctx);
-
 	close(ctx->fd);
 	ctx->fd = ERROR;
 	init_bvh(ctx);

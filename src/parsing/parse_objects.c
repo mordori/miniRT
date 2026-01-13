@@ -5,20 +5,6 @@
 #include "utils.h"
 #include <stdlib.h>
 
-
-///	
-// t_parse_error add_object_to_scene(t_context *ctx, t_object *obj)
-// {
-// 	t_object *new_obj;
-
-// 	new_obj = malloc(sizeof(t_object));
-// 	if (!new_obj)
-// 		return (PARSE_ERR_MEMORY);
-// 	*new_obj = *obj;
-// 	// *obj = init_object(obj);
-// 	vector_try_add(ctx, &ctx->scene.objs, new_obj);
-// 	return (PARSE_OK);
-// }
 // Sphere:
 // sp 0.0,0.0,20.6 12.6 10,0,255
 // ∗ identifier: sp
@@ -27,9 +13,10 @@
 // ∗ R,G,B colors in the range [0-255]: 10, 0, 255
 t_parse_error parse_sphere(t_context *ctx, char **tokens)
 {
-	t_vec3	center;
-	float	diameter;
-	t_color	color;
+	t_vec3		center;
+	float		diameter;
+	t_color		color;
+	t_material	mat;
 
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
@@ -41,5 +28,29 @@ t_parse_error parse_sphere(t_context *ctx, char **tokens)
 		return (PARSE_ERR_RANGE);
 	if (!parse_color(tokens[3], &color))
 		return (PARSE_ERR_INVALID_NUM);
-	return (init_sphere(ctx, center, diameter)); // TODO: material parsing
+	mat = (t_material){0};
+	mat.color = (t_vec4){{color.r * INV_255F, color.g * INV_255F, color.b * INV_255F, 1.0f}};
+	mat.base_color = BASE_COLOR;
+	return (init_sphere(ctx, center, diameter, &mat));
+}
+
+t_parse_error	parse_plane(t_context *ctx, char **tokens)
+{
+	t_vec3		point;
+	t_vec3		normal;
+	t_color		color;
+	t_material	mat;
+
+	if (count_tokens(tokens) < 4)
+		return(PARSE_ERR_MISSING_ARGS);
+	if (!parse_vec3(tokens[1], &point) || !parse_vec3(tokens[2], &normal))
+		return(PARSE_ERR_INVALID_NUM);
+	if (!validate_normalized(normal))
+		return(PARSE_ERR_RANGE);
+	if (!parse_color(tokens[3], &color))
+		return(PARSE_ERR_INVALID_NUM);
+	mat = (t_material){0};
+	mat.color = (t_vec4){{color.r * INV_255F, color.g * INV_255F, color.b * INV_255F, 1.0f}};
+	mat.base_color = BASE_COLOR;
+	return(init_plane(ctx, point, normal, &mat));
 }

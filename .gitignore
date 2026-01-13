@@ -13,3 +13,6 @@ lib/MLX42
 compile_commands.json
 gen_compile_commands.py
 generate_compile_commands.sh
+cachegrind.out
+cachegrind.out.11441
+callgrind.out

@@ -33,6 +33,9 @@ bool			validate_normalized(t_vec3 vec);
 int				count_tokens(char **tokens);
 void			free_tokens(char **tokens);
 
+t_parse_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material *mat);
+
+t_parse_error	parse_plane(t_context *ctx, char **tokens);
 t_parse_error	parse_sphere(t_context *ctx, char **tokens);
 t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens);
 t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens);
