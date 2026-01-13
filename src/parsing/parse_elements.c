@@ -27,8 +27,8 @@ t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 		return (PARSE_ERR_INVALID_NUM);
 	ctx->scene.ambient_light.type = LIGHT_AMBIENT;
 	ctx->scene.ambient_light.intensity = ratio;
-	ctx->scene.ambient_light.color = (t_vec4){{color.r, color.g, color.b,
-		1.0f}};
+	ctx->scene.ambient_light.color = (t_vec4){{color.r * INV_255F,
+		 color.g * INV_255F, color.b * INV_255F, 1.0f}}; // normalize to 0-1 range
 	p->has_ambient = true;
 	return (PARSE_OK);
 }
@@ -51,14 +51,14 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	if (!parse_float(tokens[2], &ratio))
 		return (PARSE_ERR_INVALID_NUM);
 	if (ratio < 0.0f || ratio > 1.0f)
-		ratio = ft_clamp(ratio, 0.0f, 1.0f);
+		return (PARSE_ERR_RANGE);
 	if (!parse_color(tokens[3], &color))
 		return (PARSE_ERR_INVALID_NUM);
 	light = (t_light){0};
 	light.type = LIGHT_POINT;
 	light.pos_dir = position;
 	light.intensity = ratio;
-	light.color = (t_vec4){{color.r, color.g, color.b, 1.0f}};
+	light.color = (t_vec4){{color.r , color.g, color.b, 1.0f}};
 	init_point_light(ctx, &light);
 	p->has_light = true;
 	return (PARSE_OK);
