@@ -29,7 +29,7 @@ t_parse_error parse_sphere(t_context *ctx, char **tokens)
 	if (!parse_color(tokens[3], &color))
 		return (PARSE_ERR_INVALID_NUM);
 	mat = (t_material){0};
-	mat.color = (t_vec4){{color.r * INV_255F, color.g * INV_255F, color.b * INV_255F, 1.0f}};
+	mat.albedo = color;
 	mat.base_color = BASE_COLOR;
 	return (init_sphere(ctx, center, diameter, &mat));
 }
@@ -38,7 +38,7 @@ t_parse_error	parse_plane(t_context *ctx, char **tokens)
 {
 	t_vec3		point;
 	t_vec3		normal;
-	t_color		color;
+	t_vec3		color;
 	t_material	mat;
 
 	if (count_tokens(tokens) < 4)
@@ -50,7 +50,7 @@ t_parse_error	parse_plane(t_context *ctx, char **tokens)
 	if (!parse_color(tokens[3], &color))
 		return(PARSE_ERR_INVALID_NUM);
 	mat = (t_material){0};
-	mat.color = (t_vec4){{color.r * INV_255F, color.g * INV_255F, color.b * INV_255F, 1.0f}};
+	mat.albedo = color;
 	mat.base_color = BASE_COLOR;
 	return(init_plane(ctx, point, normal, &mat));
 }
