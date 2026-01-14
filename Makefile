@@ -7,9 +7,8 @@ CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
-OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math -flto
-SANFLAGS	:=-fsanitize=address,alignment,undefined -fno-omit-frame-pointer
-CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt -flto
+CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS) -g
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory
 

@@ -96,9 +96,9 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 	else if (ft_strcmp(id, "C") == 0)
 		return (parse_camera(ctx, parser, tokens));
 	else if (ft_strcmp(id, "sp") == 0)
-		return (parse_sphere(ctx, parser,tokens));
-	else if (ft_strcmp(id, "pl") == 0)
-	    return (parse_plane(ctx, parser, tokens));
+		return (parse_sphere(ctx, tokens));
+	// else if (ft_strcmp(id, "pl") == 0)
+	//     return (parse_plane(ctx, tokens));
 	// else if (ft_strcmp(id, "cy") == 0)
 	//     return (parse_cylinder(ctx, tokens));
 	else
