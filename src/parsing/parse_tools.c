@@ -25,8 +25,8 @@ bool	parse_float(char *str, float *out)
 		end++;
 	if (*end != '\0')
 		return (false);
-	if (isnan(value) || isinf(value)) // check for NaN or Infinity
-		return (false);
+	// if (isnan(value) || isinf(value)) // check for NaN or Infinity
+	// 	return (false);
 	*out = value;
 	return (true);
 }

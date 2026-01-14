@@ -9,7 +9,7 @@ t_parse_error add_object(t_context *ctx, t_object *obj)
 
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
-	fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
+		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
 	*new_obj = *obj;
 	vector_try_add(ctx, &ctx->scene.objs, new_obj);
 	return (PARSE_OK);
