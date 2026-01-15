@@ -2,8 +2,8 @@
 #include "objects.h"
 #include "utils.h"
 
-t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n);
-static inline void	sort_objects(t_bvh_node *node, const t_object **objs, size_t n);
+static inline t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n);
+static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i);
 
 void	init_bvh(t_context *ctx)
 {
@@ -14,15 +14,12 @@ void	init_bvh(t_context *ctx)
 	scene = &ctx->scene;
 	n = scene->objs.total;
 	if (n == 0)
-	{
-		scene->bvh_root = NULL;
-		return ;
-	}
+		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	objs = (t_object **)scene->objs.items;
 	scene->bvh_root = build_bvh(ctx, (const t_object **)objs, n);
 }
 
-t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
+static inline t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
 {
 	t_bvh_node	*node;
 	size_t		half_n;
@@ -38,75 +35,78 @@ t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
 		return (node);
 	}
 	node->aabb = get_volume_bounds((t_object **)objs, n);
-	sort_objects(node, objs, n);
+	sort_bvh_objects(node, objs, n);
 	half_n = n / 2;
 	node->left = build_bvh(ctx, objs, half_n);
 	node->right = build_bvh(ctx, objs + half_n, n - half_n);
 	return (node);
 }
 
-static inline void	sort_objects(t_bvh_node *node, const t_object **objs, size_t n)
+bool	hit_bvh(t_bvh_node *root, const t_ray *ray, t_hit *hit, int32_t i)
 {
-	t_vec3		size;
-
-	size = vec3_sub(node->aabb.max, node->aabb.min);
-	node->axis = 0;
-	if (size.y > size.x && size.y > size.z)
-		node->axis = 1;
-	else if (size.z > size.x && size.z > size.y)
-		node->axis = 2;
-	if (node->axis == 0)
-		qsort(objs, n, sizeof(t_object *), cmp_bounds_x);
-	else if (node->axis == 1)
-		qsort(objs, n, sizeof(t_object *), cmp_bounds_y);
-	else
-		qsort(objs, n, sizeof(t_object *), cmp_bounds_z);
-}
-
-bool	hit_bvh(t_bvh_node *node, const t_ray *ray, t_hit *hit)
-{
+	t_bvh_node	*stack[64];
+	t_bvh_node	*node;
 	t_hit		temp;
-	bool		left;
-	bool		right;
 	bool		result;
 
-	if (!hit_aabb(&node->aabb, ray, hit->t))
-		return (false);
-	if (!node->left && !node->right)
+	result = false;
+	stack[i++] = root;
+	while (i > 0)
 	{
-		temp.t = hit->t;
-		result = hit_object(node->obj, ray, &temp);
-		if (result)
-			*hit = temp;
-		return (result);
+		node = stack[--i];
+		if (!hit_aabb(&node->aabb, ray, hit->t))
+			continue ;
+		if (node->obj)
+		{
+			temp.t = hit->t;
+			if ((node->obj->flags & OBJ_VISIBLE) && hit_object(node->obj, ray, &temp))
+			{
+				result = true;
+				*hit = temp;
+			}
+			continue ;
+		}
+		add_nodes_to_bvh_stack(ray, node, stack, &i);
 	}
-	if (ray->sign[node->axis])
-	{
-		right = hit_bvh(node->right, ray, hit);
-		left = hit_bvh(node->left, ray, hit);
-		return (right || left);
-	}
-	left = hit_bvh(node->left, ray, hit);
-	right = hit_bvh(node->right, ray, hit);
-	return (left || right);
+	return (result);
 }
 
-bool	hit_bvh_shadow(t_bvh_node *node, const t_ray *ray, float dist)
+bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 {
+	t_bvh_node	*stack[64];
+	int32_t		i;
+	t_bvh_node	*node;
 	t_hit		temp;
 
-	if (!hit_aabb(&node->aabb, ray, dist))
-		return (false);
-	if (!node->left && !node->right)
+	i = 0;
+	stack[i++] = root;
+	while (i > 0)
 	{
-		temp.t = dist;
-		return (hit_object(node->obj, ray, &temp));
+		node = stack[--i];
+		if (!hit_aabb(&node->aabb, ray, dist))
+			continue ;
+		if (node->obj)
+		{
+			temp.t = dist;
+			if ((node->obj->flags & OBJ_CAST_SHADOWS) && hit_object(node->obj, ray, &temp))
+				return (true);
+			continue ;
+		}
+		add_nodes_to_bvh_stack(ray, node, stack, &i);
 	}
+	return (false);
+}
+
+static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i)
+{
 	if (ray->sign[node->axis])
 	{
-		return (hit_bvh_shadow(node->right, ray, dist) ||
-				hit_bvh_shadow(node->left, ray, dist));
+		stack[(*i)++] = node->left;
+		stack[(*i)++] = node->right;
 	}
-	return (hit_bvh_shadow(node->left, ray, dist) ||
-			hit_bvh_shadow(node->right, ray, dist));
+	else
+	{
+		stack[(*i)++] = node->right;
+		stack[(*i)++] = node->left;
+	}
 }
