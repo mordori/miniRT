@@ -41,11 +41,11 @@ static inline bool	trace_ray(const t_scene *scene, t_ray *ray, t_path_data *data
 	t_path_data		d;
 
 	d = *data;
-	if (hit_object(scene->selected_obj, ray, &d.hit) | hit_bvh(scene->bvh_root, ray, &d.hit))
+	if (hit_object(scene->selected_obj, ray, &d.hit) | hit_bvh(scene->bvh_root, ray, &d.hit, 0))
 	{
 		mat = ((t_material **)scene->materials.items)[d.hit.obj->material_id];
 		d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_lighting(scene, &d.hit, 0, mat)));
-		d.color = vec3_add(d.color, vec3_mul(d.throughput, mat->emission));
+		// d.color = vec3_add(d.color, vec3_mul(d.throughput, mat->emission));
 		if (d.mode == RENDER_PREVIEW)
 			compute_ambient(scene, mat, &d.color);
 		if (scatter(ray, &d.hit, seed))
@@ -106,8 +106,8 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray)
 
 	if (!tex)
 		return (background_gradient((ray->dir.y + 1.0f) * 0.5f));
-	uv.u = (atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI;
-	uv.v = acosf(ray->dir.y) * M_1_PI;
+	uv.u = ft_clamp01((atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI);
+	uv.v = ft_clamp01(acosf(ray->dir.y) * M_1_PI);
 	xy.x = (uint32_t)(uv.u * (tex->width - 1));
 	xy.y = (uint32_t)(uv.v * (tex->height - 1));
 	i = (xy.y * tex->width + xy.x) * 4;
