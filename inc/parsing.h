@@ -12,7 +12,8 @@ typedef enum e_parse_error
 	PARSE_ERR_INVALID_NUM,  /* Could not parse number                       */
 	PARSE_ERR_RANGE,        /* Value out of valid range                     */
 	PARSE_ERR_DUPLICATE,    /* Duplicate unique element (A, C, or L)        */
-	PARSE_ERR_MALLOC        /* Memory allocation failed                     */
+	PARSE_ERR_MALLOC,       /* Memory allocation failed                     */
+	PARSE_ERR_MISSING_OBJ,  /* No objects defined in the scene              */
 }				t_parse_error;
 
 typedef struct s_parser
@@ -21,6 +22,9 @@ typedef struct s_parser
 	bool		has_light;
 	bool		has_ambient;
 	bool		has_camera;
+	bool		has_sphere;
+	bool		has_plane;
+	bool		has_cylinder;
 }				t_parser;
 
 bool			parse_scene(t_context *ctx, int fd);
@@ -35,8 +39,8 @@ void			free_tokens(char **tokens);
 
 t_parse_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material *mat);
 
-t_parse_error	parse_plane(t_context *ctx, char **tokens);
-t_parse_error	parse_sphere(t_context *ctx, char **tokens);
+t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens);
+t_parse_error	parse_sphere(t_context *ctx, t_parser *parser, char **tokens);
 t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens);
 t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens);
 t_parse_error	parse_camera(t_context *ctx, t_parser *p, char **tokens);

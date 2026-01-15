@@ -72,6 +72,11 @@ static bool	validate_scene(t_parser *parser)
 		ft_putendl_fd("Error: Missing camera (C)", STDERR_FILENO);
 		return (false);
 	}
+	if (!parser->has_plane && !parser->has_sphere /* && !parser->has_cylinder */)
+	{
+		ft_putendl_fd("Error: No objects defined in the scene", STDERR_FILENO);
+		return (false);
+	}
 	return (true);
 }
 
@@ -81,7 +86,7 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 {
 	const char	*id;
 
-	if (!tokens || !tokens[0])
+	if (!tokens || !tokens[0] || !ctx || !parser)
 		return (PARSE_ERR_MALLOC);
 	id = tokens[0];
 	if (ft_strcmp(id, "A") == 0)
@@ -91,9 +96,9 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 	else if (ft_strcmp(id, "C") == 0)
 		return (parse_camera(ctx, parser, tokens));
 	else if (ft_strcmp(id, "sp") == 0)
-		return (parse_sphere(ctx, tokens));
-	// else if (ft_strcmp(id, "pl") == 0)
-	//     return (parse_plane(ctx, tokens));
+		return (parse_sphere(ctx, parser,tokens));
+	else if (ft_strcmp(id, "pl") == 0)
+	    return (parse_plane(ctx, parser, tokens));
 	// else if (ft_strcmp(id, "cy") == 0)
 	//     return (parse_cylinder(ctx, tokens));
 	else

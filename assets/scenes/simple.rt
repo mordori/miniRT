@@ -4,11 +4,31 @@ A 0.0 255,255,255
 # Camera
 C 0,0,0 0,0,1 70
 
-# Point light
-L -3,3,-2 1.0 255,0,0
+C 0,0,0 0,0,1 70
 
 # Ground
 sp 0,-50.5,3 100 128,128,128
 
-# Spheres
-sp 0,0,3 1 170,170,170
+# Ground plane for shadows to fall on
+pl 5,0,0 0,1,0 20,20,20 # Plane is missing
+pl 0,-5,0 0,1,0 20,20,20 # Plane is working
+
+sp 0,10,15 2 255,0,0
+sp 3,0,10 1.5 0,255,0
+sp -3,0,10 1.5 0,0,255
+
+# # Simple test scene with ambient, camera, light and spheres
+
+# A 0.7 255,255,255
+
+# C 0,0,0 0,0,1 70
+
+# # Light positioned above and in front of spheres to cast clear shadows
+# L 0,0,10 0.7 255,255,255
+
+# # Ground plane for shadows to fall on
+# pl 1,0,0 0,1,0 20,20,20
+
+# sp 0,10,15 2 255,0,0
+# sp 3,0,10 1.5 0,255,0
+# sp -3,0,10 1.5 0,0,255

@@ -7,7 +7,8 @@ CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
-OPTS		:=-O3 -march=native -funroll-loops -fno-plt -flto
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt -ffast-math -flto
+SANFLAGS	:=-fsanitize=address,alignment,undefined -fno-omit-frame-pointer
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory
@@ -132,7 +133,12 @@ debug: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) -O0
 debug: LDFLAGS		:=-ldl -lglfw -pthread -lm
 debug: all
 
-.PHONY: all clean fclean re config debug
+sanitize: BUILD_TYPE	:=SANITIZE
+sanitize: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) $(SANFLAGS) -O1
+sanitize: LDFLAGS		:=-ldl -lglfw -pthread -lm $(SANFLAGS)
+sanitize: all
+
+.PHONY: all clean fclean re config debug sanitize
 .SECONDARY: $(OBJS) $(DEPS) $(CONF)
 
 -include $(DEPS)

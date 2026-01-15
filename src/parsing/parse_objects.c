@@ -11,13 +11,15 @@
 // ∗ x, y, z coordinates of the sphere center: 0.0,0.0,20.6
 // ∗ the sphere diameter: 12.6
 // ∗ R,G,B colors in the range [0-255]: 10, 0, 255
-t_parse_error parse_sphere(t_context *ctx, char **tokens)
+t_parse_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3	center;
 	float	diameter;
 	t_vec3	color;
 	t_material	mat;
 
+	if (!ctx || !parser || !tokens)
+		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &center))
@@ -31,16 +33,19 @@ t_parse_error parse_sphere(t_context *ctx, char **tokens)
 	mat = (t_material){0};
 	mat.albedo = color;
 	mat.base_color = BASE_COLOR;
+	parser->has_sphere = true;
 	return (init_sphere(ctx, center, diameter, &mat));
 }
 
-t_parse_error	parse_plane(t_context *ctx, char **tokens)
+t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3		point;
 	t_vec3		normal;
 	t_vec3		color;
 	t_material	mat;
 
+	if (!ctx || !parser || !tokens)
+		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) < 4)
 		return(PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &point) || !parse_vec3(tokens[2], &normal))
@@ -52,5 +57,6 @@ t_parse_error	parse_plane(t_context *ctx, char **tokens)
 	mat = (t_material){0};
 	mat.albedo = color;
 	mat.base_color = BASE_COLOR;
+	parser->has_plane = true;
 	return(init_plane(ctx, point, normal, &mat));
 }
