@@ -9,6 +9,8 @@ t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_mater
 	t_object	obj;
 	float		radius;
 
+	if (!ctx || !mat)
+		return (PARSE_ERR_MALLOC);
 	radius = diameter / 2.0f;
 	obj = (t_object){0};
 	obj.type = OBJ_SPHERE;
@@ -26,6 +28,8 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	t_sphere	sphere;
 	float		t;
 
+	if (!shape || !ray || !hit)
+		return (false);
 	sphere = shape->sphere;
 	if (sphere.radius < M_EPSILON)
 		return (false);

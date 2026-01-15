@@ -14,6 +14,8 @@ t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	float	ratio;
 	t_vec3	color;
 
+	if (!ctx || !p || !tokens)
+		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 3)
 		return (PARSE_ERR_MISSING_ARGS);
 	// check for duplicate ambient light
@@ -43,6 +45,8 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	color;
 	t_light	light;
 
+	if (!ctx || !p || !tokens)
+		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &position))
@@ -73,6 +77,8 @@ t_parse_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	orientation;
 	float	fov;
 
+	if (!ctx || !p || !tokens)
+		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (p->has_camera)
@@ -92,15 +98,6 @@ t_parse_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	return (PARSE_OK);
 }
 
-// void init_camera_from_parsed_data(t_camera *cam)
-// {
-//     t_vec3 orientation;
-//     // Extract direction from target
-//     orientation = vec3_normalize(vec3_sub(cam->target.pos, cam->transform.pos));
-//     // Convert to yaw/pitch
-//     cam->yaw = atan2f(orientation.x, orientation.z);
-//     cam->pitch = asinf(orientation.y);
-// } in src/camera/camera.c and then update_camera()
 bool	validate_normalized(t_vec3 vec)
 {
 	float	length;
