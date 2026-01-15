@@ -16,6 +16,7 @@ t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_mater
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_squared = radius * radius;
 	obj.material_id = new_material(ctx, mat);
+	obj.flags |= OBJ_CAST_SHADOWS | OBJ_VISIBLE;
 	return (add_object(ctx, &obj));
 }
 

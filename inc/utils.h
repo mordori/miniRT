@@ -47,5 +47,6 @@ double	ft_strtod(const char *str, char **endptr);
 char	**try_split(char const *s);
 void	blit(t_image *img, t_renderer *r);
 uint32_t	vec3_to_uint32(t_vec3 color);
+void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
 
 #endif

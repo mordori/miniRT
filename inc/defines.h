@@ -48,7 +48,6 @@ typedef enum e_obj_type		t_obj_type;
 typedef enum e_light_type	t_light_type;
 typedef enum e_cam_state	t_cam_state;
 typedef enum e_base_color	t_base_color;
-typedef enum e_surface_type	t_surface_type;
 typedef enum e_pattern		t_pattern;
 typedef enum e_entity		t_entity;
 typedef enum e_err_code		t_err_code;
@@ -141,12 +140,6 @@ enum e_pattern
 	PAT_CHECKERBOARD
 };
 
-enum e_surface_type
-{
-	SURF_OPAQUE,
-	SURF_TRANSPARENT
-};
-
 enum e_entity
 {
 	ENT_CAMERA,
@@ -179,37 +172,39 @@ struct s_texture
 
 struct __attribute__((aligned(16))) s_material
 {
-	t_vec3			albedo;
-	t_vec3			emission;
 	t_texture		texture;
 	t_texture		normal_map;
-	float			alpha;
-	t_base_color	base_color;
-	t_surface_type	surface_type;
-	t_pattern		pattern;
+	t_vec3			albedo;
+	t_vec3			emission;
+	float			metallic;
+	float			roughness;
+	float			ior;
+	float			transmission;
 	uint32_t		flags;
+	t_base_color	base_color;
+	t_pattern		pattern;
 };
 
-struct __attribute__((aligned(32))) s_plane
+struct __attribute__((aligned(16))) s_plane
 {
 	t_vec3			point;
-	t_vec3			normal;				//
+	t_vec3			normal;
 };
 
-struct __attribute__((aligned(32))) s_sphere
+struct __attribute__((aligned(16))) s_sphere
 {
 	t_vec3			center;
 	float			radius;
 	float			radius_squared;
 };
 
-struct __attribute__((aligned(32))) s_cylinder
+struct __attribute__((aligned(16))) s_cylinder
 {
 	float			radius;
 	float			height;
 };
 
-union __attribute__((aligned(32))) u_shape
+union __attribute__((aligned(16))) u_shape
 {
 	t_plane			plane;
 	t_sphere		sphere;
