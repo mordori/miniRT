@@ -118,10 +118,10 @@ void	blit(t_image *img, t_renderer *r)
 	while (i < limit)
 	{
 		color =
-			((uint32_t)(0xFF << 24) |
+			(0xFFU << 24) | // unused alpha channel
 			((uint32_t)(buf[i].b * 255.0f + 0.5f) << 16) |
 			((uint32_t)(buf[i].g * 255.0f + 0.5f) << 8) |
-			((uint32_t)(buf[i].r * 255.0f + 0.5f)));
+			((uint32_t)(buf[i].r * 255.0f + 0.5f));
 		pixels[i] = color;
 		++i;
 	}

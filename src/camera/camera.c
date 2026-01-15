@@ -7,6 +7,8 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation, float fov)
 {
 	t_camera	*cam;
 
+	if (!ctx)
+		return ;
 	cam = &ctx->scene.cam;
 	cam->state = CAM_DEFAULT;
 	cam->transform.pos = position;

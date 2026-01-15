@@ -6,7 +6,7 @@ void	fatal_error(t_context *ctx, char *msg, char *file, int line)
 {
 	char	str[INT32_LENGTH + 1];
 
-	ft_putstr_fd("Error:\n", STDERR_FILENO);
+	ft_putstr_fd("Error: ", STDERR_FILENO);
 	if (msg)
 		ft_putendl_fd(msg, STDERR_FILENO);
 	if (file && line > 0)
