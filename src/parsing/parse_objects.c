@@ -37,6 +37,11 @@ t_parse_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 	return (init_sphere(ctx, center, diameter, &mat));
 }
 
+// Plane:
+// ∗ identifier: pl
+// ∗ x, y, z coordinates of a point in the plane: 0.0,0.0,-10.0
+// ∗ 3D normalized normal vector, in the range [-1,1] for each x, y, z axis
+// ∗ R,G,B colors in the range [0-255]: 0,0,225
 t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3		point;
@@ -60,3 +65,11 @@ t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 	parser->has_plane = true;
 	return(init_plane(ctx, point, normal, &mat));
 }
+
+// Cylinder:
+// ∗ identifier: cy
+// ∗ x, y, z coordinates of the center of the cylinder: 50.0,0.0,20.6
+// ∗ 3D normalized vector of axis of cylinder, in the range [-1,1] for each x,y,z axis
+// ∗ the cylinder diameter: 14.2
+// ∗ the cylinder height: 21.42
+// ∗ R, G, B colors in the range [0,255]: 10, 0, 255

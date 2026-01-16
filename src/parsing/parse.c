@@ -4,8 +4,8 @@
 #include "parsing.h"
 #include "utils.h"
 
-static void				print_parse_error(t_parse_error err, int line_num);
-static bool				validate_scene(t_parser *parser);
+static void				print_parse_error(t_context *ctx, t_parse_error err, int line_num);
+static bool				validate_scene(t_context *ctx, t_parser *parser);
 static t_parse_error	parse_line(t_context *ctx, t_parser *parser,
 							char *line);
 static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
@@ -27,11 +27,11 @@ bool	parse_scene(t_context *ctx, int fd)
 		free(line);
 		if (err != PARSE_OK && err != PARSE_ERR_EMPTY)
 		{
-			print_parse_error(err, parser.line_num);
+			print_parse_error(ctx, err, parser.line_num);
 			return (false);
 		}
 	}
-	return (validate_scene(&parser));
+	return (validate_scene(ctx, &parser));
 }
 
 static t_parse_error	parse_line(t_context *ctx, t_parser *parser, char *line)
@@ -53,28 +53,28 @@ static t_parse_error	parse_line(t_context *ctx, t_parser *parser, char *line)
 	return (ret);
 }
 
-static bool	validate_scene(t_parser *parser)
+static bool	validate_scene(t_context *ctx, t_parser *parser)
 {
 	if (!parser)
 		return (false);
 	if (!parser->has_ambient)
 	{
-		ft_putendl_fd("Error: Missing ambient light (A)", STDERR_FILENO);
+		fatal_error(ctx, "Missing ambient light (A)", __FILE__, parser->line_num);
 		return (false);
 	}
 	if (!parser->has_light)
 	{
-		ft_putendl_fd("Error: Missing light source (L)", STDERR_FILENO);
+		fatal_error(ctx, "Missing light source (L)", __FILE__, parser->line_num);
 		return (false);
 	}
 	if (!parser->has_camera)
 	{
-		ft_putendl_fd("Error: Missing camera (C)", STDERR_FILENO);
+		fatal_error(ctx, "Missing camera (C)", __FILE__, parser->line_num);
 		return (false);
 	}
 	if (!parser->has_plane && !parser->has_sphere /* && !parser->has_cylinder */)
 	{
-		ft_putendl_fd("Error: No objects defined in the scene", STDERR_FILENO);
+		fatal_error(ctx, "No objects defined in the scene", __FILE__, parser->line_num);
 		return (false);
 	}
 	return (true);
@@ -105,21 +105,23 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 		return (PARSE_ERR_UNKNOWN_ID);
 }
 
-static void	print_parse_error(t_parse_error err, int line_num)
+static void	print_parse_error(t_context *ctx, t_parse_error err, int line_num)
 {
-	ft_putstr_fd("Parse Error on line ", STDERR_FILENO);
-	ft_putnbr_fd(line_num, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
+	// ft_putstr_fd("Parse Error on line ", STDERR_FILENO);
+	// ft_putnbr_fd(line_num, STDERR_FILENO);
+	// ft_putstr_fd(": ", STDERR_FILENO);
 	if (err == PARSE_ERR_UNKNOWN_ID)
-		ft_putendl_fd("Unknown element identifier.", STDERR_FILENO);
+		fatal_error(ctx, "Unknown element identifier.", 0, line_num);
 	else if (err == PARSE_ERR_MISSING_ARGS)
-		ft_putendl_fd("Missing arguments for element.", STDERR_FILENO);
+		fatal_error(ctx, "Missing arguments for element.", 0, line_num);
 	else if (err == PARSE_ERR_INVALID_NUM)
-		ft_putendl_fd("Invalid number format.", STDERR_FILENO);
+		fatal_error(ctx, "Invalid number format.", 0, line_num);
 	else if (err == PARSE_ERR_RANGE)
-		ft_putendl_fd("Value out of valid range.", STDERR_FILENO);
+		fatal_error(ctx, "Value out of valid range.", 0, line_num);
 	else if (err == PARSE_ERR_DUPLICATE)
-		ft_putendl_fd("Duplicate unique element (A, L, or C).", STDERR_FILENO);
+		fatal_error(ctx, "Duplicate unique element (A, L, or C).", 0, line_num);
 	else if (err == PARSE_ERR_MALLOC)
-		ft_putendl_fd("Memory allocation failed.", STDERR_FILENO);
+		fatal_error(ctx, "Memory allocation failed.", 0, line_num);
+	else if (err == PARSE_ERR_MISSING_OBJ)
+		fatal_error(ctx, "Missing object in scene.", 0, line_num);
 }

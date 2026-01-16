@@ -37,8 +37,8 @@
 
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)
+# define OBJ_DOUBLE_SIDED		(1 << 2)
 
-# define MAT_DOUBLE_SIDED		(1 << 0)
 # define MAT_RECEIVE_SHADOWS	(1 << 1)
 
 typedef enum e_obj_type		t_obj_type;
