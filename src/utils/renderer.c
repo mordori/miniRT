@@ -30,7 +30,7 @@ uint32_t	vec3_to_uint32(t_vec3 color)
 	uint32_t	result;
 
 	result =
-		((uint32_t)(0xFF << 24) |
+		((0xFFU << 24) |
 		((uint32_t)(color.b * 255.0f + 0.5f) << 16) |
 		((uint32_t)(color.g * 255.0f + 0.5f) << 8) |
 		((uint32_t)(color.r * 255.0f + 0.5f)));
