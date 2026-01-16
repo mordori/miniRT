@@ -82,7 +82,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	if (!l2)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
 	l2->pos = (t_vec3){{0.0f, 0.2f, 5.5f}};
-	l2->emission = vec3_scale((t_vec3){{1.0f, 0.05f, 0.05f}}, 300.0f);
+	l2->emission = vec3_scale((t_vec3){{1.0f, 0.05f, 0.05f}}, 100.0f);
 	l2->type = LIGHT_AREA;
 
 	obj = (t_object){0};

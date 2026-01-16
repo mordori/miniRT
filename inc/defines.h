@@ -12,7 +12,7 @@
 
 # define WIDTH				1920
 # define HEIGHT				1080
-# define RENDER_SAMPLES		512
+# define RENDER_SAMPLES		128
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		8
 # define THREADS_DFL		4
@@ -312,6 +312,7 @@ struct s_renderer
 	uint32_t			new_width;
 	uint32_t			new_height;
 	uint32_t			frame;
+	uint32_t			render_time;
 	int32_t				threads_amount;
 	int32_t				threads_init;
 	t_render_mode		mode;
