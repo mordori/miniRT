@@ -6,19 +6,24 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 20:46:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/13 23:56:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/16 01:12:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft_random.h"
 
 // Xorshift32 by George Marsaglia
-float	randomf(uint32_t *seed)
+uint32_t	random_uint32(uint32_t *seed)
 {
 	*seed ^= *seed << 13;
 	*seed ^= *seed >> 17;
 	*seed ^= *seed << 5;
-	return ((float)(*seed));
+	return (*seed);
+}
+
+float	randomf(uint32_t *seed)
+{
+	return ((float)(random_uint32(seed)));
 }
 
 float	randomf01(uint32_t *seed)

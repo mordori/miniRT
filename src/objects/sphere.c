@@ -1,6 +1,7 @@
 #include "objects.h"
 #include "materials.h"
 
+
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
 t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_material *mat)
@@ -35,6 +36,24 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
 	hit->normal = vec3_div(vec3_sub(hit->point, sphere.center), sphere.radius);
 	return (true);
+}
+
+t_vec3	random_point_on_sphere(const t_shape *shape, uint32_t *seed)
+{
+	t_vec3	result;
+
+	result = vec3_unit_random(seed);
+	result = vec3_scale(result, shape->sphere.radius);
+	result = vec3_add(shape->sphere.center, result);
+	return (result);
+}
+
+t_vec3	normal_at_sphere(const t_shape *shape, const t_vec3 pos)
+{
+	t_vec3	result;
+
+	result = vec3_div(vec3_sub(pos, shape->sphere.center), shape->sphere.radius);
+	return (result);
 }
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max)

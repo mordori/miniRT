@@ -27,3 +27,23 @@ bool	hit_plane(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	plane = shape->plane;
 	return (true);
 }
+
+t_vec3	random_point_on_plane(const t_shape *shape, uint32_t *seed)
+{
+	t_vec3	result;
+
+	(void)shape;
+	(void)seed;
+	result = vec3_n(1.0f);
+	return (result);
+}
+
+t_vec3	normal_at_plane(const t_shape *shape, const t_vec3 pos)
+{
+	t_vec3	result;
+
+	(void)shape;
+	(void)pos;
+	result = vec3_n(1.0f);
+	return (result);
+}

@@ -24,14 +24,15 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n)
 
 t_aabb	get_object_bounds(const t_object *obj)
 {
-	static const t_get_shape_bounds	functions[] =
-	{
-		plane_bounds,
-		sphere_bounds,
-		cylinder_bounds
-	};
+	t_aabb result;
 
-	return(functions[obj->type](obj));
+	if (obj->type == OBJ_SPHERE)
+		result = sphere_bounds(obj);
+	else if (obj->type == OBJ_PLANE)
+		result = plane_bounds(obj);
+	else
+		result = cylinder_bounds(obj);
+	return(result);
 }
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
