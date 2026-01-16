@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/09 05:09:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/15 20:00:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,14 @@
 
 # ifndef M_EPSILON
 #  define M_EPSILON		1e-6f
+# endif
+
+# ifndef LEN_EPSILON
+#  define LEN_EPSILON		1e-6f
+# endif
+
+# ifndef LEN_SQ_EPSILON
+#  define LEN_SQ_EPSILON	1e-12f
 # endif
 
 typedef struct s_list		t_list;

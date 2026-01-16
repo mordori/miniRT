@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 20:44:52 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/13 23:38:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/16 01:12:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft_defs.h"
 
+uint32_t	random_uint32(uint32_t *seed);
 float	randomf(uint32_t *seed);
 float	randomf01(uint32_t *seed);
 float	randomfn11(uint32_t *seed);

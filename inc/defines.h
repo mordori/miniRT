@@ -10,16 +10,17 @@
 # include "libft_colors.h"
 # include "libft_graphics.h"
 
-# define WIDTH			1920
-# define HEIGHT			1080
-# define RENDER_FRAMES	128
-# define RENDER_BOUNCES	3
-# define THREADS_DFL	4
-# define SENS_ORBIT		0.0025f
-# define SENS_ZOOM		0.0018f
-# define SENS_PAN		0.0006f
-# define TILE_SIZE		32
-# define INV_255F		0.003921568627451f
+# define WIDTH				1920
+# define HEIGHT				1080
+# define RENDER_SAMPLES		512
+# define PREVIEW_BOUNCES	2
+# define REFINE_BOUNCES		8
+# define THREADS_DFL		4
+# define SENS_ORBIT			0.0025f
+# define SENS_ZOOM			0.0018f
+# define SENS_PAN			0.0006f
+# define TILE_SIZE			32
+# define INV_255F			0.003921568627451f
 
 
 # ifndef M_1_2PI
@@ -115,6 +116,7 @@ enum e_obj_type
 enum e_light_type
 {
 	LIGHT_POINT,
+	LIGHT_AREA,
 	LIGHT_AMBIENT,
 	LIGHT_DIRECTIONAL
 };
@@ -183,6 +185,7 @@ struct __attribute__((aligned(16))) s_material
 	uint32_t		flags;
 	t_base_color	base_color;
 	t_pattern		pattern;
+	bool			is_emissive;
 };
 
 struct __attribute__((aligned(16))) s_plane
@@ -230,6 +233,8 @@ struct __attribute__((aligned(16))) s_light
 		t_vec3		dir;
 	};
 	t_vec3			color;
+	t_vec3			emission;
+	t_object		*obj;
 	float			radius;
 	float			intensity;
 	t_light_type	type;
@@ -268,6 +273,7 @@ struct __attribute__((aligned(16))) s_path_data
 	t_vec3			color;
 	t_vec3			throughput;
 	t_render_mode	mode;
+	int32_t			bounce;
 };
 
 struct s_scene

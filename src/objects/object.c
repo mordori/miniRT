@@ -17,18 +17,43 @@ t_parse_error add_object(t_context *ctx, t_object *obj)
 
 bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 {
-	static const t_hit_shape	functions[] =
-	{
-		hit_plane,
-		hit_sphere,
-		hit_cylinder
-	};
 	bool	result;
 
 	if (!obj)
 		return (false);
-	result = functions[obj->type](&obj->shape, ray, hit);
+	if (obj->type == OBJ_SPHERE)
+		result = hit_sphere(&obj->shape, ray, hit);
+	else if (obj->type == OBJ_PLANE)
+		result = hit_plane(&obj->shape, ray, hit);
+	else
+		result = hit_cylinder(&obj->shape, ray, hit);
 	if (result)
 		hit->obj = obj;
+	return (result);
+}
+
+t_vec3	random_point_on_object(const t_object *obj, uint32_t *seed)
+{
+	t_vec3	result;
+
+	if (obj->type == OBJ_SPHERE)
+		result = random_point_on_sphere(&obj->shape, seed);
+	else if (obj->type == OBJ_PLANE)
+		result = random_point_on_plane(&obj->shape, seed);
+	else
+		result = random_point_on_cylinder(&obj->shape, seed);
+	return (result);
+}
+
+t_vec3	normal_at_point(const t_object *obj, const t_vec3 pos)
+{
+	t_vec3	result;
+
+	if (obj->type == OBJ_SPHERE)
+		result = normal_at_sphere(&obj->shape, pos);
+	else if (obj->type == OBJ_PLANE)
+		result = normal_at_plane(&obj->shape, pos);
+	else
+		result = normal_at_cylinder(&obj->shape, pos);
 	return (result);
 }

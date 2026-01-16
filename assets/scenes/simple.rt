@@ -1,19 +1,14 @@
-# Simple test scene with ambient, camera, light and spheres
-
 # Ambient light
-A 0.0 200,200,255
+A 0.0 255,255,255
 
 # Camera
 C 0,0,0 0,0,1 70
 
 # Point light
-L -1,10,-1 0.0 255,0,0
+L -3,3,-2 1.0 255,0,0
 
-# # Ground
-sp 0,-50.7,3 100 255,255,255
+# Ground
+sp 0,-50.5,3 100 128,128,128
 
-# # Sun
-sp 20,13.9,14.75 3.5 255,255,255
-
-# # Spheres
-sp 0,0,3 1.4 255,255,255
+# Spheres
+sp 0,0,3 1 170,170,170

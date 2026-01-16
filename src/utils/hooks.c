@@ -83,18 +83,18 @@ void	loop_hook(void *param)
 		{
 			r->cam = ctx->scene.cam;
 			r->mode = RENDER_PREVIEW;
-			r->ray_bounces = 2;
+			r->ray_bounces = PREVIEW_BOUNCES;
 			r->frame = 1;
 			r->tile_index = 0;
 			update = false;
 			pthread_cond_broadcast(&r->cond);
 		}
-		else if (r->frame < RENDER_FRAMES)
+		else if (r->frame < RENDER_SAMPLES)
 		{
 			if (r->mode == RENDER_PREVIEW)
 				r->frame = 1;
 			r->mode = RENDER_REFINE;
-			r->ray_bounces = RENDER_BOUNCES;
+			r->ray_bounces = REFINE_BOUNCES;
 			r->tile_index = 0;
 			pthread_cond_broadcast(&r->cond);
 		}

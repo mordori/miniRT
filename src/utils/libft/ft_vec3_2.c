@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/21 18:04:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/15 20:03:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ float	vec3_dot(t_vec3 a, t_vec3 b)
 
 t_vec3	vec3_div(t_vec3 v, float div)
 {
-	if (fabsf(div) < M_EPSILON)
+	if (fabsf(div) < LEN_SQ_EPSILON)
 		return (vec3_n(0.0f));
 	return (vec3_scale(v, 1.0f / div));
 }
