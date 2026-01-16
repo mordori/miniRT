@@ -64,6 +64,7 @@ void	loop_hook(void *param)
 	t_renderer		*r;
 	bool			resize;
 	static bool		update;
+	uint32_t		render_time;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
@@ -76,6 +77,9 @@ void	loop_hook(void *param)
 		r->frame_complete = false;
 		blit(ctx->img, r);
 		++r->frame;
+		render_time = time_now() - r->render_time;
+		if (r->frame == RENDER_SAMPLES)
+			printf("Done!\tRender time: %d.%.1ds\n", render_time / 1000, render_time % 10);
 	}
 	if (r->threads_running == 0 && !resize)
 	{
@@ -87,6 +91,7 @@ void	loop_hook(void *param)
 			r->frame = 1;
 			r->tile_index = 0;
 			update = false;
+			r->render_time = time_now();
 			pthread_cond_broadcast(&r->cond);
 		}
 		else if (r->frame < RENDER_SAMPLES)

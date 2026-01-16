@@ -78,6 +78,7 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	r->mode = RENDER_PREVIEW;
 	r->ray_bounces = 2;
 	r->frame = 1;
+	r->render_time = time_now();
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 }

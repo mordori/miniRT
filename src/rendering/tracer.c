@@ -52,11 +52,13 @@ static inline t_path_data	trace_ray(const t_scene *scene, t_ray *ray, t_path_dat
 				d.color = vec3_add(d.color, vec3_mul(d.throughput, mat->emission));
 			return (d);
 		}
+		// d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_directional(scene, &d.hit, mat)));
 		if (d.mode == RENDER_PREVIEW && d.bounce == 0)
 			d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_ambient(scene, mat)));
-		// d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_directional(scene, &d.hit, mat)));
+		if (d.mode == RENDER_PREVIEW)
+			return (d);
 		d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_lighting(scene, &d.hit, mat, seed)));
-		if (scatter(ray, &d.hit, seed))
+		if (d.mode == RENDER_REFINE && scatter(ray, &d.hit, seed))
 		{
 			d.throughput = vec3_mul(d.throughput, mat->albedo);
 			if (d.bounce > 2)
