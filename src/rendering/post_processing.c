@@ -5,7 +5,8 @@ static inline float	aces(float x);
 
 t_vec3	post_process(t_vec3 c)
 {
-	// static const float	exposure = 0.5f;
+	// static const float	exposure = 0.4f;
+
 	c.r = fmaxf(0.0f, c.r);
 	c.g = fmaxf(0.0f, c.g);
 	c.b = fmaxf(0.0f, c.b);
