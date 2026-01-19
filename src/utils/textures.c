@@ -1,8 +1,10 @@
 #include "utils.h"
 
 static inline float	srgb_to_linear(uint8_t c);
+static inline void	tex_data_to_linear(t_texture *texture);
+static inline void	tex_srgb_to_linear(t_texture *texture);
 
-t_texture	load_texture(t_context *ctx, char *file)
+t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
 {
 	t_texture	texture;
 	size_t		size;
@@ -14,13 +16,39 @@ t_texture	load_texture(t_context *ctx, char *file)
 	texture.pixels = aligned_alloc(64, size);
 	if (!texture.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
-	tex_to_linear(&texture);
+	if (is_srgb)
+		tex_srgb_to_linear(&texture);
+	else
+		tex_data_to_linear(&texture);
 	mlx_delete_texture(texture.tex);
 	texture.tex = NULL;
 	return (texture);
 }
 
-void	tex_to_linear(t_texture *texture)
+static inline void	tex_data_to_linear(t_texture *texture)
+{
+	uint32_t	pixels_total;
+	uint32_t	i;
+	float		*dst;
+	uint8_t		*src;
+
+	i = 0;
+	texture->width = texture->tex->width;
+	texture->height = texture->tex->height;
+	dst = texture->pixels;
+	src = texture->tex->pixels;
+	pixels_total = texture->width * texture->height * 4;
+	while (i < pixels_total)
+	{
+		dst[i] = ((float)src[i] * INV_255F);
+		dst[i + 1] = ((float)src[i + 1] * INV_255F);
+		dst[i + 2] = ((float)src[i + 2] * INV_255F);
+		dst[i + 3] = ((float)src[i + 3] * INV_255F);
+		i += 4;
+	}
+}
+
+static inline void	tex_srgb_to_linear(t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;

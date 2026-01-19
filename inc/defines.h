@@ -12,16 +12,16 @@
 
 # define WIDTH				1920
 # define HEIGHT				1080
-# define RENDER_SAMPLES		128
+# define RENDER_SAMPLES		2048
 # define PREVIEW_BOUNCES	2
-# define REFINE_BOUNCES		8
+# define REFINE_BOUNCES		32
 # define THREADS_DFL		4
 # define SENS_ORBIT			0.0025f
 # define SENS_ZOOM			0.0018f
 # define SENS_PAN			0.0006f
 # define TILE_SIZE			32
 # define INV_255F			0.003921568627451f
-
+# define INV_2_2F			0.454545454545454f
 
 # ifndef M_1_2PI
 #  define M_1_2PI		0.15915494309189533577f
@@ -33,10 +33,6 @@
 
 # ifndef C_EPSILON
 #  define C_EPSILON		1e-4f
-# endif
-
-# ifndef SHADOW_BIAS
-#  define SHADOW_BIAS	1e-4f
 # endif
 
 # define OBJ_VISIBLE			(1 << 0)
@@ -70,7 +66,8 @@ typedef struct s_material	t_material;
 typedef struct s_renderer	t_renderer;
 typedef struct s_editor		t_editor;
 typedef struct s_viewport	t_viewport;
-typedef struct s_path_data	t_path_data;
+typedef struct s_path		t_path;
+typedef struct s_pixel		t_pixel;
 
 typedef union u_shape		t_shape;
 
@@ -264,16 +261,19 @@ struct __attribute__((aligned(16))) s_camera
 	float			pitch;
 	float			yaw;
 	float			distance;
+	float			exposure;
 	t_cam_state		state;
 };
 
-struct __attribute__((aligned(16))) s_path_data
+struct __attribute__((aligned(16))) s_path
 {
+	t_ray			ray;
 	t_hit			hit;
 	t_vec3			color;
 	t_vec3			throughput;
-	t_render_mode	mode;
+	t_material		*mat;
 	int32_t			bounce;
+	t_render_mode	mode;
 };
 
 struct s_scene
@@ -326,6 +326,17 @@ struct s_editor
 
 };
 
+struct __attribute__((aligned(16))) s_pixel
+{
+	t_vec3		*color;
+	uint32_t	*seed;
+	int32_t		x;
+	int32_t		y;
+	uint32_t	frame;
+	float		u;
+	float		v;
+};
+
 struct __attribute__((aligned(16))) s_aabb
 {
 	t_vec3			min;
@@ -350,6 +361,7 @@ struct s_context
 	t_image			*img;
 	uint32_t		resize_time;
 	int				fd;
+	t_texture		blue_noise;
 };
 
 #endif

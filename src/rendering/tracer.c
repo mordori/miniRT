@@ -7,100 +7,95 @@
 
 static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray);
 static inline t_vec3	background_gradient(float t);
-static inline t_path_data	trace_ray(const t_scene *scene, t_ray *ray, t_path_data *data, uint32_t *seed);
-static inline bool	scatter(t_ray *ray, t_hit *hit, uint32_t *seed);
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
+static inline bool	scatter(t_path *path, uint32_t *seed);
 
-t_vec3	trace_path(const t_scene *scene, const t_renderer *r, t_vec2 uv, uint32_t *seed)
+t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 {
 	const t_viewport	*vp;
-	t_ray				ray;
+	const t_renderer	*r;
+	t_path				path;
 	t_vec3				pixel_loc;
-	t_path_data			data;
-	int32_t				previous_bounce;
 
+	r = &ctx->renderer;
 	vp = &r->cam.viewport;
-	pixel_loc = vec3_add(vp->pixel_00_loc, vec3_add(vec3_scale(vp->d_u, uv.u), vec3_scale(vp->d_v, uv.v)));
-	ray = new_ray(r->cam.transform.pos, vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos)));
-	data = (t_path_data){0};
-	data.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
-	data.mode = r->mode;
-	while (data.bounce < r->ray_bounces)
+	pixel_loc = vec3_add(vec3_scale(vp->d_u, pixel->u), vec3_scale(vp->d_v, pixel->v));
+	pixel_loc = vec3_add(vp->pixel_00_loc, pixel_loc);
+	path = (t_path){0};
+	path.ray = new_ray(r->cam.transform.pos, vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos)));
+	path.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
+	path.mode = r->mode;
+	while (path.bounce < r->ray_bounces)
 	{
-		data.hit = (t_hit){0};
-		data.hit.t = M_INF;
-		previous_bounce = data.bounce;
-		data = trace_ray(scene, &ray, &data, seed);
-		if (previous_bounce == data.bounce)
+		path.hit = (t_hit){0};
+		path.hit.t = M_INF;
+		if (!trace_ray(ctx, &path, pixel))
 			break;
 	}
-	return (data.color);
+	return (path.color);
 }
 
-static inline t_path_data	trace_ray(const t_scene *scene, t_ray *ray, t_path_data *data, uint32_t *seed)
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	t_material		*mat;
-	t_path_data		d;
-	float			p;
+	t_vec3		lighting;
 
-	d = *data;
-	if (hit_object(scene->selected_obj, ray, &d.hit) | hit_bvh(scene->bvh_root, ray, &d.hit, 0))
+	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
-		mat = ((t_material **)scene->materials.items)[d.hit.obj->material_id];
-		if (mat->is_emissive)
+		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
+		if (path->mat->is_emissive)
 		{
-			if (d.bounce == 0)
-				d.color = vec3_add(d.color, vec3_mul(d.throughput, mat->emission));
-			return (d);
+			if (path->bounce == 0)
+				path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
+			return (false);
 		}
-		// d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_directional(scene, &d.hit, mat)));
-		if (d.mode == RENDER_PREVIEW && d.bounce == 0)
-			d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_ambient(scene, mat)));
-		if (d.mode == RENDER_PREVIEW)
-			return (d);
-		d.color = vec3_add(d.color, vec3_mul(d.throughput, compute_lighting(scene, &d.hit, mat, seed)));
-		if (d.mode == RENDER_REFINE && scatter(ray, &d.hit, seed))
+
+		lighting = compute_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
+		if (path->bounce > 0)
+			lighting = vec3_min(lighting, 10.0f);
+		path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+
+		// if (path->mode == RENDER_PREVIEW && path->bounce == 0)
+		// {
+		// 	path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_ambient(scene, mat)));
+		// 	return (false);
+		// }
+		// if (path->mode != RENDER_PREVIEW)
+		if (ctx->scene.lights.total > 0)
 		{
-			d.throughput = vec3_mul(d.throughput, mat->albedo);
-			if (d.bounce > 2)
-			{
-				p = fmaxf(d.throughput.r, fmaxf(d.throughput.g, d.throughput.b));
-				if (p > 0.95f)
-					p = 0.95f;
-				else if (p < 0.05f)
-					p = 0.05f;
-				if (randomf01(seed) > p)
-					return (d);
-				d.throughput = vec3_scale(d.throughput, 1.0f / p);
-			}
-			++d.bounce;
-			return (d);
-		};
-		return (d);
+			lighting = compute_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[pcg(pixel->seed) % ctx->scene.lights.total], pixel);
+			if (path->bounce > 0)
+				lighting = vec3_min(lighting, 10.0f);
+			path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+		}
+		return (scatter(path, pixel->seed));
 	}
-	// if (d.bounce == 0)
-		// d.color = vec3_add(d.color, vec3_mul(d.throughput, vec3_div(background_color(&scene->skydome, ray), 0.3f)));
-	// else
-	d.color = vec3_add(d.color, vec3_mul(d.throughput, background_color(&scene->skydome, ray)));
-	return (d);
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray)));
+	return (false);
 }
 
-static inline bool	scatter(t_ray *ray, t_hit *hit, uint32_t *seed)
+static inline bool	scatter(t_path *path, uint32_t *seed)
 {
 	t_vec3		origin;
 	t_vec3		dir;
-	t_vec3		random;
 	float		len_sq;
+	float		p;
 
-	random =  vec3_unit_random(seed);
-	dir = vec3_add(hit->normal, random);
+	dir = vec3_add(path->hit.normal, vec3_unit_random(seed));
 	len_sq = vec3_dot(dir, dir);
 	if (len_sq < LEN_SQ_EPSILON)
 	{
-		dir = hit->normal;
+		dir = path->hit.normal;
 		len_sq = 1.0f;
 	}
-	origin = vec3_add(hit->point, vec3_scale(hit->normal, G_EPSILON));
-	*ray = new_ray(origin, vec3_div(dir, sqrtf(len_sq)));
+	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
+	path->ray = new_ray(origin, vec3_div(dir, sqrtf(len_sq)));
+	path->throughput = vec3_mul(path->throughput, path->mat->albedo);
+	p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
+	p = ft_clamp(p, 0.05f, 0.95f);
+	if (randomf01(seed) > p)
+		return (false);
+	path->throughput = vec3_scale(path->throughput, 1.0f / p);
+	++path->bounce;
 	return (true);
 }
 
@@ -131,7 +126,7 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray)
 	t_vec3		result;
 	const float	*pixels;
 
-	if (tex)
+	if (!tex)
 		return (background_gradient((ray->dir.y + 1.0f) * 0.5f));
 	uv.u = ft_clamp01((atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI);
 	uv.v = ft_clamp01(acosf(ray->dir.y) * M_1_PI);
@@ -139,8 +134,8 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray)
 	xy.y = (uint32_t)(uv.v * (tex->height - 1));
 	i = (xy.y * tex->width + xy.x) * 4;
 	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64);
-	memcpy(&result, &pixels[i], sizeof(t_vec4));
-	return (result);
+	memcpy(&result, &pixels[i], sizeof(t_vec3));
+	return (vec3_scale(result, 20.0f));
 }
 
 static inline t_vec3	background_gradient(float t)

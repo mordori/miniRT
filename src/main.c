@@ -44,6 +44,7 @@ static inline void	initialize(t_context *ctx)
 		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
+	ctx->blue_noise = load_texture(ctx, "assets/textures/blue_noise.png", false);
 	resize_window(ctx);
 	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx))
 		mlx_loop(ctx->mlx);
@@ -68,6 +69,7 @@ void	clean(t_context *ctx)
 		pthread_mutex_destroy(&r->mutex);
 	free(r->threads);
 	clean_scene(ctx);
+	free_texture(&ctx->blue_noise);
 	free(r->buffer);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
@@ -75,18 +77,9 @@ void	clean(t_context *ctx)
 		mlx_terminate(ctx->mlx);
 }
 
-// antialiasing
 // dof
-// --subsampling and passes with bilinear interpolation
-// --ordered dithering bayer matrix / IGN
 // fog
-// tangent and bitangent
-// shadow acne
-// blue noise disk soft shadows
 // scene saving
 // parse .obj files
-// Interleaved Gradient Noise
 // save render .png
-// json file for extended objects
-// bouncing ball animation, squash strect
-// bilinear filterin for textures
+// Stochastic Bilinear Interpolation for textures

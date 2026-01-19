@@ -5,31 +5,36 @@
 
 static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
-t_vec3	compute_lighting(const t_scene *scene, const t_hit *hit, t_material *mat, uint32_t *seed)
+t_vec3	compute_lighting(const t_context *ctx, const t_path *path, t_light *light, t_pixel *pixel)
 {
-	t_light		*light;
 	t_vec3		color;
 	t_vec3		hit_to_light;
 	t_vec3		orig_biased;
 	t_vec3		pos;
 	t_vec3		dir;
+	t_vec2		uv;
 	float		dist;
 	float		ndotl;
 	float		cos_light;
 
 	color = (t_vec3){0};
-	light = ((t_light **)scene->lights.items)[random_uint32(seed) % scene->lights.total];
 	if (light->type == LIGHT_AREA)
-		pos = random_point_on_object(light->obj, seed);
+	{
+		if (path->bounce == 0)
+			uv = (t_vec2){{blue_noise(&ctx->blue_noise, pixel, 4), blue_noise(&ctx->blue_noise, pixel, 5)}};
+		else
+			uv = (t_vec2){{randomf01(pixel->seed), randomf01(pixel->seed)}};
+		pos = random_point_on_object(light->obj, uv.u, uv.v);
+	}
 	else
 		pos = light->pos;
-	orig_biased = vec3_add(hit->point, vec3_scale(hit->normal, SHADOW_BIAS));
+	orig_biased = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
 	hit_to_light = vec3_sub(pos, orig_biased);
 	dist = vec3_length(hit_to_light);
 	if (dist < LEN_EPSILON)
 		return (color);
 	dir = vec3_scale(hit_to_light, 1.0f / dist);
-	ndotl = vec3_dot(hit->normal, dir);
+	ndotl = vec3_dot(path->hit.normal, dir);
 	if (ndotl <= 0.0f)
 		return (color);
 	if (light->type == LIGHT_AREA)
@@ -39,9 +44,11 @@ t_vec3	compute_lighting(const t_scene *scene, const t_hit *hit, t_material *mat,
 			return (color);
 		ndotl *= cos_light;
 	}
-	if (hit_shadow(scene, orig_biased, dir, dist - 1e-3f))
+	if (hit_shadow(&ctx->scene, orig_biased, dir, dist - G_EPSILON))
 		return (color);
-	color = vec3_scale(add_light(light->emission, mat->albedo, ndotl, dist), (float)scene->lights.total);
+	color = add_light(light->emission, path->mat->albedo, ndotl, dist);
+	// color = vec3_scale(add_light(light->emission, path->mat->albedo, ndotl, dist), (float)ctx->scene.lights.total);
+	color = add_light(light->emission, path->mat->albedo, ndotl, dist);
 	if (light->type == LIGHT_AREA)
 	{
 		float area = 4.0f * M_PI * light->obj->shape.sphere.radius_squared;
@@ -70,7 +77,7 @@ t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, t_material *m
 	t_vec3		orig_biased;
 
 	light = (t_light *)&scene->directional_light;
-	orig_biased = vec3_add(hit->point, vec3_scale(hit->normal, SHADOW_BIAS));
+	orig_biased = vec3_add(hit->point, vec3_scale(hit->normal, G_EPSILON));
 	dir = light->dir;
 	ndotl = vec3_dot(hit->normal, dir);
 	if (ndotl <= 0.0f || hit_shadow(scene, orig_biased, dir, M_INF))

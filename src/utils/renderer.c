@@ -2,35 +2,33 @@
 #include "camera.h"
 #include "rendering.h"
 
-void	blit(t_image *img, t_renderer *r)
+static inline uint32_t	vec3_to_uint32(t_vec3 color);
+
+void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 {
 	uint32_t	*pixels;
-	t_vec3		color;
 	float		scale;
-	uint32_t	i;
-	uint32_t	limit;
 	t_vec3		*buf;
+	t_vec3		color;
 
 	buf = __builtin_assume_aligned(r->buffer, 64);
-	pixels = (uint32_t *)img->pixels;
-	limit = r->pixels;
-	i = 0;
+	pixels = (uint32_t *)ctx->img->pixels;
 	scale = 1.0f / (float)r->frame;
-	while (i < limit)
+	while (i < r->pixels)
 	{
 		color = vec3_scale(buf[i], scale);
-		color = post_process(color);
+		color = post_process_fast(ctx, color);
 		pixels[i] = vec3_to_uint32(color);
 		++i;
 	}
 }
 
-uint32_t	vec3_to_uint32(t_vec3 color)
+static inline uint32_t	vec3_to_uint32(t_vec3 color)
 {
 	uint32_t	result;
 
 	result =
-		((uint32_t)(0xFF << 24) |
+		((uint32_t)(0xFFu << 24) |
 		((uint32_t)(color.b * 255.0f + 0.5f) << 16) |
 		((uint32_t)(color.g * 255.0f + 0.5f) << 8) |
 		((uint32_t)(color.r * 255.0f + 0.5f)));

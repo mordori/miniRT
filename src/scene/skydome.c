@@ -4,5 +4,5 @@
 void	init_skydome(t_context *ctx, char *file)
 {
 	if (file)
-		ctx->scene.skydome = load_texture(ctx, file);
+		ctx->scene.skydome = load_texture(ctx, file, true);
 }

@@ -33,10 +33,9 @@ int 	cmp_bounds_x(const void *a, const void *b);
 int 	cmp_bounds_y(const void *a, const void *b);
 int 	cmp_bounds_z(const void *a, const void *b);
 t_vec3	get_point(t_ray *ray, float t);
-t_texture	load_texture(t_context *ctx, char *file);
+t_texture	load_texture(t_context *ctx, char *file, bool is_srgb);
 void	free_texture(t_texture *tex);
 void	resize_window(t_context *ctx);
-void	tex_to_linear(t_texture *texture);
 bool	resize_timer(t_context *ctx);
 uint32_t	time_now(void);
 void	clean_bvh(t_bvh_node *node);
@@ -45,8 +44,9 @@ void	stop_render(t_renderer *r);
 float	ft_atof(const char *str, char **endptr);
 double	ft_strtod(const char *str, char **endptr);
 char	**try_split(char const *s);
-void	blit(t_image *img, t_renderer *r);
-uint32_t	vec3_to_uint32(t_vec3 color);
+void	blit(const t_context *ctx, const t_renderer *r, uint32_t i);
 void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
+float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
+t_vec3	map_spherical(float u, float v);
 
 #endif

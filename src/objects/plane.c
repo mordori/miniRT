@@ -28,12 +28,13 @@ bool	hit_plane(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	return (true);
 }
 
-t_vec3	random_point_on_plane(const t_shape *shape, uint32_t *seed)
+t_vec3	random_point_on_plane(const t_shape *shape, float u, float v)
 {
 	t_vec3	result;
 
 	(void)shape;
-	(void)seed;
+	(void)u;
+	(void)v;
 	result = vec3_n(1.0f);
 	return (result);
 }
