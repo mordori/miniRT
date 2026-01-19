@@ -75,7 +75,7 @@ void	loop_hook(void *param)
 	if (r->frame_complete)
 	{
 		r->frame_complete = false;
-		blit(ctx->img, r);
+		blit(ctx, r, 0);
 		++r->frame;
 		render_time = time_now() - r->render_time;
 		if (r->frame == RENDER_SAMPLES)

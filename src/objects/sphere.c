@@ -1,6 +1,6 @@
 #include "objects.h"
 #include "materials.h"
-
+#include "utils.h"
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
@@ -38,11 +38,11 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	return (true);
 }
 
-t_vec3	random_point_on_sphere(const t_shape *shape, uint32_t *seed)
+t_vec3	random_point_on_sphere(const t_shape *shape, float u, float v)
 {
 	t_vec3	result;
 
-	result = vec3_unit_random(seed);
+	result = map_spherical(u, v);
 	result = vec3_scale(result, shape->sphere.radius);
 	result = vec3_add(shape->sphere.center, result);
 	return (result);

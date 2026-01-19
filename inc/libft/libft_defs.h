@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/15 20:00:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/19 04:12:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@
 # ifndef M_PI_2
 #  define M_PI_2		1.57079632679489661923
 # endif
+
+# ifndef M_TAU
+#  define M_TAU			6.28318530717958647693
+# endif
+
 
 # ifndef M_INF
 #  define M_INF			FLT_MAX

@@ -32,16 +32,16 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 	return (result);
 }
 
-t_vec3	random_point_on_object(const t_object *obj, uint32_t *seed)
+t_vec3	random_point_on_object(const t_object *obj, float u, float v)
 {
 	t_vec3	result;
 
 	if (obj->type == OBJ_SPHERE)
-		result = random_point_on_sphere(&obj->shape, seed);
+		result = random_point_on_sphere(&obj->shape, u, v);
 	else if (obj->type == OBJ_PLANE)
-		result = random_point_on_plane(&obj->shape, seed);
+		result = random_point_on_plane(&obj->shape, u, v);
 	else
-		result = random_point_on_cylinder(&obj->shape, seed);
+		result = random_point_on_cylinder(&obj->shape, u, v);
 	return (result);
 }
 

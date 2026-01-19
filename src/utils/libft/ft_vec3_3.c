@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 00:03:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/15 20:08:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/19 07:46:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,13 @@ t_vec3	vec3_unit_random(uint32_t *seed)
 		if (len_sq <= 1.0f && fabsf(len_sq) >= LEN_SQ_EPSILON)
 			return (vec3_div(result, sqrtf(len_sq)));
 	}
+}
+
+t_vec3	vec3_min(t_vec3 v, float min)
+{
+	return ((t_vec3){{
+		fminf(v.r, min),
+		fminf(v.g, min),
+		fminf(v.b, min)
+	}});
 }
