@@ -17,14 +17,14 @@ void	init_directional_light(t_context *ctx, t_light *light)
 
 	direction = (t_vec3){{20.0f, 13.75f, 14.75f}};
 	direction = vec3_normalize(direction);
-	target_lux = 20.0f;
+	target_lux = 40.0f;
 	geometric_factor = 4.0f * M_PI * (angular_radius * angular_radius);
-	radiance = target_lux / geometric_factor / 100.0f;
+	radiance = target_lux / geometric_factor / 25.0f;
 	light->pos = vec3_scale(direction, distance);
 	light->emission = vec3_scale((t_vec3){{1.0f, 1.0f, 1.0f}}, radiance);
 	light->type = LIGHT_AREA;
 	obj = (t_object){0};
-	radius = distance * angular_radius * 10.0f;
+	radius = distance * angular_radius * 6.0f;
 	obj.type = OBJ_SPHERE;
 	obj.transform.pos = light->pos;
 	obj.shape.sphere.center = obj.transform.pos;

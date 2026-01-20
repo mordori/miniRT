@@ -161,7 +161,7 @@ struct __attribute__((aligned(16))) s_hit
 	float			t;
 };
 
-struct s_texture
+struct __attribute__((aligned(16))) s_texture
 {
 	mlx_texture_t	*tex;
 	float			*pixels;
@@ -289,36 +289,42 @@ struct s_scene
 	t_object		*selected_obj;
 };
 
-struct s_renderer
+struct __attribute__((aligned(64))) s_renderer
 {
-	pthread_mutex_t		mutex;
-	uint32_t			tile_index;
-	uint32_t			threads_running;
-	uint32_t			tiles_total;
-	bool				active;
-	bool				resize_pending;
-	bool				frame_complete;
-	uint8_t				padding_0[9];
-	pthread_cond_t		cond;
-	uint8_t				padding_1[16];
-	t_vec3				*buffer;
-	uint32_t			width;
-	uint32_t			height;
-	uint32_t			pixels;
-	t_int2				tiles;
-	uint8_t				padding_2[28];
-	t_camera			cam;
-	pthread_t			*threads;
-	uint32_t			new_width;
-	uint32_t			new_height;
-	uint32_t			frame;
-	uint32_t			render_time;
-	int32_t				threads_amount;
-	int32_t				threads_init;
-	t_render_mode		mode;
-	uint8_t				ray_bounces;
-	bool				init_mutex;
-	bool				init_cond;
+	struct __attribute__((aligned(64)))
+	{
+		pthread_mutex_t		mutex;
+		pthread_cond_t		cond;
+		uint32_t			tile_index;
+		uint32_t			threads_running;
+		uint32_t			tiles_total;
+		bool				active;
+		bool				resize_pending;
+		bool				frame_complete;
+	};
+	struct __attribute__((aligned(64)))
+	{
+		t_vec3				*buffer;
+		t_camera			cam;
+		t_int2				tiles;
+		uint32_t			width;
+		uint32_t			height;
+		uint32_t			pixels;
+		t_render_mode		mode;
+		uint32_t			frame;
+		uint8_t				ray_bounces;
+	};
+	struct __attribute__((aligned(64)))
+	{
+		pthread_t			*threads;
+		uint32_t			new_width;
+		uint32_t			new_height;
+		int32_t				threads_amount;
+		int32_t				threads_init;
+		uint32_t			render_time;
+		bool				init_mutex;
+		bool				init_cond;
+	};
 };
 
 struct s_editor
@@ -356,12 +362,12 @@ struct s_context
 {
 	t_renderer		renderer;
 	t_scene			scene;
+	t_texture		blue_noise;
 	t_editor		editor;
 	mlx_t			*mlx;
 	t_image			*img;
 	uint32_t		resize_time;
 	int				fd;
-	t_texture		blue_noise;
 };
 
 #endif
