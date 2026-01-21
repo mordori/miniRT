@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/19 07:47:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 18:38:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,31 +100,34 @@ t_vec2i	vec2i_f(float x, float y);
 t_vec2i	vec2i_nf(float n);
 t_vec2i	vec2i_add(t_vec2i a, t_vec2i b);
 t_vec2i	vec2i_sub(t_vec2i a, t_vec2i b);
-t_vec2i	vec2i_scale(t_vec2i v, float s);
+t_vec2i	vec2i_scale(t_vec2i vec, float s);
 t_vec2	vec2(float x, float y);
 t_vec2	vec2_n(float n);
 t_vec2	vec2_add(t_vec2 a, t_vec2 b);
 t_vec2	vec2_sub(t_vec2 a, t_vec2 b);
-t_vec2	vec2_scale(t_vec2 v, float s);
+t_vec2	vec2_scale(t_vec2 vec, float s);
 t_vec3	vec3(float x, float y, float z);
 t_vec3	vec3_n(float n);
 t_vec3	vec3_add(t_vec3 a, t_vec3 b);
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
-t_vec3	vec3_scale(t_vec3 v, float s);
+t_vec3	vec3_scale(t_vec3 vec, float s);
 t_vec3	vec3_cross(t_vec3 a, t_vec3 b);
 float	vec3_dot(t_vec3 a, t_vec3 b);
-t_vec3	vec3_div(t_vec3 v, float div);
-float	vec3_length(t_vec3 v);
-t_vec3	vec3_normalize(t_vec3 v);
-t_vec3	vec3_reflect(t_vec3 v, t_vec3 n);
+t_vec3	vec3_div(t_vec3 vec, float div);
+float	vec3_length(t_vec3 vec);
+t_vec3	vec3_normalize(t_vec3 vec);
+t_vec3	vec3_reflect(t_vec3 vec, t_vec3 n);
 t_vec3	vec3_unit_random(uint32_t *seed);
-t_vec3	vec3_min(t_vec3 v, float min);
+t_vec3	vec3_min(t_vec3 vec, float min);
+t_vec3	vec3_max(t_vec3 vec, float max);
+t_vec3	vec3_sqrt(t_vec3 vec);
+t_vec3	vec3_clamp01(t_vec3 vec);
 t_vec4	vec4(float x, float y, float z, float w);
-t_vec4	vec4_3(t_vec3 v, float w);
+t_vec4	vec4_3(t_vec3 vec, float w);
 t_vec4	vec4_n(float n);
 t_vec4	vec4_add(t_vec4 a, t_vec4 b);
 t_vec4	vec4_sub(t_vec4 a, t_vec4 b);
-t_vec4	vec4_scale(t_vec4 v, float s);
+t_vec4	vec4_scale(t_vec4 vec, float s);
 size_t	ft_pow(size_t n, size_t e);
 bool	ft_is_pot(size_t n);
 float	degrees_to_rad(float degrees);

@@ -5,7 +5,7 @@
 
 static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
-t_vec3	compute_lighting(const t_context *ctx, const t_path *path, t_light *light, t_pixel *pixel)
+t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light *light, t_pixel *pixel)
 {
 	t_vec3		color;
 	t_vec3		hit_to_light;
@@ -16,9 +16,10 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, t_light *light
 	float		dist;
 	float		ndotl;
 	float		cos_light;
+	float		area;
 
 	color = (t_vec3){0};
-	if (light->type == LIGHT_AREA)
+	if (light->type >= LIGHT_AREA)
 	{
 		if (path->bounce == 0)
 			uv = (t_vec2){{blue_noise(&ctx->blue_noise, pixel, 4), blue_noise(&ctx->blue_noise, pixel, 5)}};
@@ -37,7 +38,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, t_light *light
 	ndotl = vec3_dot(path->hit.normal, dir);
 	if (ndotl <= 0.0f)
 		return (color);
-	if (light->type == LIGHT_AREA)
+	if (light->type >= LIGHT_AREA)
 	{
 		cos_light = vec3_dot(normal_at_point(light->obj, pos), vec3_scale(dir, -1.0f));
 		if (cos_light <= 0.0f)
@@ -47,17 +48,17 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, t_light *light
 	if (hit_shadow(&ctx->scene, orig_biased, dir, dist - G_EPSILON))
 		return (color);
 	color = add_light(light->emission, path->mat->albedo, ndotl, dist);
-	// color = vec3_scale(add_light(light->emission, path->mat->albedo, ndotl, dist), (float)ctx->scene.lights.total);
-	color = add_light(light->emission, path->mat->albedo, ndotl, dist);
-	if (light->type == LIGHT_AREA)
+	if (light->type != LIGHT_DIRECTIONAL)
+		color = vec3_scale(color, (float)ctx->scene.lights.total);
+	if (light->type >= LIGHT_AREA)
 	{
-		float area = 4.0f * M_PI * light->obj->shape.sphere.radius_squared;
+		area = 4.0f * M_PI * light->obj->shape.sphere.radius_squared;
 		color = vec3_scale(color, area);
 	}
 	return (color);
 }
 
-t_vec3	compute_ambient(const t_scene *scene, t_material *mat)
+t_vec3	compute_ambient(const t_scene *scene, const t_material *mat)
 {
 	t_light		*light;
 	t_vec3		color;
@@ -68,7 +69,7 @@ t_vec3	compute_ambient(const t_scene *scene, t_material *mat)
 	return (color);
 }
 
-t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, t_material *mat)
+t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, const t_material *mat)
 {
 	t_light		*light;
 	t_vec3		color;
@@ -78,7 +79,7 @@ t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, t_material *m
 
 	light = (t_light *)&scene->directional_light;
 	orig_biased = vec3_add(hit->point, vec3_scale(hit->normal, G_EPSILON));
-	dir = light->dir;
+	dir = vec3_normalize(light->dir);
 	ndotl = vec3_dot(hit->normal, dir);
 	if (ndotl <= 0.0f || hit_shadow(scene, orig_biased, dir, M_INF))
 		return ((t_vec3){0});

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 23:32:25 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/01 21:12:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 17:45:10 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
  * @param w W-component to assign to the 4D vector.
  * @return 4D vector composed of (v.x, v.y, v.z, w).
  */
-t_vec4	vec4_3(t_vec3 v, float w)
+t_vec4	vec4_3(t_vec3 vec, float w)
 {
 	t_vec4	result;
 
-	result.xyz = v;
+	result.xyz = vec;
 	result.w = w;
 	return (result);
 }

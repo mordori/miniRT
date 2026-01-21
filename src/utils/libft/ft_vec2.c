@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:30:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/12 04:14:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 17:45:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,10 @@ t_vec2	vec2_sub(t_vec2 a, t_vec2 b)
  * @param s Scalar value to multiply with.
  * @return Scaled vector.
  */
-t_vec2	vec2_scale(t_vec2 v, float s)
+t_vec2	vec2_scale(t_vec2 vec, float s)
 {
 	return ((t_vec2){{
-		v.x * s,
-		v.y * s
+		vec.x * s,
+		vec.y * s
 	}});
 }

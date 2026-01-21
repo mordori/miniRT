@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 00:03:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/19 07:46:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 17:44:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ t_vec3	vec3_mul(t_vec3 a, t_vec3 b)
 	}});
 }
 
-t_vec3	vec3_reflect(t_vec3 v, t_vec3 n)
+t_vec3	vec3_reflect(t_vec3 vec, t_vec3 n)
 {
-	return (vec3_sub(v, vec3_scale(n, 2 * vec3_dot(v, n))));
+	return (vec3_sub(vec, vec3_scale(n, 2 * vec3_dot(vec, n))));
 }
 
 t_vec3	vec3_unit_random(uint32_t *seed)
@@ -45,11 +45,20 @@ t_vec3	vec3_unit_random(uint32_t *seed)
 	}
 }
 
-t_vec3	vec3_min(t_vec3 v, float min)
+t_vec3	vec3_min(t_vec3 vec, float min)
 {
 	return ((t_vec3){{
-		fminf(v.r, min),
-		fminf(v.g, min),
-		fminf(v.b, min)
+		fminf(vec.r, min),
+		fminf(vec.g, min),
+		fminf(vec.b, min)
+	}});
+}
+
+t_vec3	vec3_max(t_vec3 vec, float max)
+{
+	return ((t_vec3){{
+		fmaxf(vec.r, max),
+		fmaxf(vec.g, max),
+		fmaxf(vec.b, max)
 	}});
 }

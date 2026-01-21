@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/15 20:03:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 17:44:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ float	vec3_dot(t_vec3 a, t_vec3 b)
 	);
 }
 
-t_vec3	vec3_div(t_vec3 v, float div)
+t_vec3	vec3_div(t_vec3 vec, float div)
 {
 	if (fabsf(div) < LEN_SQ_EPSILON)
 		return (vec3_n(0.0f));
-	return (vec3_scale(v, 1.0f / div));
+	return (vec3_scale(vec, 1.0f / div));
 }
 
 /**
@@ -64,9 +64,9 @@ t_vec3	vec3_div(t_vec3 v, float div)
  * @param v Input vector to normalize.
  * @return Normalized unit vector, or a zero vector if `v` has zero length.
  */
-t_vec3	vec3_normalize(t_vec3 v)
+t_vec3	vec3_normalize(t_vec3 vec)
 {
-	return (vec3_div(v, vec3_length(v)));
+	return (vec3_div(vec, vec3_length(vec)));
 }
 
 /**
@@ -75,7 +75,7 @@ t_vec3	vec3_normalize(t_vec3 v)
  * @param v The input vector.
  * @return The scalar length of vector `v`.
  */
-float	vec3_length(t_vec3 v)
+float	vec3_length(t_vec3 vec)
 {
-	return (sqrtf(vec3_dot(v, v)));
+	return (sqrtf(vec3_dot(vec, vec)));
 }

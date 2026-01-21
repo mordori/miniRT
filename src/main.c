@@ -83,3 +83,8 @@ void	clean(t_context *ctx)
 // parse .obj files
 // save render .png
 // Stochastic Bilinear Interpolation for textures
+
+
+// Netpractise:
+// pbaube guide
+// crashcourse youtube 28-31

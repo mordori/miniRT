@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 14:32:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/11 22:04:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 17:45:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,10 @@ t_vec2i	vec2i_sub(t_vec2i a, t_vec2i b)
  * @param s Scalar multiplier.
  * @return Scaled vector with truncated integer components.
  */
-t_vec2i	vec2i_scale(t_vec2i v, float s)
+t_vec2i	vec2i_scale(t_vec2i vec, float s)
 {
 	return ((t_vec2i){
-		(int)((float)v.x * s),
-		(int)((float)v.y * s)
+		(int)((float)vec.x * s),
+		(int)((float)vec.y * s)
 	});
 }
