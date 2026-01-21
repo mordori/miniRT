@@ -113,8 +113,8 @@ enum e_obj_type
 enum e_light_type
 {
 	LIGHT_POINT,
-	LIGHT_AREA,
 	LIGHT_AMBIENT,
+	LIGHT_AREA,
 	LIGHT_DIRECTIONAL
 };
 

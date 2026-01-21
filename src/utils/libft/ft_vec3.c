@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 03:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/12 01:25:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/21 17:45:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,11 @@ t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
  * @param s Scalar multiplier.
  * @return Scaled vector.
  */
-t_vec3	vec3_scale(t_vec3 v, float s)
+t_vec3	vec3_scale(t_vec3 vec, float s)
 {
 	return ((t_vec3){{
-		v.x * s,
-		v.y * s,
-		v.z * s
+		vec.x * s,
+		vec.y * s,
+		vec.z * s
 	}});
 }
