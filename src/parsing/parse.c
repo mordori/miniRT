@@ -39,7 +39,7 @@ static t_parse_error	parse_line(t_context *ctx, t_parser *parser, char *line)
 	char			**tokens;
 	t_parse_error	ret;
 
-	if (!line || !parser || !ctx)
+	if (!line)
 		return (PARSE_ERR_MALLOC);
 	while (*line && ft_isspace(*line))
 		line++;
@@ -55,8 +55,7 @@ static t_parse_error	parse_line(t_context *ctx, t_parser *parser, char *line)
 
 static bool	validate_scene(t_context *ctx, t_parser *parser)
 {
-	if (!parser)
-		return (false);
+	(void)ctx;
 	if (!parser->has_ambient)
 	{
 		fatal_error(ctx, "Missing ambient light (A)", __FILE__, parser->line_num);
@@ -72,7 +71,7 @@ static bool	validate_scene(t_context *ctx, t_parser *parser)
 		fatal_error(ctx, "Missing camera (C)", __FILE__, parser->line_num);
 		return (false);
 	}
-	if (!parser->has_plane && !parser->has_sphere /* && !parser->has_cylinder */)
+	if (!parser->has_plane && !parser->has_sphere && !parser->has_cylinder)
 	{
 		fatal_error(ctx, "No objects defined in the scene", __FILE__, parser->line_num);
 		return (false);
@@ -86,7 +85,7 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 {
 	const char	*id;
 
-	if (!tokens || !tokens[0] || !ctx || !parser)
+	if (!tokens || !tokens[0])
 		return (PARSE_ERR_MALLOC);
 	id = tokens[0];
 	if (ft_strcmp(id, "A") == 0)
@@ -99,17 +98,14 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 		return (parse_sphere(ctx, parser,tokens));
 	else if (ft_strcmp(id, "pl") == 0)
 	    return (parse_plane(ctx, parser, tokens));
-	// else if (ft_strcmp(id, "cy") == 0)
-	//     return (parse_cylinder(ctx, tokens));
+	else if (ft_strcmp(id, "cy") == 0)
+	    return (parse_cylinder(ctx, parser, tokens));
 	else
 		return (PARSE_ERR_UNKNOWN_ID);
 }
 
 static void	print_parse_error(t_context *ctx, t_parse_error err, int line_num)
 {
-	// ft_putstr_fd("Parse Error on line ", STDERR_FILENO);
-	// ft_putnbr_fd(line_num, STDERR_FILENO);
-	// ft_putstr_fd(": ", STDERR_FILENO);
 	if (err == PARSE_ERR_UNKNOWN_ID)
 		fatal_error(ctx, "Unknown element identifier.", 0, line_num);
 	else if (err == PARSE_ERR_MISSING_ARGS)

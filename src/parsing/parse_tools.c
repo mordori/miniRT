@@ -25,8 +25,8 @@ bool	parse_float(char *str, float *out)
 		end++;
 	if (*end != '\0')
 		return (false);
-	// if (isnan(value) || isinf(value)) // check for NaN or Infinity
-	// 	return (false);
+	if (isnan(value) || isinf(value)) // check for NaN or Infinity
+		return (false);
 	*out = value;
 	return (true);
 }
@@ -63,10 +63,6 @@ bool	parse_color(char *str, t_vec3 *color)
 	free_tokens(tokens);
 	return (ret);
 }
-
-// t_parse_error parse_material(t_parser *p, const char *token, t_material *mat)
-// {
-// }
 
 // Parse a vec3 from a string in the format "x,y,z"
 bool	parse_vec3(char *str, t_vec3 *vec)

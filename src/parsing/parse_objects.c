@@ -18,8 +18,6 @@ t_parse_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 	t_vec3	color;
 	t_material	mat;
 
-	if (!ctx || !parser || !tokens)
-		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &center))
@@ -49,8 +47,6 @@ t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 	t_vec3		color;
 	t_material	mat;
 
-	if (!ctx || !parser || !tokens)
-		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) < 4)
 		return(PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &point) || !parse_vec3(tokens[2], &normal))
@@ -73,3 +69,28 @@ t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 // ∗ the cylinder diameter: 14.2
 // ∗ the cylinder height: 21.42
 // ∗ R, G, B colors in the range [0,255]: 10, 0, 255
+t_parse_error	parse_cylinder(t_context *ctx, t_parser *parser, char **tokens)
+{
+	t_cylinder	cy;
+	t_material	mat;
+	t_vec3		color;
+
+	if (count_tokens(tokens) < 6)
+		return (PARSE_ERR_MISSING_ARGS);
+	if (!parse_vec3(tokens[1], &cy.center) || !parse_vec3(tokens[2], &cy.axis))
+		return (PARSE_ERR_INVALID_NUM);
+	if (!validate_normalized(cy.axis))
+		return(PARSE_ERR_RANGE);
+	if (!parse_float(tokens[3], &cy.radius) || !parse_float(tokens[4], &cy.height))
+		return(PARSE_ERR_INVALID_NUM);
+	cy.radius /= 2.0f;
+	if (cy.radius <= 0.0f || cy.height <= 0.0f)
+		return (PARSE_ERR_RANGE);
+	if (!parse_color(tokens[5], &color))
+		return (PARSE_ERR_INVALID_NUM);
+	mat = (t_material){0};
+	mat.albedo = color;
+	mat.base_color = BASE_COLOR;
+	parser->has_cylinder = true;
+	return (init_cylinder(ctx, &cy, &mat));
+}

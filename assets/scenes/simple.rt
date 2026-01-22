@@ -1,31 +1,25 @@
-# Ambient light
-A 0.0 255,255,255
+# Simple test scene with ambient, camera, light and spheres
 
-# Camera
+#Ambient light: id  intensity   RGB
+A 0.7 255,255,255
+
+#Camera: viewport orientation   FOV
 C 0,0,0 0,0,1 70
 
-# Camera
-C 0,0,0 0,0,1 70
+#Light: position    intensity   RGB
+L 0,0,10 0.7 255,255,255
 
-# Ground
-sp 0,-50.5,3 100 128,128,128
+#Plane: point    normal   RGB
+# pl 0,0,-25 0,0,1 20,20,20
+# pl 0,0,25 0,0,1 20,20,20
+# pl -5,0,0 1,0,0 200,200,200
+pl 0,-3,0 0,1,0 200,200,200
 
-# Ground plane for shadows to fall on
-pl 5,0,0 0,1,0 20,20,20 # Plane is missing
-pl 0,-5,0 0,1,0 20,20,20 # Plane is working
+#Cylinders: center    orientation   diameter   height   RGB
+cy 0,-4,4 0,1,0 2 4 255,128,0
 
-sp 0,10,15 2 255,0,0
+#Spheres: center    diameter    RGB
+sp 0,8,15 2 255,0,0
 sp 3,0,10 1.5 0,255,0
 sp -3,0,10 1.5 0,0,255
 
-# # Simple test scene with ambient, camera, light and spheres
-
-# A 0.7 255,255,255
-
-# C 0,0,0 0,0,1 70
-
-# # Light positioned above and in front of spheres to cast clear shadows
-# L 0,0,10 0.7 255,255,255
-
-# Spheres
-sp 0,0,3 1.4 255,255,255
