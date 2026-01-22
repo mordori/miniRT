@@ -12,7 +12,7 @@
 
 # define WIDTH				1920
 # define HEIGHT				1080
-# define RENDER_SAMPLES		2048
+# define RENDER_SAMPLES		128
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		32
 # define THREADS_DFL		4
@@ -37,8 +37,8 @@
 
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)
-# define OBJ_DOUBLE_SIDED		(1 << 2)
 
+# define MAT_DOUBLE_SIDED		(1 << 0)
 # define MAT_RECEIVE_SHADOWS	(1 << 1)
 
 typedef enum e_obj_type		t_obj_type;
@@ -200,6 +200,8 @@ struct __attribute__((aligned(16))) s_sphere
 
 struct __attribute__((aligned(16))) s_cylinder
 {
+	t_vec3			axis;
+	t_vec3			center;
 	float			radius;
 	float			height;
 };

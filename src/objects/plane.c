@@ -12,6 +12,7 @@ t_parse_error init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material
 	obj.transform.pos = point;
 	obj.shape.plane.point = point;
 	obj.shape.plane.normal = normal;
+	obj.flags |= OBJ_CAST_SHADOWS | OBJ_VISIBLE;
 	obj.material_id = new_material(ctx, mat);
 	return (add_object(ctx, &obj));
 }

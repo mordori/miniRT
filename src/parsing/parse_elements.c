@@ -14,13 +14,11 @@ t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	float	ratio;
 	t_vec3	color;
 
-	if (!ctx || !p || !tokens)
-		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 3)
 		return (PARSE_ERR_MISSING_ARGS);
 	// check for duplicate ambient light
-	// if (p->has_ambient)
-	// 	return (PARSE_ERR_DUPLICATE);
+	if (p->has_ambient)
+		return (PARSE_ERR_DUPLICATE);
 	if (!parse_float(tokens[1], &ratio))
 		return (PARSE_ERR_INVALID_NUM);
 	if (ratio < 0.0f || ratio > 1.0f)
@@ -45,8 +43,6 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	color;
 	t_light	light;
 
-	if (!ctx || !p || !tokens)
-		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &position))
@@ -77,8 +73,6 @@ t_parse_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	orientation;
 	float	fov;
 
-	if (!ctx || !p || !tokens)
-		return (PARSE_ERR_MALLOC);
 	if (count_tokens(tokens) != 4)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (p->has_camera)

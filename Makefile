@@ -7,6 +7,7 @@ CC			:=cc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
+SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt -flto
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS) -g
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
@@ -56,7 +57,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse.c parse_elements.c parse_objects.c parse_tools.c)
+				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				renderer.c tracer.c post_processing.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
@@ -124,6 +125,7 @@ fclean: clean
 	@$(call rm_dir,$(DIR_DEP))
 	@$(call rm_file,$(CONF))
 	@$(call rm_file,$(NAME))
+	@$(call rm_file,$(NAME)_sanitize)
 
 re: fclean all
 
@@ -135,6 +137,7 @@ debug: all
 sanitize: BUILD_TYPE	:=SANITIZE
 sanitize: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) $(SANFLAGS) -O1
 sanitize: LDFLAGS		:=-ldl -lglfw -pthread -lm $(SANFLAGS)
+sanitize: NAME			:=$(NAME)_sanitize
 sanitize: all
 
 .PHONY: all clean fclean re config debug sanitize
