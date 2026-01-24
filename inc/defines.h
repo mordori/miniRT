@@ -12,7 +12,7 @@
 
 # define WIDTH				1920
 # define HEIGHT				1080
-# define RENDER_SAMPLES		128
+# define RENDER_SAMPLES		2048
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		32
 # define TILE_SIZE			32

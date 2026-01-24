@@ -28,8 +28,6 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	t_sphere	sphere;
 	float		t;
 
-	if (!shape || !ray || !hit)
-		return (false);
 	sphere = shape->sphere;
 	if (sphere.radius < M_EPSILON)
 		return (false);

@@ -1,9 +1,12 @@
 #include "camera.h"
 #include "input.h"
 
-static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos);
-static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
-static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
+static inline void	set_cam_state(\
+t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos);
+static inline void	orbit(\
+t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
+static inline void	zoom(\
+t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
 static inline void	pan(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos);
 
 bool	control_camera(t_context *ctx)
@@ -34,7 +37,8 @@ bool	control_camera(t_context *ctx)
 	return (true);
 }
 
-static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos)
+static inline void	set_cam_state(\
+t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos)
 {
 	t_camera	*cam;
 
@@ -56,7 +60,8 @@ static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos, t_vec2i 
 	}
 }
 
-static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
+static inline void	orbit(\
+t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
 {
 	float		speed;
 	t_vec2i		delta;
@@ -85,7 +90,8 @@ static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_v
 	}
 }
 
-static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
+static inline void	zoom(\
+t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
 {
 	float		speed;
 	t_vec2i		delta;
