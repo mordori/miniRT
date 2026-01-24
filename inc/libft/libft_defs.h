@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/19 04:12:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/24 04:35:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@
 #  define M_TAU			6.28318530717958647693
 # endif
 
-
 # ifndef M_INF
 #  define M_INF			FLT_MAX
 # endif
@@ -92,6 +91,7 @@
 typedef struct s_list		t_list;
 typedef struct s_vec2i		t_vec2i;
 typedef struct s_vec2i		t_int2;
+typedef struct s_vec2ui		t_uint2;
 typedef struct s_mat2		t_mat2;
 typedef struct s_mat3		t_mat3;
 typedef struct s_mat4		t_mat4;

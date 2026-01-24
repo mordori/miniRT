@@ -7,17 +7,22 @@ static inline uint32_t	vec3_to_uint32(t_vec3 color);
 void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 {
 	uint32_t	*pixels;
-	float		scale;
 	t_vec3		*buf;
 	t_vec3		color;
+	float		scale;
+	float		exposure;
 
 	buf = __builtin_assume_aligned(r->buffer, 64);
 	pixels = (uint32_t *)ctx->img->pixels;
 	scale = 1.0f / (float)r->frame;
+	// if (r->mode == RENDER_REFINE)
+		exposure = ctx->scene.cam.exposure;
+	// else
+	// 	exposure = 1.0f;
 	while (i < r->pixels)
 	{
 		color = vec3_scale(buf[i], scale);
-		color = post_process_fast(ctx, color);
+		color = post_process_fast(color, exposure);
 		pixels[i] = vec3_to_uint32(color);
 		++i;
 	}
@@ -60,6 +65,7 @@ void	resize_window(t_context *ctx)
 	memset(r->buffer, 0, size);
 	update_camera(ctx);
 	r->resize_pending = false;
+	blit(ctx, &ctx->renderer, 0);
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 	start_render(r, &ctx->scene.cam);
@@ -73,8 +79,8 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	r->tiles_total = r->tiles.x * r->tiles.y;
 	r->tile_index = 0;
 	r->cam = *cam;
-	r->mode = RENDER_PREVIEW;
-	r->ray_bounces = 2;
+	r->mode = RENDER_REFINE;
+	r->ray_bounces = REFINE_BOUNCES;
 	r->frame = 1;
 	r->render_time = time_now();
 	pthread_cond_broadcast(&r->cond);

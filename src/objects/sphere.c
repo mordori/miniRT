@@ -17,7 +17,7 @@ t_parse_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_mater
 	obj.transform.pos = center;
 	obj.shape.sphere.center = center;
 	obj.shape.sphere.radius = radius;
-	obj.shape.sphere.radius_squared = radius * radius;
+	obj.shape.sphere.radius_sq = radius * radius;
 	obj.material_id = new_material(ctx, mat);
 	obj.flags |= OBJ_CAST_SHADOWS | OBJ_VISIBLE;
 	return (add_object(ctx, &obj));
@@ -70,7 +70,7 @@ static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, fl
 
 	oc = vec3_sub(ray->origin, sphere->center);
 	half_b = vec3_dot(ray->dir, oc);
-	d = half_b * half_b - (vec3_dot(oc, oc) - sphere->radius_squared);
+	d = half_b * half_b - (vec3_dot(oc, oc) - sphere->radius_sq);
 	if (d < 0)
 		return (M_INF);
 	sqrt_d = sqrtf(d);

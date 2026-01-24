@@ -5,11 +5,10 @@ static inline t_vec3	tonemap_aces(t_vec3 color);
 static inline t_vec3	linear_to_srgb(t_vec3 c);
 static inline float	aces(float x);
 
-t_vec3	post_process_fast(const t_context *ctx, t_vec3 c)
+t_vec3	post_process_fast(t_vec3 c, float exposure)
 {
 	c = vec3_max(c, 0.0f);
-	if (ctx->renderer.mode != RENDER_PREVIEW)
-		c = vec3_scale(c, ctx->scene.cam.exposure);
+	c = vec3_scale(c, exposure);
 	c = tonemap_aces(c);
 	c = vec3_sqrt(c);
 	c = vec3_clamp01(c);

@@ -31,7 +31,7 @@ void	init_directional_light(t_context *ctx, t_light *light)
 	obj.transform.pos = light->pos;
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = radius;
-	obj.shape.sphere.radius_squared = radius * radius;
+	obj.shape.sphere.radius_sq = radius * radius;
 	mat.emission = light->emission;
 	mat.is_emissive = true;
 	obj.material_id = new_material(ctx, &mat);
