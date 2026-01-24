@@ -8,7 +8,7 @@
 static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, float lux);
 static inline t_vec3	background_gradient(float t);
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
-static inline bool	trace_ray_preview(const t_context *ctx, t_path *path);
+static inline void	trace_ray_preview(const t_context *ctx, t_path *path);
 static inline bool	scatter(t_path *path, uint32_t *seed);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
@@ -30,18 +30,18 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	{
 		path.hit = (t_hit){0};
 		path.hit.t = M_INF;
-		if (r->mode == RENDER_REFINE && !trace_ray(ctx, &path, pixel))
+		// if (r->mode == RENDER_PREVIEW)
+		// {
+		// 	trace_ray_preview(ctx, &path);
+		// 	break ;
+		// }
+		if (!trace_ray(ctx, &path, pixel))
 			break;
-		else if (r->mode == RENDER_PREVIEW)
-		{
-			trace_ray_preview(ctx, &path);
-			break ;
-		}
 	}
 	return (path.color);
 }
 
-static inline bool	trace_ray_preview(const t_context *ctx, t_path *path)
+static inline void	trace_ray_preview(const t_context *ctx, t_path *path)
 {
 	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
@@ -49,20 +49,22 @@ static inline bool	trace_ray_preview(const t_context *ctx, t_path *path)
 		if (path->mat->is_emissive)
 		{
 			path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
-			return (false);
+			return ;
 		}
 		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_ambient(&ctx->scene, path->mat)));
 		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_directional(&ctx->scene, &path->hit, path->mat)));
 		// Add all point lights
-		return (true);
+		return ;
 	}
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 1.0f)));
-	return (true);
+	return ;
 }
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	t_vec3		lighting;
+	static const float	max_brightness = 40.0f;
+	t_vec3				lighting;
+	uint32_t			light_idx;
 
 	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
@@ -73,15 +75,16 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 				path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
 			return (false);
 		}
-		lighting = compute_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
-		if (path->bounce > 0)
-			lighting = vec3_min(lighting, 10.0f);
-		path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+		// lighting = compute_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
+		// if (path->bounce > 0)
+		// 	lighting = vec3_clamp_mag(lighting, max_brightness);
+		// path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
 		if (ctx->scene.lights.total > 0)
 		{
-			lighting = compute_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[pcg(pixel->seed) % ctx->scene.lights.total], pixel);
+			light_idx = fast_range(pcg(pixel->seed), ctx->scene.lights.total);
+			lighting = compute_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[light_idx], pixel);
 			if (path->bounce > 0)
-				lighting = vec3_min(lighting, 10.0f);
+				lighting = vec3_clamp_mag(lighting, max_brightness);
 			path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
 		}
 		return (scatter(path, pixel->seed));
@@ -143,8 +146,8 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, fl
 	t_vec3		result;
 	const float	*pixels;
 
-	if (!tex)
-		return (background_gradient((ray->dir.y + 1.0f) * 0.5f));
+	if (tex)
+		return (vec3_scale(background_gradient((ray->dir.y + 1.0f) * 0.5f), lux));
 	uv.u = ft_clamp01((atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI);
 	uv.v = ft_clamp01(acosf(ray->dir.y) * M_1_PI);
 	xy.x = (uint32_t)(uv.u * (tex->width - 1));

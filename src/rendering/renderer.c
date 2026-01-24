@@ -72,8 +72,8 @@ static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_
 {
 	const t_renderer	*r;
 	t_pixel				pixel;
-	t_int2				start;
-	t_int2				end;
+	t_uint2				start;
+	t_uint2				end;
 	uint32_t			width;
 
 	r = &ctx->renderer;
@@ -105,7 +105,7 @@ static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
 	t_vec3				color;
 
 	r = &ctx->renderer;
-	seed = hash_lowerbias32((pixel->x * r->width + pixel->y) ^ hash_lowerbias32(r->frame));
+	seed = hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
 	if (seed == 0)
 		seed = 1;
 	pixel->seed = &seed;

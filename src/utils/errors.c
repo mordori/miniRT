@@ -49,7 +49,8 @@ char	*errors(t_err_code code)
 "object add failed", \
 "point light add failed", \
 "bvh failed", \
-"material add failed"
+"material add failed" \
+"NPOT texture"
 	};
 
 	return (e[code]);

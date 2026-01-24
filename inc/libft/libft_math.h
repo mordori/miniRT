@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/21 18:38:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/24 04:35:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,14 @@ union u_f_int
 
 struct s_vec2i
 {
-	int32_t	x;
-	int32_t	y;
+	int32_t		x;
+	int32_t		y;
+};
+
+struct s_vec2ui
+{
+	uint32_t	x;
+	uint32_t	y;
 };
 
 union u_vec2
@@ -122,6 +128,7 @@ t_vec3	vec3_min(t_vec3 vec, float min);
 t_vec3	vec3_max(t_vec3 vec, float max);
 t_vec3	vec3_sqrt(t_vec3 vec);
 t_vec3	vec3_clamp01(t_vec3 vec);
+t_vec3	vec3_clamp_mag(t_vec3 vec, float max);
 t_vec4	vec4(float x, float y, float z, float w);
 t_vec4	vec4_3(t_vec3 vec, float w);
 t_vec4	vec4_n(float n);

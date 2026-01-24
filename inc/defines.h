@@ -15,11 +15,12 @@
 # define RENDER_SAMPLES		128
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		32
+# define TILE_SIZE			32
+
 # define THREADS_DFL		4
 # define SENS_ORBIT			0.0025f
 # define SENS_ZOOM			0.0018f
 # define SENS_PAN			0.0006f
-# define TILE_SIZE			32
 # define INV_255F			0.003921568627451f
 # define INV_2_2F			0.454545454545454f
 
@@ -96,7 +97,8 @@ enum e_err_code
 	ERR_OBJADD,
 	ERR_POINTLADD,
 	ERR_BVH,
-	ERR_MATADD
+	ERR_MATADD,
+	ERR_TEXNPOT
 };
 
 enum e_obj_type
@@ -148,8 +150,8 @@ enum e_entity
 
 enum e_render_mode
 {
-	RENDER_PREVIEW,
-	RENDER_REFINE
+	RENDER_REFINE,
+	RENDER_PREVIEW
 };
 
 struct __attribute__((aligned(16))) s_hit
@@ -195,7 +197,7 @@ struct __attribute__((aligned(16))) s_sphere
 {
 	t_vec3			center;
 	float			radius;
-	float			radius_squared;
+	float			radius_sq;
 };
 
 struct __attribute__((aligned(16))) s_cylinder
@@ -235,6 +237,7 @@ struct __attribute__((aligned(16))) s_light
 	t_vec3			emission;
 	t_object		*obj;
 	float			radius;
+	float			radius_sq;
 	float			intensity;
 	t_light_type	type;
 };
@@ -338,8 +341,8 @@ struct __attribute__((aligned(16))) s_pixel
 {
 	t_vec3		*color;
 	uint32_t	*seed;
-	int32_t		x;
-	int32_t		y;
+	uint32_t	x;
+	uint32_t	y;
 	uint32_t	frame;
 	float		u;
 	float		v;

@@ -1,8 +1,9 @@
 #include "utils.h"
+#include "libft_math.h"
 
 static inline float	srgb_to_linear(uint8_t c);
-static inline void	tex_data_to_linear(t_texture *texture);
-static inline void	tex_srgb_to_linear(t_texture *texture);
+static inline void	tex_data_to_linear(t_context *ctx,t_texture *texture);
+static inline void	tex_srgb_to_linear(t_context *ctx,t_texture *texture);
 
 t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
 {
@@ -17,15 +18,15 @@ t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
 	if (!texture.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	if (is_srgb)
-		tex_srgb_to_linear(&texture);
+		tex_srgb_to_linear(ctx, &texture);
 	else
-		tex_data_to_linear(&texture);
+		tex_data_to_linear(ctx, &texture);
 	mlx_delete_texture(texture.tex);
 	texture.tex = NULL;
 	return (texture);
 }
 
-static inline void	tex_data_to_linear(t_texture *texture)
+static inline void	tex_data_to_linear(t_context *ctx,t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;
@@ -35,6 +36,8 @@ static inline void	tex_data_to_linear(t_texture *texture)
 	i = 0;
 	texture->width = texture->tex->width;
 	texture->height = texture->tex->height;
+	if (!ft_is_pot(texture->width) || !ft_is_pot(texture->height))
+		fatal_error(ctx, errors(ERR_TEXNPOT), __FILE__, __LINE__);
 	dst = texture->pixels;
 	src = texture->tex->pixels;
 	pixels_total = texture->width * texture->height * 4;
@@ -48,7 +51,7 @@ static inline void	tex_data_to_linear(t_texture *texture)
 	}
 }
 
-static inline void	tex_srgb_to_linear(t_texture *texture)
+static inline void	tex_srgb_to_linear(t_context *ctx,t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;
@@ -58,6 +61,8 @@ static inline void	tex_srgb_to_linear(t_texture *texture)
 	i = 0;
 	texture->width = texture->tex->width;
 	texture->height = texture->tex->height;
+	if (!ft_is_pot(texture->width) || !ft_is_pot(texture->height))
+		fatal_error(ctx, errors(ERR_TEXNPOT), __FILE__, __LINE__);
 	dst = texture->pixels;
 	src = texture->tex->pixels;
 	pixels_total = texture->width * texture->height * 4;
