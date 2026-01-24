@@ -44,7 +44,8 @@ static inline void	initialize(t_context *ctx)
 		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
-	ctx->blue_noise = load_texture(ctx, "assets/textures/blue_noise.png", false);
+	ctx->blue_noise = \
+load_texture(ctx, "assets/textures/blue_noise.png", false);
 	resize_window(ctx);
 	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx))
 		mlx_loop(ctx->mlx);
@@ -83,7 +84,6 @@ void	clean(t_context *ctx)
 // parse .obj files
 // save render .png
 // Stochastic Bilinear Interpolation for textures
-
 
 // Netpractise:
 // pbaube guide

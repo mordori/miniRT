@@ -8,7 +8,7 @@
 static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, float lux);
 static inline t_vec3	background_gradient(float t);
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
-static inline void	trace_ray_preview(const t_context *ctx, t_path *path);
+// static inline void	trace_ray_preview(const t_context *ctx, t_path *path);
 static inline bool	scatter(t_path *path, uint32_t *seed);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
@@ -41,24 +41,24 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	return (path.color);
 }
 
-static inline void	trace_ray_preview(const t_context *ctx, t_path *path)
-{
-	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
-	{
-		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
-		if (path->mat->is_emissive)
-		{
-			path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
-			return ;
-		}
-		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_ambient(&ctx->scene, path->mat)));
-		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_directional(&ctx->scene, &path->hit, path->mat)));
-		// Add all point lights
-		return ;
-	}
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 1.0f)));
-	return ;
-}
+// static inline void	trace_ray_preview(const t_context *ctx, t_path *path)
+// {
+// 	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
+// 	{
+// 		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
+// 		if (path->mat->is_emissive)
+// 		{
+// 			path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
+// 			return ;
+// 		}
+// 		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_ambient(&ctx->scene, path->mat)));
+// 		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_directional(&ctx->scene, &path->hit, path->mat)));
+// 		// Add all point lights
+// 		return ;
+// 	}
+// 	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 1.0f)));
+// 	return ;
+// }
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 {

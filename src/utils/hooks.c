@@ -79,8 +79,7 @@ void	loop_hook(void *param)
 		++r->frame;
 		render_time = time_now() - r->render_time;
 		if (r->frame == RENDER_SAMPLES)
-			printf("Done!\tRender time: %.3fs\n", render_time / 1000.0f);
-			// printf("Done!\tRender time: %d.%.1fs\n", render_time / 1000, (float)(render_time % 1000));
+			printf("Done!\tRender time: %.1fs\n", render_time / 1000.0f);
 	}
 	if (r->threads_running == 0 && !resize)
 	{

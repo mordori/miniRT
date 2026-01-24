@@ -3,7 +3,7 @@
 #include "utils.h"
 #include "libft_random.h"
 
-static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
+// static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
 void	orthonormal_basis(const t_vec3 n, t_vec3 *t, t_vec3 *b)
 {
@@ -171,13 +171,13 @@ t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, const t_mater
 	return (color);
 }
 
-static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist)
-{
-	t_vec3		result;
-	float		attenuation;
+// static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist)
+// {
+// 	t_vec3		result;
+// 	float		attenuation;
 
-	attenuation = ndotl / fmaxf(dist * dist, 0.1f);
-	result = vec3_mul(emission, albedo);
-	result = vec3_scale(result, attenuation);
-	return (result);
-}
+// 	attenuation = ndotl / fmaxf(dist * dist, 0.1f);
+// 	result = vec3_mul(emission, albedo);
+// 	result = vec3_scale(result, attenuation);
+// 	return (result);
+// }
