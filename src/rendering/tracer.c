@@ -9,7 +9,7 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, fl
 static inline t_vec3	background_gradient(float t);
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
 // static inline void	trace_ray_preview(const t_context *ctx, t_path *path);
-static inline bool	scatter(t_path *path, uint32_t *seed);
+static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 {
@@ -60,12 +60,23 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 // 	return ;
 // }
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
+static inline void	add_lighting(const t_context *ctx, t_path *path, t_light *light, t_pixel *pixel)
 {
 	static const float	max_brightness = 40.0f;
 	t_vec3				lighting;
-	uint32_t			light_idx;
 
+	lighting = compute_lighting(ctx, path, light, pixel);
+	if (path->bounce > 0)
+		lighting = vec3_clamp_mag(lighting, max_brightness);
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+}
+
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
+{
+	uint32_t		light_idx;
+	size_t			i;
+
+	i = 0;
 	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
 		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
@@ -75,46 +86,70 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 				path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
 			return (false);
 		}
-		// lighting = compute_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
-		// if (path->bounce > 0)
-		// 	lighting = vec3_clamp_mag(lighting, max_brightness);
-		// path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+		if (ctx->scene.directional_light.obj->flags & OBJ_VISIBLE)
+			add_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
 		if (ctx->scene.lights.total > 0)
 		{
-			light_idx = fast_range(pcg(pixel->seed), ctx->scene.lights.total);
-			lighting = compute_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[light_idx], pixel);
-			if (path->bounce > 0)
-				lighting = vec3_clamp_mag(lighting, max_brightness);
-			path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+			if (ctx->renderer.mode == RENDER_PREVIEW)
+			{
+				light_idx = (uint32_t)(blue_noise(&ctx->blue_noise, pixel, 6) * ctx->scene.lights.total);
+				if (light_idx >= ctx->scene.lights.total)
+					light_idx = ctx->scene.lights.total - 1;
+				add_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[light_idx], pixel);
+			}
+			else
+				while (i < ctx->scene.lights.total)
+					add_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[i++], pixel);
 		}
-		return (scatter(path, pixel->seed));
+		return (scatter(ctx, path, pixel));
 	}
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 20.0f)));
 	return (false);
 }
 
-static inline bool	scatter(t_path *path, uint32_t *seed)
+t_vec3 sample_cos_hemisphere(t_vec3 normal, float u, float v)
+{
+	float		phi;
+	float		cos_theta;
+	float		sin_theta;
+	t_vec3		dir_local;
+	t_vec3		dir_world;
+	t_vec3		t;
+	t_vec3		b;
+
+	phi = M_TAU * u;
+	cos_theta = sqrtf(v);
+	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - v));
+	dir_local = vec3(sin_theta * cosf(phi), sin_theta * sinf(phi), cos_theta);
+	orthonormal_basis(normal, &t, &b);
+	dir_world = vec3_add(vec3_scale(t, dir_local.x), vec3_scale(b, dir_local.y));
+	dir_world = vec3_add(dir_world, vec3_scale(normal, dir_local.z));
+	return (vec3_normalize(dir_world));
+}
+
+static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		origin;
 	t_vec3		dir;
-	float		len_sq;
 	float		p;
+	t_vec2		uv;
 
-	dir = vec3_add(path->hit.normal, vec3_unit_random(seed));
-	len_sq = vec3_dot(dir, dir);
-	if (len_sq < LEN_SQ_EPSILON)
-	{
-		dir = path->hit.normal;
-		len_sq = 1.0f;
-	}
+	if (path->bounce == 0)
+		uv = vec2(blue_noise(&ctx->blue_noise, pixel, 2), blue_noise(&ctx->blue_noise, pixel, 3));
+	else
+		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
+	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
 	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
-	path->ray = new_ray(origin, vec3_div(dir, sqrtf(len_sq)));
+	path->ray = new_ray(origin, dir);
 	path->throughput = vec3_mul(path->throughput, path->mat->albedo);
-	p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
-	p = ft_clamp(p, 0.05f, 0.95f);
-	if (randomf01(seed) > p)
-		return (false);
-	path->throughput = vec3_scale(path->throughput, 1.0f / p);
+	if (path->bounce >= DEPTH_ENABLE_RR)
+	{
+		p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
+		p = ft_clamp(p, 0.05f, 0.95f);
+		if (randomf01(pixel->seed) > p)
+			return (false);
+		path->throughput = vec3_scale(path->throughput, 1.0f / p);
+	}
 	++path->bounce;
 	return (true);
 }

@@ -5,16 +5,6 @@
 
 // static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
-void	orthonormal_basis(const t_vec3 n, t_vec3 *t, t_vec3 *b)
-{
-	if (fabsf(n.x) > 0.9f)
-		*t = vec3(0.0f, 1.0f, 0.0f);
-	else
-		*t = vec3(1.0f, 0.0f, 0.0f);
-	*b = vec3_normalize(vec3_cross(n, *t));
-	*t = vec3_normalize(vec3_cross(n, *b));
-}
-
 t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, float *pdf)
 {
 	t_vec3		orig_to_light;
@@ -83,7 +73,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 		return (color);
 	color = vec3_mul(light->emission, path->mat->albedo);
 	color = vec3_scale(color, ndotl / pdf);
-	if (light->type != LIGHT_DIRECTIONAL)
+	if (light->type != LIGHT_DIRECTIONAL && ctx->renderer.mode == RENDER_PREVIEW)
 		color = vec3_scale(color, (float)ctx->scene.lights.total);
 	return (color);
 }

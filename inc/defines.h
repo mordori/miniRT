@@ -12,29 +12,22 @@
 
 # define WIDTH				1920
 # define HEIGHT				1080
-# define RENDER_SAMPLES		2048
+# define THREADS_DFL		4
+# define TILE_SIZE			32
+# define RENDER_SAMPLES		1024
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		32
-# define TILE_SIZE			32
+# define DEPTH_ENABLE_RR	3
 
-# define THREADS_DFL		4
 # define SENS_ORBIT			0.0025f
 # define SENS_ZOOM			0.0018f
 # define SENS_PAN			0.0006f
+
 # define INV_255F			0.003921568627451f
 # define INV_2_2F			0.454545454545454f
-
-# ifndef M_1_2PI
-#  define M_1_2PI		0.15915494309189533577f
-# endif
-
-# ifndef G_EPSILON
-#  define G_EPSILON		1e-3f
-# endif
-
-# ifndef C_EPSILON
-#  define C_EPSILON		1e-4f
-# endif
+# define M_1_2PI			0.15915494309189533577f
+# define G_EPSILON			1e-3f
+# define C_EPSILON			1e-4f
 
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)
@@ -151,7 +144,8 @@ enum e_entity
 enum e_render_mode
 {
 	RENDER_REFINE,
-	RENDER_PREVIEW
+	RENDER_PREVIEW,
+	RENDER_EDIT
 };
 
 struct __attribute__((aligned(16))) s_hit
