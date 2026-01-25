@@ -1,12 +1,6 @@
 #include "utils.h"
 #include "libft_random.h"
 
-// Lemire's Method
-uint32_t	fast_range(uint32_t n, uint32_t	range)
-{
-	return ((uint32_t)(((uint64_t)n * (uint64_t)range) >> 32));
-}
-
 // Samples a pre-calculated texture in /assets/textures/ by Christoph Peters
 // https://momentsingraphics.de/BlueNoise.html
 float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)

@@ -48,6 +48,7 @@ static inline t_vec3	tonemap_aces(t_vec3 c)
 	return (result);
 }
 
+// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 static inline float	aces(float x)
 {
 	return ((x * (2.51f * x + 0.03f)) / (x * (2.43f * x + 0.59f) + 0.14f));

@@ -35,7 +35,7 @@ void	init_directional_light(t_context *ctx, t_light *light)
 	mat.emission = light->emission;
 	mat.is_emissive = true;
 	obj.material_id = new_material(ctx, &mat);
-	obj.flags |=  OBJ_VISIBLE;
+	// obj.flags |=  OBJ_VISIBLE;
 	add_object(ctx, &obj);
 	light->obj = (t_object *)vector_getlast(&ctx->scene.objs);
 }
