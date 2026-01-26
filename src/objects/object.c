@@ -3,7 +3,7 @@
 #include "utils.h"
 #include "materials.h"
 
-t_parse_error add_object(t_context *ctx, t_object *obj)
+t_error add_object(t_context *ctx, t_object *obj)
 {
 	t_object *new_obj;
 

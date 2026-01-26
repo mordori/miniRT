@@ -8,7 +8,7 @@ WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
-OPTS		:=-Ofast -march=native -funroll-loops -fno-plt -flto
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt -flto -ffast-math -ftree-vectorize
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory
@@ -58,7 +58,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c)
+				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				renderer.c tracer.c post_processing.c skydome.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \

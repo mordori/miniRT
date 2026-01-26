@@ -4,18 +4,18 @@
 #include "parsing.h"
 #include "utils.h"
 
-static void				print_parse_error(t_context *ctx, t_parse_error err, int line_num);
+static void				print_error(t_context *ctx, t_error err, int line_num);
 static bool				validate_scene(t_context *ctx, t_parser *parser);
-static t_parse_error	parse_line(t_context *ctx, t_parser *parser,
+static t_error	parse_line(t_context *ctx, t_parser *parser,
 							char *line);
-static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
+static t_error	identify_input(t_context *ctx, t_parser *parser,
 							char **tokens);
 
 bool	parse_scene(t_context *ctx, int fd)
 {
 	t_parser		parser;
 	char			*line;
-	t_parse_error	err;
+	t_error	err;
 
 	if (!ctx || fd == ERROR)
 		return (false);
@@ -27,23 +27,28 @@ bool	parse_scene(t_context *ctx, int fd)
 		free(line);
 		if (err != PARSE_OK && err != PARSE_ERR_EMPTY)
 		{
-			print_parse_error(ctx, err, parser.line_num);
+			print_error(ctx, err, parser.line_num);
 			return (false);
 		}
+	}
+	if (!validate_scene(ctx, &parser))
+	{
+		cleanup_parser(&parser);
+		return (false);
 	}
 	return (validate_scene(ctx, &parser));
 }
 
-static t_parse_error	parse_line(t_context *ctx, t_parser *parser, char *line)
+static t_error	parse_line(t_context *ctx, t_parser *parser, char *line)
 {
 	char			**tokens;
-	t_parse_error	ret;
+	t_error	ret;
 
 	if (!line)
 		return (PARSE_ERR_MALLOC);
 	while (*line && ft_isspace(*line))
 		line++;
-	if (*line == '\0' || *line == '#') // empty line or comment
+	if (*line == '\0' || *line == '#')
 		return (PARSE_ERR_EMPTY);
 	tokens = try_split(line);
 	if (!tokens)
@@ -80,7 +85,7 @@ static bool	validate_scene(t_context *ctx, t_parser *parser)
 }
 
 // key elements A, L, C must be present exactly once
-static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
+static t_error	identify_input(t_context *ctx, t_parser *parser,
 		char **tokens)
 {
 	const char	*id;
@@ -88,7 +93,13 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 	if (!tokens || !tokens[0])
 		return (PARSE_ERR_MALLOC);
 	id = tokens[0];
-	if (ft_strcmp(id, "A") == 0)
+	// if (ft_strcmp(id, "mat") == 0)
+	// 	return (parse_material(ctx, parser, tokens));	TODO
+	if (ft_strcmp(id, "sky") == 0)
+		return (parse_skydome(ctx, tokens));
+	if (ft_strcmp(id, "tex") == 0)
+		return (parse_texture(ctx, parser, tokens));
+	else if (ft_strcmp(id, "A") == 0)
 		return (parse_ambient(ctx, parser, tokens));
 	else if (ft_strcmp(id, "L") == 0)
 		return (parse_light(ctx, parser, tokens));
@@ -104,7 +115,7 @@ static t_parse_error	identify_input(t_context *ctx, t_parser *parser,
 		return (PARSE_ERR_UNKNOWN_ID);
 }
 
-static void	print_parse_error(t_context *ctx, t_parse_error err, int line_num)
+static void	print_error(t_context *ctx, t_error err, int line_num)
 {
 	if (err == PARSE_ERR_UNKNOWN_ID)
 		fatal_error(ctx, "Unknown element identifier.", 0, line_num);
@@ -120,4 +131,10 @@ static void	print_parse_error(t_context *ctx, t_parse_error err, int line_num)
 		fatal_error(ctx, "Memory allocation failed.", 0, line_num);
 	else if (err == PARSE_ERR_MISSING_OBJ)
 		fatal_error(ctx, "Missing object in scene.", 0, line_num);
+		else if (err == PARSE_ERR_TEXTURE)
+		fatal_error(ctx, "Failed to load texture.", 0, line_num);
+	else if (err == PARSE_ERR_MATERIAL)
+		fatal_error(ctx, "Invalid material ID.", 0, line_num);
+	else if (err == PARSE_ERR_TOO_MANY)
+		fatal_error(ctx, "Too many textures or materials.", 0, line_num);
 }
