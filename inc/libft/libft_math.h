@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/24 04:35:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/25 23:43:51 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ t_vec3	vec3_max(t_vec3 vec, float max);
 t_vec3	vec3_sqrt(t_vec3 vec);
 t_vec3	vec3_clamp01(t_vec3 vec);
 t_vec3	vec3_clamp_mag(t_vec3 vec, float max);
+t_vec3	vec3_addf(t_vec3 vec, float n);
 t_vec4	vec4(float x, float y, float z, float w);
 t_vec4	vec4_3(t_vec3 vec, float w);
 t_vec4	vec4_n(float n);

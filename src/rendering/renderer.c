@@ -70,21 +70,19 @@ static inline void	*render_routine(void *arg)
 
 static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
 {
-	const t_renderer	*r;
 	t_pixel				pixel;
 	t_uint2				start;
 	t_uint2				end;
 	uint32_t			width;
 
-	r = &ctx->renderer;
-	start.x = (tile_id % r->tiles.x) * TILE_SIZE;
-	start.y = (tile_id / r->tiles.x) * TILE_SIZE;
-	end.x = ft_uint_min(start.x + TILE_SIZE, r->width);
-	end.y = ft_uint_min(start.y + TILE_SIZE, r->height);
+	start.x = (tile_id % ctx->renderer.tiles.x) * TILE_SIZE;
+	start.y = (tile_id / ctx->renderer.tiles.x) * TILE_SIZE;
+	end.x = ft_uint_min(start.x + TILE_SIZE, ctx->renderer.width);
+	end.y = ft_uint_min(start.y + TILE_SIZE, ctx->renderer.height);
 	pixel.y = start.y;
-	width = r->width;
+	width = ctx->renderer.width;
 	buf = __builtin_assume_aligned(buf, 64);
-	while (pixel.y < end.y)
+	while (pixel.y < end.y && !ctx->renderer.render_cancel)
 	{
 		pixel.color = &buf[pixel.y * width + start.x];
 		pixel.x = start.x;
@@ -117,8 +115,8 @@ static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
 	}
 	else
 	{
-		pixel->u = (float)pixel->x + blue_noise(&ctx->blue_noise, pixel, 0);
-		pixel->v = (float)pixel->y + blue_noise(&ctx->blue_noise, pixel, 1);
+		pixel->u = (float)pixel->x + blue_noise(&ctx->tex_blue_noise, pixel, BN_PX_U);
+		pixel->v = (float)pixel->y + blue_noise(&ctx->tex_blue_noise, pixel, BN_PX_V);
 	}
 	color = trace_path(ctx, pixel);
 	if (r->frame == 1)

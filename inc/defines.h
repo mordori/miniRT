@@ -148,6 +148,20 @@ enum e_render_mode
 	RENDER_EDIT
 };
 
+enum e_blue_noise_channels
+{
+	BN_PX_U,
+	BN_PX_V,
+	BN_SC_U,
+	BN_SC_V,
+	BN_CO_U,
+	BN_CO_V,
+	BN_LI,
+	BN_PP_R,
+	BN_PP_G,
+	BN_PP_B
+};
+
 struct __attribute__((aligned(16))) s_hit
 {
 	t_vec3			point;
@@ -312,6 +326,8 @@ struct __attribute__((aligned(64))) s_renderer
 		t_render_mode		mode;
 		uint32_t			frame;
 		uint8_t				ray_bounces;
+		uint8_t				quality;
+		_Atomic bool		render_cancel;
 	};
 	struct __attribute__((aligned(64)))
 	{
@@ -361,7 +377,7 @@ struct s_context
 {
 	t_renderer		renderer;
 	t_scene			scene;
-	t_texture		blue_noise;
+	t_texture		tex_blue_noise;
 	t_editor		editor;
 	mlx_t			*mlx;
 	t_image			*img;

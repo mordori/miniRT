@@ -15,10 +15,10 @@ t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, flo
 	float		sin_theta;
 	float		phi;
 	t_vec3		axis;
-	t_vec3		local_dir;
+	t_vec3		dir_local;
+	t_vec3		dir_world;
 	t_vec3		t;
 	t_vec3		b;
-	t_vec3		world_dir;
 
 	orig_to_light = vec3_sub(light->pos, orig);
 	dist_sq = vec3_dot(orig_to_light, orig_to_light);
@@ -26,16 +26,16 @@ t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, flo
 		return (vec3_n(0.0f));
 	sin_theta_max_sq = light->obj->shape.sphere.radius_sq / dist_sq;
 	cos_theta_max = sqrtf(fmaxf(0.0f, 1.0f - sin_theta_max_sq));
-	z = 1.0f + uv.u * (cos_theta_max - 1.0f);
+	phi = M_TAU * uv.u;
+	z = 1.0f + uv.v * (cos_theta_max - 1.0f);
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - z * z));
-	phi = M_TAU * uv.v;
-	local_dir = vec3(sin_theta * cosf(phi), sin_theta * sinf(phi), z);
+	dir_local = vec3(sin_theta * cosf(phi), sin_theta * sinf(phi), z);
 	axis = vec3_scale(orig_to_light, 1.0f / sqrtf(dist_sq));
 	orthonormal_basis(axis, &t, &b);
-	world_dir = vec3_add(vec3_scale(b, local_dir.y), vec3_scale(axis, local_dir.z));
-	world_dir = vec3_add(vec3_scale(t, local_dir.x), world_dir);
+	dir_world = vec3_add(vec3_scale(b, dir_local.y), vec3_scale(axis, dir_local.z));
+	dir_world = vec3_add(vec3_scale(t, dir_local.x), dir_world);
 	*pdf = 1.0f / (M_TAU * (1.0f - cos_theta_max));
-	return (world_dir);
+	return (dir_world);
 }
 
 t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light *light, t_pixel *pixel)
@@ -55,7 +55,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	color = (t_vec3){0};
 	orig = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
 	if (path->bounce == 0)
-		uv = vec2(blue_noise(&ctx->blue_noise, pixel, 4), blue_noise(&ctx->blue_noise, pixel, 5));
+		uv = vec2(blue_noise(&ctx->tex_blue_noise, pixel, BN_CO_U), blue_noise(&ctx->tex_blue_noise, pixel, BN_CO_V));
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
 	dir = sample_cone(light, orig, uv, &pdf);
@@ -73,8 +73,6 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 		return (color);
 	color = vec3_mul(light->emission, path->mat->albedo);
 	color = vec3_scale(color, ndotl / pdf);
-	if (light->type != LIGHT_DIRECTIONAL && ctx->renderer.mode == RENDER_PREVIEW)
-		color = vec3_scale(color, (float)ctx->scene.lights.total);
 	return (color);
 }
 
