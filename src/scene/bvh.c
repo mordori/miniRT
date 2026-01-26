@@ -97,16 +97,31 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 	return (false);
 }
 
-static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i)
+// static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i)
+// {
+// 	if (ray->sign[node->axis])
+// 	{
+// 		stack[(*i)++] = node->left;
+// 		stack[(*i)++] = node->right;
+// 	}
+// 	else
+// 	{
+// 		stack[(*i)++] = node->right;
+// 		stack[(*i)++] = node->left;
+// 	}
+// }
+
+// Branchless child ordering: pushes farther child first so closer child
+// is popped first (LIFO), enabling early termination when a hit is found.
+static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node,
+	t_bvh_node **stack, int32_t *i)
 {
-	if (ray->sign[node->axis])
-	{
-		stack[(*i)++] = node->left;
-		stack[(*i)++] = node->right;
-	}
-	else
-	{
-		stack[(*i)++] = node->right;
-		stack[(*i)++] = node->left;
-	}
+	t_bvh_node	*children[2];
+	int			sign;
+
+	children[0] = node->right;
+	children[1] = node->left;
+	sign = ray->sign[node->axis];
+	stack[(*i)++] = children[sign];
+	stack[(*i)++] = children[1 - sign];
 }

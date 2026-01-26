@@ -9,7 +9,7 @@
 // ∗ identifier: A
 // ∗ ambient lighting ratio in the range [0.0,1.0]: 0.2
 // ∗ R, G, B colors in the range [0-255]: 255, 255, 255
-t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
+t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 {
 	float	ratio;
 	t_vec3	color;
@@ -36,7 +36,7 @@ t_parse_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 // ∗ x, y, z coordinates of the light point: -40.0,50.0,0.0
 // ∗ the light brightness ratio in the range [0.0,1.0]: 0.6
 // ∗ R, G, B colors in the range [0-255]: 10,0,255
-t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
+t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
 	float	ratio;
 	t_vec3	position;
@@ -67,7 +67,7 @@ t_parse_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 // ∗ x, y, z coordinates of the viewpoint: -50.0,0,20
 // ∗ 3D normalized orientation vector, in the range [-1,1] for each x, y,z
 // ∗ FOV: Horizontal field of view in degrees in the range [0,180]: 70
-t_parse_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
+t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 {
 	t_vec3	position;
 	t_vec3	orientation;

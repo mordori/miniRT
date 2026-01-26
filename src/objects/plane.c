@@ -1,7 +1,7 @@
 #include "objects.h"
 #include "materials.h"
 
-t_parse_error init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material *mat)
+t_error init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material *mat)
 {
 	t_object obj;
 

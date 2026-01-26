@@ -108,7 +108,7 @@
 #include <math.h>
 #include <stddef.h>
 
-t_parse_error	init_cylinder(t_context *ctx, t_cylinder *cy, t_material *mat)
+t_error	init_cylinder(t_context *ctx, t_cylinder *cy, t_material *mat)
 {
 	t_object	obj;
 

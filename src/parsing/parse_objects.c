@@ -11,7 +11,7 @@
 // ∗ x, y, z coordinates of the sphere center: 0.0,0.0,20.6
 // ∗ the sphere diameter: 12.6
 // ∗ R,G,B colors in the range [0-255]: 10, 0, 255
-t_parse_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
+t_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3	center;
 	float	diameter;
@@ -40,7 +40,7 @@ t_parse_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 // ∗ x, y, z coordinates of a point in the plane: 0.0,0.0,-10.0
 // ∗ 3D normalized normal vector, in the range [-1,1] for each x, y, z axis
 // ∗ R,G,B colors in the range [0-255]: 0,0,225
-t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
+t_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3		point;
 	t_vec3		normal;
@@ -69,7 +69,7 @@ t_parse_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 // ∗ the cylinder diameter: 14.2
 // ∗ the cylinder height: 21.42
 // ∗ R, G, B colors in the range [0,255]: 10, 0, 255
-t_parse_error	parse_cylinder(t_context *ctx, t_parser *parser, char **tokens)
+t_error	parse_cylinder(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_cylinder	cy;
 	t_material	mat;
