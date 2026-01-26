@@ -48,6 +48,9 @@ static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
 	return (result);
 }
 
+// AABB tests are called millions of times per frame
+// Modern CPUs handle the extra arithmetic faster than branch mispredictions
+// BVH traversal patterns are unpredictable, causing frequent mispredictions
 bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t)
 {
 	float		t_min;
@@ -61,14 +64,14 @@ bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t)
 	max = (aabb->max.x - ray->origin.x) * ray->inv_dir.x;
 	t_min = fmaxf(t_min, fminf(min, max));
 	t_max = fminf(t_max, fmaxf(min, max));
-	if (t_min > t_max)
-		return (false);
+	// if (t_min > t_max)
+	// 	return (false);
 	min = (aabb->min.y - ray->origin.y) * ray->inv_dir.y;
 	max = (aabb->max.y - ray->origin.y) * ray->inv_dir.y;
 	t_min = fmaxf(t_min, fminf(min, max));
 	t_max = fminf(t_max, fmaxf(min, max));
-	if (t_min > t_max)
-		return (false);
+	// if (t_min > t_max)
+	// 	return (false);
 	min = (aabb->min.z - ray->origin.z) * ray->inv_dir.z;
 	max = (aabb->max.z - ray->origin.z) * ray->inv_dir.z;
 	t_min = fmaxf(t_min, fminf(min, max));
