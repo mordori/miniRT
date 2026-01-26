@@ -10,21 +10,24 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 	t_vec3		*buf;
 	t_vec3		color;
 	float		scale;
-	float		exposure;
+	t_pixel		pixel;
 
 	buf = __builtin_assume_aligned(r->buffer, 64);
 	pixels = (uint32_t *)ctx->img->pixels;
 	scale = 1.0f / (float)r->frame;
-	// if (r->mode == RENDER_REFINE)
-		exposure = ctx->scene.cam.exposure;
-	// else
-	// 	exposure = 1.0f;
+	pixel.frame = r->frame;
+	pixel.x = 0;
+	pixel.y = 0;
 	while (i < r->pixels)
 	{
 		color = vec3_scale(buf[i], scale);
-		color = post_process_fast(color, exposure);
-		pixels[i] = vec3_to_uint32(color);
-		++i;
+		color = post_process(ctx, &pixel, color);
+		pixels[i++] = vec3_to_uint32(color);
+		if (++pixel.x == r->width)
+		{
+			pixel.x = 0;
+			++pixel.y;
+		}
 	}
 }
 
@@ -65,7 +68,8 @@ void	resize_window(t_context *ctx)
 	memset(r->buffer, 0, size);
 	update_camera(ctx);
 	r->resize_pending = false;
-	blit(ctx, &ctx->renderer, 0);
+	if (r->frame == 0)
+		blit(ctx, &ctx->renderer, 0);
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 	start_render(r, &ctx->scene.cam);

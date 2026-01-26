@@ -62,17 +62,28 @@ void	loop_hook(void *param)
 {
 	t_context		*ctx;
 	t_renderer		*r;
-	bool			resize;
 	static bool		update;
 	uint32_t		render_time;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
 	if (process_input(ctx))
+	{
 		update = true;
+		if (r->mode == RENDER_REFINE)
+			r->render_cancel = true;
+	}
 	pthread_mutex_lock(&r->mutex);
-	resize = r->resize_pending;
-	if (r->frame_complete)
+	if (r->render_cancel || r->resize_pending)
+	{
+		r->tile_index = r->tiles_total;
+		pthread_cond_broadcast(&r->cond);
+		while (r->threads_running)
+			pthread_cond_wait(&r->cond, &r->mutex);
+		r->render_cancel = false;
+		r->frame_complete = false;
+	}
+	else if (r->frame_complete && !r->resize_pending)
 	{
 		r->frame_complete = false;
 		blit(ctx, r, 0);
@@ -81,30 +92,32 @@ void	loop_hook(void *param)
 		if (r->frame == RENDER_SAMPLES)
 			printf("Done!\tRender time: %.1fs\n", render_time / 1000.0f);
 	}
-	if (r->threads_running == 0 && !resize)
+	if (r->resize_pending)
 	{
-		if (update)
-		{
-			r->cam = ctx->scene.cam;
-			r->mode = RENDER_PREVIEW;
-			r->ray_bounces = PREVIEW_BOUNCES;
+		pthread_mutex_unlock(&r->mutex);
+		if (ctx->resize_time != 0 && resize_timer(ctx))
+			resize_window(ctx);
+		return ;
+	}
+	else if (!r->threads_running && update)
+	{
+		r->cam = ctx->scene.cam;
+		r->mode = RENDER_PREVIEW;
+		r->ray_bounces = PREVIEW_BOUNCES;
+		r->frame = 1;
+		r->tile_index = 0;
+		update = false;
+		r->render_time = time_now();
+		pthread_cond_broadcast(&r->cond);
+	}
+	else if (!r->threads_running && r->frame < RENDER_SAMPLES)
+	{
+		if (r->mode == RENDER_PREVIEW)
 			r->frame = 1;
-			r->tile_index = 0;
-			update = false;
-			r->render_time = time_now();
-			pthread_cond_broadcast(&r->cond);
-		}
-		else if (r->frame < RENDER_SAMPLES)
-		{
-			if (r->mode == RENDER_PREVIEW)
-				r->frame = 1;
-			r->mode = RENDER_REFINE;
-			r->ray_bounces = REFINE_BOUNCES;
-			r->tile_index = 0;
-			pthread_cond_broadcast(&r->cond);
-		}
+		r->mode = RENDER_REFINE;
+		r->ray_bounces = REFINE_BOUNCES;
+		r->tile_index = 0;
+		pthread_cond_broadcast(&r->cond);
 	}
 	pthread_mutex_unlock(&r->mutex);
-	if (resize && ctx->resize_time != 0 && resize_timer(ctx))
-		resize_window(ctx);
 }

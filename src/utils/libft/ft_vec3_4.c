@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:35:30 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/24 03:28:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/25 23:43:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,9 @@ t_vec3	vec3_clamp_mag(t_vec3 vec, float max)
 		return (vec3_scale(vec, scale));
 	}
 	return (vec);
+}
+
+t_vec3	vec3_addf(t_vec3 vec, float n)
+{
+	return (vec3(vec.x + n, vec.y + n, vec.z + n));
 }

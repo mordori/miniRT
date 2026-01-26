@@ -8,7 +8,7 @@
 static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, float lux);
 static inline t_vec3	background_gradient(float t);
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
-// static inline void	trace_ray_preview(const t_context *ctx, t_path *path);
+// static inline void	trace_ray_edit(const t_context *ctx, t_path *path);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
@@ -30,9 +30,9 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	{
 		path.hit = (t_hit){0};
 		path.hit.t = M_INF;
-		// if (r->mode == RENDER_PREVIEW)
+		// if (r->mode == RENDER_EDIT)
 		// {
-		// 	trace_ray_preview(ctx, &path);
+		// 	trace_ray_edit(ctx, &path);
 		// 	break ;
 		// }
 		if (!trace_ray(ctx, &path, pixel))
@@ -41,7 +41,7 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	return (path.color);
 }
 
-// static inline void	trace_ray_preview(const t_context *ctx, t_path *path)
+// static inline void	trace_ray_edit(const t_context *ctx, t_path *path)
 // {
 // 	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 // 	{
@@ -92,10 +92,11 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		{
 			if (ctx->renderer.mode == RENDER_PREVIEW)
 			{
-				light_idx = (uint32_t)(blue_noise(&ctx->blue_noise, pixel, 6) * ctx->scene.lights.total);
+				light_idx = (uint32_t)(blue_noise(&ctx->tex_blue_noise, pixel, BN_LI) * ctx->scene.lights.total);
 				if (light_idx >= ctx->scene.lights.total)
 					light_idx = ctx->scene.lights.total - 1;
 				add_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[light_idx], pixel);
+				path->color = vec3_scale(path->color, (float)ctx->scene.lights.total);
 			}
 			else
 				while (i < ctx->scene.lights.total)
@@ -135,7 +136,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	t_vec2		uv;
 
 	if (path->bounce == 0)
-		uv = vec2(blue_noise(&ctx->blue_noise, pixel, 2), blue_noise(&ctx->blue_noise, pixel, 3));
+		uv = vec2(blue_noise(&ctx->tex_blue_noise, pixel, BN_SC_U), blue_noise(&ctx->tex_blue_noise, pixel, BN_SC_V));
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
 	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
@@ -193,6 +194,7 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, fl
 	return (vec3_scale(result, lux));
 }
 
+// Todo: smoother with floats
 static inline t_vec3	background_gradient(float t)
 {
 	t_vec3		result;

@@ -5,27 +5,30 @@ static inline t_vec3	tonemap_aces(t_vec3 color);
 static inline t_vec3	linear_to_srgb(t_vec3 c);
 static inline float	aces(float x);
 
-t_vec3	post_process_fast(t_vec3 c, float exposure)
-{
-	c = vec3_max(c, 0.0f);
-	c = vec3_scale(c, exposure);
-	c = tonemap_aces(c);
-	c = vec3_sqrt(c);
-	c = vec3_clamp01(c);
-	return (c);
-}
-
 t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 {
 	c = vec3_max(c, 0.0f);
-	c = vec3_scale(c, ctx->scene.cam.exposure);
+	if (ctx->renderer.mode != RENDER_EDIT)
+		c = vec3_scale(c, ctx->scene.cam.exposure);
 	c = tonemap_aces(c);
-	c = linear_to_srgb(c);
-	c.r += (blue_noise(&ctx->blue_noise, pixel, 0) - 0.5f) * INV_255F;
-	c.g += (blue_noise(&ctx->blue_noise, pixel, 1) - 0.5f) * INV_255F;
-	c.b += (blue_noise(&ctx->blue_noise, pixel, 2) - 0.5f) * INV_255F;
-	c = vec3_clamp01(c);
-	return (c);
+	if (ctx->renderer.mode == RENDER_REFINE)
+	{
+		if (ctx->renderer.quality == 1)
+		{
+			c = linear_to_srgb(c);
+			c.r += (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_R) - 0.5f) * INV_255F;
+			c.g += (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_G) - 0.5f) * INV_255F;
+			c.b += (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_B) - 0.5f) * INV_255F;
+		}
+		else
+		{
+			c = vec3_sqrt(c);
+			c = vec3_addf(c, (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_R) - 0.5f) * INV_255F);
+		}
+	}
+	else
+		c = vec3_sqrt(c);
+	return (vec3_clamp01(c));
 }
 
 static inline t_vec3	linear_to_srgb(t_vec3 c)
