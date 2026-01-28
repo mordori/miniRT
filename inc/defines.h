@@ -14,7 +14,7 @@
 # define HEIGHT				1080
 # define THREADS_DFL		4
 # define TILE_SIZE			32
-# define RENDER_SAMPLES		512
+# define RENDER_SAMPLES		256					// MIN = 20
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		32
 # define DEPTH_ENABLE_RR	3
