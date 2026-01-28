@@ -3,7 +3,7 @@
 
 static inline t_vec3	tonemap_aces(t_vec3 color);
 static inline t_vec3	linear_to_srgb(t_vec3 c);
-static inline float	aces(float x);
+static inline float		aces(float x);
 
 t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 {
@@ -13,18 +13,10 @@ t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 	c = tonemap_aces(c);
 	if (ctx->renderer.mode == RENDER_REFINE)
 	{
-		if (ctx->renderer.quality == 1)
-		{
-			c = linear_to_srgb(c);
-			c.r += (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_R) - 0.5f) * INV_255F;
-			c.g += (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_G) - 0.5f) * INV_255F;
-			c.b += (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_B) - 0.5f) * INV_255F;
-		}
-		else
-		{
-			c = vec3_sqrt(c);
-			c = vec3_addf(c, (blue_noise(&ctx->tex_blue_noise, pixel, BN_PP_R) - 0.5f) * INV_255F);
-		}
+		c = linear_to_srgb(c);
+		c.r += (blue_noise(&ctx->tex_bn, pixel, BN_PP_R) - 0.5f) * INV_255F;
+		c.g += (blue_noise(&ctx->tex_bn, pixel, BN_PP_G) - 0.5f) * INV_255F;
+		c.b += (blue_noise(&ctx->tex_bn, pixel, BN_PP_B) - 0.5f) * INV_255F;
 	}
 	else
 		c = vec3_sqrt(c);

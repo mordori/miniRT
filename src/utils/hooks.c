@@ -10,6 +10,13 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	ctx = (t_context *)param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
+	else if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_RELEASE)
+	{
+		if (ctx->renderer.mode != RENDER_EDIT)
+			ctx->renderer.mode = RENDER_EDIT;
+		else
+			ctx->renderer.mode = RENDER_REFINE;
+	}
 }
 
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
@@ -71,26 +78,30 @@ void	loop_hook(void *param)
 	{
 		update = true;
 		if (r->mode == RENDER_REFINE)
-			r->render_cancel = true;
+			atomic_store(&r->render_cancel, true);
 	}
 	pthread_mutex_lock(&r->mutex);
-	if (r->render_cancel || r->resize_pending)
+	if (atomic_load(&r->render_cancel) || r->resize_pending)
 	{
 		r->tile_index = r->tiles_total;
 		pthread_cond_broadcast(&r->cond);
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);
-		r->render_cancel = false;
+		atomic_store(&r->render_cancel, false);
 		r->frame_complete = false;
 	}
 	else if (r->frame_complete && !r->resize_pending)
 	{
+		if (r->mode != RENDER_REFINE || r->frame < 16 || (r->frame < 64 && (r->frame & 1)) || (time_now() - r->blit_time > 1000 || r->frame == RENDER_SAMPLES - 1))
+		{
+			r->blit_time = time_now();
+			blit(ctx, r, 0);
+			render_time = time_now() - r->render_time;
+			if (r->frame == RENDER_SAMPLES - 1)
+				printf("Done!\tRender time: %.1fs\n", render_time / 1000.0f);
+		}
 		r->frame_complete = false;
-		blit(ctx, r, 0);
 		++r->frame;
-		render_time = time_now() - r->render_time;
-		if (r->frame == RENDER_SAMPLES)
-			printf("Done!\tRender time: %.1fs\n", render_time / 1000.0f);
 	}
 	if (r->resize_pending)
 	{
@@ -102,7 +113,8 @@ void	loop_hook(void *param)
 	else if (!r->threads_running && update)
 	{
 		r->cam = ctx->scene.cam;
-		r->mode = RENDER_PREVIEW;
+		if (r->mode == RENDER_REFINE)
+			r->mode = RENDER_PREVIEW;
 		r->ray_bounces = PREVIEW_BOUNCES;
 		r->frame = 1;
 		r->tile_index = 0;
@@ -113,7 +125,11 @@ void	loop_hook(void *param)
 	else if (!r->threads_running && r->frame < RENDER_SAMPLES)
 	{
 		if (r->mode == RENDER_PREVIEW)
+		{
+			r->blit_time = 0;
+			r->render_time = time_now();
 			r->frame = 1;
+		}
 		r->mode = RENDER_REFINE;
 		r->ray_bounces = REFINE_BOUNCES;
 		r->tile_index = 0;

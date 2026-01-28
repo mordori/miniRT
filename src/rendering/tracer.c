@@ -92,7 +92,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		{
 			if (ctx->renderer.mode == RENDER_PREVIEW)
 			{
-				light_idx = (uint32_t)(blue_noise(&ctx->tex_blue_noise, pixel, BN_LI) * ctx->scene.lights.total);
+				light_idx = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
 				if (light_idx >= ctx->scene.lights.total)
 					light_idx = ctx->scene.lights.total - 1;
 				add_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[light_idx], pixel);
@@ -136,7 +136,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	t_vec2		uv;
 
 	if (path->bounce == 0)
-		uv = vec2(blue_noise(&ctx->tex_blue_noise, pixel, BN_SC_U), blue_noise(&ctx->tex_blue_noise, pixel, BN_SC_V));
+		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_SC_U), blue_noise(&ctx->tex_bn, pixel, BN_SC_V));
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
 	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
