@@ -182,7 +182,7 @@ static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, fl
 	t_vec3		result;
 	const float	*pixels;
 
-	if (tex)
+	if (!tex)
 		return (vec3_scale(background_gradient((ray->dir.y + 1.0f) * 0.5f), lux));
 	uv.u = ft_clamp01((atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI);
 	uv.v = ft_clamp01(acosf(ray->dir.y) * M_1_PI);

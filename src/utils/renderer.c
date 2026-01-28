@@ -13,7 +13,7 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 	t_pixel		pixel;
 
 	buf = __builtin_assume_aligned(r->buffer, 64);
-	pixels = (uint32_t *)ctx->img->pixels;
+	pixels = (uint32_t *)__builtin_assume_aligned(ctx->img->pixels, 4);
 	scale = 1.0f / (float)r->frame;
 	pixel.frame = r->frame;
 	pixel.x = 0;
