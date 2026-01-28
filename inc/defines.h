@@ -205,7 +205,7 @@ struct __attribute__((aligned(16))) s_material
 	float			roughness;
 	float			ior;
 	float			transmission;
-	uint32_t		flags;
+	float			flags;
 	t_base_color	base_color;
 	t_pattern		pattern;
 	bool			is_emissive;

@@ -84,8 +84,9 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens);
 t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens);
 t_error	parse_skydome(t_context *ctx, char **tkns);
 
-t_texture		*find_texture_name(t_parser *p, const char *name);
+t_error parse_material(t_parser *parser, char **tkns);
 t_error	parse_texture(t_context *ctx, t_parser *p, char **tkns);
+t_texture		*find_texture_name(t_parser *p, const char *name);
 t_error	load_texture_file(t_context *ctx, const char *filename, t_texture *out);
 
 bool			is_png_filename(const char *str);
