@@ -71,6 +71,7 @@ void	loop_hook(void *param)
 	t_renderer		*r;
 	static bool		update;
 	uint32_t		render_time;
+	static uint64_t	tick;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
@@ -92,13 +93,30 @@ void	loop_hook(void *param)
 	}
 	else if (r->frame_complete && !r->resize_pending)
 	{
-		if (r->mode != RENDER_REFINE || r->frame < 16 || (r->frame < 64 && (r->frame & 1)) || (time_now() - r->blit_time > 1000 || r->frame == RENDER_SAMPLES - 1))
+		try_write(ctx, STDOUT_FILENO, "\rRendering...   ");
+		try_write(ctx, STDOUT_FILENO, "[");
+		int step = r->frame / ((RENDER_SAMPLES) / 19);
+		int i = step;
+		while (i-- > 0)
+			try_write(ctx, STDOUT_FILENO, "#");
+		i = 19 - step;
+		while (i-- > 0)
+			try_write(ctx, STDOUT_FILENO, " ");
+		try_write(ctx, STDOUT_FILENO, "] [");
+		char	str[INT64_LENGTH] = {0};
+		uint64_to_str(r->frame, str);
+		try_write(ctx, STDOUT_FILENO, str);
+		try_write(ctx, STDOUT_FILENO, "/");
+		uint64_to_str(RENDER_SAMPLES, str);
+		try_write(ctx, STDOUT_FILENO, str);
+		try_write(ctx, STDOUT_FILENO, "] ");
+		if (r->mode != RENDER_REFINE || r->frame < 16 || (r->frame < 48 && (r->frame & 1)) || (time_now() - r->blit_time > 1000 || r->frame == RENDER_SAMPLES))
 		{
 			r->blit_time = time_now();
 			blit(ctx, r, 0);
 			render_time = time_now() - r->render_time;
-			if (r->frame == RENDER_SAMPLES - 1)
-				printf("Done!\tRender time: %.1fs\n", render_time / 1000.0f);
+			if (r->frame == RENDER_SAMPLES)
+				printf("\nDone!\t\t    Time: %.1fs\n\n", render_time / 1000.0f);
 		}
 		r->frame_complete = false;
 		++r->frame;
@@ -122,7 +140,7 @@ void	loop_hook(void *param)
 		r->render_time = time_now();
 		pthread_cond_broadcast(&r->cond);
 	}
-	else if (!r->threads_running && r->frame < RENDER_SAMPLES)
+	else if (!r->threads_running && r->frame < RENDER_SAMPLES + 1)
 	{
 		if (r->mode == RENDER_PREVIEW)
 		{
@@ -136,4 +154,5 @@ void	loop_hook(void *param)
 		pthread_cond_broadcast(&r->cond);
 	}
 	pthread_mutex_unlock(&r->mutex);
+	++tick;
 }

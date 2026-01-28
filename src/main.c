@@ -22,8 +22,14 @@ int	main(int argc, char *argv[])
 	ctx = (t_context){0};
 	file = argv[1];
 	validate_file_type(file);
+	printf("[miniRT]\n");
+	printf("Loaded scene: %s\n\n", file);
+	printf("Render settings\n");
+	printf("Samples:\t%d\n", RENDER_SAMPLES);
+	printf("Bounces:\t%d\n\n\n", REFINE_BOUNCES);
 	ctx.fd = try_open(file, O_RDONLY, 0);
 	initialize(&ctx);
+	try_write(&ctx, STDOUT_FILENO, "\n\nGoodbye!\n");
 	clean(&ctx);
 	return (EXIT_SUCCESS);
 }
