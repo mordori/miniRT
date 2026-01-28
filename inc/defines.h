@@ -14,7 +14,7 @@
 # define HEIGHT				1080
 # define THREADS_DFL		4
 # define TILE_SIZE			32
-# define RENDER_SAMPLES		1024
+# define RENDER_SAMPLES		512
 # define PREVIEW_BOUNCES	2
 # define REFINE_BOUNCES		32
 # define DEPTH_ENABLE_RR	3
@@ -326,7 +326,6 @@ struct __attribute__((aligned(64))) s_renderer
 		t_render_mode		mode;
 		uint32_t			frame;
 		uint8_t				ray_bounces;
-		uint8_t				quality;
 		_Atomic bool		render_cancel;
 	};
 	struct __attribute__((aligned(64)))
@@ -337,6 +336,7 @@ struct __attribute__((aligned(64))) s_renderer
 		int32_t				threads_amount;
 		int32_t				threads_init;
 		uint32_t			render_time;
+		uint32_t			blit_time;
 		bool				init_mutex;
 		bool				init_cond;
 	};
@@ -377,7 +377,7 @@ struct s_context
 {
 	t_renderer		renderer;
 	t_scene			scene;
-	t_texture		tex_blue_noise;
+	t_texture		tex_bn;
 	t_editor		editor;
 	mlx_t			*mlx;
 	t_image			*img;

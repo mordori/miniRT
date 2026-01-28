@@ -44,8 +44,7 @@ static inline void	initialize(t_context *ctx)
 		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
-	ctx->tex_blue_noise = \
-load_texture(ctx, "assets/textures/blue_noise.png", false);
+	ctx->tex_bn = load_texture(ctx, "assets/textures/blue_noise.png", false);
 	resize_window(ctx);
 	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx))
 		mlx_loop(ctx->mlx);
@@ -70,7 +69,7 @@ void	clean(t_context *ctx)
 		pthread_mutex_destroy(&r->mutex);
 	free(r->threads);
 	clean_scene(ctx);
-	free_texture(&ctx->tex_blue_noise);
+	free_texture(&ctx->tex_bn);
 	free(r->buffer);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
