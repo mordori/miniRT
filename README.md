@@ -67,7 +67,7 @@ As the project is still under construction, we recommend to run the program with
 
 | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Left ALT/CMD</kbd> + <kbd>Left Mouse Button</kbd> and drag                | Orbit Camera                                              |
+| <kbd>Left ALT</kbd> + <kbd>Left Mouse Button</kbd> and drag                | Orbit Camera                                              |
 
 ### General
 
