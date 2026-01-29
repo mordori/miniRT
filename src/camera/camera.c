@@ -20,7 +20,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation, float fov)
 	cam->pitch = asinf(orientation.y);
 	cam->distance = 0.0f;
 	// ctx->scene.cam.exposure = 1.0f;
-	ctx->scene.cam.exposure = 0.05f;
+	ctx->scene.cam.exposure = 0.085f;
 }
 
 void	update_camera(t_context *ctx)

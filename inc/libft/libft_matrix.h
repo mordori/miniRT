@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 22:44:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/22 01:01:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/01/29 06:43:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_mat2	mat3_sub(t_mat3	m, int row, int column);
 float	mat3_minor(t_mat3 m, int row, int column);
 float	mat3_cofactor(t_mat3 m, int row, int column);
 float	mat3_det(t_mat3 m);
+t_vec3	mat3_mul_vec3(t_mat3 m, t_vec3 v);
 bool	mat4_inverse(t_mat4 m, t_mat4 *out);
 t_mat3	mat4_sub(t_mat4	m, int row, int column);
 float	mat4_minor(t_mat4 m, int row, int column);

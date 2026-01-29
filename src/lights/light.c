@@ -55,7 +55,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	color = (t_vec3){0};
 	orig = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
 	if (path->bounce == 0)
-		uv = vec2(blue_noise(&ctx->tex_blue_noise, pixel, BN_CO_U), blue_noise(&ctx->tex_blue_noise, pixel, BN_CO_V));
+		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_CO_U), blue_noise(&ctx->tex_bn, pixel, BN_CO_V));
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
 	dir = sample_cone(light, orig, uv, &pdf);
