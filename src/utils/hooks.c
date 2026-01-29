@@ -110,7 +110,7 @@ void	loop_hook(void *param)
 		uint64_to_str(RENDER_SAMPLES, str);
 		try_write(ctx, STDOUT_FILENO, str);
 		try_write(ctx, STDOUT_FILENO, "] ");
-		if (r->mode != RENDER_REFINE || r->frame < 16 || (r->frame < 48 && (r->frame & 1)) || (time_now() - r->blit_time > 1000 || r->frame == RENDER_SAMPLES))
+		if (r->mode != RENDER_REFINE || r->frame < 8 || (r->frame < 32 && (r->frame & 1)) || (time_now() - r->blit_time > 1000 || r->frame == RENDER_SAMPLES))
 		{
 			r->blit_time = time_now();
 			blit(ctx, r, 0);
