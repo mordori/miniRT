@@ -14,8 +14,14 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 
 	buf = __builtin_assume_aligned(r->buffer, 64);
 	pixels = (uint32_t *)ctx->img->pixels;
-	scale = 1.0f / (float)r->frame;
 	pixel.frame = r->frame;
+	if (r->frame > 1)
+		scale = 1.0f / (float)r->frame;
+	else
+	{
+		scale = 1.0f;
+		pixel.frame = 1;
+	}
 	pixel.x = 0;
 	pixel.y = 0;
 	while (i < r->pixels)
