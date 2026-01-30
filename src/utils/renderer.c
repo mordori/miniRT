@@ -64,8 +64,8 @@ void	resize_window(t_context *ctx)
 	r->height = r->new_height;
 	r->pixels = r->width * r->height;
 	free(r->buffer);
-	size = (sizeof(t_vec3) * r->pixels + 63) & ~63;
-	r->buffer = aligned_alloc(64, size);
+	size = sizeof(t_vec3) * r->pixels;
+	r->buffer = a_alloc(64, size);
 	if (!r->buffer || !mlx_resize_image(ctx->img, r->width, r->height))
 	{
 		pthread_mutex_unlock(&r->mutex);

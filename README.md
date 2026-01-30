@@ -3,15 +3,15 @@
 **Monte Carlo path tracer.**
 
 > [!IMPORTANT]
-> This is project is work in progress. It is still missing many of the planned features. Some of the parameters are currently hardcoded in and there may be bugs.
+> This project is work in progress! It is still missing many of the planned features. Some of the parameters are currently hardcoded in and there may be bugs.
 
 > [!NOTE]
-> Some of the features, such as HDR images, utilisation of GPU, and a denoising solution, will not be implemented until the project has been validated. This is due to restrictions placed onto the subject.
+> Some of the features such as HDR images, GPU utilisation, and a denoising solution, will not be implemented until the project has been validated. This is due to restrictions placed upon the subject.
 
 > [!NOTE]
-> [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library, is used in this project. It handles window creation and manages the framebuffer to which we copy ours.
+> [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library, is used in this project. It handles window creation and manages a framebuffer to which we copy ours.
 >
-> The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed depending on your system. Please refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
+> The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Please refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
 
 <br>
 
@@ -22,7 +22,7 @@
 
 #### TODO
 - Disney BRDF and approximated BSDF materials
-- Additional primitive object
+- Additional primitive objects
 - Texture maps and procedural patterns
 - Normal maps
 - Extented camera properties and trackball controls

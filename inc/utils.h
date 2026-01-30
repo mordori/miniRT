@@ -51,5 +51,6 @@ t_vec3	map_spherical(float u, float v);
 uint32_t	fast_range(uint32_t n, uint32_t	range);
 void	orthonormal_basis(const t_vec3 n, t_vec3 *t, t_vec3 *b);
 size_t	uint64_to_str(uint64_t n, char *buf);
+void	*a_alloc(size_t alignment, size_t size);
 
 #endif
