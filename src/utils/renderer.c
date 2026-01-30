@@ -4,7 +4,8 @@
 
 static inline uint32_t	vec3_to_uint32(t_vec3 color);
 
-void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
+__attribute_noinline__
+void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
 {
 	uint32_t	*pixels;
 	t_vec3		*buf;
@@ -15,8 +16,8 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 	buf = __builtin_assume_aligned(r->buffer, 64);
 	pixels = (uint32_t *)ctx->img->pixels;
 	pixel.frame = r->frame;
-	if (r->frame > 1)
-		scale = 1.0f / (float)r->frame;
+	if (pixel.frame > 1)
+		scale = 1.0f / (float)pixel.frame;
 	else
 	{
 		scale = 1.0f;
@@ -24,15 +25,27 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i)
 	}
 	pixel.x = 0;
 	pixel.y = 0;
-	while (i < r->pixels)
+	if (r->mode == RENDER_REFINE)
 	{
-		color = vec3_scale(buf[i], scale);
-		color = post_process(ctx, &pixel, color);
-		pixels[i++] = vec3_to_uint32(color);
-		if (++pixel.x == r->width)
+		while (i < limit)
 		{
-			pixel.x = 0;
-			++pixel.y;
+			color = vec3_scale(buf[i], scale);
+			color = post_process(ctx, &pixel, color);
+			pixels[i++] = vec3_to_uint32(color);
+			if (++pixel.x == r->width)
+			{
+				pixel.x = 0;
+				++pixel.y;
+			}
+		}
+	}
+	else
+	{
+		while (i < limit)
+		{
+			color = vec3_scale(buf[i], scale);
+			color = post_process_fast(ctx, color);
+			pixels[i++] = vec3_to_uint32(color);
 		}
 	}
 }
@@ -75,7 +88,7 @@ void	resize_window(t_context *ctx)
 	update_camera(ctx);
 	r->resize_pending = false;
 	if (r->frame == 0)
-		blit(ctx, &ctx->renderer, 0);
+		blit(ctx, &ctx->renderer, 0, r->pixels);
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 	start_render(r, &ctx->scene.cam);

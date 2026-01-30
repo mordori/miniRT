@@ -44,7 +44,7 @@ void	stop_render(t_renderer *r);
 float	ft_atof(const char *str, char **endptr);
 double	ft_strtod(const char *str, char **endptr);
 char	**try_split(char const *s);
-void	blit(const t_context *ctx, const t_renderer *r, uint32_t i);
+void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit);
 void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
 float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
 t_vec3	map_spherical(float u, float v);

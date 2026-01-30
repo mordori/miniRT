@@ -3,13 +3,13 @@ NAME		:=miniRT
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
-CC			:=cc
+CC			:=gcc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
 OPTS		:=-Ofast -march=native -funroll-loops -fno-plt -flto
-CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
+CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS) -g
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory
 
