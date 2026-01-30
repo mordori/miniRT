@@ -13,8 +13,8 @@ t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
 	texture.tex = mlx_load_png(file);
 	if (!texture.tex)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
-	size = ((sizeof(float) * texture.tex->width * texture.tex->height * 4) + 63) & ~63;
-	texture.pixels = aligned_alloc(64, size);
+	size = (sizeof(float) * texture.tex->width * texture.tex->height * 4);
+	texture.pixels = a_alloc(64, size);
 	if (!texture.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	if (is_srgb)

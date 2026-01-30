@@ -53,7 +53,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	float		t_hc;
 
 	color = (t_vec3){0};
-	orig = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
+	orig = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
 	if (path->bounce == 0)
 		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_CO_U), blue_noise(&ctx->tex_bn, pixel, BN_CO_V));
 	else
@@ -69,7 +69,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	ca_dist_sq = vec3_dot(orig_to_light, orig_to_light) - t_ca * t_ca;
 	t_hc = sqrtf(light->obj->shape.sphere.radius_sq - ca_dist_sq);
 	dist = t_ca - t_hc;
-	if (hit_shadow(&ctx->scene, orig, dir, dist - G_EPSILON))
+	if (hit_shadow(&ctx->scene, orig, dir, dist - B_EPSILON))
 		return (color);
 	color = vec3_mul(light->emission, path->mat->albedo);
 	color = vec3_scale(color, ndotl / pdf);
@@ -149,7 +149,7 @@ t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, const t_mater
 	t_vec3		orig_biased;
 
 	light = (t_light *)&scene->directional_light;
-	orig_biased = vec3_add(hit->point, vec3_scale(hit->normal, G_EPSILON));
+	orig_biased = vec3_add(hit->point, vec3_scale(hit->normal, B_EPSILON));
 	dir = vec3_normalize(light->dir);
 	ndotl = vec3_dot(hit->normal, dir);
 	if (ndotl <= 0.0f || hit_shadow(scene, orig_biased, dir, M_INF))
