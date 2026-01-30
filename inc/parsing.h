@@ -89,6 +89,8 @@ t_error	parse_texture(t_context *ctx, t_parser *p, char **tkns);
 t_texture		*find_texture_name(t_parser *p, const char *name);
 t_error	load_texture_file(t_context *ctx, const char *filename, t_texture *out);
 
+t_error parse_mat(t_parser *parser, const char *tkn, t_material *material);
+
 bool			is_png_filename(const char *str);
 void			cleanup_parser(t_parser *p);
 #endif
