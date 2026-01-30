@@ -1,6 +1,7 @@
 #include <xmmintrin.h>
 #include "scene.h"
 #include "libft_list.h"
+#include <emmintrin.h>  // SSE2 intrinsics
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b);
 

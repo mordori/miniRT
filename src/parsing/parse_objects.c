@@ -15,7 +15,7 @@ t_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3	center;
 	float	diameter;
-	t_vec3	color;
+	// t_vec3	color;
 	t_material	mat;
 
 	if (count_tokens(tokens) != 4)
@@ -26,11 +26,13 @@ t_error parse_sphere(t_context *ctx, t_parser *parser, char **tokens)
 		return (PARSE_ERR_INVALID_NUM);
 	if (diameter <= 0.0f)
 		return (PARSE_ERR_RANGE);
-	if (!parse_color(tokens[3], &color))
-		return (PARSE_ERR_INVALID_NUM);
-	mat = (t_material){0};
-	mat.albedo = color;
-	mat.base_color = BASE_COLOR;
+	// if (!parse_color(tokens[3], &color))
+	// 	return (PARSE_ERR_INVALID_NUM);
+	// mat = (t_material){0};
+	// mat.albedo = color;
+	// mat.base_color = BASE_COLOR;
+	if (parse_mat(parser, tokens[3], &mat) != PARSE_OK)
+		return (PARSE_ERR_MATERIAL);
 	parser->has_sphere = true;
 	return (init_sphere(ctx, center, diameter, &mat));
 }
@@ -44,7 +46,7 @@ t_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_vec3		point;
 	t_vec3		normal;
-	t_vec3		color;
+	// t_vec3		color;
 	t_material	mat;
 
 	if (count_tokens(tokens) < 4)
@@ -53,11 +55,13 @@ t_error	parse_plane(t_context *ctx, t_parser *parser, char **tokens)
 		return(PARSE_ERR_INVALID_NUM);
 	if (!validate_normalized(normal))
 		return(PARSE_ERR_RANGE);
-	if (!parse_color(tokens[3], &color))
-		return(PARSE_ERR_INVALID_NUM);
-	mat = (t_material){0};
-	mat.albedo = color;
-	mat.base_color = BASE_COLOR;
+	// if (!parse_color(tokens[3], &color))
+	// 	return(PARSE_ERR_INVALID_NUM);
+	// mat = (t_material){0};
+	// mat.albedo = color;
+	// mat.base_color = BASE_COLOR;
+	if (parse_mat(parser, tokens[3], &mat) != PARSE_OK)
+		return (PARSE_ERR_MATERIAL);
 	parser->has_plane = true;
 	return(init_plane(ctx, point, normal, &mat));
 }
@@ -73,7 +77,7 @@ t_error	parse_cylinder(t_context *ctx, t_parser *parser, char **tokens)
 {
 	t_cylinder	cy;
 	t_material	mat;
-	t_vec3		color;
+	// t_vec3		color;
 
 	if (count_tokens(tokens) < 6)
 		return (PARSE_ERR_MISSING_ARGS);
@@ -86,11 +90,13 @@ t_error	parse_cylinder(t_context *ctx, t_parser *parser, char **tokens)
 	cy.radius /= 2.0f;
 	if (cy.radius <= 0.0f || cy.height <= 0.0f)
 		return (PARSE_ERR_RANGE);
-	if (!parse_color(tokens[5], &color))
-		return (PARSE_ERR_INVALID_NUM);
-	mat = (t_material){0};
-	mat.albedo = color;
-	mat.base_color = BASE_COLOR;
+	// if (!parse_color(tokens[5], &color))
+	// 	return (PARSE_ERR_INVALID_NUM);
+	// mat = (t_material){0};
+	// mat.albedo = color;
+	// mat.base_color = BASE_COLOR;
+	if (parse_mat(parser, tokens[5], &mat) != PARSE_OK)
+		return (PARSE_ERR_MATERIAL);
 	parser->has_cylinder = true;
 	return (init_cylinder(ctx, &cy, &mat));
 }
