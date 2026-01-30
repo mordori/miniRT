@@ -26,8 +26,8 @@
 # define INV_255F			0.003921568627451f
 # define INV_2_2F			0.454545454545454f
 # define M_1_2PI			0.15915494309189533577f
-# define G_EPSILON			1e-3f
-# define C_EPSILON			1e-4f
+# define B_EPSILON			1e-4f
+# define G_EPSILON			1e-5f
 
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)

@@ -140,7 +140,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
 	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
-	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, G_EPSILON));
+	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
 	path->ray = new_ray(origin, dir);
 	path->throughput = vec3_mul(path->throughput, path->mat->albedo);
 	if (path->bounce >= DEPTH_ENABLE_RR)
