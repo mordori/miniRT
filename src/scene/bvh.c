@@ -110,3 +110,18 @@ static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_
 		stack[(*i)++] = node->left;
 	}
 }
+
+// // Branchless child ordering: pushes farther child first so closer child
+// // is popped first (LIFO), enabling early termination when a hit is found.
+// static inline void    add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node,
+//     t_bvh_node **stack, int32_t *i)
+// {
+//     t_bvh_node    *children[2];
+//     int            sign;
+
+//     children[0] = node->right;
+//     children[1] = node->left;
+//     sign = ray->sign[node->axis];
+//     stack[(*i)++] = children[sign];
+//     stack[(*i)++] = children[1 - sign];
+// }

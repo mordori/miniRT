@@ -10,22 +10,21 @@ static inline float		aces_fast(float x);
 t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 {
 	c = vec3_max(c, 0.0f);
-	if (ctx->renderer.mode == RENDER_REFINE)
-	{
-		c = vec3_scale(c, ctx->scene.cam.exposure);
-		c = tonemap_aces(c);
-		c = linear_to_srgb(c);
-		c.r += (blue_noise(&ctx->tex_bn, pixel, BN_PP_R) - 0.5f) * INV_255F;
-		c.g += (blue_noise(&ctx->tex_bn, pixel, BN_PP_G) - 0.5f) * INV_255F;
-		c.b += (blue_noise(&ctx->tex_bn, pixel, BN_PP_B) - 0.5f) * INV_255F;
-	}
-	else
-	{
-		if (ctx->renderer.mode != RENDER_EDIT)
-			c = vec3_scale(c, ctx->scene.cam.exposure * 0.6f);
-		c = tonemap_aces_fast(c);
-		c = vec3_sqrt(c);
-	}
+	c = vec3_scale(c, ctx->scene.cam.exposure);
+	c = tonemap_aces(c);
+	c = linear_to_srgb(c);
+	c.r += (blue_noise(&ctx->tex_bn, pixel, BN_PP_R) - 0.5f) * INV_255F;
+	c.g += (blue_noise(&ctx->tex_bn, pixel, BN_PP_G) - 0.5f) * INV_255F;
+	c.b += (blue_noise(&ctx->tex_bn, pixel, BN_PP_B) - 0.5f) * INV_255F;
+	return (vec3_clamp01(c));
+}
+
+t_vec3	post_process_fast(const t_context *ctx, t_vec3 c)
+{
+	c = vec3_max(c, 0.0f);
+	c = vec3_scale(c, ctx->scene.cam.exposure * 0.6f);
+	c = tonemap_aces_fast(c);
+	c = vec3_sqrt(c);
 	return (vec3_clamp01(c));
 }
 
