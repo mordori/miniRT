@@ -4,14 +4,14 @@
 
 static inline uint32_t	vec3_to_uint32(t_vec3 color);
 
-__attribute_noinline__
 void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
 {
-	uint32_t	*pixels;
-	t_vec3		*buf;
-	t_vec3		color;
-	float		scale;
-	t_pixel		pixel;
+	uint32_t		*pixels;
+	t_vec3			*buf;
+	t_vec3			color;
+	float			scale;
+	t_pixel			pixel;
+	const uint32_t	width = r->width;
 
 	buf = __builtin_assume_aligned(r->buffer, 64);
 	pixels = (uint32_t *)ctx->img->pixels;
@@ -27,12 +27,13 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
 	pixel.y = 0;
 	if (r->mode == RENDER_REFINE)
 	{
+		#pragma GCC unroll 4
 		while (i < limit)
 		{
 			color = vec3_scale(buf[i], scale);
 			color = post_process(ctx, &pixel, color);
 			pixels[i++] = vec3_to_uint32(color);
-			if (++pixel.x == r->width)
+			if (++pixel.x == width)
 			{
 				pixel.x = 0;
 				++pixel.y;
@@ -55,11 +56,11 @@ static inline uint32_t	vec3_to_uint32(t_vec3 color)
 	uint32_t	result;
 
 	result =
-		((uint32_t)(0xFFu << 24) |
+		((uint32_t)(color.data[3] * 255.0f + 0.5f) << 24) |
 		((uint32_t)(color.b * 255.0f + 0.5f) << 16) |
 		((uint32_t)(color.g * 255.0f + 0.5f) << 8) |
-		((uint32_t)(color.r * 255.0f + 0.5f)));
-	return (result);
+		((uint32_t)(color.r * 255.0f + 0.5f));
+	return (result | 0xFF000000);
 }
 
 void	resize_window(t_context *ctx)

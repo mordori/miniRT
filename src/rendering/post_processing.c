@@ -45,6 +45,7 @@ static inline t_vec3	tonemap_aces_fast(t_vec3 c)
 	result.r = aces_fast(c.r);
 	result.g = aces_fast(c.g);
 	result.b = aces_fast(c.b);
+	result.data[3] = aces_fast(c.data[3]);
 	return (result);
 }
 
