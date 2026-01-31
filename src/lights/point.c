@@ -28,7 +28,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	l2 = malloc(sizeof(*l2));
 	if (!l2)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
-	l2->pos = (t_vec3){{0.0f, 0.4f, 1.3f}};
+	l2->pos = (t_vec3){{0.0f, 0.4f, 0.8f}};
 	l2->emission = vec3_scale((t_vec3){{0.1f, 0.5f, 1.05f}}, 40.0f);
 	l2->type = LIGHT_AREA;
 
@@ -50,7 +50,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	l2 = malloc(sizeof(*l2));
 	if (!l2)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
-	l2->pos = (t_vec3){{0.0f, 0.2f, 5.5f}};
+	l2->pos = (t_vec3){{0.0f, 0.2f, 5.0f}};
 	l2->emission = vec3_scale((t_vec3){{1.0f, 0.05f, 0.05f}}, 2000.0f);
 	l2->type = LIGHT_AREA;
 

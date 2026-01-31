@@ -19,6 +19,7 @@
 - Monte Carlo integration with importance sampling for Global Illumination
 - Bounding Volume Hierarchy for computing intersections
 - Modest post-processing stack with ACES tonemapping
+- High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling auto-vectorisation of data.
 
 #### TODO
 - Disney BRDF and approximated BSDF materials
@@ -26,9 +27,43 @@
 - Texture maps and procedural patterns
 - Normal maps
 - Extented camera properties and trackball controls
+- Quaternions
 - Object editing with simplified rendering mode
 - Additional post-processing modules
 - Extented scene description format
+
+#### Post-validation Features
+- HDRi texture for skydome
+- Denoising solution
+- Load .ojb meshes
+- Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
+- Replace MLX42 with GPU interop to avoid data transfer back to CPU
+
+
+## Optimisation & Performance
+This project implements a highly optimised CPU rendering engine, balancing code readability with raw performance. By analysing assembly output with GDB and compiler behaviour, several optimisations were implemented to maximise throughput.
+
+### Blit Function
+
+
+#### Vectorised Preview Mode
+Used during the camera movement. Achieves SIMD (Single Instruction, Multiple Data) execution, processing 4 pixels in parallel per instruction cycle.
+
+-
+
+#### Pipelined Refine Mode
+
+-
+
+### Micro-optimisations
+
+- Invariant caching to local variables to prevent pointer aliasing, ensuring the compiler uses registers instead of repeated L1 cache loads.
+
+- Branchless logic using arithmetics where possible to minimise branch misprediction inside hot loops.
+
+## Physically Based Rendering
+
+## Monte Carlo Integration
 
 <br>
 
