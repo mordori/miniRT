@@ -4,14 +4,13 @@
 
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
-t_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_material *mat)
+t_error	init_sphere(t_context *ctx, t_vec3 center, float diameter,
+			t_material *mat)
 {
 	t_object	obj;
 	float		radius;
 
-	if (!ctx || !mat)
-		return (PARSE_ERR_MALLOC);
-	radius = diameter / 2.0f;
+	radius = diameter * 0.5f;
 	obj = (t_object){0};
 	obj.type = OBJ_SPHERE;
 	obj.transform.pos = center;
@@ -19,7 +18,7 @@ t_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, t_material *m
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
 	obj.material_id = new_material(ctx, mat);
-	obj.flags |= OBJ_CAST_SHADOWS | OBJ_VISIBLE;
+	obj.flags = OBJ_VISIBLE | OBJ_CAST_SHADOWS;
 	return (add_object(ctx, &obj));
 }
 

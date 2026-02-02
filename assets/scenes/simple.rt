@@ -6,11 +6,11 @@ sky sky.png
 #Ambient light: id  intensity   RGB
 A 0.7 255,255,255
 
-#Camera: viewport orientation   FOV
-C 0,0.01,0.7 0,0,1 70
+#Camera: viewport orientation   FOV   exposure
+C 0,0.01,0.7 0,0,1 70 0.085
 
-#Light: position    intensity   RGB
-L 0,0,10 0.7 255,255,255
+#Light: position    intensity   RGB    radius
+L 0,0,10 0.7 255,255,255 1
 
 #Plane: point    normal   RGB
 # pl 0,0,-25 0,0,1 20,20,20
