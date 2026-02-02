@@ -1,6 +1,6 @@
 #include "utils.h"
 
-bool	resize_timer(t_context *ctx)
+bool	resize_timer(const t_context *ctx)
 {
 	uint32_t	time;
 

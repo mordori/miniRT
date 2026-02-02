@@ -6,6 +6,7 @@
 #include "libft_io.h"
 #include "utils.h"
 #include "materials.h"
+#include "rendering.h"
 
 void	init_scene(t_context *ctx)
 {

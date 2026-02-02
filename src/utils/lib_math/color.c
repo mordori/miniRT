@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_colors.c                                        :+:      :+:    :+:   */
+/*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 00:44:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/02 00:30:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/01 12:11:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_colors.h"
-#include "libft_math.h"
+#include "lib_math.h"
 
 /**
  * Interpolates two colors by first separating the color channels,
@@ -23,7 +22,7 @@
  * @param t Interpolation factor.
  * @return Interpolated color (32-bit RGBA).
  */
-uint32_t	lerp_color(uint32_t c1, uint32_t c2, float t)
+uint32_t	lerp_color(const uint32_t c1, const uint32_t c2, const float t)
 {
 	t_color	color1;
 	t_color	color2;
@@ -47,7 +46,7 @@ uint32_t	lerp_color(uint32_t c1, uint32_t c2, float t)
  * @param rgba 32-bit unsigned integer in RGBA format.
  * @return 32-bit unsigned integer in ABGR format.
  */
-uint32_t	rgba_to_abgr(uint32_t rgba)
+uint32_t	rgba_to_abgr(const uint32_t rgba)
 {
 	t_color	abgr;
 

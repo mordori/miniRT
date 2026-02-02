@@ -1,33 +1,35 @@
 #ifndef MINIRT_DEFINES_H
 # define MINIRT_DEFINES_H
 
+# define _GNU_SOURCE
+
 # include <pthread.h>
 # include <stdatomic.h>
 
 # include "MLX42.h"
 # include "libft_defs.h"
 # include "libft_vector.h"
-# include "libft_colors.h"
-# include "libft_graphics.h"
 
-# define WIDTH				1920
-# define HEIGHT				1080
-# define THREADS_DFL		4
-# define TILE_SIZE			32
-# define RENDER_SAMPLES		512					// MIN = 20
-# define PREVIEW_BOUNCES	2
-# define REFINE_BOUNCES		32
-# define DEPTH_ENABLE_RR	3
+# include "lib_math.h"
 
-# define SENS_ORBIT			0.0025f
-# define SENS_ZOOM			0.0018f
-# define SENS_PAN			0.0006f
+# define WIDTH					1920
+# define HEIGHT					1080
+# define THREADS_DFL			4
+# define TILE_SIZE				32
+# define RENDER_SAMPLES			256
+# define PREVIEW_BOUNCES		2
+# define REFINE_BOUNCES			32
+# define DEPTH_ENABLE_RR		3
 
-# define INV_255F			0.003921568627451f
-# define INV_2_2F			0.454545454545454f
-# define M_1_2PI			0.15915494309189533577f
-# define B_EPSILON			1e-4f
-# define G_EPSILON			1e-5f
+# define SENS_ORBIT				0.0025f
+# define SENS_ZOOM				0.0018f
+# define SENS_PAN				0.0006f
+
+# define INV_255F				0.003921568627451f
+# define INV_2_2F				0.454545454545454f
+# define M_1_2PI				0.15915494309189533577f
+# define B_EPSILON				1e-4f
+# define G_EPSILON				1e-5f
 
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)
@@ -35,41 +37,39 @@
 # define MAT_DOUBLE_SIDED		(1 << 0)
 # define MAT_RECEIVE_SHADOWS	(1 << 1)
 
-typedef enum e_obj_type		t_obj_type;
-typedef enum e_light_type	t_light_type;
-typedef enum e_cam_state	t_cam_state;
-typedef enum e_base_color	t_base_color;
-typedef enum e_pattern		t_pattern;
-typedef enum e_entity		t_entity;
-typedef enum e_err_code		t_err_code;
-typedef enum e_render_mode	t_render_mode;
+typedef enum e_obj_type			t_obj_type;
+typedef enum e_light_type		t_light_type;
+typedef enum e_cam_state		t_cam_state;
+typedef enum e_base_color		t_base_color;
+typedef enum e_pattern			t_pattern;
+typedef enum e_entity			t_entity;
+typedef enum e_err_code			t_err_code;
+typedef enum e_render_mode		t_render_mode;
 
-typedef struct s_context	t_context;
-typedef struct s_bvh_node	t_bvh_node;
-typedef struct s_aabb		t_aabb;
-typedef struct s_object		t_object;
-typedef struct s_hit		t_hit;
-typedef struct s_plane		t_plane;
-typedef struct s_sphere		t_sphere;
-typedef struct s_cylinder	t_cylinder;
-typedef struct s_light		t_light;
-typedef struct s_scene		t_scene;
-typedef struct s_camera		t_camera;
-typedef struct s_texture	t_texture;
-typedef struct s_material	t_material;
-typedef struct s_renderer	t_renderer;
-typedef struct s_editor		t_editor;
-typedef struct s_viewport	t_viewport;
-typedef struct s_path		t_path;
-typedef struct s_pixel		t_pixel;
+typedef struct s_context		t_context;
+typedef struct s_bvh_node		t_bvh_node;
+typedef struct s_aabb			t_aabb;
+typedef struct s_object			t_object;
+typedef struct s_hit			t_hit;
+typedef struct s_plane			t_plane;
+typedef struct s_sphere			t_sphere;
+typedef struct s_cylinder		t_cylinder;
+typedef struct s_light			t_light;
+typedef struct s_scene			t_scene;
+typedef struct s_camera			t_camera;
+typedef struct s_texture		t_texture;
+typedef struct s_material		t_material;
+typedef struct s_renderer		t_renderer;
+typedef struct s_editor			t_editor;
+typedef struct s_viewport		t_viewport;
+typedef struct s_path			t_path;
+typedef struct s_pixel			t_pixel;
+typedef struct s_ray			t_ray;
+typedef struct s_transform		t_transform;
 
-typedef union u_shape		t_shape;
+typedef union u_shape			t_shape;
 
-typedef mlx_image_t			t_image;
-
-typedef void				(*t_add_entity)(t_context *, char **);
-typedef t_aabb				(*t_get_shape_bounds)(const t_object *);
-typedef bool				(*t_hit_shape)(const t_shape *, const t_ray *, t_hit *);
+typedef mlx_image_t				t_image;
 
 enum e_err_code
 {
@@ -161,6 +161,22 @@ enum e_blue_noise_channels
 	BN_PP_G,
 	BN_PP_B
 };
+
+struct __attribute__((aligned(16))) s_transform
+{
+	t_vec3	pos;
+	t_vec4	rot;
+	t_vec3	scale;
+};
+
+struct __attribute__((aligned(16))) s_ray
+{
+	t_vec3		origin;
+	t_vec3		dir;
+	t_vec3		inv_dir;
+	t_v4ui		signs;
+};
+
 
 struct __attribute__((aligned(16))) s_hit
 {

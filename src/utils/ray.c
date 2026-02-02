@@ -1,0 +1,22 @@
+#include "utils.h"
+
+t_ray	new_ray(const t_vec3 origin, const t_vec3 dir)
+{
+	static const t_v4si	sign_bit = {0x80000000, 0x80000000, 0x80000000, 0x80000000};
+	static const t_v4sf	epsilon = {1e-20f, 1e-20f, 1e-20f, 1e-20f};
+	static const t_v4sf	one = {1.0f, 1.0f, 1.0f, 1.0f};
+	t_v4si				signed_eps;
+	t_ray				ray;
+
+	ray.origin = origin;
+	ray.dir = dir;
+	signed_eps = (t_v4si)epsilon | ((t_v4si)dir.v & sign_bit);
+	ray.inv_dir.v = one / (dir.v + (t_v4sf)signed_eps);
+	ray.signs = (t_v4ui)ray.inv_dir.v >> 31;
+	return (ray);
+}
+
+t_vec3	get_point(const t_ray *ray, const float t)
+{
+	return (vec3_add(ray->origin, vec3_scale(ray->dir, t)));
+}

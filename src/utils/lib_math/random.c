@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_random.c                                        :+:      :+:    :+:   */
+/*   random.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 20:46:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/19 21:54:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/01 07:35:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_random.h"
+#include "lib_math.h"
 
 // Stateless mixer for seed hashing
 // https://old.reddit.com/r/RNG/comments/jqnq20/the_wang_and_jenkins_integer_hash_functions_just/

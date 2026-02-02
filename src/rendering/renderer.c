@@ -1,6 +1,5 @@
 #include "rendering.h"
 #include "utils.h"
-#include "libft_random.h"
 
 static inline void	*render_routine(void *arg);
 static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id);

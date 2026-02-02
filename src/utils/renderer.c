@@ -4,7 +4,7 @@
 
 static inline uint32_t	vec3_to_uint32(t_vec3 color);
 
-void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
+void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, const uint32_t limit)
 {
 	uint32_t		*pixels;
 	t_vec3			*buf;
@@ -27,7 +27,7 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
 	pixel.y = 0;
 	if (r->mode == RENDER_REFINE)
 	{
-		#pragma GCC unroll 4
+#pragma GCC unroll 4
 		while (i < limit)
 		{
 			color = vec3_scale(buf[i], scale);
@@ -51,16 +51,17 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
 	}
 }
 
-static inline uint32_t	vec3_to_uint32(t_vec3 color)
+static inline uint32_t	vec3_to_uint32(const t_vec3 color)
 {
-	uint32_t	result;
+	static const t_v4sf		padding = {0.5f, 0.5f, 0.5f, 0.5f};
+	static const t_v4si		weights = {1, 256, 65536, 0};
+	t_v4si					res;
+	uint32_t				packed_color;
 
-	result =
-		((uint32_t)(color.data[3] * 255.0f + 0.5f) << 24) |
-		((uint32_t)(color.b * 255.0f + 0.5f) << 16) |
-		((uint32_t)(color.g * 255.0f + 0.5f) << 8) |
-		((uint32_t)(color.r * 255.0f + 0.5f));
-	return (result | 0xFF000000);
+	res = __builtin_convertvector(color.v * 255.0f + padding, t_v4si);
+	res = res * weights;
+	packed_color = res[2] + res[1] + res[0];
+	return (packed_color | 0xFF000000);
 }
 
 void	resize_window(t_context *ctx)

@@ -19,6 +19,7 @@ void	init_bvh(t_context *ctx)
 	scene->bvh_root = build_bvh(ctx, (const t_object **)objs, n);
 }
 
+// TODO: Linear BVH with Morton codes
 static inline t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n)
 {
 	t_bvh_node	*node;
@@ -47,28 +48,28 @@ bool	hit_bvh(t_bvh_node *root, const t_ray *ray, t_hit *hit, int32_t i)
 	t_bvh_node	*stack[64];
 	t_bvh_node	*node;
 	t_hit		temp;
-	bool		result;
+	bool		res;
 
-	result = false;
+	res = false;
 	stack[i++] = root;
 	while (i > 0)
 	{
 		node = stack[--i];
-		if (!hit_aabb(&node->aabb, ray, hit->t))
+		if (!hit_aabb(&node->aabb, ray, hit->t, 0))
 			continue ;
 		if (node->obj)
 		{
 			temp.t = hit->t;
 			if ((node->obj->flags & OBJ_VISIBLE) && hit_object(node->obj, ray, &temp))
 			{
-				result = true;
+				res = true;
 				*hit = temp;
 			}
 			continue ;
 		}
 		add_nodes_to_bvh_stack(ray, node, stack, &i);
 	}
-	return (result);
+	return (res);
 }
 
 bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
@@ -83,7 +84,7 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 	while (i > 0)
 	{
 		node = stack[--i];
-		if (!hit_aabb(&node->aabb, ray, dist))
+		if (!hit_aabb(&node->aabb, ray, dist, 0))
 			continue ;
 		if (node->obj)
 		{
@@ -99,7 +100,7 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 
 static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i)
 {
-	if (ray->sign[node->axis])
+	if (ray->signs[node->axis])
 	{
 		stack[(*i)++] = node->left;
 		stack[(*i)++] = node->right;
@@ -121,7 +122,7 @@ static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_
 
 //     children[0] = node->right;
 //     children[1] = node->left;
-//     sign = ray->sign[node->axis];
+//     sign = ray->signs[node->axis];
 //     stack[(*i)++] = children[sign];
 //     stack[(*i)++] = children[1 - sign];
 // }

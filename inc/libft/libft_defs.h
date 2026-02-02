@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:23:22 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/24 04:35:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/01 09:15:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,56 +60,7 @@
 #  define FD_MAX		4
 # endif
 
-# ifndef M_PI
-#  define M_PI			3.14159265358979323846
-# endif
-
-# ifndef M_PI_2
-#  define M_PI_2		1.57079632679489661923
-# endif
-
-# ifndef M_TAU
-#  define M_TAU			6.28318530717958647693
-# endif
-
-# ifndef M_INF
-#  define M_INF			FLT_MAX
-# endif
-
-# ifndef M_EPSILON
-#  define M_EPSILON		1e-6f
-# endif
-
-# ifndef LEN_EPSILON
-#  define LEN_EPSILON		1e-6f
-# endif
-
-# ifndef LEN_SQ_EPSILON
-#  define LEN_SQ_EPSILON	1e-12f
-# endif
-
 typedef struct s_list		t_list;
-typedef struct s_vec2i		t_vec2i;
-typedef struct s_vec2i		t_int2;
-typedef struct s_vec2ui		t_uint2;
-typedef struct s_mat2		t_mat2;
-typedef struct s_mat3		t_mat3;
-typedef struct s_mat4		t_mat4;
-typedef struct s_quad		t_quad;
-typedef struct s_vertex		t_vertex;
-typedef struct s_transform	t_transform;
 typedef struct s_arena		t_arena;
-typedef struct s_ray		t_ray;
-
-typedef union u_f_int		t_f_int;
-typedef union u_vec2		t_point;
-typedef union u_vec2		t_float2;
-typedef union u_vec2		t_vec2;
-typedef union u_vec3		t_vec3;
-typedef union u_vec3		t_float3;
-typedef union u_vec4		t_vec4;
-typedef union u_vec4		t_float4;
-typedef union u_color		t_color;
-typedef union u_vec4		t_quaternion;
 
 #endif

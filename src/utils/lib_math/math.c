@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_math.c                                          :+:      :+:    :+:   */
+/*   math.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:14:46 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/24 04:03:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/01 12:14:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_math.h"
+#include "lib_math.h"
 
-float	ft_lerp(float a, float b, float t)
+float	ft_lerp(const float a, const float b, const float t)
 {
 	return ((1.0f - t) * a + t * b);
 }
 
-int	ft_imax(int a, int b)
+int	ft_imax(const int a, const int b)
 {
 	if (a > b)
 		return (a);
 	return (b);
 }
 
-int	ft_imin(int a, int b)
+int	ft_imin(const int a, const int b)
 {
 	if (a > b)
 		return (b);
 	return (a);
 }
 
-size_t	ft_pow(size_t n, size_t e)
+size_t	ft_pow(const size_t n, const size_t e)
 {
 	size_t	i;
 	size_t	result;
@@ -46,7 +46,7 @@ size_t	ft_pow(size_t n, size_t e)
 	return (result);
 }
 
-bool	ft_is_pot(size_t n)
+bool	ft_is_pot(const size_t n)
 {
 	return (n != 0 && ((n & (n - 1)) == 0));
 }
