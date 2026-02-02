@@ -60,7 +60,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c)
+				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				renderer.c tracer.c post_processing.c skydome.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \

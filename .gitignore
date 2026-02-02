@@ -2,6 +2,7 @@
 .vscode/
 dep/
 obj/
+docs/
 *.o
 *.d
 libft.a

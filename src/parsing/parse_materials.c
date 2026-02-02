@@ -3,111 +3,116 @@
 #include "libft_utils.h"
 #include "lights.h"
 #include "parsing.h"
+#include "materials.h"
+#include "objects.h"
 #include "utils.h"
 #include <stdlib.h>
 #include <string.h>
 
-t_material	*get_material_by_id(t_parser *parser, int id)
+static inline bool	is_color_token(const char *str)
 {
-	if (id < 0 || id >= MAX_MATERIALS)
-		return (NULL);
-	if (!parser->materials[id].defined)
-		return (NULL);
-	return (&parser->materials[id].material);
+	return (str && ft_strchr(str, ',') != NULL);
 }
 
-// Helper to check if token is a color (contains commas)
-static bool is_color_token(const char *tkn)
+t_material	*get_material_by_id(t_parser *p, int id)
 {
-	return (ft_strchr(tkn, ','));
+	if (id < 0 || id >= p->mat_count || !p->materials[id].defined)
+		return (NULL);
+	return (&p->materials[id].material);
 }
 
-// static int	parse_object_flags(const char **tkns, int index)
-// {
-// 	int flags = 0;
-// }
-
-t_error parse_mat(t_parser *parser, const char *tkn, t_material *material)
+/**
+ * Parse material from either inline color or material ID reference.
+ * Color format: "R,G,B" (0-255)
+ * Material ID: integer index
+ */
+t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
 {
-	int id;
-	t_vec3 color;
-	t_material *mat;
+	int			id;
+	t_vec3		color;
+	t_material	*mat;
 
-	if (is_color_token(tkn))
+	if (is_color_token(token))
 	{
-		if (!parse_color((char *)tkn, &color))
+		if (!parse_color((char *)token, &color))
 			return (PARSE_ERR_INVALID_NUM);
-		*material = (t_material){0};
-		material->albedo = color;
-		material->base_color = BASE_COLOR;
+		*out = (t_material){0};
+		out->albedo = color;
+		out->base_color = BASE_COLOR;
 		return (PARSE_OK);
 	}
-	id = ft_atoi(tkn);
-	mat = get_material_by_id(parser, id);
+	if (!parse_int((char *)token, &id))
+		return (PARSE_ERR_INVALID_NUM);
+	mat = get_material_by_id(p, id);
 	if (!mat)
 		return (PARSE_ERR_MATERIAL);
-	*material = *mat;
+	*out = *mat;
 	return (PARSE_OK);
 }
 
 /**
- * Parses material definitions with all PBR properties:
+ * Parse material definition line:
  *   mat <id> <color> <metallic> <roughness> <ior> <transmission>
  *       <emission_strength> <emission_color> <flags>
  */
-t_error parse_material(t_parser *parser, char **tkns)
+t_error	parse_material_def(t_parser *p, char **tokens)
 {
-	t_mat *mat;
-	t_material *material;
-	int id;
-	t_vec3 color;
-	t_vec3 emission_color;
-	float emission_strength;
+	t_mat_entry	*entry;
+	t_material	*mat;
+	int			id;
+	t_vec3		color;
+	t_vec3		emission_color;
+	float		emission_strength;
 
-	if (count_tokens(tkns) < 10)
+	if (count_tokens(tokens) < 10)
 		return (PARSE_ERR_MISSING_ARGS);
-	id = ft_atof(tkns[1], NULL);
-	if (id < 0 || id >= MAX_MATERIALS)
+	if (p->mat_count >= MAX_MATERIALS)
+		return (PARSE_ERR_TOO_MANY);
+	if (!parse_int(tokens[1], &id) || id != p->mat_count)
 		return (PARSE_ERR_MATERIAL);
-	mat = &parser->materials[id];
-	material = &mat->material;
-	*material = (t_material){0};
-	if (!parse_color(tkns[2], &color))
+	if (!parse_color(tokens[2], &color))
 		return (PARSE_ERR_INVALID_NUM);
-	material->albedo = color;
-	material->base_color = BASE_COLOR;
-	if (!parse_float(tkns[3], &material->metallic))
+	entry = &p->materials[p->mat_count];
+	mat = &entry->material;
+	*mat = (t_material){0};
+	mat->albedo = color;
+	mat->base_color = BASE_COLOR;
+	if (!parse_float(tokens[3], &mat->metallic)
+		|| !parse_float(tokens[4], &mat->roughness)
+		|| !parse_float(tokens[5], &mat->ior)
+		|| !parse_float(tokens[6], &mat->transmission)
+		|| !parse_float(tokens[7], &emission_strength)
+		|| !parse_color(tokens[8], &emission_color)
+		|| !parse_float(tokens[9], &mat->flags))
 		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_float(tkns[4], &material->roughness))
-		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_float(tkns[5], &material->ior))
-		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_float(tkns[6], &material->transmission))
-		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_float(tkns[7], &emission_strength))
-		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_color(tkns[8], &emission_color))
-		return (PARSE_ERR_INVALID_NUM);
-	material->emission = vec3_scale(emission_color, emission_strength);
-	material->is_emissive = (emission_strength > 0.0f);
-	if (!parse_float(tkns[9], &material->flags))
-		return (PARSE_ERR_INVALID_NUM);
-	mat->defined = true;
-	parser->material_count++;
+	mat->emission = vec3_scale(emission_color, emission_strength);
+	mat->is_emissive = (emission_strength > 0.0f);
+	entry->defined = true;
+	p->mat_count++;
 	return (PARSE_OK);
 }
 
-void	cleanup_parser(t_parser *p)
-{
-	int	i;
+/**
+ * Create area light from emissive material attached to object.
+ */
+// t_error	create_area_light(t_context *ctx, t_object *obj, t_material *mat)
+// {
+// 	t_light	*light;
 
-	if (!p)
-		return ;
-	i = 0;
-	while (i < p->texture_count)
-	{
-		if (p->textures[i].loaded)
-			free_texture(&p->textures[i].texture);
-		i++;
-	}
-}
+// 	if (!mat->is_emissive)
+// 		return (PARSE_OK);
+// 	light = malloc(sizeof(*light));
+// 	if (!light)
+// 		return (PARSE_ERR_MALLOC);
+// 	*light = (t_light){0};
+// 	light->type = LIGHT_AREA;
+// 	light->pos = obj->transform.pos;
+// 	light->emission = mat->emission;
+// 	light->color = mat->albedo;
+// 	light->intensity = vec3_length(mat->emission);
+// 	light->obj = obj;
+// 	vector_try_add(ctx, &ctx->scene.lights, light);
+// 	return (PARSE_OK);
+// }
+
+

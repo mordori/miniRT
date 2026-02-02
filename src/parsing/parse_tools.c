@@ -13,7 +13,6 @@ bool	parse_float(char *str, float *out)
 
 	if (!str || !out)
 		return (false);
-	end = NULL;
 	while (ft_isspace(*str))
 		str++;
 	if (*str == '\0')
@@ -25,9 +24,59 @@ bool	parse_float(char *str, float *out)
 		end++;
 	if (*end != '\0')
 		return (false);
-	if (isnan(value) || isinf(value)) // check for NaN or Infinity
+	if (isnan(value) || isinf(value))
 		return (false);
 	*out = value;
+	return (true);
+}
+
+bool	parse_uint(char *str, uint32_t *out)
+{
+	long	value;
+	int		i;
+
+	if (!str || !out)
+		return (false);
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '\0')
+		return (false);
+	i = 0;
+	while (str[i] && ft_isdigit(str[i]))
+		i++;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str[i] != '\0' || i == 0)
+		return (false);
+	value = ft_atoi(str);
+	if (value < 0)
+		return (false);
+	*out = (uint32_t)value;
+	return (true);
+}
+
+bool	parse_int(char *str, int *out)
+{
+	long	value;
+	int		i;
+
+	if (!str || !out)
+		return (false);
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '\0')
+		return (false);
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i] && ft_isdigit(str[i]))
+		i++;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str[i] != '\0')
+		return (false);
+	value = ft_atoi(str);
+	*out = (int)value;
 	return (true);
 }
 
@@ -73,6 +122,7 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 	ret = false;
 	if (!str || !vec)
 		return (ret);
+	*vec = (t_vec3){0};
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (ret);
@@ -95,10 +145,4 @@ int	count_tokens(char **tokens)
 	while (tokens[count])
 		count++;
 	return (count);
-}
-
-// a wrapper to free the tokens array
-void	free_tokens(char **tokens)
-{
-	ft_free_split(tokens);
 }
