@@ -1,18 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_mat2.c                                          :+:      :+:    :+:   */
+/*   v4sf.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/21 18:02:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/21 18:08:39 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/02/01 12:44:14 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/02/01 12:48:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_matrix.h"
+#include "lib_math.h"
 
-float	mat2_det(t_mat2 m)
+t_v4sf	v4sf(const float x, const float y, const float z, const float w)
 {
-	return (m.m[0][0] * m.m[1][1] - m.m[1][0] * m.m[0][1]);
+	t_v4sf	res;
+
+	res = (t_v4sf){x, y, z, w};
+	return (res);
+}
+
+t_v4sf	v4sf_n(const float n)
+{
+	t_v4sf	res;
+
+	res = (t_v4sf){n, n, n, n};
+	return (res);
 }

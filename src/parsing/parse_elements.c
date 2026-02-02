@@ -1,6 +1,6 @@
 #include "camera.h"
 #include "libft_io.h"
-#include "libft_math.h"
+#include "lib_math.h"
 #include "libft_str.h"
 #include "lights.h"
 #include "parsing.h"

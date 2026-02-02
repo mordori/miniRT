@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_colors.h                                     :+:      :+:    :+:   */
+/*   v4si.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 00:45:12 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/08 19:23:07 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/02/01 22:47:34 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/02/01 22:49:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_defs.h"
+#include "lib_math.h"
 
-union u_color
+t_v4si	v4si(const int32_t x, const int32_t y, const int32_t z, const int32_t w)
 {
-	uint32_t	full;
-	struct
-	{
-		uint8_t	r;
-		uint8_t	g;
-		uint8_t	b;
-		uint8_t	a;
-	};
-};
+	t_v4si	res;
 
-uint32_t	lerp_color(uint32_t c1, uint32_t c2, float t);
-uint32_t	rgba_to_abgr(uint32_t rgba);
+	res = (t_v4si){x, y, z, w};
+	return (res);
+}
+
+t_v4si	v4si_n(const int32_t n)
+{
+	t_v4si	res;
+
+	res = (t_v4si){n, n, n, n};
+	return (res);
+}

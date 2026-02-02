@@ -1,12 +1,11 @@
 #include "utils.h"
-#include "libft_random.h"
 
 // Samples a low discrepency sequence, where points are as evenly spaced as
 // possible, using Cranley-Patterson Rotation (random shift modulo).
 //
 // Pre-calculated texture in /assets/textures/ by Christoph Peters
 // https://momentsingraphics.de/BlueNoise.html
-float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
+float	blue_noise(const t_texture *tex, const t_pixel *pixel, const uint32_t dim)
 {
 	uint32_t	tx;
 	uint32_t	ty;

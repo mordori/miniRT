@@ -1,5 +1,5 @@
 #include "lights.h"
-#include "rendering.h"
+#include "utils.h"
 #include "scene.h"
 
 bool	hit_shadow(const t_scene *scene, const t_vec3 orig, const t_vec3 dir, float dist)

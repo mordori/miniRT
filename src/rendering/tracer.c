@@ -3,13 +3,11 @@
 #include "lights.h"
 #include "objects.h"
 #include "utils.h"
-#include "libft_random.h"
 
-static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, float lux);
-static inline t_vec3	background_gradient(float t);
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
 // static inline void	trace_ray_edit(const t_context *ctx, t_path *path);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
+static inline t_vec3	sample_cos_hemisphere(const t_vec3 normal, const float u, const float v);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 {
@@ -60,7 +58,7 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 // 	return ;
 // }
 
-static inline void	add_lighting(const t_context *ctx, t_path *path, t_light *light, t_pixel *pixel)
+static inline void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
 	static const float	max_brightness = 40.0f;
 	t_vec3				lighting;
@@ -108,20 +106,20 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 	return (false);
 }
 
-t_vec3 sample_cos_hemisphere(t_vec3 normal, float u, float v)
+static inline t_vec3	sample_cos_hemisphere(const t_vec3 normal, const float u, const float v)
 {
-	float		phi;
 	float		cos_theta;
 	float		sin_theta;
 	t_vec3		dir_local;
 	t_vec3		dir_world;
 	t_vec3		t;
 	t_vec3		b;
+	t_vec2		phi;
 
-	phi = M_TAU * u;
 	cos_theta = sqrtf(v);
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - v));
-	dir_local = vec3(sin_theta * cosf(phi), sin_theta * sinf(phi), cos_theta);
+	sincosf(M_TAU * u, &phi.sin, &phi.cos);
+	dir_local = vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
 	orthonormal_basis(normal, &t, &b);
 	dir_world = vec3_add(vec3_scale(t, dir_local.x), vec3_scale(b, dir_local.y));
 	dir_world = vec3_add(dir_world, vec3_scale(normal, dir_local.z));
@@ -153,56 +151,4 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	}
 	++path->bounce;
 	return (true);
-}
-
-t_ray	new_ray(t_vec3 origin, t_vec3 dir)
-{
-	t_ray		ray;
-	t_f_int		sign;
-
-	ray.origin = origin;
-	ray.dir = dir;
-	ray.inv_dir.x = 1.0f / (ray.dir.x + copysignf(1e-20f, ray.dir.x));
-	ray.inv_dir.y = 1.0f / (ray.dir.y + copysignf(1e-20f, ray.dir.y));
-	ray.inv_dir.z = 1.0f / (ray.dir.z + copysignf(1e-20f, ray.dir.z));
-	sign.f = ray.inv_dir.x;
-	ray.sign[0] = sign.i >> 31;
-	sign.f = ray.inv_dir.y;
-	ray.sign[1] = sign.i >> 31;
-	sign.f = ray.inv_dir.z;
-	ray.sign[2] = sign.i >> 31;
-	return (ray);
-}
-
-static inline t_vec3	background_color(const t_texture *tex, const t_ray *ray, float lux)
-{
-	t_float2	uv;
-	t_int2		xy;
-	uint32_t	i;
-	t_vec3		result;
-	const float	*pixels;
-
-	if (tex)
-		return (vec3_scale(background_gradient((ray->dir.y + 1.0f) * 0.5f), lux));
-	uv.u = ft_clamp01((atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI);
-	uv.v = ft_clamp01(acosf(ray->dir.y) * M_1_PI);
-	xy.x = (uint32_t)(uv.u * (tex->width - 1));
-	xy.y = (uint32_t)(uv.v * (tex->height - 1));
-	i = (xy.y * tex->width + xy.x) * 4;
-	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64);
-	memcpy(&result, &pixels[i], sizeof(t_vec3));
-	return (vec3_scale(result, lux));
-}
-
-// Todo: smoother with floats
-static inline t_vec3	background_gradient(float t)
-{
-	t_vec3		result;
-	uint32_t	c;
-
-	c = lerp_color(RED, BLUE, t);
-	result.r = (float)(((c >> 24) & 0xFF) * INV_255F);
-	result.g = (float)(((c >> 16) & 0xFF) * INV_255F);
-	result.b = (float)(((c >> 8) & 0xFF) * INV_255F);
-	return (result);
 }

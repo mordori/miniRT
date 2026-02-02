@@ -33,6 +33,7 @@ DIR_RENDER	:=rendering/
 DIR_SCENE	:=scene/
 DIR_UTILS	:=utils/
 DIR_LIBFT	:=libft/
+DIR_MATH	:=lib_math/
 
 URL_MLX		:=https://github.com/codam-coding-college/MLX42.git
 MLX42		:=$(DIR_MLX)build/libmlx42.a
@@ -51,7 +52,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input.c mouse.c keys.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
-				light.c ambient.c directional.c point.c shadows.c)
+				lighting.c ambient.c directional.c point.c shadows.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
@@ -59,31 +60,33 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				renderer.c tracer.c post_processing.c)
+				renderer.c tracer.c post_processing.c skydome.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validator.c skydome.c bvh.c aabb.c bounds.c)
+				scene.c validator.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c rays.c bounds.c noise.c mapping.c range.c space.c alloc.c \
+				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c space.c alloc.c \
 				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c ft_strtod.c)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
+				math.c mat4.c mat4_transforms.c \
+				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \
+				vec2.c vec4_2.c vec2i.c vec2i_2.c math_2.c \
+				vec3_3.c color.c v4sf.c v4si.c \
+				mat4_transforms_2.c random.c vec3_4.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
-			ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
-			ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
-			ft_calloc.c ft_isdigit.c ft_memcmp.c ft_putchar_fd.c \
-			ft_isalnum.c ft_isprint.c ft_memcpy.c ft_putendl_fd.c \
-			ft_strdup.c ft_strlcpy.c ft_strnstr.c ft_tolower.c \
-			ft_putstr_fd.c ft_striteri.c ft_strlen.c ft_strrchr.c \
-			ft_split.c ft_strjoin.c ft_strmapi.c ft_strtrim.c \
-			ft_strchr.c ft_strlcat.c ft_strncmp.c ft_substr.c \
-			ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c \
-			ft_lstclear_bonus.c ft_lstdelone_bonus.c \
-			ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c \
-			ft_lstnew_bonus.c ft_lstsize_bonus.c ft_printf.c ft_uitoa.c \
-			ft_countdigits.c ft_strchrdup.c ft_get_next_line.c ft_vector.c \
-			ft_vector_utils.c ft_math.c ft_mat4.c ft_mat4_transforms.c \
-			ft_vec4.c ft_vec3.c ft_vec3_2.c ft_mat4_utils.c ft_mat4_2.c \
-			ft_vec2.c ft_vec4_2.c ft_vec2i.c ft_vec2i_2.c ft_math_2.c \
-			ft_colors.c ft_vector_utils_2.c ft_vec3_3.c ft_mat2.c ft_mat3.c \
-			ft_mat4_transforms_2.c ft_random.c ft_vec3_4.c ft_mat3_2.c)
+				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
+				ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
+				ft_calloc.c ft_isdigit.c ft_memcmp.c ft_putchar_fd.c \
+				ft_isalnum.c ft_isprint.c ft_memcpy.c ft_putendl_fd.c \
+				ft_strdup.c ft_strlcpy.c ft_strnstr.c ft_tolower.c \
+				ft_putstr_fd.c ft_striteri.c ft_strlen.c ft_strrchr.c \
+				ft_split.c ft_strjoin.c ft_strmapi.c ft_strtrim.c \
+				ft_strchr.c ft_strlcat.c ft_strncmp.c ft_substr.c \
+				ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c \
+				ft_lstclear_bonus.c ft_lstdelone_bonus.c \
+				ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c \
+				ft_lstnew_bonus.c ft_lstsize_bonus.c ft_printf.c ft_uitoa.c \
+				ft_countdigits.c ft_strchrdup.c ft_get_next_line.c ft_vector.c \
+				ft_vector_utils.c ft_vector_utils_2.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
@@ -121,7 +124,7 @@ clean:
 	@$(call rm_dir,$(DIR_OBJ))
 
 fclean: clean
-	@$(call rm_dir,$(DIR_LIB))
+# 	@$(call rm_dir,$(DIR_LIB))
 	@$(call rm_dir,$(DIR_DEP))
 	@$(call rm_file,$(CONF))
 	@$(call rm_file,$(NAME))

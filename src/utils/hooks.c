@@ -110,10 +110,10 @@ void	loop_hook(void *param)
 		uint64_to_str(RENDER_SAMPLES, str);
 		try_write(ctx, STDOUT_FILENO, str);
 		try_write(ctx, STDOUT_FILENO, "] ");
-		if (r->mode != RENDER_REFINE || r->frame < 8 || (r->frame < 32 && (r->frame & 1)) || (time_now() - r->blit_time > 1000 || r->frame == RENDER_SAMPLES))
+		if (r->mode != RENDER_REFINE || r->frame < 8 || (r->frame < 32 && (r->frame & 1)) || r->frame == 48 || r->frame == 64 || r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame == RENDER_SAMPLES))
 		{
-			r->blit_time = time_now();
 			blit(ctx, r, 0, r->pixels);
+			r->blit_time = time_now();
 			render_time = time_now() - r->render_time;
 			if (r->frame == RENDER_SAMPLES)
 				printf("\nDone!\t\t    Time: %.1fs\n\n", render_time / 1000.0f);

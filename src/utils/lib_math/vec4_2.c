@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_mat3_2.c                                        :+:      :+:    :+:   */
+/*   vec4_2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/29 06:33:41 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/29 06:43:24 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/07/19 23:32:25 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/02/01 12:09:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_matrix.h"
+#include "lib_math.h"
 
-t_vec3	mat3_mul_vec3(t_mat3 m, t_vec3 v)
+t_vec4	vec4_3(const t_vec3 vec, const float w)
 {
-	t_vec3	result;
+	t_vec4		result;
 
-	result.x = v.x * m.m[0][0] + v.y * m.m[0][1] + v.z * m.m[0][2];
-	result.y = v.x * m.m[1][0] + v.y * m.m[1][1] + v.z * m.m[1][2];
-	result.z = v.x * m.m[2][0] + v.y * m.m[2][1] + v.z * m.m[2][2];
+	result.v = vec.v;
+	result.w = w;
 	return (result);
 }

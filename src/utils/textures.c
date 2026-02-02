@@ -1,5 +1,4 @@
 #include "utils.h"
-#include "libft_math.h"
 
 static inline float	srgb_to_linear(uint8_t c);
 static inline void	tex_data_to_linear(t_context *ctx,t_texture *texture);

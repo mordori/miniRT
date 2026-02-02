@@ -4,22 +4,19 @@
 
 > [!IMPORTANT]
 > This project is work in progress! It is still missing many of the planned features. Some of the parameters are currently hardcoded in and there may be bugs.
+>
+> Some of the features will not be implemented until the project has been validated. This is due to restrictions placed upon the subject.
 
 > [!NOTE]
-> Some of the features such as HDR images, GPU utilisation, and a denoising solution, will not be implemented until the project has been validated. This is due to restrictions placed upon the subject.
-
-> [!NOTE]
-> [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library, is used in this project. It handles window creation and manages a framebuffer to which we copy ours.
+> [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject, is used in this project. It handles window creation and manages a framebuffer to which we copy ours.
 >
 > The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Please refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
-
-<br>
 
 ## Features
 - Monte Carlo integration with importance sampling for Global Illumination
 - Bounding Volume Hierarchy for computing intersections
 - Modest post-processing stack with ACES tonemapping
-- High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling auto-vectorisation of data.
+- High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
 
 #### TODO
 - Disney BRDF and approximated BSDF materials
@@ -33,15 +30,18 @@
 - Extented scene description format
 
 #### Post-validation Features
+- Discard the restrictive coding standard required by the subject and refactor the code to be more efficient
 - HDRi texture for skydome
 - Denoising solution
 - Load .ojb meshes
 - Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
-- Replace MLX42 with GPU interop to avoid data transfer back to CPU
-
+- Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
 ## Optimisation & Performance
 This project implements a highly optimised CPU rendering engine, balancing code readability with raw performance. By analysing assembly output with GDB and compiler behaviour, several optimisations were implemented to maximise throughput.
+
+### Math Utilities
+High-performance linear algebra library providing SIMD-accelerated, memory-aligned vector and matrix primitives.
 
 ### Blit Function
 
@@ -57,15 +57,15 @@ Used during the camera movement. Achieves SIMD (Single Instruction, Multiple Dat
 
 ### Micro-optimisations
 
-- Invariant caching to local variables to prevent pointer aliasing, ensuring the compiler uses registers instead of repeated L1 cache loads.
+- Invariant caching to local variables to prevent pointer aliasing, ensuring the compiler uses registers instead of repeated L1 cache loads
 
-- Branchless logic using arithmetics where possible to minimise branch misprediction inside hot loops.
+- Branchless arithmetic to minimise CPU stalls in performance-critical loops.
 
 ## Physically Based Rendering
 
 ## Monte Carlo Integration
 
-<br>
+
 
 ## How to use
 Run the following commands to clone the repository and create `miniRT` program

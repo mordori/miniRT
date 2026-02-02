@@ -1,17 +1,15 @@
 #include "utils.h"
 
-t_vec3	map_spherical(float u, float v)
+t_vec3	map_spherical(const float u, const float v)
 {
-	float		phi;
+	t_vec3		res;
 	float		cos_theta;
 	float		sin_theta;
+	t_vec2		phi;
 
-	phi = M_TAU * u;
 	cos_theta = 1.0f - 2.0f * v;
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
-	return ((t_vec3){{
-		sin_theta * cosf(phi),
-		sin_theta * sinf(phi),
-		cos_theta
-	}});
+	sincosf(M_TAU * u, &phi.sin, &phi.cos);
+	res = vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
+	return (res);
 }

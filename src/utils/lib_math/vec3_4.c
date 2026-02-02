@@ -1,36 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_vec3_4.c                                        :+:      :+:    :+:   */
+/*   vec3_4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:35:30 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/01/25 23:43:40 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/02 00:16:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_math.h"
+#include "lib_math.h"
 
-t_vec3	vec3_sqrt(t_vec3 vec)
+t_vec3	vec3_sqrt(const t_vec3 vec)
 {
-	return ((t_vec3){{
-		sqrtf(vec.r),
-		sqrtf(vec.g),
-		sqrtf(vec.b)
-	}});
+	t_vec3		res;
+
+	res.v = _mm_sqrt_ps(vec.v);
+	return (res);
 }
 
-t_vec3	vec3_clamp01(t_vec3 vec)
+t_vec3	vec3_clamp(const t_vec3 vec, const float min, const float max)
 {
-	return ((t_vec3){{
-		ft_clamp01(vec.r),
-		ft_clamp01(vec.g),
-		ft_clamp01(vec.b)
-	}});
+	t_vec3		res;
+
+	res.v = _mm_max_ps(vec.v, v4sf_n(min));
+	res.v = _mm_min_ps(vec.v, v4sf_n(max));
+	return (res);
 }
 
-t_vec3	vec3_clamp_mag(t_vec3 vec, float max)
+t_vec3	vec3_clamp01(const t_vec3 vec)
+{
+	return (vec3_clamp(vec, 0.0f, 1.0f));
+}
+
+t_vec3	vec3_clamp_mag(const t_vec3 vec, const float max)
 {
 	float	len_sq;
 	float	scale;
@@ -44,7 +48,12 @@ t_vec3	vec3_clamp_mag(t_vec3 vec, float max)
 	return (vec);
 }
 
-t_vec3	vec3_addf(t_vec3 vec, float n)
+t_vec3	vec3_add_n(const t_vec3 vec, const float n)
 {
-	return (vec3(vec.x + n, vec.y + n, vec.z + n));
+	t_v4sf	n_v;
+	t_vec3	res;
+
+	n_v = (t_v4sf){n, n, n, n};
+	res.v = vec.v + n_v;
+	return (res);
 }

@@ -1,7 +1,6 @@
 #include "lights.h"
 #include "objects.h"
 #include "utils.h"
-#include "libft_random.h"
 
 // static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
@@ -19,6 +18,7 @@ t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, flo
 	t_vec3		dir_world;
 	t_vec3		t;
 	t_vec3		b;
+	t_vec2		sc_phi;
 
 	orig_to_light = vec3_sub(light->pos, orig);
 	dist_sq = vec3_dot(orig_to_light, orig_to_light);
@@ -29,7 +29,8 @@ t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, flo
 	phi = M_TAU * uv.u;
 	z = 1.0f + uv.v * (cos_theta_max - 1.0f);
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - z * z));
-	dir_local = vec3(sin_theta * cosf(phi), sin_theta * sinf(phi), z);
+	sincosf(phi, &sc_phi.u, &sc_phi.v);
+	dir_local = vec3(sin_theta * sc_phi.v, sin_theta * sc_phi.u, z);
 	axis = vec3_scale(orig_to_light, 1.0f / sqrtf(dist_sq));
 	orthonormal_basis(axis, &t, &b);
 	dir_world = vec3_add(vec3_scale(b, dir_local.y), vec3_scale(axis, dir_local.z));
