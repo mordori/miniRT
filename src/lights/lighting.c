@@ -12,13 +12,12 @@ t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, flo
 	float		cos_theta_max;
 	float		z;
 	float		sin_theta;
-	float		phi;
 	t_vec3		axis;
 	t_vec3		dir_local;
 	t_vec3		dir_world;
 	t_vec3		t;
 	t_vec3		b;
-	t_vec2		sc_phi;
+	t_vec2		phi;
 
 	orig_to_light = vec3_sub(light->pos, orig);
 	dist_sq = vec3_dot(orig_to_light, orig_to_light);
@@ -26,11 +25,10 @@ t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, flo
 		return (vec3_n(0.0f));
 	sin_theta_max_sq = light->obj->shape.sphere.radius_sq / dist_sq;
 	cos_theta_max = sqrtf(fmaxf(0.0f, 1.0f - sin_theta_max_sq));
-	phi = M_TAU * uv.u;
 	z = 1.0f + uv.v * (cos_theta_max - 1.0f);
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - z * z));
-	sincosf(phi, &sc_phi.u, &sc_phi.v);
-	dir_local = vec3(sin_theta * sc_phi.v, sin_theta * sc_phi.u, z);
+	sincosf(M_TAU * uv.u, &phi.sin, &phi.cos);
+	dir_local = vec3(sin_theta * phi.cos, sin_theta * phi.sin, z);
 	axis = vec3_scale(orig_to_light, 1.0f / sqrtf(dist_sq));
 	orthonormal_basis(axis, &t, &b);
 	dir_world = vec3_add(vec3_scale(b, dir_local.y), vec3_scale(axis, dir_local.z));

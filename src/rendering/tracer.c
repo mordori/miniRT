@@ -75,7 +75,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 	size_t			i;
 
 	i = 0;
-	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
+	if (hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
 		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
 		if (path->mat->is_emissive)
