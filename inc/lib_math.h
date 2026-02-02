@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 07:45:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/02 17:22:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@
 #  define M_TAU				6.28318530717958647693
 #  define M_INF				FLT_MAX
 
-#  define M_EPSILON			1e-6f
-#  define LEN_EPSILON		1e-6f
-#  define LEN_SQ_EPSILON	1e-12f
+# define INV_255F			0.003921568627451f
+# define INV_2_2F			0.454545454545454f
+# define M_1_2PI			0.15915494309189533577f
+
+# define M_EPSILON			1e-6f
+# define LEN_EPSILON		1e-6f
+# define LEN_SQ_EPSILON		1e-12f
+# define B_EPSILON			1e-4f
+# define G_EPSILON			1e-5f
 
 typedef struct s_vec2i		t_vec2i;
 typedef struct s_vec2i		t_int2;
@@ -248,6 +254,7 @@ float	randomfn11(uint32_t *seed);
 uint32_t	hash_lowerbias32(uint32_t seed);
 
 uint32_t	lerp_color(const uint32_t c1, const uint32_t c2, const float t);
+// t_vec3	lerp_color(const uint32_t color1, const uint32_t color2, const float t);
 uint32_t	rgba_to_abgr(const uint32_t rgba);
 
 #endif

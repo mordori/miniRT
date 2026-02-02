@@ -130,6 +130,7 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 	{
 		ret = parse_float(tokens[0], &vec->x) && parse_float(tokens[1], &vec->y)
 			&& parse_float(tokens[2], &vec->z);
+		vec->data[3] = 0.0f;
 	}
 	free_tokens(tokens);
 	return (ret);

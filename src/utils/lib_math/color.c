@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 00:44:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 12:11:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/02 17:33:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,23 @@ uint32_t	lerp_color(const uint32_t c1, const uint32_t c2, const float t)
 	color.a = (uint8_t)ft_lerp(color1.a, color2.a, t);
 	return (color.full);
 }
+
+// t_vec3	lerp_color(const uint32_t color1, const uint32_t color2, const float t)
+// {
+// 	t_color	c1;
+// 	t_color	c2;
+// 	t_v4sf	a;
+// 	t_v4sf	b;
+// 	t_vec3	res;
+
+// 	c1 = (t_color){color1};
+// 	c2 = (t_color){color2};
+// 	a = v4sf(c1.r, c1.g, c1.b, 255.0f);
+// 	b = v4sf(c2.r, c2.g, c2.b, 255.0f);
+// 	res.v = ((1.0f - t) * a + t * b) * INV_255F;
+
+// 	return (res);
+// }
 
 /**
  * Converts a 32-bit RGBA color value to ABGR format.
