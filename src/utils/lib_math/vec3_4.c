@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:35:30 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 00:16:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/03 14:23:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_vec3	vec3_clamp(const t_vec3 vec, const float min, const float max)
 	t_vec3		res;
 
 	res.v = _mm_max_ps(vec.v, v4sf_n(min));
-	res.v = _mm_min_ps(vec.v, v4sf_n(max));
+	res.v = _mm_min_ps(res.v, v4sf_n(max));
 	return (res);
 }
 

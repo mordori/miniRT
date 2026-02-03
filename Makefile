@@ -4,13 +4,13 @@ CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
 CC			:=gcc
-WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow -msse2 -msse3 \
+WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow \
 			 -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wswitch-enum -Wundef
 
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
-OPTS		:=-Ofast -march=native -funroll-loops -fno-plt -flto -ftree-vectorize
+OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory

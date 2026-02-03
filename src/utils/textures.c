@@ -1,8 +1,8 @@
 #include "utils.h"
 
 static inline float	srgb_to_linear(uint8_t c);
-static inline void	tex_data_to_linear(t_context *ctx,t_texture *texture);
-static inline void	tex_srgb_to_linear(t_context *ctx,t_texture *texture);
+static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture);
+static inline void	tex_srgb_to_linear(t_context *ctx, t_texture *texture);
 
 t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
 {
@@ -25,7 +25,7 @@ t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
 	return (texture);
 }
 
-static inline void	tex_data_to_linear(t_context *ctx,t_texture *texture)
+static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;
@@ -50,7 +50,7 @@ static inline void	tex_data_to_linear(t_context *ctx,t_texture *texture)
 	}
 }
 
-static inline void	tex_srgb_to_linear(t_context *ctx,t_texture *texture)
+static inline void	tex_srgb_to_linear(t_context *ctx, t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;

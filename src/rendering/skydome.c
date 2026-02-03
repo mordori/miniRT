@@ -21,16 +21,11 @@ t_vec3	background_color(const t_texture *tex, const t_ray *ray, const float lux)
 	return (vec3_scale(res, lux));
 }
 
-// Todo: smoother with floats
 t_vec3	background_gradient(const float t)
 {
 	t_vec3		res;
-	uint32_t	c;
 
-	c = lerp_color(RED, BLUE, t);
-	res.r = (float)(((c >> 24) & 0xFF) * INV_255F);
-	res.g = (float)(((c >> 16) & 0xFF) * INV_255F);
-	res.b = (float)(((c >> 8) & 0xFF) * INV_255F);
+	res = lerp_color(RED, BLUE, t);
 	return (res);
 }
 

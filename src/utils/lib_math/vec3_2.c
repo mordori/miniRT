@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 10:50:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/03 13:18:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 t_vec3	vec3_cross(const t_vec3 a, const t_vec3 b)
 {
-	static const t_v4si	mask_yzx = {1, 2, 0, 3};
-	static const t_v4si	mask_zxy = {2, 0, 1, 3};
 	t_vec3				res;
-	t_v4sf				a_yzx_b_zxy;
-	t_v4sf				a_zxy_b_yzx;
+	t_v4sf				yzx;
+	t_v4sf				zxy;
 
-	a_yzx_b_zxy = __builtin_shuffle(a.v, mask_yzx) * __builtin_shuffle(b.v, mask_zxy);
-	a_zxy_b_yzx = __builtin_shuffle(a.v, mask_zxy) * __builtin_shuffle(b.v, mask_yzx);
-	res.v = a_yzx_b_zxy - a_zxy_b_yzx;
+	yzx = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 0, 2, 1)) *
+			_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 1, 0, 2));
+	zxy = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 1, 0, 2)) *
+			_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 0, 2, 1));
+	res.v = yzx - zxy;
 	return (res);
 }
 
