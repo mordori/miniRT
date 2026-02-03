@@ -15,7 +15,7 @@ t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 	c.r += (blue_noise(&ctx->tex_bn, pixel, BN_PP_R) - 0.5f) * INV_255F;
 	c.g += (blue_noise(&ctx->tex_bn, pixel, BN_PP_G) - 0.5f) * INV_255F;
 	c.b += (blue_noise(&ctx->tex_bn, pixel, BN_PP_B) - 0.5f) * INV_255F;
-	return (vec3_clamp01(c));
+	return (c);
 }
 
 t_vec3	post_process_fast(const t_context *ctx, t_vec3 c)
@@ -24,7 +24,7 @@ t_vec3	post_process_fast(const t_context *ctx, t_vec3 c)
 	c = vec3_scale(c, ctx->scene.cam.exposure * 0.6f);
 	c = tonemap_aces_fast(c);
 	c = vec3_sqrt(c);
-	return (vec3_clamp01(c));
+	return (c);
 }
 
 static inline t_vec3	linear_to_srgb(t_vec3 c)
@@ -90,5 +90,5 @@ static inline t_vec3	tonemap_aces(t_vec3 color)
 	color = mat4_mul_vec3(&aces_input, color);
 	color = rrt_and_odt_fit(color);
 	color = mat4_mul_vec3(&aces_output, color);
-	return (vec3_clamp01(color));
+	return (vec3_max(color, 0.0f));
 }

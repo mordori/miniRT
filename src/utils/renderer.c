@@ -53,15 +53,12 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, const uint32_t 
 
 static inline uint32_t	vec3_to_uint32(const t_vec3 color)
 {
-	static const t_v4sf		padding = {0.5f, 0.5f, 0.5f, 0.5f};
-	static const t_v4si		weights = {1, 256, 65536, 0};
-	t_v4si					res;
-	uint32_t				packed_color;
+	__m128i			res;
 
-	res = __builtin_convertvector(color.v * 255.0f + padding, t_v4si);
-	res = res * weights;
-	packed_color = res[2] + res[1] + res[0];
-	return (packed_color | 0xFF000000);
+	res = _mm_cvtps_epi32(color.v * v4sf_n(255.0f));
+	res = _mm_packs_epi32(res, res);
+	res = _mm_packus_epi16(res, res);
+	return ((uint32_t)_mm_cvtsi128_si32(res) | 0xFF000000);
 }
 
 void	resize_window(t_context *ctx)

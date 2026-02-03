@@ -47,9 +47,8 @@ High-performance linear algebra library providing SIMD-accelerated, memory-align
 
 
 #### Vectorised Preview Mode
-Used during the camera movement. Achieves SIMD (Single Instruction, Multiple Data) execution, processing 4 pixels in parallel per instruction cycle.
 
--
+- Used during the camera movement. Achieves SIMD (Single Instruction, Multiple Data) execution, processing 4 pixels in parallel per instruction cycle.
 
 #### Pipelined Refine Mode
 
@@ -68,6 +67,12 @@ Used during the camera movement. Achieves SIMD (Single Instruction, Multiple Dat
 
 
 ## How to use
+
+> [!NOTE]
+> The default build configuration targets the Haswell microarchitecture (Intel 2013+ / AMD Ryzen).
+>
+>If you are compiling on legacy hardware, please replace `-march=haswell` with `-msse4.1` in the Makefile to ensure compatibility.
+
 Run the following commands to clone the repository and create `miniRT` program
 ``` git
 git clone https://github.com/mordori/miniRT.git miniRT
