@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/03 12:57:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/04 08:24:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_mat2		t_mat2;
 typedef struct s_mat3		t_mat3;
 typedef struct s_mat4		t_mat4;
 
-typedef union u_f_int		t_f_int;
+typedef union u_f_ui		t_f_ui;
 typedef union u_vec2		t_point;
 typedef union u_vec2		t_float2;
 typedef union u_vec2		t_vec2;
@@ -81,7 +81,7 @@ struct __attribute__((aligned(16))) s_mat4
 	};
 };
 
-union u_f_int
+union u_f_ui
 {
 	float		f;
 	uint32_t	i;

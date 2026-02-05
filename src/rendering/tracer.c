@@ -60,8 +60,8 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 
 static inline void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
-	static const float	max_brightness = 40.0f;
-	t_vec3				lighting;
+	const float		max_brightness = 40.0f;
+	t_vec3			lighting;
 
 	lighting = compute_lighting(ctx, path, light, pixel);
 	if (path->bounce > 0)

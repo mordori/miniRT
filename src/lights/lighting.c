@@ -4,7 +4,7 @@
 
 // static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
-t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, float *pdf)
+static inline t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, float *pdf)
 {
 	t_vec3		orig_to_light;
 	float		dist_sq;
@@ -66,7 +66,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	orig_to_light = vec3_sub(light->pos, orig);
 	t_ca = vec3_dot(orig_to_light, dir);
 	ca_dist_sq = vec3_dot(orig_to_light, orig_to_light) - t_ca * t_ca;
-	t_hc = sqrtf(light->obj->shape.sphere.radius_sq - ca_dist_sq);
+	t_hc = sqrtf(fmaxf(0.0f, light->obj->shape.sphere.radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
 	if (hit_shadow(&ctx->scene, orig, dir, dist - B_EPSILON))
 		return (color);
