@@ -305,7 +305,7 @@ struct __attribute__((aligned(16))) s_path
 	t_render_mode	mode;
 };
 
-struct s_scene
+struct __attribute__((aligned(16))) s_scene
 {
 	t_camera		cam;
 	t_vector		objs;
@@ -358,7 +358,7 @@ struct __attribute__((aligned(64))) s_renderer
 	};
 };
 
-struct s_editor
+struct __attribute__((aligned(16))) s_editor
 {
 
 };
@@ -389,7 +389,7 @@ struct __attribute__((aligned(16))) s_bvh_node
 	int				axis;
 };
 
-struct s_context
+struct __attribute__((aligned(64))) s_context
 {
 	t_renderer		renderer;
 	t_scene			scene;
