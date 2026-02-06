@@ -6,7 +6,7 @@ BUILD_TYPE	:=RELEASE
 CC			:=gcc
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow \
 			 -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wswitch-enum -Wundef
-
+WFLAGS		:=
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
