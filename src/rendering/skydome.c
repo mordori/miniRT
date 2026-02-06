@@ -1,4 +1,5 @@
 #include "rendering.h"
+#include "materials.h"
 #include "utils.h"
 
 t_vec3	background_color(const t_texture *tex, const t_ray *ray, const float lux)

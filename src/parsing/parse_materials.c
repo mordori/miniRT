@@ -50,6 +50,21 @@ t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
 	return (PARSE_OK);
 }
 
+static t_error parse_material_texture(t_parser *p, t_material *mat, const char *tkn)
+{
+	t_texture	*tex;
+
+	if (is_placeholder(tkn))
+		return (PARSE_OK);
+	tex = find_texture_by_name(p, tkn);
+	if (!tex)
+		return (PARSE_ERR_TEXTURE);
+	mat->texture = *tex;
+	if (mat->texture.pixels)
+		mat->base_color = BASE_TEXTURE;
+	return (PARSE_OK);
+}
+
 /**
  * Parse material definition line:
  *   mat <id> <color> <metallic> <roughness> <ior> <transmission>
@@ -63,8 +78,10 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3		color;
 	t_vec3		emission_color;
 	float		emission_strength;
+	int 		tokens_count;
 
-	if (count_tokens(tokens) < 10)
+	tokens_count = count_tokens(tokens);
+	if (tokens_count < 10)
 		return (PARSE_ERR_MISSING_ARGS);
 	if (p->mat_count >= MAX_MATERIALS)
 		return (PARSE_ERR_TOO_MANY);
@@ -87,33 +104,10 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 		return (PARSE_ERR_INVALID_NUM);
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);
+	if (tokens_count > 10 && parse_material_texture(p, mat, tokens[10]) != PARSE_OK)
+		return (PARSE_ERR_MATERIAL);
 	entry->defined = true;
 	new_material(ctx, mat);
 	p->mat_count++;
 	return (PARSE_OK);
 }
-
-/**
- * Create area light from emissive material attached to object.
- */
-// t_error	create_area_light(t_context *ctx, t_object *obj, t_material *mat)
-// {
-// 	t_light	*light;
-
-// 	if (!mat->is_emissive)
-// 		return (PARSE_OK);
-// 	light = malloc(sizeof(*light));
-// 	if (!light)
-// 		return (PARSE_ERR_MALLOC);
-// 	*light = (t_light){0};
-// 	light->type = LIGHT_AREA;
-// 	light->pos = obj->transform.pos;
-// 	light->emission = mat->emission;
-// 	light->color = mat->albedo;
-// 	light->intensity = vec3_length(mat->emission);
-// 	light->obj = obj;
-// 	vector_try_add(ctx, &ctx->scene.lights, light);
-// 	return (PARSE_OK);
-// }
-
-

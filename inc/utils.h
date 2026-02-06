@@ -48,6 +48,7 @@ void	blit(const t_context *ctx, const t_renderer *r, uint32_t i, uint32_t limit)
 void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
 float	blue_noise(const t_texture *tex, const t_pixel *pixel, const uint32_t dim);
 t_vec3	map_spherical(const float u, const float v);
+t_vec2	spherical_uv(t_vec3 dir);
 uint32_t	fast_range(const uint32_t n, const uint32_t range);
 size_t	uint64_to_str(uint64_t n, char *buf);
 void	*a_alloc(size_t alignment, size_t size);

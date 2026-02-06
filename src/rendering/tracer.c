@@ -3,6 +3,7 @@
 #include "lights.h"
 #include "objects.h"
 #include "utils.h"
+#include "materials.h"
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
