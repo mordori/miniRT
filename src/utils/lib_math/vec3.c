@@ -6,23 +6,23 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 03:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 12:48:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/05 21:22:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_vec3	vec3(const float x, const float y, const float z)
+t_vec3	vec3(float x, float y, float z)
 {
 	return ((t_vec3){{x, y, z, 0.0f}});
 }
 
-t_vec3	vec3_n(const float n)
+t_vec3	vec3_n(float n)
 {
 	return ((t_vec3){{n, n, n, 0.0f}});
 }
 
-t_vec3	vec3_add(const t_vec3 a, const t_vec3 b)
+t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 {
 	t_vec3		res;
 
@@ -30,7 +30,7 @@ t_vec3	vec3_add(const t_vec3 a, const t_vec3 b)
 	return (res);
 }
 
-t_vec3	vec3_sub(const t_vec3 a, const t_vec3 b)
+t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
 {
 	t_vec3		res;
 
@@ -38,7 +38,7 @@ t_vec3	vec3_sub(const t_vec3 a, const t_vec3 b)
 	return (res);
 }
 
-t_vec3	vec3_scale(const t_vec3 vec, const float s)
+t_vec3	vec3_scale(t_vec3 vec, float s)
 {
 	t_vec3		factor;
 

@@ -4,7 +4,7 @@
 
 // static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
-static inline t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const t_vec2 uv, float *pdf)
+static inline t_vec3	sample_cone(const t_light *light, t_vec3 orig, t_vec2 uv, float *pdf)
 {
 	t_vec3		orig_to_light;
 	float		dist_sq;
@@ -37,11 +37,57 @@ static inline t_vec3	sample_cone(const t_light *light, const t_vec3 orig, const 
 	return (dir_world);
 }
 
+float	d_ggx(float ndoth, float roughness)
+{
+	float		a;
+	float		k;
+
+	a = ndoth * roughness;
+	k = roughness / 1.0f - ndoth * ndoth + a * a;
+	return (k * k * M_1_PI);
+}
+
+float	v_hammon(float ndotv, float ndotl, float roughness)
+{
+	float		a;
+	float		b;
+
+	a = 2.0f * ndotl * ndotv;
+	b = ndotl + ndotv;
+	return (0.5f / ft_lerp_fast(a, b, roughness));
+}
+
+t_vec3	f_schlick(float u, t_vec3 f0)
+{
+	float		f;
+
+	f = powf(1.0f - u, 5.0f);
+	return (vec3_add_n(vec3_scale(f0, (1.0f - f)), f));
+}
+
+float	f_schlick2(float u, float f0, float f90)
+{
+	return (f0 + (f90 - f0) * powf(1.0f -u, 5.0f));
+}
+
+float	f_d_disney(float ndotv, float ndotl, float ldoth, float roughness)
+{
+	float		f90;
+	float		l_scatter;
+	float		v_scatter;
+
+	f90 = 0.5f + 2.0f * roughness * ldoth * ldoth;
+	l_scatter = f_schlick2(ndotl, 1.0, f90);
+	v_scatter = f_schlick2(ndotv, 1.0f, f90);
+	return (l_scatter * v_scatter * M_1_PI);
+}
+
 t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light *light, t_pixel *pixel)
 {
 	t_vec3		color;
 	t_vec3		orig;
-	t_vec3		dir;
+	t_vec3		n;
+	t_vec3		l;
 	t_vec3		orig_to_light;
 	t_vec2		uv;
 	float		dist;
@@ -51,26 +97,61 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	float		ca_dist_sq;
 	float		t_hc;
 
+	t_vec3		view;
+	t_vec3		h;
+	float		ndoth;
+	float		ndotv;
+	float		ldoth;
+	t_vec3		f0;
+
+	float		d;
+	float		v;
+	t_vec3		f;
+
+	t_vec3		f_r;
+	t_vec3		f_d;
+
 	color = (t_vec3){0};
-	orig = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
+	n = path->hit.normal;
+	orig = vec3_add(path->hit.point, vec3_scale(n, B_EPSILON));
 	if (path->bounce == 0)
 		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_CO_U), blue_noise(&ctx->tex_bn, pixel, BN_CO_V));
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
-	dir = sample_cone(light, orig, uv, &pdf);
-	if (vec3_dot(dir, dir) < LEN_SQ_EPSILON)
+	l = sample_cone(light, orig, uv, &pdf);
+	if (vec3_dot(l, l) < LEN_SQ_EPSILON)
 		return (color);
-	ndotl = vec3_dot(path->hit.normal, dir);
+	ndotl = vec3_dot(n, l);
 	if (ndotl <= 0.0f)
 		return (color);
 	orig_to_light = vec3_sub(light->pos, orig);
-	t_ca = vec3_dot(orig_to_light, dir);
+	t_ca = vec3_dot(orig_to_light, l);
 	ca_dist_sq = vec3_dot(orig_to_light, orig_to_light) - t_ca * t_ca;
 	t_hc = sqrtf(fmaxf(0.0f, light->obj->shape.sphere.radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
-	if (hit_shadow(&ctx->scene, orig, dir, dist - B_EPSILON))
+	if (hit_shadow(&ctx->scene, orig, l, dist - B_EPSILON))
 		return (color);
-	color = vec3_mul(light->emission, path->mat->albedo);
+
+
+	view = vec3_negate(path->ray.dir);
+	h = vec3_normalize(vec3_add(view, l));
+	ndotv = fmaxf(G_EPSILON, vec3_dot(n, view));
+	ndotl = fmaxf(0.0f, ndotl);
+	ndoth = fmaxf(0.0f, vec3_dot(n, h));
+	ldoth = fmaxf(0.0f, vec3_dot(l, h));
+
+	d = d_ggx(ndoth, path->mat->roughness * path->mat->roughness);
+	v = v_hammon(ndotv, ndotl, path->mat->roughness);
+	f0 = vec3_lerp(vec3_n(0.04f), path->mat->albedo, path->mat->metallic);
+	f = f_schlick(ldoth, f0);
+
+	f_r = vec3_scale(f, d * v);
+
+	f_d = vec3_mul(path->mat->albedo, vec3_sub(vec3_n(1.0f), f));
+	float disney_brdf = f_d_disney(ndotv, ndotl, ldoth, path->mat->roughness);
+	f_d = vec3_scale(f_d, (1.0f - path->mat->metallic) * disney_brdf);
+
+	color = vec3_mul(light->emission, vec3_add(f_d, f_r));
 	color = vec3_scale(color, ndotl / pdf);
 	return (color);
 }

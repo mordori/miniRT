@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 00:44:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/03 12:43:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:27:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_vec3	lerp_color(const uint32_t c1, const uint32_t c2, const float t)
+t_vec3	lerp_color(uint32_t c1, uint32_t c2, float t)
 {
 	t_v4sf	a;
 	t_v4sf	b;
@@ -33,7 +33,7 @@ t_vec3	lerp_color(const uint32_t c1, const uint32_t c2, const float t)
  * @param rgba 32-bit unsigned integer in RGBA format.
  * @return 32-bit unsigned integer in ABGR format.
  */
-uint32_t	rgba_to_abgr(const uint32_t rgba)
+uint32_t	rgba_to_abgr(uint32_t rgba)
 {
 	t_color	abgr;
 

@@ -17,7 +17,7 @@ void	init_directional_light(t_context *ctx, t_light *light)
 
 	direction = (t_vec3){{20.0f, 13.75f, 14.75f}};
 	direction = vec3_normalize(direction);
-	target_lux = 40.0f;
+	target_lux = 120.0f;
 	area = 4.0f * M_PI * (angular_radius * angular_radius);
 	radiance = target_lux / area / 25.0f;
 	light->pos = vec3_scale(direction, distance);

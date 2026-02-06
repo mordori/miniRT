@@ -25,17 +25,11 @@
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
 
-# define INV_255F				0.003921568627451f
-# define INV_2_2F				0.454545454545454f
-# define M_1_2PI				0.15915494309189533577f
-# define B_EPSILON				1e-4f
-# define G_EPSILON				1e-5f
-
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)
 
-# define MAT_DOUBLE_SIDED		(1 << 0)
-# define MAT_RECEIVE_SHADOWS	(1 << 1)
+# define MAT_RECEIVE_SHADOWS	(1 << 0)
+# define MAT_DOUBLE_SIDED		(1 << 1)
 
 typedef enum e_obj_type			t_obj_type;
 typedef enum e_light_type		t_light_type;

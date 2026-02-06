@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 05:01:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 06:40:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:32:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_mat4	mat4_rot(const t_vec3 rot)
+t_mat4	mat4_rot(t_vec3 rot)
 {
 	t_mat4		res;
 	t_vec2		x;

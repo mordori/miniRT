@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 14:32:13 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 12:15:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:30:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param y Y-component of the vector.
  * @return 2D integer vector with the specified components.
  */
-t_vec2i	vec2i(const int32_t x, const int32_t y)
+t_vec2i	vec2i(int32_t x, int32_t y)
 {
 	return ((t_vec2i){x, y});
 }
@@ -31,7 +31,7 @@ t_vec2i	vec2i(const int32_t x, const int32_t y)
  * @param n Value to be assigned to both x and y.
  * @return 2D integer vector with x = y = n.
  */
-t_vec2i	vec2i_n(const int32_t n)
+t_vec2i	vec2i_n(int32_t n)
 {
 	return ((t_vec2i){n, n});
 }
@@ -43,7 +43,7 @@ t_vec2i	vec2i_n(const int32_t n)
  * @param b Second input vector.
  * @return Resulting vector after adding `a` and `b`.
  */
-t_vec2i	vec2i_add(const t_vec2i a, const t_vec2i b)
+t_vec2i	vec2i_add(t_vec2i a, t_vec2i b)
 {
 	return ((t_vec2i){
 		a.x + b.x,
@@ -58,7 +58,7 @@ t_vec2i	vec2i_add(const t_vec2i a, const t_vec2i b)
  * @param b Subtrahend vector.
  * @return Resulting vector after subtracting `b` from `a`.
  */
-t_vec2i	vec2i_sub(const t_vec2i a, const t_vec2i b)
+t_vec2i	vec2i_sub(t_vec2i a, t_vec2i b)
 {
 	return ((t_vec2i){
 		a.x - b.x,
@@ -76,7 +76,7 @@ t_vec2i	vec2i_sub(const t_vec2i a, const t_vec2i b)
  * @param s Scalar multiplier.
  * @return Scaled vector with truncated integer components.
  */
-t_vec2i	vec2i_scale(const t_vec2i vec, const float s)
+t_vec2i	vec2i_scale(t_vec2i vec, float s)
 {
 	return ((t_vec2i){
 		(int)((float)vec.x * s),

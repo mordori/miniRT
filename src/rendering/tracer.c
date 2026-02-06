@@ -39,25 +39,6 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	return (path.color);
 }
 
-// static inline void	trace_ray_edit(const t_context *ctx, t_path *path)
-// {
-// 	if (hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
-// 	{
-// 		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
-// 		if (path->mat->is_emissive)
-// 		{
-// 			path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
-// 			return ;
-// 		}
-// 		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_ambient(&ctx->scene, path->mat)));
-// 		path->color = vec3_add(path->color, vec3_mul(path->throughput, compute_directional(&ctx->scene, &path->hit, path->mat)));
-// 		// Add all point lights
-// 		return ;
-// 	}
-// 	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 1.0f)));
-// 	return ;
-// }
-
 static inline void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
 	const float		max_brightness = 40.0f;
@@ -126,6 +107,7 @@ static inline t_vec3	sample_cos_hemisphere(const t_vec3 normal, const float u, c
 	return (vec3_normalize(dir_world));
 }
 
+// TODO: reflect/diffuse path
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		origin;

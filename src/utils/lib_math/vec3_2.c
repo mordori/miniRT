@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/03 17:22:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:30:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_vec3	vec3_cross(const t_vec3 a, const t_vec3 b)
+t_vec3	vec3_cross(t_vec3 a, t_vec3 b)
 {
 	t_vec3				res;
 	t_v4sf				yzx;
@@ -26,7 +26,7 @@ t_vec3	vec3_cross(const t_vec3 a, const t_vec3 b)
 	return (res);
 }
 
-float	vec3_dot(const t_vec3 a, const t_vec3 b)
+float	vec3_dot(t_vec3 a, t_vec3 b)
 {
 	t_v4sf		res;
 
@@ -34,19 +34,19 @@ float	vec3_dot(const t_vec3 a, const t_vec3 b)
 	return (res[0] + res[1] + res[2]);
 }
 
-t_vec3	vec3_div(const t_vec3 vec, const float div)
+t_vec3	vec3_div(t_vec3 vec, float div)
 {
 	if (fabsf(div) < LEN_EPSILON)
 		return (vec3_n(0.0f));
 	return (vec3_scale(vec, 1.0f / div));
 }
 
-t_vec3	vec3_normalize(const t_vec3 vec)
+t_vec3	vec3_normalize(t_vec3 vec)
 {
 	return (vec3_div(vec, vec3_length(vec)));
 }
 
-float	vec3_length(const t_vec3 vec)
+float	vec3_length(t_vec3 vec)
 {
 	return (sqrtf(vec3_dot(vec, vec)));
 }

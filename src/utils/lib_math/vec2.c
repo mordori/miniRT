@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:30:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 12:15:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:29:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param y Y-component of the vector.
  * @return 2D vector with the specified components.
  */
-t_vec2	vec2(const float x, const float y)
+t_vec2	vec2(float x, float y)
 {
 	return ((t_vec2){{x, y}});
 }
@@ -32,7 +32,7 @@ t_vec2	vec2(const float x, const float y)
  * @param n The value to assign to both x and y components.
  * @return 2D vector with x = y = n.
  */
-t_vec2	vec2_n(const float n)
+t_vec2	vec2_n(float n)
 {
 	return ((t_vec2){{n, n}});
 }
@@ -44,7 +44,7 @@ t_vec2	vec2_n(const float n)
  * @param b Second input vector.
  * @return Resulting vector after adding `a` and `b`.
  */
-t_vec2	vec2_add(const t_vec2 a, const t_vec2 b)
+t_vec2	vec2_add(t_vec2 a, t_vec2 b)
 {
 	return ((t_vec2){{
 		a.x + b.x,
@@ -59,7 +59,7 @@ t_vec2	vec2_add(const t_vec2 a, const t_vec2 b)
  * @param b Subtrahend vector.
  * @return Resulting vector after subtracting `b` from `a`.
  */
-t_vec2	vec2_sub(const t_vec2 a, const t_vec2 b)
+t_vec2	vec2_sub(t_vec2 a, t_vec2 b)
 {
 	return ((t_vec2){{
 		a.x - b.x,
@@ -76,7 +76,7 @@ t_vec2	vec2_sub(const t_vec2 a, const t_vec2 b)
  * @param s Scalar value to multiply with.
  * @return Scaled vector.
  */
-t_vec2	vec2_scale(const t_vec2 vec, const float s)
+t_vec2	vec2_scale(t_vec2 vec, float s)
 {
 	return ((t_vec2){{
 		vec.x * s,

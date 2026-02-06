@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/04 08:24:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:27:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <sys/types.h>
 # include <xmmintrin.h>
 
-#  define M_PI				3.14159265358979323846
-#  define M_PI_2			1.57079632679489661923
+// #  define M_PI				3.14159265358979323846
+// #  define M_PI_2			1.57079632679489661923
 #  define M_TAU				6.28318530717958647693
 #  define M_INF				FLT_MAX
 
@@ -179,73 +179,76 @@ union u_color
 
 float	mat3_det(const t_mat3 *src);
 bool	mat4_inverse(const t_mat4 *src, t_mat4 *out);
-t_mat3	mat4_sub(const t_mat4 *src, const int skip_r, const int skip_c);
-float	mat4_cofactor(const t_mat4 *src, const int row, const int col);
+t_mat3	mat4_sub(const t_mat4 *src, int skip_r, int skip_c);
+float	mat4_cofactor(const t_mat4 *src, int row, int col);
 float	mat4_det(const t_mat4 *src);
 t_mat4	mat4_identity(void);
 t_mat4	mat4_transpose(const t_mat4 *m);
 t_mat4	mat4_mul(const t_mat4 *a, const t_mat4 *b);
-t_vec4	mat4_mul_vec4(const t_mat4 *m, const t_vec4 v);
-t_mat4	mat4_translate(const t_vec3 t);
-t_mat4	mat4_scale(const t_vec3 s);
+t_vec4	mat4_mul_vec4(const t_mat4 *m, t_vec4 v);
+t_mat4	mat4_translate(t_vec3 t);
+t_mat4	mat4_scale(t_vec3 s);
 t_mat4	mat4_rot_x(float rad);
 t_mat4	mat4_rot_y(float rad);
 t_mat4	mat4_rot_z(float rad);
-t_vec3	mat4_mul_vec3(const t_mat4 *m, const t_vec3 v);
-t_mat4	mat4_rot(const t_vec3 rot);
+t_vec3	mat4_mul_vec3(const t_mat4 *m, t_vec3 v);
+t_mat4	mat4_rot(t_vec3 rot);
 
-float	ft_lerp(const float a, const float b, const float t);
-int		ft_imax(const int a, const int b);
-int		ft_imin(const int a, const int b);
-float	ft_normalize(const float value, const float min, const float max);
-float	ft_clamp01(const float value);
-float	ft_clamp(float value, const float min, const float max);
-t_vec2i	vec2i(const int32_t x, const int32_t y);
-t_vec2i	vec2i_n(const int32_t n);
-t_vec2i	vec2i_f(const float x, const float y);
-t_vec2i	vec2i_nf(const float n);
-t_vec2i	vec2i_add(const t_vec2i a, const t_vec2i b);
-t_vec2i	vec2i_sub(const t_vec2i a, const t_vec2i b);
-t_vec2i	vec2i_scale(const t_vec2i vec, const float s);
-t_vec2	vec2(const float x, const float y);
-t_vec2	vec2_n(const float n);
-t_vec2	vec2_add(const t_vec2 a, const t_vec2 b);
-t_vec2	vec2_sub(const t_vec2 a, const t_vec2 b);
-t_vec2	vec2_scale(const t_vec2 vec, const float s);
-t_vec3	vec3(const float x, const float y, const float z);
-t_vec3	vec3_n(const float n);
-t_vec3	vec3_add(const t_vec3 a, const t_vec3 b);
-t_vec3	vec3_sub(const t_vec3 a, const t_vec3 b);
-t_vec3	vec3_scale(const t_vec3 vec, const float s);
-t_vec3	vec3_cross(const t_vec3 a, const t_vec3 b);
-float	vec3_dot(const t_vec3 a, const t_vec3 b);
-t_vec3	vec3_div(const t_vec3 vec, const float div);
-float	vec3_length(const t_vec3 vec);
-t_vec3	vec3_normalize(const t_vec3 vec);
-t_vec3	vec3_reflect(const t_vec3 vec, const t_vec3 n);
+float	ft_lerp(float a, float b, float t);
+float	ft_lerp_fast(float a, float b, float t);
+int		ft_imax(int a, int b);
+int		ft_imin(int a, int b);
+float	ft_normalize(float value, float min, float max);
+float	ft_clamp01(float value);
+float	ft_clamp(float value, float min, float max);
+t_vec2i	vec2i(int32_t x, int32_t y);
+t_vec2i	vec2i_n(int32_t n);
+t_vec2i	vec2i_f(float x, float y);
+t_vec2i	vec2i_nf(float n);
+t_vec2i	vec2i_add(t_vec2i a, t_vec2i b);
+t_vec2i	vec2i_sub(t_vec2i a, t_vec2i b);
+t_vec2i	vec2i_scale(t_vec2i vec, float s);
+t_vec2	vec2(float x, float y);
+t_vec2	vec2_n(float n);
+t_vec2	vec2_add(t_vec2 a, t_vec2 b);
+t_vec2	vec2_sub(t_vec2 a, t_vec2 b);
+t_vec2	vec2_scale(t_vec2 vec, float s);
+t_vec3	vec3(float x, float y, float z);
+t_vec3	vec3_n(float n);
+t_vec3	vec3_add(t_vec3 a, t_vec3 b);
+t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
+t_vec3	vec3_scale(t_vec3 vec, float s);
+t_vec3	vec3_cross(t_vec3 a, t_vec3 b);
+float	vec3_dot(t_vec3 a, t_vec3 b);
+t_vec3	vec3_div(t_vec3 vec, float div);
+float	vec3_length(t_vec3 vec);
+t_vec3	vec3_normalize(t_vec3 vec);
+t_vec3	vec3_reflect(t_vec3 vec, t_vec3 n);
 t_vec3	vec3_unit_random(uint32_t *seed);
-t_vec3	vec3_min(const t_vec3 vec, const float min);
-t_vec3	vec3_max(const t_vec3 vec, const float max);
-t_vec3	vec3_sqrt(const t_vec3 vec);
-t_vec3	vec3_clamp01(const t_vec3 vec);
-t_vec3	vec3_clamp_mag(const t_vec3 vec, const float max);
-t_vec3	vec3_add_n(const t_vec3 vec, const float n);
-t_vec3	vec3_mul(const t_vec3 a, const t_vec3 b);
+t_vec3	vec3_min(t_vec3 vec, float min);
+t_vec3	vec3_max(t_vec3 vec, float max);
+t_vec3	vec3_sqrt(t_vec3 vec);
+t_vec3	vec3_clamp01(t_vec3 vec);
+t_vec3	vec3_clamp_mag(t_vec3 vec, float max);
+t_vec3	vec3_add_n(t_vec3 vec, float n);
+t_vec3	vec3_mul(t_vec3 a, t_vec3 b);
+t_vec3	vec3_negate(t_vec3 vec);
+t_vec3	vec3_lerp(t_vec3 a, t_vec3 b, float t);
 t_vec4	vec4(float x, float y, float z, float w);
-t_vec4	vec4_3(const t_vec3 vec, const float w);
-t_vec4	vec4_n(const float n);
-t_vec4	vec4_add(const t_vec4 a, const t_vec4 b);
-t_vec4	vec4_sub(const t_vec4 a, const t_vec4 b);
-t_vec4	vec4_scale(const t_vec4 vec, const float s);
-size_t	ft_pow(const size_t n, const size_t e);
-bool	ft_is_pot(const size_t n);
-float	degrees_to_rad(const float degrees);
-uint32_t	ft_uint_min(const uint32_t a,const  uint32_t b);
-t_v4sf	v4sf(const float x, const float y, const float z, const float w);
-t_v4sf	v4sf_n(const float n);
-t_v4si	v4si(const int32_t x, const int32_t y, const int32_t z, const int32_t w);
-t_v4si	v4si_n(const int32_t n);
-t_vec3	vec3_clamp(const t_vec3 vec, const float min, const float max);
+t_vec4	vec4_3(t_vec3 vec, float w);
+t_vec4	vec4_n(float n);
+t_vec4	vec4_add(t_vec4 a, t_vec4 b);
+t_vec4	vec4_sub(t_vec4 a, t_vec4 b);
+t_vec4	vec4_scale(t_vec4 vec, float s);
+size_t	ft_pow(size_t n, size_t e);
+bool	ft_is_pot(size_t n);
+float	degrees_to_rad(float degrees);
+uint32_t	ft_uint_min(uint32_t a, uint32_t b);
+t_v4sf	v4sf(float x, float y, float z, float w);
+t_v4sf	v4sf_n(float n);
+t_v4si	v4si(int32_t x, int32_t y, int32_t z, int32_t w);
+t_v4si	v4si_n(int32_t n);
+t_vec3	vec3_clamp(t_vec3 vec, float min, float max);
 
 uint32_t	pcg(uint32_t *state);
 float	randomf(uint32_t *seed);
@@ -253,7 +256,7 @@ float	randomf01(uint32_t *seed);
 float	randomfn11(uint32_t *seed);
 uint32_t	hash_lowerbias32(uint32_t seed);
 
-t_vec3	lerp_color(const uint32_t color1, const uint32_t color2, const float t);
-uint32_t	rgba_to_abgr(const uint32_t rgba);
+t_vec3	lerp_color(uint32_t color1, uint32_t color2, float t);
+uint32_t	rgba_to_abgr(uint32_t rgba);
 
 #endif

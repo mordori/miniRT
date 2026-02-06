@@ -3,7 +3,7 @@
 #include "utils.h"
 
 static inline t_bvh_node	*build_bvh(t_context *ctx, const t_object **objs, size_t n);
-static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i);
+static inline void	add_nodes_to_bvh_stack(const t_ray *ray, const t_bvh_node *node, t_bvh_node **stack, int32_t *i);
 
 void	init_bvh(t_context *ctx)
 {
@@ -98,7 +98,7 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 	return (false);
 }
 
-static inline void	add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node, t_bvh_node **stack, int32_t *i)
+static inline void	add_nodes_to_bvh_stack(const t_ray *ray, const t_bvh_node *node, t_bvh_node **stack, int32_t *i)
 {
 	if (ray->signs[node->axis])
 	{

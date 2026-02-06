@@ -10,11 +10,12 @@
 
 void	init_scene(t_context *ctx)
 {
+	ctx->scene = (t_scene){0};
 	vector_try_init(ctx, &ctx->scene.objs, false, free);
 	vector_try_init(ctx, &ctx->scene.lights, false, free);
 	vector_try_init(ctx, &ctx->scene.materials, false, free);
 	init_directional_light(ctx, &ctx->scene.directional_light);
-	// init_skydome(ctx, "assets/textures/sky.png"); Added into .rt file
+
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
 	close(ctx->fd);

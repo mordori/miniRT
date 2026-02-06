@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 22:44:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 01:17:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:28:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_mat4	mat4_mul(const t_mat4 *a, const t_mat4 *b)
 	return (res);
 }
 
-t_vec4	mat4_mul_vec4(const t_mat4 *src, const t_vec4 vec)
+t_vec4	mat4_mul_vec4(const t_mat4 *src, t_vec4 vec)
 {
 	t_vec4		res;
 	__m128		c0;

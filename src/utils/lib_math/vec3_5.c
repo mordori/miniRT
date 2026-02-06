@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mat4_transforms_2.c                                :+:      :+:    :+:   */
+/*   vec3_5.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/01 07:34:25 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/06 04:28:08 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/02/05 21:55:00 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/02/05 22:17:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_mat4	mat4_shear(t_vec3 x, t_vec3 y, t_vec3 z)
+t_vec3	vec3_negate(t_vec3 vec)
 {
-	t_mat4		res;
+	return (vec3_scale(vec, -1.0f));
+}
 
-	res.rows[0] = (t_v4sf){1.0f, x.y, x.z, 0.0f};
-	res.rows[1] = (t_v4sf){y.x, 1.0f, y.z, 0.0f};
-	res.rows[2] = (t_v4sf){z.x, z.y, 1.0f, 0.0f};
-	res.rows[3] = (t_v4sf){0.0f, 0.0f, 0.0f, 1.0f};
+t_vec3	vec3_lerp(t_vec3 a, t_vec3 b, float t)
+{
+	t_vec3		res;
+
+	res.v = a.v + (b.v - a.v) * v4sf_n(t);
 	return (res);
 }

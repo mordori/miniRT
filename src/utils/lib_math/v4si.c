@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:47:34 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 22:49:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:29:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_v4si	v4si(const int32_t x, const int32_t y, const int32_t z, const int32_t w)
+t_v4si	v4si(int32_t x, int32_t y, int32_t z, int32_t w)
 {
 	t_v4si	res;
 
@@ -20,7 +20,7 @@ t_v4si	v4si(const int32_t x, const int32_t y, const int32_t z, const int32_t w)
 	return (res);
 }
 
-t_v4si	v4si_n(const int32_t n)
+t_v4si	v4si_n(int32_t n)
 {
 	t_v4si	res;
 
