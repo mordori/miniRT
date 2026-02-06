@@ -1,7 +1,7 @@
 #include "objects.h"
 #include "materials.h"
 
-t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material *mat)
+t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 {
 	t_object	obj;
 
@@ -11,7 +11,7 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, t_material *mat)
 	obj.shape.plane.point = point;
 	obj.shape.plane.normal = normal;
 	obj.flags = OBJ_VISIBLE | OBJ_CAST_SHADOWS;
-	obj.material_id = new_material(ctx, mat);
+	obj.material_id = mat_id;
 	return (add_object(ctx, &obj));
 }
 

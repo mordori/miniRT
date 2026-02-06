@@ -55,7 +55,7 @@ t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
  *   mat <id> <color> <metallic> <roughness> <ior> <transmission>
  *       <emission_strength> <emission_color> <flags>
  */
-t_error	parse_material_def(t_parser *p, char **tokens)
+t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 {
 	t_mat_entry	*entry;
 	t_material	*mat;
@@ -88,6 +88,7 @@ t_error	parse_material_def(t_parser *p, char **tokens)
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);
 	entry->defined = true;
+	new_material(ctx, mat);
 	p->mat_count++;
 	return (PARSE_OK);
 }

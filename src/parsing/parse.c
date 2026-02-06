@@ -88,7 +88,7 @@ static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
 		return (PARSE_ERR_MALLOC);
 	id = tokens[0];
 	if (ft_strcmp(id, "mat") == 0)
-		return (parse_material_def(p, tokens));
+		return (parse_material_def(ctx, p, tokens));
 	if (ft_strcmp(id, "tex") == 0)
 		return (parse_texture_def(ctx, p, tokens));
 	if (ft_strcmp(id, "A") == 0)
