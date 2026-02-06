@@ -88,6 +88,7 @@ t_error			parse_texture_def(t_context *ctx, t_parser *p, char **tokens);
 t_error			load_texture_file(t_context *ctx, const char *filename,
 					t_texture *out);
 t_texture		*find_texture_by_name(t_parser *p, const char *name);
+bool			is_placeholder(const char *str);
 
 /* Area light from emissive objects */
 t_error			create_area_light(t_context *ctx, t_object *obj,
