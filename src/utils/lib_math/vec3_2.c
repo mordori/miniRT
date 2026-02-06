@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/06 04:30:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 14:46:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 t_vec3	vec3_cross(t_vec3 a, t_vec3 b)
 {
-	t_vec3				res;
-	t_v4sf				yzx;
-	t_v4sf				zxy;
+	t_vec3		res;
+	t_v4sf		yzx;
+	t_v4sf		zxy;
 
 	yzx = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 0, 2, 1)) *
 			_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 1, 0, 2));
