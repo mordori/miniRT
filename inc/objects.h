@@ -18,4 +18,9 @@ t_vec3	normal_at_plane(const t_shape *shape, const t_vec3 pos);
 t_vec3	normal_at_sphere(const t_shape *shape, const t_vec3 pos);
 t_vec3	normal_at_cylinder(const t_shape *shape, const t_vec3 pos);
 
+/* Object initialization */
+t_error			init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id);
+t_error			init_sphere(t_context *ctx, t_vec3 center, float diameter, uint32_t mat_id);
+t_error			init_cylinder(t_context *ctx, t_cylinder *cy, int32_t mat_id);
+
 #endif

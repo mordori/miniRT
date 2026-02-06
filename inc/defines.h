@@ -257,6 +257,7 @@ struct __attribute__((aligned(16))) s_light
 	float			radius;
 	float			radius_sq;
 	float			intensity;
+	uint32_t		material_id;
 	t_light_type	type;
 };
 

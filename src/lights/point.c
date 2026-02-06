@@ -21,7 +21,6 @@ void	init_point_light(t_context *ctx, t_light *light)
 	(void)light;
 
 	t_object	obj;
-	t_material	mat;
 	float		radius;
 	t_light	*l2;
 
@@ -39,9 +38,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
-	mat.emission = l2->emission;
-	mat.is_emissive = true;
-	obj.material_id = new_material(ctx, &mat);
+	obj.material_id = light->material_id;
 	// obj.flags |= OBJ_VISIBLE;
 	add_object(ctx, &obj);
 	l2->obj = (t_object *)vector_getlast(&ctx->scene.objs);
@@ -62,9 +59,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
-	mat.emission = l2->emission;
-	mat.is_emissive = true;
-	obj.material_id = new_material(ctx, &mat);
+	obj.material_id = light->material_id;
 
 
 	add_object(ctx, &obj);

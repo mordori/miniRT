@@ -43,10 +43,11 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	color;
 	t_light	light;
 	int		token_count;
+	uint32_t	mat_id;
 
 	token_count = count_tokens(tokens);
-	if (token_count < 4 || token_count > 5)
-		return (PARSE_ERR_MISSING_ARGS);
+	// if (token_count < 4 || token_count > 5)
+	// 	return (PARSE_ERR_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &position))
 		return (PARSE_ERR_INVALID_NUM);
 	if (!parse_float(tokens[2], &ratio))
@@ -55,6 +56,8 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 		return (PARSE_ERR_RANGE);
 	if (!parse_color(tokens[3], &color))
 		return (PARSE_ERR_INVALID_NUM);
+	if (!parse_uint(tokens[5], &mat_id))
+		return (PARSE_ERR_RANGE);
 	radius = 0.0f;
 	if (token_count == 5 && !parse_float(tokens[4], &radius))
 		return (PARSE_ERR_INVALID_NUM);
@@ -65,6 +68,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	light.color = color;
 	light.radius = radius;
 	light.radius_sq = radius * radius;
+	light.material_id = mat_id;
 	init_point_light(ctx, &light);
 	p->has_light = true;
 	return (PARSE_OK);

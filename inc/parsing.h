@@ -68,13 +68,6 @@ void			free_tokens(char **tokens);
 bool			validate_range(float value, float min, float max);
 bool			validate_normalized(t_vec3 vec);
 
-/* Object initialization */
-t_error			init_plane(t_context *ctx, t_vec3 point, t_vec3 normal,
-					t_material *mat);
-t_error			init_sphere(t_context *ctx, t_vec3 center, float diameter,
-					t_material *mat);
-t_error			init_cylinder(t_context *ctx, t_cylinder *cy, t_material *mat);
-
 /* Element parsing */
 t_error			parse_sphere(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_plane(t_context *ctx, t_parser *p, char **tokens);
@@ -85,7 +78,8 @@ t_error			parse_light(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_camera(t_context *ctx, t_parser *p, char **tokens);
 
 /* Material and texture parsing */
-t_error			parse_material_def(t_parser *p, char **tokens);
+// t_error			parse_material_def(t_parser *p, char **tokens);
+t_error			parse_material_def(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_material_token(t_parser *p, const char *token,
 					t_material *out);
 t_material		*get_material_by_id(t_parser *p, int id);

@@ -7,7 +7,6 @@ void	init_directional_light(t_context *ctx, t_light *light)
 {
 	const float		distance = 999.0f;
 	const float		angular_radius = 0.0046f;
-	t_material		mat;
 	t_object		obj;
 	t_vec3			direction;
 	float			radius;
@@ -32,9 +31,7 @@ void	init_directional_light(t_context *ctx, t_light *light)
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
-	mat.emission = light->emission;
-	mat.is_emissive = true;
-	obj.material_id = new_material(ctx, &mat);
+	obj.material_id = 0;
 	// obj.flags |=  OBJ_VISIBLE;
 	add_object(ctx, &obj);
 	light->obj = (t_object *)vector_getlast(&ctx->scene.objs);
