@@ -1,6 +1,7 @@
 #include "lights.h"
 #include "objects.h"
 #include "utils.h"
+#include "materials.h"
 
 // static inline t_vec3	add_light(const t_vec3 emission, const t_vec3 albedo, float ndotl, float dist);
 
@@ -72,7 +73,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	dist = t_ca - t_hc;
 	if (hit_shadow(&ctx->scene, orig, dir, dist - B_EPSILON))
 		return (color);
-	color = vec3_mul(light->emission, path->mat->albedo);
+	color = vec3_mul(light->emission, get_surface_color(path->mat, &path->hit));
 	color = vec3_scale(color, ndotl / pdf);
 	return (color);
 }
@@ -130,13 +131,13 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 // 	return (color);
 // }
 
-t_vec3	compute_ambient(const t_scene *scene, const t_material *mat)
+t_vec3	compute_ambient(const t_scene *scene, const t_material *mat, const t_hit *hit)
 {
 	t_light		*light;
 	t_vec3		color;
 
 	light = (t_light *)&scene->ambient_light;
-	color = vec3_mul(light->color, mat->albedo);
+	color = vec3_mul(light->color, get_surface_color(mat, hit));
 	color = vec3_scale(color, light->intensity);
 	return (color);
 }
@@ -155,7 +156,7 @@ t_vec3	compute_directional(const t_scene *scene, const t_hit *hit, const t_mater
 	ndotl = vec3_dot(hit->normal, dir);
 	if (ndotl <= 0.0f || hit_shadow(scene, orig_biased, dir, M_INF))
 		return ((t_vec3){0});
-	color = vec3_mul(light->color, mat->albedo);
+	color = vec3_mul(light->color, get_surface_color(mat, hit));
 	color = vec3_scale(color, light->intensity * ndotl);
 	return (color);
 }

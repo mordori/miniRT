@@ -3,6 +3,7 @@
 #include "lights.h"
 #include "objects.h"
 #include "utils.h"
+#include "materials.h"
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
 // static inline void	trace_ray_edit(const t_context *ctx, t_path *path);
@@ -140,7 +141,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
 	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
 	path->ray = new_ray(origin, dir);
-	path->throughput = vec3_mul(path->throughput, path->mat->albedo);
+	path->throughput = vec3_mul(path->throughput, get_surface_color(path->mat, &path->hit));
 	if (path->bounce >= DEPTH_ENABLE_RR)
 	{
 		p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));

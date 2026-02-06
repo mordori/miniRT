@@ -16,11 +16,6 @@ static inline bool	is_png_filename(const char *str)
 	return (len >= 5 && ft_strcmp(str + len - 4, ".png") == 0);
 }
 
-static inline bool	is_placeholder(const char *str)
-{
-	return (str && ft_strcmp(str, "_") == 0);
-}
-
 /**
  * Load a PNG texture from assets/textures/ directory.
  */

@@ -31,7 +31,7 @@ float	vec3_dot(const t_vec3 a, const t_vec3 b)
 	t_v4sf		res;
 
 	res = a.v * b.v;
-	return (res[0] + res[1] + res[2] + res[3]);
+	return (res[0] + res[1] + res[2]);
 }
 
 t_vec3	vec3_div(const t_vec3 vec, const float div)
