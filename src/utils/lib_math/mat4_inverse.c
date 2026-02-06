@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 00:16:36 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 07:43:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:28:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	mat4_inverse(const t_mat4 *src, t_mat4 *out)
 	return (true);
 }
 
-t_mat3	mat4_sub(const t_mat4 *src, const int skip_r, const int skip_c)
+t_mat3	mat4_sub(const t_mat4 *src, int skip_r, int skip_c)
 {
 	t_mat3		res;
 	int			row;
@@ -67,7 +67,7 @@ t_mat3	mat4_sub(const t_mat4 *src, const int skip_r, const int skip_c)
 	return (res);
 }
 
-float	mat4_cofactor(const t_mat4 *src, const int row, const int col)
+float	mat4_cofactor(const t_mat4 *src, int row, int col)
 {
 	float		det;
 	t_mat3		sub;

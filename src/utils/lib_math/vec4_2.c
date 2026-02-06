@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 23:32:25 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 16:24:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:31:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_vec4	vec4_3(const t_vec3 vec, const float w)
+t_vec4	vec4_3(t_vec3 vec, float w)
 {
 	t_vec4		res;
 

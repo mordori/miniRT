@@ -71,9 +71,9 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \
 				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \
-				vec2.c vec4_2.c vec2i.c vec2i_2.c math_2.c \
+				vec2.c vec4_2.c vec2i.c vec2i_2.c math_2.c math_3.c \
 				vec3_3.c color.c v4sf.c v4si.c \
-				mat4_transforms_2.c random.c vec3_4.c)
+				mat4_transforms_2.c random.c vec3_4.c vec3_5.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 				ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \

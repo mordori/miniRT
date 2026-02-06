@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 00:03:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 00:16:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/05 21:24:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_vec3	vec3_mul(const t_vec3 a, const t_vec3 b)
+t_vec3	vec3_mul(t_vec3 a, t_vec3 b)
 {
 	t_vec3		res;
 
@@ -20,7 +20,7 @@ t_vec3	vec3_mul(const t_vec3 a, const t_vec3 b)
 	return (res);
 }
 
-t_vec3	vec3_reflect(const t_vec3 vec, const t_vec3 n)
+t_vec3	vec3_reflect(t_vec3 vec, t_vec3 n)
 {
 	return (vec3_sub(vec, vec3_scale(n, 2 * vec3_dot(vec, n))));
 }
@@ -39,7 +39,7 @@ t_vec3	vec3_unit_random(uint32_t *seed)
 	}
 }
 
-t_vec3	vec3_min(const t_vec3 vec, const float min)
+t_vec3	vec3_min(t_vec3 vec, float min)
 {
 	t_vec3		res;
 	t_v4sf		limit;
@@ -49,7 +49,7 @@ t_vec3	vec3_min(const t_vec3 vec, const float min)
 	return (res);
 }
 
-t_vec3	vec3_max(const t_vec3 vec, const float max)
+t_vec3	vec3_max(t_vec3 vec, float max)
 {
 	t_vec3		res;
 	t_v4sf		limit;
@@ -60,7 +60,7 @@ t_vec3	vec3_max(const t_vec3 vec, const float max)
 }
 
 // Bitwise selection mask for branchless arithmetic and compiler bitwise reinterpretation
-// t_vec3	vec3_min(const t_vec3 vec, const float min)
+// t_vec3	vec3_min(t_vec3 vec, float min)
 // {
 // 	t_vec3		res;
 // 	t_v4sf		limit;

@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 22:54:07 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/02 02:08:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/06 04:28:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-t_mat4	mat4_translate(const t_vec3 t)
+t_mat4	mat4_translate(t_vec3 t)
 {
 	t_mat4		res;
 
@@ -23,7 +23,7 @@ t_mat4	mat4_translate(const t_vec3 t)
 	return (res);
 }
 
-t_mat4	mat4_scale(const t_vec3 s)
+t_mat4	mat4_scale(t_vec3 s)
 {
 	t_mat4		res;
 
@@ -34,7 +34,7 @@ t_mat4	mat4_scale(const t_vec3 s)
 	return (res);
 }
 
-t_mat4	mat4_rot_x(const float rad)
+t_mat4	mat4_rot_x(float rad)
 {
 	t_mat4	res;
 	float	c;
@@ -48,7 +48,7 @@ t_mat4	mat4_rot_x(const float rad)
 	return (res);
 }
 
-t_mat4	mat4_rot_y(const float rad)
+t_mat4	mat4_rot_y(float rad)
 {
 	t_mat4	res;
 	float	c;
@@ -62,7 +62,7 @@ t_mat4	mat4_rot_y(const float rad)
 	return (res);
 }
 
-t_mat4	mat4_rot_z(const float rad)
+t_mat4	mat4_rot_z(float rad)
 {
 	t_mat4	res;
 	float	c;
