@@ -24,5 +24,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	obj.material_id = l->material_id;
 	add_object(ctx, &obj);
 	l->obj = (t_object *)vector_getlast(&ctx->scene.objs);
+	if (l->obj)
+		l->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	vector_try_add(ctx, &ctx->scene.lights, l);
 }
