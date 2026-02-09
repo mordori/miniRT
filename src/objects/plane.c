@@ -10,7 +10,6 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 	obj.transform.pos = point;
 	obj.shape.plane.point = point;
 	obj.shape.plane.normal = normal;
-	obj.flags = OBJ_VISIBLE | OBJ_CAST_SHADOWS;
 	obj.material_id = mat_id;
 	return (add_object(ctx, &obj));
 }

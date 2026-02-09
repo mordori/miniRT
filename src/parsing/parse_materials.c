@@ -83,7 +83,7 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 		|| !parse_float(tokens[6], &mat->transmission)
 		|| !parse_float(tokens[7], &emission_strength)
 		|| !parse_color(tokens[8], &emission_color)
-		|| !parse_float(tokens[9], &mat->flags))
+		|| !parse_uint(tokens[9], &mat->flags))
 		return (PARSE_ERR_INVALID_NUM);
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);

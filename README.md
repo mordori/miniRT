@@ -36,7 +36,7 @@
 - Extented scene description format
 
 #### Post-validation Features
-- Discard the restrictive coding standard required by the subject and refactor the code to be more efficient
+- Discard the restrictive coding standard required by the subject and refactor to more efficient code
 - HDRi texture loading for skydome
 - Denoising solution
 - Loading .ojb meshes

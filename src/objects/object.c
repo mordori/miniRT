@@ -5,12 +5,15 @@
 
 t_error add_object(t_context *ctx, t_object *obj)
 {
-	t_object *new_obj;
+	t_object 	*new_obj;
+	t_material	*mat;
 
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
 	*new_obj = *obj;
+	mat = ((t_material **)ctx->scene.materials.items)[obj->material_id];
+	new_obj->flags = mat->flags;
 	vector_try_add(ctx, &ctx->scene.objs, new_obj);
 	return (PARSE_OK);
 }
