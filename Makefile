@@ -12,7 +12,7 @@ SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
 OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
-MAKEFLAGS	+= --no-print-directory
+MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || echo 4)
 
 DIR_INC		:=inc/
 DIR_SRC		:=src/
@@ -97,6 +97,9 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
+# Removed config dependencies to use parallel compilation
+# For debug commands to work, add $(CONFIG) back to NAME and %.o and compile serially
+# TODO: remove config completely for shipping
 all: config $(MLX42) $(NAME)
 
 config:
@@ -109,14 +112,14 @@ $(MLX42):
 	fi
 	@echo "$(GREEN) [+]$(COLOR) compiling mlx42.a"
 	@cmake $(DIR_MLX) -B $(DIR_MLX)build > /dev/null
-	@make -j4 -C $(DIR_MLX)build > /dev/null
+	@+make -C $(DIR_MLX)build > /dev/null
 	@echo "$(YELLOW) [✔] mlx42.a created$(COLOR)"
 
-$(NAME): $(CONF) $(MLX42) $(OBJS)
+$(NAME): $(MLX42) $(OBJS)
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(MLX42) $(LDFLAGS)
 	@$(call output)
 
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(MLX42)
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(MLX42)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
 	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 	@echo "$(GREEN) [+]$(COLOR) compiling $@"
@@ -131,7 +134,9 @@ fclean: clean
 	@$(call rm_file,$(NAME))
 	@$(call rm_file,$(NAME)_sanitize)
 
-re: fclean all
+re:
+	@$(MAKE) fclean 2> /dev/null
+	@$(MAKE) all
 
 debug: BUILD_TYPE	:=DEBUG
 debug: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) -O0

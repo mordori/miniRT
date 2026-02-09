@@ -3,11 +3,13 @@
 **High-Performance CPU Path Tracer with Monte Carlo Integration.**
 
 > [!IMPORTANT]
-> This project is work in progress!
+>
+> ⚠ This project is work in progress! ⚠
 >
 > Some of the features will not be implemented until the project has been validated. This is due to restrictions placed upon the subject.
 
 > [!NOTE]
+>
 > Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and manages a framebuffer to which we copy ours.
 >
 > The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Please refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
@@ -57,6 +59,10 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 - Leverages explicit loop unrolling to maximize Instruction Level Parallelism (ILP). While color channel dependencies limit auto-vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
 
+### BVH
+
+- Documentation under construction
+
 ### Micro-optimisations
 
 - Invariant caching to local variables to prevent pointer aliasing, ensuring the compiler uses registers instead of repeated L1 cache loads.
@@ -67,10 +73,11 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 ## Physically Based Rendering
 
+- Documentation under construction
+
 ## Monte Carlo Integration
 
-
-
+- Documentation under construction
 
 ## How to use
 

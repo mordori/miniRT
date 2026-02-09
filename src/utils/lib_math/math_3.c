@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 21:01:29 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/05 21:02:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/08 18:21:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,4 +15,9 @@
 float	ft_lerp_fast(float a, float b, float t)
 {
 	return (a + (b - a) * t);
+}
+
+float	f_schlick(float u, float f0, float f90)
+{
+	return (f0 + (f90 - f0) * powf(1.0f - u, 5.0f));
 }

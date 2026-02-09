@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 19:39:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/05 22:27:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/08 14:06:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 float	ft_normalize(float value, float min, float max)
 {
-	return (ft_clamp01((value - min) / (max - min)));
+	return (clampf01((value - min) / (max - min)));
 }
 
-float	ft_clamp01(float value)
+float	clampf01(float value)
 {
-	return (ft_clamp(value, 0.0f, 1.0f));
+	return (clampf(value, 0.0f, 1.0f));
 }
 
-float	ft_clamp(float value, float min, float max)
+float	clampf(float value, float min, float max)
 {
 	value = fminf(value, max);
 	value = fmaxf(value, min);

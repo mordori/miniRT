@@ -17,7 +17,7 @@
 # define THREADS_DFL			4
 # define TILE_SIZE				32
 # define RENDER_SAMPLES			256
-# define PREVIEW_BOUNCES		2
+# define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
 
@@ -27,6 +27,7 @@
 
 # define OBJ_VISIBLE			(1 << 0)
 # define OBJ_CAST_SHADOWS		(1 << 1)
+# define OBJ_HIDDEN_CAM			(1 << 2)
 
 # define MAT_RECEIVE_SHADOWS	(1 << 0)
 # define MAT_DOUBLE_SIDED		(1 << 1)
@@ -167,7 +168,7 @@ struct __attribute__((aligned(16))) s_ray
 {
 	t_vec3		origin;
 	t_vec3		dir;
-	t_vec3		inv_dir;
+	t_vec3		dir_recip;
 	t_v4ui		signs;
 };
 
@@ -179,6 +180,7 @@ struct __attribute__((aligned(16))) s_hit
 	t_vec2			uv;
 	const t_object	*obj;
 	float			t;
+	bool			is_primary;
 };
 
 struct __attribute__((aligned(16))) s_texture
@@ -252,10 +254,9 @@ struct __attribute__((aligned(16))) s_light
 		t_vec3		dir;
 	};
 	t_vec3			color;
-	t_vec3			emission;
 	t_object		*obj;
+	t_material		*mat;
 	float			radius;
-	float			radius_sq;
 	float			intensity;
 	uint32_t		material_id;
 	t_light_type	type;
@@ -298,6 +299,7 @@ struct __attribute__((aligned(16))) s_path
 	t_material		*mat;
 	int32_t			bounce;
 	t_render_mode	mode;
+	bool			last_bounce_was_spec;
 };
 
 struct __attribute__((aligned(16))) s_scene
