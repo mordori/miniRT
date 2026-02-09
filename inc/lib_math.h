@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/08 17:11:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/09 05:24:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,5 +282,16 @@ uint32_t	hash_lowerbias32(uint32_t seed);
 // -----------------------------------------------------------------
 t_vec3		lerp_color(uint32_t color1, uint32_t color2, float t);
 uint32_t	rgba_to_abgr(uint32_t rgba);
+
+// Coordinate systems
+// -----------------------------------------------------------------
+t_vec3		tangent_to_world(t_vec3 vec, t_vec3 n);
+t_vec3		spherical_to_world(t_vec3 n, float u, float cos_theta, float sin_theta);
+
+// Sampling
+// -----------------------------------------------------------------
+t_vec3		sample_cos_hemisphere(t_vec3 n, t_vec2 uv);
+t_vec3		sample_ggx(t_vec3 n, float alpha, t_vec2 uv);
+t_vec3		sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
 
 #endif

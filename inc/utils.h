@@ -49,7 +49,6 @@ void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
 float	blue_noise(const t_texture *tex, const t_pixel *pixel, const uint32_t dim);
 t_vec3	map_spherical(const float u, const float v);
 uint32_t	fast_range(const uint32_t n, const uint32_t range);
-void	orthonormal_basis(const t_vec3 n, t_vec3 *t, t_vec3 *b);
 size_t	uint64_to_str(uint64_t n, char *buf);
 void	*a_alloc(size_t alignment, size_t size);
 t_ray	new_ray(const t_vec3 origin, const t_vec3 dir);

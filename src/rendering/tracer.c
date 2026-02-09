@@ -5,9 +5,7 @@
 #include "utils.h"
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
-// static inline void	trace_ray_edit(const t_context *ctx, t_path *path);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
-static inline t_vec3	sample_cos_hemisphere(const t_vec3 normal, const float u, const float v);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 {
@@ -29,11 +27,6 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 		path.hit = (t_hit){0};
 		path.hit.t = M_INF;
 		path.hit.is_primary = (path.bounce == 0);
-		// if (r->mode == RENDER_EDIT)
-		// {
-		// 	trace_ray_edit(ctx, &path);
-		// 	break ;
-		// }
 		if (!trace_ray(ctx, &path, pixel))
 			break;
 	}
@@ -88,26 +81,18 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 	return (false);
 }
 
-static inline t_vec3	sample_cos_hemisphere(const t_vec3 normal, const float u, const float v)
+// https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
+static float	g_schlick_ggx(float ndotv, float roughness)
 {
-	float		cos_theta;
-	float		sin_theta;
-	t_vec3		dir_local;
-	t_vec3		dir_world;
-	t_vec3		t;
-	t_vec3		b;
-	t_vec2		phi;
+	float		alpha;
+	float		k;
 
-	cos_theta = sqrtf(v);
-	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - v));
-	sincosf(M_TAU * u, &phi.sin, &phi.cos);
-	dir_local = vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
-	orthonormal_basis(normal, &t, &b);
-	dir_world = vec3_add(vec3_scale(t, dir_local.x), vec3_scale(b, dir_local.y));
-	dir_world = vec3_add(dir_world, vec3_scale(normal, dir_local.z));
-	return (vec3_normalize(dir_world));
+	alpha = roughness * roughness;
+	k = alpha / 2.0f;
+	return (ndotv / (ndotv * (1.0f - k) + k + G_EPSILON));
 }
 
+// WIP
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		origin;
@@ -116,11 +101,19 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	t_vec2		uv;
 
 	t_vec3		v;
+	t_vec3		h;
 	t_vec3		f0;
 	t_vec3		fresnel;
 	float		p_spec;
 	float		ndotv;
-	t_vec3		reflection;
+	float		ndotl;
+	float		vdoth;
+	float		ndoth;
+
+	float		g;
+	float		weight;
+
+	float		f0_dielectric;
 
 	if (path->bounce == 0)
 		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_SC_U), blue_noise(&ctx->tex_bn, pixel, BN_SC_V));
@@ -129,7 +122,9 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 
 	v = vec3_negate(path->ray.dir);
 	ndotv = clampf01(vec3_dot(path->hit.normal, v));
-	f0 = vec3_lerp(vec3_n(0.04f), path->mat->albedo, path->mat->metallic);
+	f0_dielectric = (path->mat->ior - 1.0f) / (path->mat->ior + 1.0f);
+	f0_dielectric *= f0_dielectric;
+	f0 = vec3_lerp(vec3_n(f0_dielectric), path->mat->albedo, path->mat->metallic);
 	fresnel = vec3_schlick(f0, ndotv);
 	p_spec = clampf01((fresnel.r + fresnel.g + fresnel.b) / 3.0f);
 	if (path->mat->metallic > 0.9f)
@@ -147,17 +142,27 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 		p_spec = clampf(p_spec, 0.01f, 0.99f);
 		path->last_bounce_was_spec = randomf01(pixel->seed) < p_spec;
 	}
-	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
 	if (path->last_bounce_was_spec)
 	{
-		reflection = vec3_reflect(path->ray.dir, path->hit.normal);
-		dir = vec3_normalize(vec3_add(reflection, vec3_scale(dir, path->mat->roughness)));
+		h = sample_ggx(path->hit.normal, path->mat->roughness, uv);
+		dir = vec3_reflect(path->ray.dir, h);
+		ndotl = vec3_dot(path->hit.normal, dir);
+		if (ndotl <= 0.0f)
+			return (false);
+		ndoth = clampf01(vec3_dot(path->hit.normal, h));
+		vdoth = clampf01(vec3_dot(v, h));
+		g = g_schlick_ggx(ndotv, path->mat->roughness) * g_schlick_ggx(ndotl, path->mat->roughness);
+		weight = (g * vdoth) / (ndotv * ndoth + G_EPSILON);
 		path->throughput = vec3_mul(path->throughput, fresnel);
+		path->throughput = vec3_scale(path->throughput, weight);
 		path->throughput = vec3_scale(path->throughput, 1.0f / p_spec);
 	}
 	else
 	{
+		dir = sample_cos_hemisphere(path->hit.normal, uv);
 		path->throughput = vec3_mul(path->throughput, path->mat->albedo);
+		if (path->mat->metallic > 0.0f)
+			path->throughput = vec3_scale(path->throughput, 1.0f - path->mat->metallic);
 		path->throughput = vec3_scale(path->throughput, 1.0f / (1.0f - p_spec));
 	}
 	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
