@@ -26,11 +26,10 @@
 # define SENS_PAN				0.0006f
 
 # define OBJ_VISIBLE			(1 << 0)
-# define OBJ_CAST_SHADOWS		(1 << 1)
-# define OBJ_HIDDEN_CAM			(1 << 2)
-
-# define MAT_RECEIVE_SHADOWS	(1 << 0)
-# define MAT_DOUBLE_SIDED		(1 << 1)
+# define OBJ_HIDDEN_CAM			(1 << 1)
+# define OBJ_NO_CAST_SHADOW		(1 << 2)
+# define MAT_NO_REC_SHADOW		(1 << 3)
+# define MAT_DOUBLE_SIDED		(1 << 4)
 
 typedef enum e_obj_type			t_obj_type;
 typedef enum e_light_type		t_light_type;
@@ -201,7 +200,7 @@ struct __attribute__((aligned(16))) s_material
 	float			roughness;
 	float			ior;
 	float			transmission;
-	float			flags;
+	uint32_t		flags;
 	t_base_color	base_color;
 	t_pattern		pattern;
 	bool			is_emissive;
@@ -310,7 +309,6 @@ struct __attribute__((aligned(16))) s_scene
 	t_vector		materials;
 	t_texture		skydome;
 	t_light			ambient_light;
-	t_light			directional_light;
 	t_bvh_node		*bvh_root;
 	t_object		*selected_obj;
 };

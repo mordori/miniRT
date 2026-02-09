@@ -59,8 +59,6 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), 40.0f));
 			return (false);
 		}
-		if (ctx->scene.directional_light.obj->flags & OBJ_VISIBLE)
-			add_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
 		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
 		{
 			if (ctx->renderer.mode == RENDER_PREVIEW)
@@ -77,7 +75,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		}
 		return (scatter(ctx, path, pixel));
 	}
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 15.0f)));
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure)));
 	return (false);
 }
 

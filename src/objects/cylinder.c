@@ -11,7 +11,6 @@ t_error	init_cylinder(t_context *ctx, t_cylinder *cy, int32_t mat_id)
 	obj.transform.pos = cy->center;
 	obj.shape.cylinder = *cy;
 	obj.material_id = mat_id;
-	obj.flags = OBJ_VISIBLE | OBJ_CAST_SHADOWS;
 	return (add_object(ctx, &obj));
 }
 

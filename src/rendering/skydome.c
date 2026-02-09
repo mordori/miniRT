@@ -10,7 +10,7 @@ t_vec3	background_color(const t_texture *tex, const t_ray *ray, const float lux)
 	const float	*pixels;
 
 	if (!tex->pixels)
-		return (vec3_scale(background_gradient((ray->dir.y + 1.0f) * 0.5f), lux));
+		return (vec3_scale(background_gradient((ray->dir.y + 1.0f) * 0.5f), lux * 1.5f));
 	uv.u = clampf01((atan2f(ray->dir.z, ray->dir.x) + M_PI) * M_1_2PI);
 	uv.v = clampf01(acosf(ray->dir.y) * M_1_PI);
 	xy.x = (uint32_t)(uv.u * (tex->width - 1));

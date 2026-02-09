@@ -89,7 +89,7 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 		if (node->obj)
 		{
 			temp.t = dist;
-			if ((node->obj->flags & OBJ_CAST_SHADOWS) && hit_object(node->obj, ray, &temp))
+			if (!(node->obj->flags & OBJ_NO_CAST_SHADOW) && hit_object(node->obj, ray, &temp))
 				return (true);
 			continue ;
 		}

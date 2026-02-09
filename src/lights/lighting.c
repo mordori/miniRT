@@ -38,7 +38,7 @@ t_vec3	compute_lighting(const t_context *ctx, const t_path *path, const t_light 
 	ca_dist_sq = vec3_dot(hit_to_light_center, hit_to_light_center) - t_ca * t_ca;
 	t_hc = sqrtf(fmaxf(0.0f, light->obj->shape.sphere.radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
-	if (hit_shadow(&ctx->scene, hit_biased, l, dist - B_EPSILON))
+	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, l, dist - B_EPSILON))
 		return (vec3_n(0.0f));
 	res = vec3_mul(light->mat->emission, brdf(path, n, l, ndotl));
 	res = vec3_scale(res, ndotl / pdf);

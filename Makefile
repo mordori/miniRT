@@ -53,7 +53,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input.c mouse.c keys.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
-				lighting.c ambient.c directional.c point.c shadows.c)
+				lighting.c ambient.c point.c shadows.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
@@ -98,7 +98,7 @@ RED			:=\033[1;31m
 COLOR		:=\033[0m
 
 # Removed config dependencies to use parallel compilation
-# For debug commands to work, add $(CONFIG) back to NAME and %.o and compile serially
+# For debug commands to work, add $(CONF) back to NAME and %.o and compile serially
 # TODO: remove config completely for shipping
 all: config $(MLX42) $(NAME)
 
