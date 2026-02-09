@@ -10,18 +10,22 @@
 
 > [!NOTE]
 >
-> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and manages a framebuffer to which we copy ours.
+> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and manages a frame buffer to which we copy ours.
 >
 > The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Please refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
+
+<p align="center">
+	<img src="doc/rt.png" alt="Demo" />
+</p>
 
 ## Features
 - Monte Carlo integration with importance sampling for Global Illumination
 - BVH acceleration structure for rapid intersection testing
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
+- PBR material model with importance-sampled GGX specular, Smith-Schlick geometry shadowing, and Burley diffuse
 
 #### TODO
-- Disney BRDF and approximated BSDF materials
 - Additional primitive objects
 - Texture maps and procedural patterns
 - Normal maps
@@ -57,7 +61,7 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 #### Pipelined Refine Mode
 
-- Leverages explicit loop unrolling to maximize Instruction Level Parallelism (ILP). While color channel dependencies limit auto-vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
+- Leverages explicit loop unrolling to maximize Instruction Level Parallelism (ILP). While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
 
 ### BVH
 
@@ -65,7 +69,7 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 ### Micro-optimisations
 
-- Invariant caching to local variables to prevent pointer aliasing, ensuring the compiler uses registers instead of repeated L1 cache loads.
+- Invariant caching to local variables to prevent pointer aliasing.
 
 - Branchless arithmetic to minimise CPU stalls in performance-critical loops.
 
