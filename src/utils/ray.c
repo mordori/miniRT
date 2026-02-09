@@ -11,8 +11,8 @@ t_ray	new_ray(const t_vec3 origin, const t_vec3 dir)
 	ray.origin = origin;
 	ray.dir = dir;
 	signed_eps = (t_v4si)epsilon | ((t_v4si)dir.v & sign_bit);
-	ray.inv_dir.v = one / (dir.v + (t_v4sf)signed_eps);
-	ray.signs = (t_v4ui)ray.inv_dir.v >> 31;
+	ray.dir_recip.v = one / (dir.v + (t_v4sf)signed_eps);
+	ray.signs = (t_v4ui)ray.dir_recip.v >> 31;
 	return (ray);
 }
 

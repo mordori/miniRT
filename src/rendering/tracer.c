@@ -28,6 +28,7 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	{
 		path.hit = (t_hit){0};
 		path.hit.t = M_INF;
+		path.hit.is_primary = (path.bounce == 0);
 		// if (r->mode == RENDER_EDIT)
 		// {
 		// 	trace_ray_edit(ctx, &path);
@@ -61,13 +62,13 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
 		if (path->mat->is_emissive)
 		{
-			if (path->bounce == 0)
-				path->color = vec3_add(path->color, vec3_mul(path->throughput, path->mat->emission));
+			if (path->bounce == 0 || path->last_bounce_was_spec)
+				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), 40.0f));
 			return (false);
 		}
 		if (ctx->scene.directional_light.obj->flags & OBJ_VISIBLE)
 			add_lighting(ctx, path, (t_light *)&ctx->scene.directional_light, pixel);
-		if (ctx->scene.lights.total > 0)
+		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
 		{
 			if (ctx->renderer.mode == RENDER_PREVIEW)
 			{
@@ -83,7 +84,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		}
 		return (scatter(ctx, path, pixel));
 	}
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 20.0f)));
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 15.0f)));
 	return (false);
 }
 
@@ -107,7 +108,6 @@ static inline t_vec3	sample_cos_hemisphere(const t_vec3 normal, const float u, c
 	return (vec3_normalize(dir_world));
 }
 
-// TODO: reflect/diffuse path
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		origin;
@@ -115,18 +115,57 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	float		p;
 	t_vec2		uv;
 
+	t_vec3		v;
+	t_vec3		f0;
+	t_vec3		fresnel;
+	float		p_spec;
+	float		ndotv;
+	t_vec3		reflection;
+
 	if (path->bounce == 0)
 		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_SC_U), blue_noise(&ctx->tex_bn, pixel, BN_SC_V));
 	else
 		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
+
+	v = vec3_negate(path->ray.dir);
+	ndotv = clampf01(vec3_dot(path->hit.normal, v));
+	f0 = vec3_lerp(vec3_n(0.04f), path->mat->albedo, path->mat->metallic);
+	fresnel = vec3_schlick(f0, ndotv);
+	p_spec = clampf01((fresnel.r + fresnel.g + fresnel.b) / 3.0f);
+	if (path->mat->metallic > 0.9f)
+	{
+		p_spec = 1.0f;
+		path->last_bounce_was_spec = true;
+	}
+	else if (path->mat->roughness > 0.9f)
+	{
+		p_spec = 0.0f;
+		path->last_bounce_was_spec = false;
+	}
+	else
+	{
+		p_spec = clampf(p_spec, 0.01f, 0.99f);
+		path->last_bounce_was_spec = randomf01(pixel->seed) < p_spec;
+	}
 	dir = sample_cos_hemisphere(path->hit.normal, uv.u, uv.v);
+	if (path->last_bounce_was_spec)
+	{
+		reflection = vec3_reflect(path->ray.dir, path->hit.normal);
+		dir = vec3_normalize(vec3_add(reflection, vec3_scale(dir, path->mat->roughness)));
+		path->throughput = vec3_mul(path->throughput, fresnel);
+		path->throughput = vec3_scale(path->throughput, 1.0f / p_spec);
+	}
+	else
+	{
+		path->throughput = vec3_mul(path->throughput, path->mat->albedo);
+		path->throughput = vec3_scale(path->throughput, 1.0f / (1.0f - p_spec));
+	}
 	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
 	path->ray = new_ray(origin, dir);
-	path->throughput = vec3_mul(path->throughput, path->mat->albedo);
 	if (path->bounce >= DEPTH_ENABLE_RR)
 	{
 		p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
-		p = ft_clamp(p, 0.05f, 0.95f);
+		p = clampf(p, 0.05f, 0.95f);
 		if (randomf01(pixel->seed) > p)
 			return (false);
 		path->throughput = vec3_scale(path->throughput, 1.0f / p);

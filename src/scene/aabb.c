@@ -52,8 +52,8 @@ bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t, float enter
 	t_v4sf		far;
 	float		exit;
 
-	t1 = (aabb->min.v - ray->origin.v) * ray->inv_dir.v;
-	t2 = (aabb->max.v - ray->origin.v) * ray->inv_dir.v;
+	t1 = (aabb->min.v - ray->origin.v) * ray->dir_recip.v;
+	t2 = (aabb->max.v - ray->origin.v) * ray->dir_recip.v;
 	near = _mm_min_ps(t1, t2);
 	far = _mm_max_ps(t1, t2);
 	enter = fmaxf(fmaxf(near[0], near[1]), fmaxf(near[2], 0.0f));

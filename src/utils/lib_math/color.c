@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 00:44:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/06 04:27:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/08 11:50:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_vec3	lerp_color(uint32_t c1, uint32_t c2, float t)
 
 	a = v4sf((c1 >> 24) & 0xFF, (c1 >> 16) & 0xFF, (c1 >> 8) & 0xFF, 255.0f);
 	b = v4sf((c2 >> 24) & 0xFF, (c2 >> 16) & 0xFF, (c2 >> 8) & 0xFF, 255.0f);
-	res.v = ((1.0f - t) * a + t * b) * INV_255F;
+	res.v = ((1.0f - t) * a + t * b) * M_1_255F;
 	return (res);
 }
 

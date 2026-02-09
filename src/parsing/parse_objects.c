@@ -76,7 +76,7 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 	if (!parse_float(tkns[3], &cyl.radius)
 		|| !parse_float(tkns[4], &cyl.height))
 		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_uint(tkns[5], &mat_id))
+	if (!parse_uint(tkns[6], &mat_id))
 		return (PARSE_ERR_RANGE);
 	cyl.radius *= 0.5f;
 	if (cyl.radius <= 0.0f || cyl.height <= 0.0f)

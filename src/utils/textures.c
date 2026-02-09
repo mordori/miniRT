@@ -42,10 +42,10 @@ static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture)
 	pixels_total = texture->width * texture->height * 4;
 	while (i < pixels_total)
 	{
-		dst[i] = ((float)src[i] * INV_255F);
-		dst[i + 1] = ((float)src[i + 1] * INV_255F);
-		dst[i + 2] = ((float)src[i + 2] * INV_255F);
-		dst[i + 3] = ((float)src[i + 3] * INV_255F);
+		dst[i] = ((float)src[i] * M_1_255F);
+		dst[i + 1] = ((float)src[i + 1] * M_1_255F);
+		dst[i + 2] = ((float)src[i + 2] * M_1_255F);
+		dst[i + 3] = ((float)src[i + 3] * M_1_255F);
 		i += 4;
 	}
 }
@@ -70,7 +70,7 @@ static inline void	tex_srgb_to_linear(t_context *ctx, t_texture *texture)
 		dst[i] = srgb_to_linear(src[i]);
 		dst[i + 1] = srgb_to_linear(src[i + 1]);
 		dst[i + 2] = srgb_to_linear(src[i + 2]);
-		dst[i + 3] = ((float)src[i + 3] * INV_255F);
+		dst[i + 3] = ((float)src[i + 3] * M_1_255F);
 		i += 4;
 	}
 }
@@ -86,7 +86,7 @@ static inline float	srgb_to_linear(uint8_t c)
 		i = 0;
 		while (i < 256)
 		{
-			lut[i] = powf((float)i * INV_255F, 2.2f);
+			lut[i] = powf((float)i * M_1_255F, 2.2f);
 			++i;
 		}
 		init_lut = true;

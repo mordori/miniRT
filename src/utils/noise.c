@@ -13,8 +13,8 @@ float	blue_noise(const t_texture *tex, const t_pixel *pixel, const uint32_t dim)
 	uint32_t	seed;
 
 	seed = pixel->frame + (dim * 15485863u);
-	tx = (pixel->x + hash_lowerbias32(seed)) & (tex->width - 1);
-	ty = (pixel->y + hash_lowerbias32(seed + 1)) & (tex->height - 1);
+	tx = (pixel->x + hash_lowerbias32(seed)) & (tex->width - 1u);
+	ty = (pixel->y + hash_lowerbias32(seed + 1u)) & (tex->height - 1u);
 	index = (ty * tex->width + tx) * 4u;
 	return (tex->pixels[index + (dim & 3u)]);
 }

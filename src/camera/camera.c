@@ -30,7 +30,7 @@ void	update_camera(t_context *ctx)
 	t_vec4				sc_pitch_yaw;
 
 	cam = &ctx->scene.cam;
-	cam->pitch = ft_clamp(cam->pitch, -limit, limit);
+	cam->pitch = clampf(cam->pitch, -limit, limit);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
 	if (ctx->scene.selected_obj)
 		cam->pivot = ctx->scene.selected_obj->transform.pos;

@@ -60,7 +60,7 @@ bool	hit_bvh(t_bvh_node *root, const t_ray *ray, t_hit *hit, int32_t i)
 		if (node->obj)
 		{
 			temp.t = hit->t;
-			if ((node->obj->flags & OBJ_VISIBLE) && hit_object(node->obj, ray, &temp))
+			if ((node->obj->flags & OBJ_VISIBLE) && !(hit->is_primary && (node->obj->flags & OBJ_HIDDEN_CAM)) && hit_object(node->obj, ray, &temp))
 			{
 				res = true;
 				*hit = temp;
@@ -111,18 +111,3 @@ static inline void	add_nodes_to_bvh_stack(const t_ray *ray, const t_bvh_node *no
 		stack[(*i)++] = node->left;
 	}
 }
-
-// // Branchless child ordering: pushes farther child first so closer child
-// // is popped first (LIFO), enabling early termination when a hit is found.
-// static inline void    add_nodes_to_bvh_stack(const t_ray *ray, t_bvh_node *node,
-//     t_bvh_node **stack, int32_t *i)
-// {
-//     t_bvh_node    *children[2];
-//     int            sign;
-
-//     children[0] = node->right;
-//     children[1] = node->left;
-//     sign = ray->signs[node->axis];
-//     stack[(*i)++] = children[sign];
-//     stack[(*i)++] = children[1 - sign];
-// }
