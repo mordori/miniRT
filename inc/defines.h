@@ -1,5 +1,5 @@
-#ifndef MINIRT_DEFINES_H
-# define MINIRT_DEFINES_H
+#ifndef DEFINES_H
+# define DEFINES_H
 
 # define _GNU_SOURCE
 
@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			256
+# define RENDER_SAMPLES			512
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -42,6 +42,7 @@ typedef enum e_pattern			t_pattern;
 typedef enum e_entity			t_entity;
 typedef enum e_err_code			t_err_code;
 typedef enum e_render_mode		t_render_mode;
+typedef enum e_bn_channel		t_bn_channel;
 
 typedef struct s_context		t_context;
 typedef struct s_bvh_node		t_bvh_node;
@@ -147,7 +148,7 @@ enum e_render_mode
 	RENDER_EDIT
 };
 
-enum e_blue_noise_channels
+enum e_bn_channel
 {
 	BN_PX_U,
 	BN_PX_V,
@@ -175,7 +176,6 @@ struct __attribute__((aligned(16))) s_ray
 	t_vec3		dir_recip;
 	t_v4ui		signs;
 };
-
 
 struct __attribute__((aligned(16))) s_hit
 {
@@ -311,8 +311,11 @@ struct __attribute__((aligned(16))) s_path
 	t_hit			hit;
 	t_vec3			color;
 	t_vec3			throughput;
+	t_vec3			dir_bounce;
+	t_vec2			uv;
 	t_material		*mat;
 	int32_t			bounce;
+	float			p_spec;
 	t_render_mode	mode;
 	bool			last_bounce_was_spec;
 };
@@ -380,18 +383,18 @@ struct __attribute__((aligned(64))) s_renderer
 
 struct __attribute__((aligned(16))) s_editor
 {
-
+	t_object		selection;
 };
 
 struct __attribute__((aligned(16))) s_pixel
 {
-	t_vec3		*color;
-	uint32_t	*seed;
-	uint32_t	x;
-	uint32_t	y;
-	uint32_t	frame;
-	float		u;
-	float		v;
+	t_vec3			*color;
+	uint32_t		*seed;
+	uint32_t		x;
+	uint32_t		y;
+	uint32_t		frame;
+	float			u;
+	float			v;
 };
 
 struct __attribute__((aligned(16))) s_aabb

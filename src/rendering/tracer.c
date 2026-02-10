@@ -6,7 +6,9 @@
 #include "materials.h"
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
+static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
+static inline bool	russian_roulette(t_path *path, t_pixel *pixel);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 {
@@ -29,20 +31,31 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 		path.hit.t = M_INF;
 		path.hit.is_primary = (path.bounce == 0);
 		if (!trace_ray(ctx, &path, pixel))
-			break;
+			break ;
 	}
 	return (path.color);
 }
 
-static inline void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	const float		max_brightness = 40.0f;
-	t_vec3			lighting;
+	t_vec3		bg_color;
 
-	lighting = compute_lighting(ctx, path, light, pixel);
-	if (path->bounce > 0)
-		lighting = vec3_clamp_mag(lighting, max_brightness);
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+	if (hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
+	{
+		path->mat = path->hit.obj->mat;
+		if (path->mat->is_emissive)
+		{
+			if (path->bounce == 0 || path->last_bounce_was_spec)
+				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), 40.0f));
+			return (false);
+		}
+		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
+			nee(ctx, path, pixel);
+		return (scatter(ctx, path, pixel));
+	}
+	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure);
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
+	return (false);
 }
 
 static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel)
@@ -71,116 +84,35 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel)
 	}
 }
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
-{
-	t_vec3		bg_color;
-
-	if (hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
-	{
-		path->mat = path->hit.obj->mat;
-		if (path->mat->is_emissive)
-		{
-			if (path->bounce == 0 || path->last_bounce_was_spec)
-				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), 40.0f));
-			return (false);
-		}
-		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
-			nee(ctx, path, pixel);
-		return (scatter(ctx, path, pixel));
-	}
-	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure);
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
-	return (false);
-}
-
-// https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
-static float	g_schlick_ggx(float ndotv, float roughness)
-{
-	float		alpha;
-	float		k;
-
-	alpha = roughness * roughness;
-	k = alpha / 2.0f;
-	return (ndotv / (ndotv * (1.0f - k) + k + G_EPSILON));
-}
-
-// WIP
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	t_vec3		origin;
-	t_vec3		dir;
-	float		p;
-	t_vec2		uv;
-
-	t_vec3		v;
-	t_vec3		h;
 	t_vec3		f0;
 	t_vec3		fresnel;
-	float		p_spec;
 	float		ndotv;
-	float		ndotl;
-	float		vdoth;
-	float		ndoth;
-
-	float		g;
-	float		weight;
-
 	float		f0_dielectric;
 	t_vec3		surface_color;
 
-	if (path->bounce == 0)
-		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_SC_U), blue_noise(&ctx->tex_bn, pixel, BN_SC_V));
-	else
-		uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
-
-	v = vec3_negate(path->ray.dir);
-	ndotv = clampf01(vec3_dot(path->hit.normal, v));
-	f0_dielectric = (path->mat->ior - 1.0f) / (path->mat->ior + 1.0f);
-	f0_dielectric *= f0_dielectric;
-	surface_color = get_surface_color(path->mat, &path->hit);
-	f0 = vec3_lerp(vec3_n(f0_dielectric), surface_color, path->mat->metallic);
+	random_uv(ctx, path, pixel, BN_SC_U);
+	ndotv = clampf01(vec3_dot(path->hit.normal, vec3_negate(path->ray.dir)));
+	f0_dielectric = reflectance(path->mat->ior);
+	f0 = vec3_lerp(vec3_n(f0_dielectric), path->mat->albedo, path->mat->metallic);
 	fresnel = vec3_schlick(f0, ndotv);
-	p_spec = clampf01((fresnel.r + fresnel.g + fresnel.b) / 3.0f);
-	if (path->mat->metallic > 0.9f)
-	{
-		p_spec = 1.0f;
-		path->last_bounce_was_spec = true;
-	}
-	else if (path->mat->roughness > 0.9f)
-	{
-		p_spec = 0.0f;
-		path->last_bounce_was_spec = false;
-	}
-	else
-	{
-		p_spec = clampf(p_spec, 0.01f, 0.99f);
-		path->last_bounce_was_spec = randomf01(pixel->seed) < p_spec;
-	}
+	specular_probability(path, pixel, fresnel);
 	if (path->last_bounce_was_spec)
 	{
-		h = sample_ggx(path->hit.normal, path->mat->roughness, uv);
-		dir = vec3_reflect(path->ray.dir, h);
-		ndotl = vec3_dot(path->hit.normal, dir);
-		if (ndotl <= 0.0f)
+		if (!bounce_specular(path, fresnel, ndotv))
 			return (false);
-		ndoth = clampf01(vec3_dot(path->hit.normal, h));
-		vdoth = clampf01(vec3_dot(v, h));
-		g = g_schlick_ggx(ndotv, path->mat->roughness) * g_schlick_ggx(ndotl, path->mat->roughness);
-		weight = (g * vdoth) / (ndotv * ndoth + G_EPSILON);
-		path->throughput = vec3_mul(path->throughput, fresnel);
-		path->throughput = vec3_scale(path->throughput, weight);
-		path->throughput = vec3_scale(path->throughput, 1.0f / p_spec);
 	}
 	else
-	{
-		dir = sample_cos_hemisphere(path->hit.normal, uv);
-		path->throughput = vec3_mul(path->throughput, surface_color);
-		if (path->mat->metallic > 0.0f)
-			path->throughput = vec3_scale(path->throughput, 1.0f - path->mat->metallic);
-		path->throughput = vec3_scale(path->throughput, 1.0f / (1.0f - p_spec));
-	}
-	origin = vec3_add(path->hit.point, vec3_scale(path->hit.normal, B_EPSILON));
-	path->ray = new_ray(origin, dir);
+		bounce_diffuse(path);
+	path->ray = new_ray(vec3_bias(path->hit.point, path->hit.normal), path->dir_bounce);
+	return (russian_roulette(path, pixel));
+}
+
+static inline bool	russian_roulette(t_path *path, t_pixel *pixel)
+{
+	float		p;
+
 	if (path->bounce >= DEPTH_ENABLE_RR)
 	{
 		p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
