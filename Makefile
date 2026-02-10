@@ -61,11 +61,11 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				renderer.c tracer.c post_processing.c skydome.c)
+				renderer.c tracer.c post_processing.c skydome.c diffuse.c specular.c post_processing_fast.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c \
+				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c random.c \
 				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c ft_strtod.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \

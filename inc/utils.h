@@ -53,5 +53,6 @@ uint32_t	fast_range(const uint32_t n, const uint32_t range);
 size_t	uint64_to_str(uint64_t n, char *buf);
 void	*a_alloc(size_t alignment, size_t size);
 t_ray	new_ray(const t_vec3 origin, const t_vec3 dir);
+void	random_uv(const t_context *ctx, t_path *path, t_pixel *pixel, t_bn_channel c);
 
 #endif

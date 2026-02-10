@@ -21,6 +21,7 @@ t_vec3	sample_ggx(t_vec3 n, float roughness, t_vec2 uv)
 	float		alpha;
 
 	uv.v = fminf(uv.v, 0.99999f);
+	uv.v = fmaxf(uv.v, 0.00001f);
 	alpha = fmaxf(roughness * roughness, 0.00001f);
 	cos_theta = sqrtf((1.0f - uv.v) / (1.0f + (alpha * alpha - 1.0f) * uv.v));
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
