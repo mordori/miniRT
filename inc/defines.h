@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			128
+# define RENDER_SAMPLES			256
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -250,15 +250,15 @@ union __attribute__((aligned(16))) u_shape
 	t_cone			cone;
 };
 
-struct __attribute__((aligned(16))) s_object 
+struct __attribute__((aligned(16))) s_object
 {
 	t_transform		transform;
 	t_shape			shape;
 	t_vec3			bounds_center;
-	// t_vec2			uv;
-	t_obj_type		type;
+	t_material		*mat;
 	uint32_t		material_id;
 	uint32_t		flags;
+	t_obj_type		type;
 };
 
 struct __attribute__((aligned(16))) s_light

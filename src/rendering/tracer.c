@@ -45,15 +45,39 @@ static inline void	add_lighting(const t_context *ctx, t_path *path, const t_ligh
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
 }
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
+static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	uint32_t		light_idx;
+	const t_light	*light;
 	size_t			i;
 
-	i = 0;
+	if (ctx->renderer.mode == RENDER_PREVIEW)
+	{
+		i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
+		if (i >= ctx->scene.lights.total)
+			i = ctx->scene.lights.total - 1;
+		light = ((t_light **)ctx->scene.lights.items)[i];
+		add_lighting(ctx, path, light, pixel);
+		path->color = vec3_scale(path->color, (float)ctx->scene.lights.total);
+	}
+	else
+	{
+		i = 0;
+		while (i < ctx->scene.lights.total)
+		{
+			light = ((t_light **)ctx->scene.lights.items)[i];
+			add_lighting(ctx, path, light, pixel);
+			++i;
+		}
+	}
+}
+
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
+{
+	t_vec3		bg_color;
+
 	if (hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
-		path->mat = ((t_material **)ctx->scene.materials.items)[path->hit.obj->material_id];
+		path->mat = path->hit.obj->mat;
 		if (path->mat->is_emissive)
 		{
 			if (path->bounce == 0 || path->last_bounce_was_spec)
@@ -61,22 +85,11 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 			return (false);
 		}
 		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
-		{
-			if (ctx->renderer.mode == RENDER_PREVIEW)
-			{
-				light_idx = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
-				if (light_idx >= ctx->scene.lights.total)
-					light_idx = ctx->scene.lights.total - 1;
-				add_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[light_idx], pixel);
-				path->color = vec3_scale(path->color, (float)ctx->scene.lights.total);
-			}
-			else
-				while (i < ctx->scene.lights.total)
-					add_lighting(ctx, path, ((t_light **)ctx->scene.lights.items)[i++], pixel);
-		}
+			nee(ctx, path, pixel);
 		return (scatter(ctx, path, pixel));
 	}
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure)));
+	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure);
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
 
