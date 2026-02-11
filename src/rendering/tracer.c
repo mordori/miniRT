@@ -100,7 +100,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	specular_probability(path, pixel, fresnel);
 	if (path->last_bounce_was_spec)
 	{
-		if (!bounce_specular(path, fresnel, ndotv))
+		if (!bounce_specular(path, f0, ndotv))
 			return (false);
 	}
 	else

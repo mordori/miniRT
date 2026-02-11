@@ -13,16 +13,14 @@ t_vec3	sample_cos_hemisphere(t_vec3 n, t_vec2 uv)
 	return (res);
 }
 
-t_vec3	sample_ggx(t_vec3 n, float roughness, t_vec2 uv)
+t_vec3	sample_ggx(t_vec3 n, float alpha, t_vec2 uv)
 {
 	float		cos_theta;
 	float		sin_theta;
 	t_vec3		res;
-	float		alpha;
 
 	uv.v = fminf(uv.v, 0.99999f);
 	uv.v = fmaxf(uv.v, 0.00001f);
-	alpha = fmaxf(roughness * roughness, 0.00001f);
 	cos_theta = sqrtf((1.0f - uv.v) / (1.0f + (alpha * alpha - 1.0f) * uv.v));
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
 	res = spherical_to_world(n, uv.u, cos_theta, sin_theta);

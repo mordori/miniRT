@@ -17,7 +17,7 @@ t_vec3	background_color(const t_texture *tex, const t_ray *ray, const float lux)
 t_vec3	background_gradient(const float t);
 float	reflectance(float ior);
 void	specular_probability(t_path *path, t_pixel *pixel, t_vec3 fresnel);
-bool	bounce_specular(t_path *path, t_vec3 fresnel, float ndotv);
+bool	bounce_specular(t_path *path, t_vec3 f0, float ndotv);
 void	bounce_diffuse(t_path *path);
 t_vec3	disney_diffuse(const t_path *path, t_vec3 n, t_vec3 l, float ndotl);
 
