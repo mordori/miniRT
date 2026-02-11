@@ -45,14 +45,14 @@ static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
 
 	mask_x = tex->width - 1;		/* POT bitmask: 256 → 0xFF */
 	mask_y = tex->height - 1;
-	px = uv.u * mask_x;			/* scale UV to pixel range [0, width-1] */
+	px = uv.u * mask_x;
 	py = uv.v * mask_y;
-	coords[0] = (uint32_t)px & mask_x;	/* base x, wrapped */
-	coords[1] = (uint32_t)py & mask_y;	/* base y, wrapped */
-	coords[2] = (coords[0] + 1) & mask_x;	/* next x, wraps at edge */
-	coords[3] = (coords[1] + 1) & mask_y;	/* next y, wraps at edge */
-	weights[0] = px - (uint32_t)px;		/* fractional x for lerp */
-	weights[1] = py - (uint32_t)py;		/* fractional y for lerp */
+	coords[0] = (uint32_t)px & mask_x;
+	coords[1] = (uint32_t)py & mask_y;
+	coords[2] = (coords[0] + 1) & mask_x;
+	coords[3] = (coords[1] + 1) & mask_y;
+	weights[0] = px - (uint32_t)px;
+	weights[1] = py - (uint32_t)py;
 }
 
 /**
@@ -80,10 +80,11 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 	uv.u = clampf01(uv.u);
 	uv.v = clampf01(uv.v);
 	compute_bilinear_coords(tex, uv, coords, weights);
-	row[0] = coords[1] * (tex->width << 2);	/* y0 * stride (width * 4 RGBA floats) */
-	row[1] = coords[3] * (tex->width << 2);	/* y1 * stride */
-	col[0] = coords[0] << 2;			/* x0 * 4 (RGBA offset) */
-	col[1] = coords[2] << 2;			/* x1 * 4 */
+	row[0] = coords[1] * (tex->width << 2);
+	row[1] = coords[3] * (tex->width << 2);
+	col[0] = coords[0] << 2;
+	col[1] = coords[2] << 2;
+	// add some preprocessing later
 	top = vlerp(
 			get_texel(tex->pixels, row[0] + col[0]),
 			get_texel(tex->pixels, row[0] + col[1]),
