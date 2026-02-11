@@ -19,7 +19,7 @@ static inline bool	is_png_filename(const char *str)
 /**
  * Load a PNG texture from assets/textures/ directory.
  */
-t_error	load_texture_file(t_context *ctx, const char *filename, t_texture *out)
+t_error	load_texture_file(const char *filename, t_texture *out)
 {
 	char		*path;
 	t_texture	tex;
@@ -27,33 +27,34 @@ t_error	load_texture_file(t_context *ctx, const char *filename, t_texture *out)
 	if (is_placeholder(filename))
 	{
 		*out = (t_texture){0};
-		return (PARSE_OK);
+		return (E_OK);
 	}
 	if (!is_png_filename(filename))
-		return (PARSE_ERR_TEXTURE);
+		return (E_TEXTURE);
 	path = ft_strjoin(TEXTURE_PATH, filename);
 	if (!path)
-		return (PARSE_ERR_MALLOC);
-	tex = load_texture(ctx, path, true);
+		return (E_MALLOC);
+	tex = load_texture(path, true);
 	free(path);
 	if (!tex.pixels)
-		return (PARSE_ERR_TEXTURE);
+		return (E_TEXTURE);
 	*out = tex;
-	return (PARSE_OK);
+	return (E_OK);
 }
 
 /**
  * Find texture by name in parser's texture registry.
  */
-t_texture	*find_texture_by_name(t_parser *p, const char *name)
+t_texture	*find_texture_by_name(t_scene *scene, const char *name)
 {
 	int	i;
 
 	i = 0;
-	while (i < p->tex_count)
+	while (i < scene->tex_count)
 	{
-		if (p->textures[i].loaded && ft_strcmp(p->textures[i].name, name) == 0)
-			return (&p->textures[i].texture);
+		if (scene->textures[i].loaded
+			&& ft_strcmp(scene->textures[i].name, name) == 0)
+			return (&scene->textures[i].texture);
 		i++;
 	}
 	return (NULL);
@@ -62,23 +63,23 @@ t_texture	*find_texture_by_name(t_parser *p, const char *name)
 /**
  * Parse texture definition: tex <name> <filename.png>
  */
-t_error	parse_texture_def(t_context *ctx, t_parser *p, char **tokens)
+t_error	parse_texture_def(t_context *ctx, char **tokens)
 {
 	t_tex_entry	*entry;
 	t_error		err;
 
 	if (count_tokens(tokens) != 3)
-		return (PARSE_ERR_MISSING_ARGS);
-	if (p->tex_count >= MAX_TEXTURES)
-		return (PARSE_ERR_TOO_MANY);
-	if (find_texture_by_name(p, tokens[1]))
-		return (PARSE_ERR_DUPLICATE);
-	entry = &p->textures[p->tex_count];
+		return (E_MISSING_ARGS);
+	if (ctx->scene.tex_count >= MAX_TEXTURES)
+		return (E_TOO_MANY);
+	if (find_texture_by_name(&ctx->scene, tokens[1]))
+		return (E_DUPLICATE);
+	entry = &ctx->scene.textures[ctx->scene.tex_count];
 	ft_strlcpy(entry->name, tokens[1], MAX_NAME_LEN);
-	err = load_texture_file(ctx, tokens[2], &entry->texture);
-	if (err != PARSE_OK)
+	err = load_texture_file(tokens[2], &entry->texture);
+	if (err != E_OK)
 		return (err);
 	entry->loaded = true;
-	p->tex_count++;
-	return (PARSE_OK);
+	ctx->scene.tex_count++;
+	return (E_OK);
 }

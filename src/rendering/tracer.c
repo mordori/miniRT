@@ -113,6 +113,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	float		weight;
 
 	float		f0_dielectric;
+	t_vec3		surface_color;
 
 	if (path->bounce == 0)
 		uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_SC_U), blue_noise(&ctx->tex_bn, pixel, BN_SC_V));
@@ -123,7 +124,8 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	ndotv = clampf01(vec3_dot(path->hit.normal, v));
 	f0_dielectric = (path->mat->ior - 1.0f) / (path->mat->ior + 1.0f);
 	f0_dielectric *= f0_dielectric;
-	f0 = vec3_lerp(vec3_n(f0_dielectric), path->mat->albedo, path->mat->metallic);
+	surface_color = get_surface_color(path->mat, &path->hit);
+	f0 = vec3_lerp(vec3_n(f0_dielectric), surface_color, path->mat->metallic);
 	fresnel = vec3_schlick(f0, ndotv);
 	p_spec = clampf01((fresnel.r + fresnel.g + fresnel.b) / 3.0f);
 	if (path->mat->metallic > 0.9f)
@@ -159,7 +161,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	else
 	{
 		dir = sample_cos_hemisphere(path->hit.normal, uv);
-		path->throughput = vec3_mul(path->throughput, path->mat->albedo);
+		path->throughput = vec3_mul(path->throughput, surface_color);
 		if (path->mat->metallic > 0.0f)
 			path->throughput = vec3_scale(path->throughput, 1.0f - path->mat->metallic);
 		path->throughput = vec3_scale(path->throughput, 1.0f / (1.0f - p_spec));

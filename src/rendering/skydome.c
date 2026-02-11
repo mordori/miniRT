@@ -33,5 +33,9 @@ t_vec3	background_gradient(const float t)
 void	init_skydome(t_context *ctx, char *file)
 {
 	if (file)
-		ctx->scene.skydome = load_texture(ctx, file, true);
+	{
+		ctx->scene.skydome = load_texture(file, true);
+		if (!ctx->scene.skydome.pixels)
+			fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
+	}
 }

@@ -14,9 +14,9 @@ static inline bool	is_color_token(const char *str)
 	return (str && ft_strchr(str, ',') != NULL);
 }
 
-t_material	*get_material_by_id(t_parser *p, int id)
+t_material	*get_material_by_id(t_parser *p, uint32_t id)
 {
-	if (id < 0 || id >= p->mat_count || !p->materials[id].defined)
+	if (id >= p->mat_count || !p->materials[id].defined)
 		return (NULL);
 	return (&p->materials[id].material);
 }
@@ -28,41 +28,83 @@ t_material	*get_material_by_id(t_parser *p, int id)
  */
 t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
 {
-	int			id;
+	uint32_t	id;
 	t_vec3		color;
 	t_material	*mat;
 
 	if (is_color_token(token))
 	{
 		if (!parse_color((char *)token, &color))
-			return (PARSE_ERR_INVALID_NUM);
+			return (E_INVALID_NUM);
 		*out = (t_material){0};
 		out->albedo = color;
 		out->base_color = BASE_COLOR;
-		return (PARSE_OK);
+		out->roughness = 1.0f;
+		out->ior = 1.45f;
+		out->flags = 1;
+		return (E_OK);
 	}
-	if (!parse_int((char *)token, &id))
-		return (PARSE_ERR_INVALID_NUM);
+	if (!parse_uint((char *)token, &id))
+		return (E_INVALID_NUM);
 	mat = get_material_by_id(p, id);
 	if (!mat)
-		return (PARSE_ERR_MATERIAL);
+		return (E_MATERIAL);
+	if (mat->is_emissive)
+		return (E_EMISSIVE);
 	*out = *mat;
-	return (PARSE_OK);
+	return (E_OK);
 }
 
-static t_error parse_material_texture(t_parser *p, t_material *mat, const char *tkn)
+/**
+ * Resolve material token to both a material struct and a material ID.
+ * For mat ID tokens, returns the existing ID.
+ * For inline color tokens, registers a new material and returns its ID.
+ */
+t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
+		uint32_t *out_id)
+{
+	t_material	mat;
+	uint32_t	id;
+	t_error		err;
+
+	err = parse_material_token(p, token, &mat);
+	if (err != E_OK)
+		return (err);
+	if (parse_uint((char *)token, &id))
+		*out_id = id;
+	else
+		*out_id = new_material(ctx, &mat);
+	return (E_OK);
+}
+
+static t_error parse_material_textures(t_context *ctx, char **tkn, t_material *mat,
+	int token_count)
 {
 	t_texture	*tex;
 
-	if (is_placeholder(tkn))
-		return (PARSE_OK);
-	tex = find_texture_by_name(p, tkn);
-	if (!tex)
-		return (PARSE_ERR_TEXTURE);
-	mat->texture = *tex;
-	if (mat->texture.pixels)
-		mat->base_color = BASE_TEXTURE;
-	return (PARSE_OK);
+	if (token_count >= 11)
+	{
+		if (is_placeholder(tkn[10]))
+			return (E_OK);
+		tex = find_texture_by_name(&ctx->scene, tkn[10]);
+		if (!tex)
+			return (E_TEXTURE);
+		mat->texture = *tex;
+		if (mat->texture.pixels)
+			mat->base_color = BASE_TEXTURE;
+	}
+	if (token_count == 12)
+	{
+		if (is_placeholder(tkn[11]))
+			return(E_OK);
+		tex = find_texture_by_name(&ctx->scene, tkn[11]);
+		if (!tex)
+			return (E_TEXTURE);
+		mat->normal_map = *tex;
+		if (mat->texture.pixels)
+			mat->base_color = BASE_TEXTURE;
+	}
+	return (E_OK);
 }
 
 /**
@@ -74,7 +116,7 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 {
 	t_mat_entry	*entry;
 	t_material	*mat;
-	int			id;
+	uint32_t	id;
 	t_vec3		color;
 	t_vec3		emission_color;
 	float		emission_strength;
@@ -82,13 +124,13 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 
 	tokens_count = count_tokens(tokens);
 	if (tokens_count < 10)
-		return (PARSE_ERR_MISSING_ARGS);
+		return (E_MISSING_ARGS);
 	if (p->mat_count >= MAX_MATERIALS)
-		return (PARSE_ERR_TOO_MANY);
-	if (!parse_int(tokens[1], &id) || id != p->mat_count)
-		return (PARSE_ERR_MATERIAL);
+		return (E_TOO_MANY);
+	if (!parse_uint(tokens[1], &id) || id != p->mat_count)
+		return (E_MATERIAL);
 	if (!parse_color(tokens[2], &color))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	entry = &p->materials[p->mat_count];
 	mat = &entry->material;
 	*mat = (t_material){0};
@@ -101,13 +143,13 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 		|| !parse_float(tokens[7], &emission_strength)
 		|| !parse_color(tokens[8], &emission_color)
 		|| !parse_uint(tokens[9], &mat->flags))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);
-	if (tokens_count > 10 && parse_material_texture(p, mat, tokens[10]) != PARSE_OK)
-		return (PARSE_ERR_MATERIAL);
+	if (tokens_count > 10 && parse_material_textures(ctx, tokens, mat, tokens_count) != E_OK)
+		return (E_MATERIAL);
 	entry->defined = true;
 	new_material(ctx, mat);
 	p->mat_count++;
-	return (PARSE_OK);
+	return (E_OK);
 }

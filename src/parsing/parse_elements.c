@@ -15,25 +15,26 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	color;
 
 	if (count_tokens(tokens) != 3)
-		return (PARSE_ERR_MISSING_ARGS);
+		return (E_MISSING_ARGS);
 	if (p->has_ambient)
-		return (PARSE_ERR_DUPLICATE);
+		return (E_DUPLICATE);
 	if (!parse_float(tokens[1], &ratio))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	if (!validate_range(ratio, 0.0f, 1.0f))
-		return (PARSE_ERR_RANGE);
+		return (E_RANGE);
 	if (!parse_color(tokens[2], &color))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	ctx->scene.ambient_light.type = LIGHT_AMBIENT;
 	ctx->scene.ambient_light.intensity = ratio;
 	ctx->scene.ambient_light.color = color;
 	p->has_ambient = true;
-	return (PARSE_OK);
+	return (E_OK);
 }
 
 /**
- * Point Light: L <position> <intensity> <color> [radius]
- * If radius is provided, configures the light for area light sampling.
+ * Point Light: L <position> <intensity> <color> [radius] [mat_id]
+ * radius defaults to 0.5 if not specified (area light with soft shadows).
+ * mat_id defaults to 0 if not specified.
  */
 t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
@@ -44,23 +45,30 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	t_light	light;
 	int		token_count;
 	uint32_t	mat_id;
+	t_material	*mat;
 
 	token_count = count_tokens(tokens);
-	// if (token_count < 4 || token_count > 5)
-	// 	return (PARSE_ERR_MISSING_ARGS);
+	if (token_count < 4 || token_count > 6)
+		return (E_MISSING_ARGS);
 	if (!parse_vec3(tokens[1], &position))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	if (!parse_float(tokens[2], &ratio))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	if (ratio < 0.0f || ratio > 1.0f)
-		return (PARSE_ERR_RANGE);
+		return (E_RANGE);
 	if (!parse_color(tokens[3], &color))
-		return (PARSE_ERR_INVALID_NUM);
-	if (!parse_uint(tokens[5], &mat_id))
-		return (PARSE_ERR_RANGE);
-	radius = 0.0f;
+		return (E_INVALID_NUM);
+	radius = 0.5f; // Default radius for area light
 	if (token_count >= 5 && !parse_float(tokens[4], &radius))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
+	mat_id = 0; // Default material ID
+	if (token_count >= 6 && !parse_uint(tokens[5], &mat_id))
+		return (E_RANGE);
+	mat = get_material_by_id(p, mat_id);
+	if (!mat)
+		return (E_MATERIAL);
+	if (!mat->is_emissive)
+		return (E_EMISSIVE);
 	light = (t_light){0};
 	light.type = LIGHT_POINT;
 	light.pos = position;
@@ -70,7 +78,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	light.material_id = mat_id;
 	init_point_light(ctx, &light);
 	p->has_light = true;
-	return (PARSE_OK);
+	return (E_OK);
 }
 
 /**
@@ -87,26 +95,26 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 
 	token_count = count_tokens(tokens);
 	if (token_count < 4 || token_count > 5)
-		return (PARSE_ERR_MISSING_ARGS);
+		return (E_MISSING_ARGS);
 	if (p->has_camera)
-		return (PARSE_ERR_DUPLICATE);
+		return (E_DUPLICATE);
 	if (!parse_vec3(tokens[1], &position))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	if (!parse_vec3(tokens[2], &orientation))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	if (!validate_normalized(orientation))
-		return (PARSE_ERR_RANGE);
+		return (E_RANGE);
 	if (!parse_float(tokens[3], &fov))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	if (!validate_range(fov, 0.0f, 180.0f))
-		return (PARSE_ERR_RANGE);
+		return (E_RANGE);
 	exposure = 0.085f;
 	if (token_count == 5 && !parse_float(tokens[4], &exposure))
-		return (PARSE_ERR_INVALID_NUM);
+		return (E_INVALID_NUM);
 	ctx->scene.cam.exposure = exposure;
 	init_camera(ctx, position, orientation, fov);
 	p->has_camera = true;
-	return (PARSE_OK);
+	return (E_OK);
 }
 
 bool	validate_normalized(t_vec3 vec)

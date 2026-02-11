@@ -15,7 +15,7 @@ t_error add_object(t_context *ctx, t_object *obj)
 	mat = ((t_material **)ctx->scene.materials.items)[obj->material_id];
 	new_obj->flags = mat->flags;
 	vector_try_add(ctx, &ctx->scene.objs, new_obj);
-	return (PARSE_OK);
+	return (E_OK);
 }
 
 bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
@@ -28,8 +28,12 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 		result = hit_sphere(&obj->shape, ray, hit);
 	else if (obj->type == OBJ_PLANE)
 		result = hit_plane(&obj->shape, ray, hit);
-	else
+	else if (obj->type == OBJ_CYLINDER)
 		result = hit_cylinder(&obj->shape, ray, hit);
+	// else if (obj->type == OBJ_CONE)
+	// 	result = hit_cone(&obj->shape, ray, hit);
+	else
+		return (false);
 	if (result)
 		hit->obj = obj;
 	return (result);

@@ -1,31 +1,42 @@
 #include "utils.h"
 
 static inline float	srgb_to_linear(uint8_t c);
-static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture);
-static inline void	tex_srgb_to_linear(t_context *ctx, t_texture *texture);
+static inline void	tex_data_to_linear(t_texture *texture);
+static inline void	tex_srgb_to_linear(t_texture *texture);
 
-t_texture	load_texture(t_context *ctx, char *file, bool is_srgb)
+t_texture	load_texture(char *file, bool is_srgb)
 {
 	t_texture	texture;
 	size_t		size;
 
+	texture = (t_texture){0};
 	texture.tex = mlx_load_png(file);
 	if (!texture.tex)
-		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
+		return (texture);
+	if (!ft_is_pot(texture.tex->width) || !ft_is_pot(texture.tex->height))
+	{
+		mlx_delete_texture(texture.tex);
+		return ((t_texture){0});
+	}
 	size = (sizeof(float) * texture.tex->width * texture.tex->height * 4);
 	texture.pixels = a_alloc(64, size);
 	if (!texture.pixels)
-		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
+	{
+		mlx_delete_texture(texture.tex);
+		return ((t_texture){0});
+	}
+	texture.width = texture.tex->width;
+	texture.height = texture.tex->height;
 	if (is_srgb)
-		tex_srgb_to_linear(ctx, &texture);
+		tex_srgb_to_linear(&texture);
 	else
-		tex_data_to_linear(ctx, &texture);
+		tex_data_to_linear(&texture);
 	mlx_delete_texture(texture.tex);
 	texture.tex = NULL;
 	return (texture);
 }
 
-static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture)
+static inline void	tex_data_to_linear(t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;
@@ -33,10 +44,6 @@ static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture)
 	uint8_t		*src;
 
 	i = 0;
-	texture->width = texture->tex->width;
-	texture->height = texture->tex->height;
-	if (!ft_is_pot(texture->width) || !ft_is_pot(texture->height))
-		fatal_error(ctx, errors(ERR_TEXNPOT), __FILE__, __LINE__);
 	dst = texture->pixels;
 	src = texture->tex->pixels;
 	pixels_total = texture->width * texture->height * 4;
@@ -50,7 +57,7 @@ static inline void	tex_data_to_linear(t_context *ctx, t_texture *texture)
 	}
 }
 
-static inline void	tex_srgb_to_linear(t_context *ctx, t_texture *texture)
+static inline void	tex_srgb_to_linear(t_texture *texture)
 {
 	uint32_t	pixels_total;
 	uint32_t	i;
@@ -58,10 +65,6 @@ static inline void	tex_srgb_to_linear(t_context *ctx, t_texture *texture)
 	uint8_t		*src;
 
 	i = 0;
-	texture->width = texture->tex->width;
-	texture->height = texture->tex->height;
-	if (!ft_is_pot(texture->width) || !ft_is_pot(texture->height))
-		fatal_error(ctx, errors(ERR_TEXNPOT), __FILE__, __LINE__);
 	dst = texture->pixels;
 	src = texture->tex->pixels;
 	pixels_total = texture->width * texture->height * 4;

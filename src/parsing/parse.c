@@ -23,18 +23,14 @@ bool	parse_scene(t_context *ctx, int fd)
 		parser.line_num++;
 		err = parse_line(ctx, &parser, line);
 		free(line);
-		if (err != PARSE_OK && err != PARSE_ERR_EMPTY)
+		if (err != E_OK && err != E_EMPTY)
 		{
 			print_error(ctx, err, parser.line_num);
-			cleanup_parser(&parser);
 			return (false);
 		}
 	}
 	if (!validate_scene(ctx, &parser))
-	{
-		cleanup_parser(&parser);
 		return (false);
-	}
 	return (true);
 }
 
@@ -46,10 +42,10 @@ static t_error	parse_line(t_context *ctx, t_parser *p, char *line)
 	while (*line && ft_isspace(*line))
 		line++;
 	if (*line == '\0' || *line == '#')
-		return (PARSE_ERR_EMPTY);
+		return (E_EMPTY);
 	tokens = try_split(line);
 	if (!tokens)
-		return (PARSE_ERR_MALLOC);
+		return (E_MALLOC);
 	ret = identify_input(ctx, p, tokens);
 	free_tokens(tokens);
 	return (ret);
@@ -85,12 +81,12 @@ static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
 	const char	*id;
 
 	if (!tokens[0])
-		return (PARSE_ERR_MALLOC);
+		return (E_MALLOC);
 	id = tokens[0];
 	if (ft_strcmp(id, "mat") == 0)
 		return (parse_material_def(ctx, p, tokens));
 	if (ft_strcmp(id, "tex") == 0)
-		return (parse_texture_def(ctx, p, tokens));
+		return (parse_texture_def(ctx, tokens));
 	if (ft_strcmp(id, "A") == 0)
 		return (parse_ambient(ctx, p, tokens));
 	if (ft_strcmp(id, "L") == 0)
@@ -105,23 +101,25 @@ static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
 		return (parse_plane(ctx, p, tokens));
 	if (ft_strcmp(id, "cy") == 0)
 		return (parse_cylinder(ctx, p, tokens));
-	return (PARSE_ERR_UNKNOWN_ID);
+	return (E_UNKNOWN_ID);
 }
 
 static void	print_error(t_context *ctx, t_error err, int line_num)
 {
 	static char	*msgs[] = {
-	[PARSE_ERR_UNKNOWN_ID] = "Unknown element identifier",
-	[PARSE_ERR_MISSING_ARGS] = "Missing arguments for element",
-	[PARSE_ERR_INVALID_NUM] = "Invalid number format",
-	[PARSE_ERR_RANGE] = "Value out of valid range",
-	[PARSE_ERR_DUPLICATE] = "Duplicate unique element (A, L, or C)",
-	[PARSE_ERR_MALLOC] = "Memory allocation failed",
-	[PARSE_ERR_MISSING_OBJ] = "Missing object in scene",
-	[PARSE_ERR_TEXTURE] = "Failed to load texture",
-	[PARSE_ERR_MATERIAL] = "Invalid material reference",
-	[PARSE_ERR_TOO_MANY] = "Too many textures or materials"};
+	[E_UNKNOWN_ID] = "Unknown element identifier",
+	[E_MISSING_ARGS] = "Missing arguments for element",
+	[E_INVALID_NUM] = "Invalid number format",
+	[E_RANGE] = "Value out of valid range",
+	[E_DUPLICATE] = "Duplicate unique element (A, L, or C)",
+	[E_MALLOC] = "Memory allocation failed",
+	[E_MISSING_OBJ] = "Missing object in scene",
+	[E_TEXTURE] = "Failed to load texture",
+	[E_MATERIAL] = "Invalid material reference",
+	[E_EMISSIVE] = "Emissive material on object / "
+		"non-emissive material on light",
+	[E_TOO_MANY] = "Too many textures or materials"};
 
-	if (err > PARSE_OK && err <= PARSE_ERR_TOO_MANY)
+	if (err > E_OK && err <= E_TOO_MANY)
 		fatal_error(ctx, msgs[err], NULL, line_num);
 }
