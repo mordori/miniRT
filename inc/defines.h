@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			512
+# define RENDER_SAMPLES			2048
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -28,7 +28,7 @@
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
 
-# define OBJ_VISIBLE			(1 << 0)
+# define OBJ_HIDDEN_SCENE		(1 << 0)
 # define OBJ_HIDDEN_CAM			(1 << 1)
 # define OBJ_NO_CAST_SHADOW		(1 << 2)
 # define MAT_NO_REC_SHADOW		(1 << 3)
