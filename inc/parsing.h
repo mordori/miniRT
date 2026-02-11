@@ -38,6 +38,7 @@ typedef struct s_parser
 	bool			has_sphere;
 	bool			has_plane;
 	bool			has_cylinder;
+	bool			has_cone;
 	t_mat_entry		materials[MAX_MATERIALS];
 	uint32_t		mat_count;
 }				t_parser;

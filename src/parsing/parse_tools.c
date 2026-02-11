@@ -135,15 +135,3 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 	free_tokens(tokens);
 	return (ret);
 }
-
-int	count_tokens(char **tokens)
-{
-	int	count;
-
-	if (!tokens)
-		return (0);
-	count = 0;
-	while (tokens[count])
-		count++;
-	return (count);
-}

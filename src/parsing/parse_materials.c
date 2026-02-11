@@ -39,9 +39,9 @@ t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
 		*out = (t_material){0};
 		out->albedo = color;
 		out->base_color = BASE_COLOR;
-		out->roughness = 1.0f;
-		out->ior = 1.45f;
-		out->flags = 1;
+		// out->roughness = 1.0f;
+		// out->ior = 1.45f;
+		// out->flags = 1;
 		return (E_OK);
 	}
 	if (!parse_uint((char *)token, &id))
@@ -127,7 +127,7 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 		return (E_MISSING_ARGS);
 	if (p->mat_count >= MAX_MATERIALS)
 		return (E_TOO_MANY);
-	if (!parse_uint(tokens[1], &id) || id != p->mat_count)
+	if (!parse_uint(tokens[1], &id) || id != p->mat_count) // Enforce sequential IDs, no gaps allowed
 		return (E_MATERIAL);
 	if (!parse_color(tokens[2], &color))
 		return (E_INVALID_NUM);

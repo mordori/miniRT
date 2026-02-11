@@ -4,8 +4,8 @@
 A		0.1				20,20,30
 
 # Skydome
-# sky		stars.png
-sky		sky.png
+sky		stars.png
+# sky		sky.png
 
 # Texture
 tex		moon_albedo		8k_moon.png
@@ -14,7 +14,7 @@ tex		earth_albedo	earth_daymap.png
 # Material
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags	[albedo_tex]
 # mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		_
-mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		earth_albedo
+mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		_
 mat		1		245,245,250		0.0			0.05		1.45	0.0				0.0					0,0,0				1		moon_albedo
 
 # Material - emissive
