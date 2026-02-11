@@ -50,7 +50,9 @@ static inline void	initialize(t_context *ctx)
 		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
-	ctx->tex_bn = load_texture(ctx, "assets/textures/blue_noise.png", false);
+	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
+	if (!ctx->tex_bn.pixels)
+		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	resize_window(ctx);
 	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx))
 		mlx_loop(ctx->mlx);

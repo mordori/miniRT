@@ -2,27 +2,97 @@
 #include "utils.h"
 
 /**
- * Sample a texture at given UV coordinates.
- * UV should be in range [0,1]. Returns RGB color.
+ * Linear interpolation between two colors.
+ * Returns a + (b - a) * t = a * (1 - t) + b * t
+ */
+static inline t_vec3	vlerp(t_vec3 a, t_vec3 b, float t)
+{
+	return (vec3_add(a, vec3_scale(vec3_sub(b, a), t)));
+}
+
+/**
+ * Get a single texel (pixel) from texture at integer coordinates.
+ * Assumes coordinates are valid (within bounds).
+ * Pixels stored as RGBA floats, we extract RGB.
+ */
+static inline t_vec3	get_texel(const float *pixels, uint32_t idx)
+{
+	const float	*p;
+	t_vec3		result;
+
+	p = (const float *)__builtin_assume_aligned(pixels, 64);
+	memcpy(&result, &p[idx], sizeof(t_vec3));
+	return (result);
+}
+
+/**
+ * Compute bilinear sample coordinates and weights using POT bitwise tricks.
+ *
+ * Since textures are guaranteed power-of-two, (width - 1) forms a bitmask:
+ *   e.g. width=256 → mask=0xFF, so (x & mask) wraps to [0, 255]
+ *   This replaces ft_uint_min/clamp with a single AND — ~1 cycle vs ~20.
+ *
+ * coords[0..3] = x0, y0, x1, y1 (pixel indices, wrapped via bitmask)
+ * weights[0..1] = fx, fy (fractional sub-pixel position for lerp blending)
+ */
+static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
+	uint32_t *coords, float *weights)
+{
+	float		px;
+	float		py;
+	uint32_t	mask_x;
+	uint32_t	mask_y;
+
+	mask_x = tex->width - 1;		/* POT bitmask: 256 → 0xFF */
+	mask_y = tex->height - 1;
+	px = uv.u * mask_x;			/* scale UV to pixel range [0, width-1] */
+	py = uv.v * mask_y;
+	coords[0] = (uint32_t)px & mask_x;	/* base x, wrapped */
+	coords[1] = (uint32_t)py & mask_y;	/* base y, wrapped */
+	coords[2] = (coords[0] + 1) & mask_x;	/* next x, wraps at edge */
+	coords[3] = (coords[1] + 1) & mask_y;	/* next y, wraps at edge */
+	weights[0] = px - (uint32_t)px;		/* fractional x for lerp */
+	weights[1] = py - (uint32_t)py;		/* fractional y for lerp */
+}
+
+/**
+ * Sample a texture at given UV coordinates using bilinear filtering.
+ * Blends 4 neighboring pixels weighted by distance for smooth results.
+ * Uses POT bitwise ops: shift replaces multiply for stride (width << 2 == width * 4).
+ *
+ * Algorithm:
+ *   1. Find 4 surrounding pixels (x0,y0), (x1,y0), (x0,y1), (x1,y1)
+ *   2. Compute fractional position (fx, fy) within the pixel cell
+ *   3. Lerp horizontally: top = lerp(TL, TR, fx), bottom = lerp(BL, BR, fx)
+ *   4. Lerp vertically: result = lerp(top, bottom, fy)
  */
 t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 {
-	uint32_t	x;
-	uint32_t	y;
-	uint32_t	i;
-	const float	*pixels;
-	t_vec3		result;
+	uint32_t	coords[4];
+	float		weights[2];
+	uint32_t	row[2];
+	uint32_t	col[2];
+	t_vec3		top;
+	t_vec3		bottom;
 
-	if (!tex || !tex->pixels)
-		return (vec3_n(1.0f)); // White color if texture is missing
-	uv.u = ft_clamp01(uv.u);
-	uv.v = ft_clamp01(uv.v);
-	x = (uint32_t)(uv.u * (tex->width - 1)); // tex coordinates are [0,1], so scale to pixel indices
-	y = (uint32_t)(uv.v * (tex->height - 1));
-	i = (y * tex->width + x) * 4; // 4 floats per pixel (RGBA)
-	pixels = (const float *)__builtin_assume_aligned(tex->pixels, 64); 
-	memcpy(&result, &pixels[i], sizeof(t_vec3));
-	return (result);
+	if (__builtin_expect(!tex || !tex->pixels, 0))
+		return (vec3_n(1.0f));
+	uv.u = clampf01(uv.u);
+	uv.v = clampf01(uv.v);
+	compute_bilinear_coords(tex, uv, coords, weights);
+	row[0] = coords[1] * (tex->width << 2);	/* y0 * stride (width * 4 RGBA floats) */
+	row[1] = coords[3] * (tex->width << 2);	/* y1 * stride */
+	col[0] = coords[0] << 2;			/* x0 * 4 (RGBA offset) */
+	col[1] = coords[2] << 2;			/* x1 * 4 */
+	top = vlerp(
+			get_texel(tex->pixels, row[0] + col[0]),
+			get_texel(tex->pixels, row[0] + col[1]),
+			weights[0]);
+	bottom = vlerp(
+			get_texel(tex->pixels, row[1] + col[0]),
+			get_texel(tex->pixels, row[1] + col[1]),
+			weights[0]);
+	return (vlerp(top, bottom, weights[1]));
 }
 
 /**

@@ -29,6 +29,6 @@ t_vec2	spherical_uv(t_vec3 dir)
 	t_vec2	uv;
 
 	uv.u = (atan2f(dir.z, dir.x) + (float)M_PI) * (float)M_1_2PI; // Map from [-π, π] to [0, 1]
-	uv.v = acosf(ft_clamp(dir.y, -1.0f, 1.0f)) * (float)M_1_PI; // Map from [0, π] to [0, 1]
+	uv.v = acosf(clampf(dir.y, -1.0f, 1.0f)) * (float)M_1_PI; // Map from [0, π] to [0, 1]
 	return (uv);
 }

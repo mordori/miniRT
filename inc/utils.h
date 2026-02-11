@@ -33,7 +33,7 @@ int 	cmp_bounds_x(const void *a, const void *b);
 int 	cmp_bounds_y(const void *a, const void *b);
 int 	cmp_bounds_z(const void *a, const void *b);
 t_vec3	get_point(const t_ray *ray, const float t);
-t_texture	load_texture(t_context *ctx, char *file, bool is_srgb);
+t_texture	load_texture(char *file, bool is_srgb);
 void	free_texture(t_texture *tex);
 void	resize_window(t_context *ctx);
 bool	resize_timer(const t_context *ctx);

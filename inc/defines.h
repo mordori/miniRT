@@ -21,6 +21,9 @@
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
 
+# define MAX_NAME_LEN			64
+# define MAX_TEXTURES			64
+
 # define SENS_ORBIT				0.0025f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
@@ -48,6 +51,7 @@ typedef struct s_hit			t_hit;
 typedef struct s_plane			t_plane;
 typedef struct s_sphere			t_sphere;
 typedef struct s_cylinder		t_cylinder;
+typedef struct s_cone			t_cone;
 typedef struct s_light			t_light;
 typedef struct s_scene			t_scene;
 typedef struct s_camera			t_camera;
@@ -60,6 +64,7 @@ typedef struct s_path			t_path;
 typedef struct s_pixel			t_pixel;
 typedef struct s_ray			t_ray;
 typedef struct s_transform		t_transform;
+typedef struct s_tex_entry		t_tex_entry;
 
 typedef union u_shape			t_shape;
 
@@ -227,11 +232,20 @@ struct __attribute__((aligned(16))) s_cylinder
 	float			height;
 };
 
+struct __attribute__((aligned(16))) s_cone
+{
+	t_vec3			apex;
+	t_vec3			axis;
+	float			angle;
+	float			height;
+};
+
 union __attribute__((aligned(16))) u_shape
 {
 	t_plane			plane;
 	t_sphere		sphere;
 	t_cylinder		cylinder;
+	t_cone			cone;
 };
 
 struct __attribute__((aligned(16))) s_object
@@ -239,7 +253,7 @@ struct __attribute__((aligned(16))) s_object
 	t_transform		transform;
 	t_shape			shape;
 	t_vec3			bounds_center;
-	t_vec2			uv;
+	// t_vec2			uv;
 	t_obj_type		type;
 	uint32_t		material_id;
 	uint32_t		flags;
@@ -301,16 +315,25 @@ struct __attribute__((aligned(16))) s_path
 	bool			last_bounce_was_spec;
 };
 
+struct s_tex_entry
+{
+	char		name[MAX_NAME_LEN];
+	t_texture	texture;
+	bool		loaded;
+};
+
 struct __attribute__((aligned(16))) s_scene
 {
 	t_camera		cam;
 	t_vector		objs;
 	t_vector		lights;
 	t_vector		materials;
-	t_texture		skydome;
-	t_light			ambient_light;
 	t_bvh_node		*bvh_root;
+	t_light			ambient_light;
+	t_texture		skydome;
 	t_object		*selected_obj;
+	int				tex_count;
+	t_tex_entry		textures[MAX_TEXTURES];
 };
 
 struct __attribute__((aligned(64))) s_renderer

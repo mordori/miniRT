@@ -1,4 +1,5 @@
 #include "lights.h"
+#include "materials.h"
 #include "objects.h"
 #include "utils.h"
 
@@ -85,17 +86,20 @@ static inline t_vec3	brdf(const t_path *path, t_vec3 n, t_vec3 l, float ndotl)
 	t_vec3		f_d;
 	t_vec3		k_d;
 	float		factor;
+	t_vec3		surface_color;
+
+	surface_color = get_surface_color(path->mat, &path->hit);
 
 	v = vec3_negate(path->ray.dir);
 	h = vec3_normalize(vec3_add(v, l));
 	ndotv = clampf(vec3_dot(n, v), G_EPSILON, 1.0f);
 	ndotl = clampf01(ndotl);
 	ldoth = clampf01(vec3_dot(l, h));
-	f0 = vec3_lerp(vec3_n(0.04f), path->mat->albedo, path->mat->metallic);
+	f0 = vec3_lerp(vec3_n(0.04f), surface_color, path->mat->metallic);
 	f = vec3_schlick(f0, ldoth);
 	k_d = vec3_sub(vec3_n(1.0f), f);
 	factor = f_d_burley(ndotv, ndotl, ldoth, path->mat->roughness);
-	f_d = vec3_mul(path->mat->albedo, k_d);
+	f_d = vec3_mul(surface_color, k_d);
 	f_d = vec3_scale(f_d, (1.0f - path->mat->metallic) * factor);
 	return (f_d);
 }

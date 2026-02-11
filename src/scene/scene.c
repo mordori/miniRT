@@ -23,7 +23,17 @@ void	init_scene(t_context *ctx)
 
 void	clean_scene(t_context *ctx)
 {
+	int	i;
+
 	clean_bvh(ctx->scene.bvh_root);
 	vector_free(&ctx->scene.objs, &ctx->scene.lights, &ctx->scene.materials, NULL);
 	free_texture(&ctx->scene.skydome);
+	i = 0;
+	while (i < ctx->scene.tex_count)
+	{
+		if (ctx->scene.textures[i].loaded)
+			free_texture(&ctx->scene.textures[i].texture);
+		i++;
+	}
+	ctx->scene.tex_count = 0;
 }
