@@ -77,8 +77,8 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 
 	if (__builtin_expect(!tex || !tex->pixels, 0))
 		return (vec3_n(1.0f));
-	uv.u = clampf01(uv.u);
-	uv.v = clampf01(uv.v);
+	// uv.u = clampf01(uv.u);
+	// uv.v = clampf01(uv.v);
 	compute_bilinear_coords(tex, uv, coords, weights);
 	row[0] = coords[1] * (tex->width << 2);
 	row[1] = coords[3] * (tex->width << 2);

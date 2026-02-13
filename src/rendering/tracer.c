@@ -53,7 +53,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 			nee(ctx, path, pixel);
 		return (scatter(ctx, path, pixel));
 	}
-	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure);
+	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure, ctx->scene.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
@@ -90,12 +90,11 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	t_vec3		fresnel;
 	float		ndotv;
 	float		f0_dielectric;
-	t_vec3		surface_color;
 
 	random_uv(ctx, path, pixel, BN_SC_U);
 	ndotv = clampf01(vec3_dot(path->hit.normal, vec3_negate(path->ray.dir)));
 	f0_dielectric = reflectance(path->mat->ior);
-	f0 = vec3_lerp(vec3_n(f0_dielectric), path->mat->albedo, path->mat->metallic);
+	f0 = vec3_lerp(vec3_n(f0_dielectric), get_surface_color(path->mat, &path->hit), path->mat->metallic);
 	fresnel = vec3_schlick(f0, ndotv);
 	specular_probability(path, pixel, fresnel);
 	if (path->last_bounce_was_spec)

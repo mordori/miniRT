@@ -336,6 +336,7 @@ struct __attribute__((aligned(16))) s_scene
 	t_bvh_node		*bvh_root;
 	t_light			ambient_light;
 	t_texture		skydome;
+	t_vec2			skydome_uv_offset;
 	t_object		*selected_obj;
 	int				tex_count;
 	t_tex_entry		textures[MAX_TEXTURES];
