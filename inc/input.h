@@ -3,7 +3,7 @@
 
 # include "defines.h"
 
-bool	process_input(t_context *ctx);
+void	process_input(t_context *ctx, t_renderer *r, bool *update);
 int		wrap_mouse_x(const t_context *ctx, t_vec2i *pos);
 int		wrap_mouse_y(const t_context *ctx, t_vec2i *pos);
 
