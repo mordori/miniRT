@@ -21,26 +21,25 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation, float fov)
 	cam->distance = 0.0f;
 }
 
-void	update_camera(t_context *ctx)
+void	update_camera(t_context *ctx, t_camera *cam)
 {
 	static const t_vec3	world_up = {{0.0f, 1.0f, 0.0f}};
 	const float			limit = M_PI_2 - 0.001f;
 	t_vec3				dir;
-	t_camera			*cam;
-	t_vec4				sc_pitch_yaw;
+	t_vec2				pitch;
+	t_vec2				yaw;
 
-	cam = &ctx->scene.cam;
 	cam->pitch = clampf(cam->pitch, -limit, limit);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
 	if (ctx->scene.selected_obj)
 		cam->pivot = ctx->scene.selected_obj->transform.pos;
 	else
 		cam->pivot = (t_vec3){0};
-	sincosf(cam->pitch, &sc_pitch_yaw.data[0], &sc_pitch_yaw.data[1]);
-	sincosf(cam->yaw, &sc_pitch_yaw.data[2], &sc_pitch_yaw.data[3]);
-	dir.x = sc_pitch_yaw.data[1] * sc_pitch_yaw.data[2];
-	dir.y = sc_pitch_yaw.data[0];
-	dir.z = sc_pitch_yaw.data[1] * sc_pitch_yaw.data[3];
+	sincosf(cam->pitch, &pitch.sin, &pitch.cos);
+	sincosf(cam->yaw, &yaw.sin, &yaw.cos);
+	dir.x = pitch.cos * yaw.sin;
+	dir.y = pitch.sin;
+	dir.z = pitch.cos * yaw.cos;
 	cam->forward = vec3_normalize(dir);
 	cam->right = vec3_normalize(vec3_cross(world_up, cam->forward));
 	cam->up = vec3_normalize(vec3_cross(cam->forward, cam->right));

@@ -4,7 +4,7 @@
  * Convert UV coordinates to a point on the unit sphere.
  * Inverse of spherical_uv().
  */
-t_vec3	map_spherical(const float u, const float v)
+t_vec3	map_spherical(float u, float v)
 {
 	t_vec3		res;
 	float		cos_theta;

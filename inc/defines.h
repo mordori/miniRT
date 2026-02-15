@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			2048
+# define RENDER_SAMPLES			256
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -289,12 +289,14 @@ struct __attribute__((aligned(16))) s_viewport
 struct __attribute__((aligned(16))) s_camera
 {
 	t_viewport		viewport;
+	t_light			directional_light;
 	t_transform		transform;
 	t_transform		target;
 	t_vec3			pivot;
 	t_vec3			up;
 	t_vec3			right;
 	t_vec3			forward;
+	t_vec2			skydome_uv_offset;
 	float			aspect;
 	float			focal_length;
 	float			fov;
@@ -336,9 +338,9 @@ struct __attribute__((aligned(16))) s_scene
 	t_bvh_node		*bvh_root;
 	t_light			ambient_light;
 	t_texture		skydome;
-	t_vec2			skydome_uv_offset;
 	t_object		*selected_obj;
 	int				tex_count;
+	bool			has_directional_light;
 	t_tex_entry		textures[MAX_TEXTURES];
 };
 
@@ -396,6 +398,7 @@ struct __attribute__((aligned(16))) s_pixel
 	uint32_t		frame;
 	float			u;
 	float			v;
+	float			scale;
 };
 
 struct __attribute__((aligned(16))) s_aabb

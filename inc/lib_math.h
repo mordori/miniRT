@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/10 19:27:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/13 23:08:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,7 @@ t_vec3		vec3_clamp(t_vec3 vec, float min, float max);
 t_vec3		vec3_lerp(t_vec3 a, t_vec3 b, float t);
 t_vec3		vec3_schlick(t_vec3 f0, float u);
 t_vec3		vec3_bias(t_vec3 vec, t_vec3 n);
+uint32_t	vec3_to_uint32(t_vec3 vec);
 
 // vec4
 // -----------------------------------------------------------------
