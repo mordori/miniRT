@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 21:55:00 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/13 19:12:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/13 23:07:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,14 @@ t_vec3	vec3_schlick(t_vec3 f0, float u)
 t_vec3	vec3_bias(t_vec3 vec, t_vec3 n)
 {
 	return (vec3_add(vec, vec3_scale(n, B_EPSILON)));
+}
+
+uint32_t	vec3_to_uint32(t_vec3 vec)
+{
+	__m128i			res;
+
+	res = _mm_cvtps_epi32(vec.v * v4sf_n(255.0f));
+	res = _mm_packs_epi32(res, res);
+	res = _mm_packus_epi16(res, res);
+	return ((uint32_t)_mm_cvtsi128_si32(res) | 0xFF000000);
 }

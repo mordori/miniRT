@@ -34,6 +34,7 @@ bool	control_camera(t_context *ctx)
 		zoom(ctx, pos, &previous_pos, original_pos);
 	else
 		pan(ctx, pos, &previous_pos);
+	update_camera(ctx, cam);
 	return (true);
 }
 

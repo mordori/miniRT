@@ -12,7 +12,8 @@
 >
 > Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and manages a frame buffer to which we copy ours.
 >
-> The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Please refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
+> The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
+> Please ignore the section about XServer as it is no longer required for WSL2.
 
 <p align="center">
 	<img src="doc/rt.png" alt="Demo" />

@@ -1,6 +1,6 @@
 #include "utils.h"
 
-t_ray	new_ray(const t_vec3 origin, const t_vec3 dir)
+t_ray	new_ray(t_vec3 origin, t_vec3 dir)
 {
 	static const t_v4si	sign_bit = {0x80000000, 0x80000000, 0x80000000, 0x80000000};
 	static const t_v4sf	epsilon = {1e-20f, 1e-20f, 1e-20f, 1e-20f};
@@ -16,7 +16,7 @@ t_ray	new_ray(const t_vec3 origin, const t_vec3 dir)
 	return (ray);
 }
 
-t_vec3	get_point(const t_ray *ray, const float t)
+t_vec3	get_point(const t_ray *ray, float t)
 {
 	return (vec3_add(ray->origin, vec3_scale(ray->dir, t)));
 }

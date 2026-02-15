@@ -24,8 +24,6 @@ bool	parse_float(char *str, float *out)
 		end++;
 	if (*end != '\0')
 		return (false);
-	if (isnan(value) || isinf(value))
-		return (false);
 	*out = value;
 	return (true);
 }

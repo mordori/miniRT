@@ -54,7 +54,7 @@ static inline void	initialize(t_context *ctx)
 	if (!ctx->tex_bn.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	resize_window(ctx);
-	if (mlx_loop_hook(ctx->mlx, loop_hook, ctx))
+	if (mlx_loop_hook(ctx->mlx, frame_loop, ctx))
 		mlx_loop(ctx->mlx);
 	stop_render(&ctx->renderer);
 }

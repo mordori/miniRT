@@ -77,8 +77,6 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 
 	if (__builtin_expect(!tex || !tex->pixels, 0))
 		return (vec3_n(1.0f));
-	// uv.u = clampf01(uv.u);
-	// uv.v = clampf01(uv.v);
 	compute_bilinear_coords(tex, uv, coords, weights);
 	row[0] = coords[1] * (tex->width << 2);
 	row[1] = coords[3] * (tex->width << 2);
@@ -103,6 +101,6 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 t_vec3	get_surface_color(const t_material *mat, const t_hit *hit)
 {
 	if (mat->base_color == BASE_TEXTURE && mat->texture.pixels)
-		return (sample_texture(&mat->texture, hit->uv));
+		return (vec3_mul(mat->albedo, sample_texture(&mat->texture, hit->uv)));
 	return (mat->albedo);
 }

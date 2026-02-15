@@ -40,7 +40,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		bg_color;
 
-	if (hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
+	if ((int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
 		path->mat = path->hit.obj->mat;
 		if (path->mat->is_emissive)
@@ -49,11 +49,13 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), 40.0f));
 			return (false);
 		}
+		if (ctx->scene.has_directional_light)
+			add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel);
 		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
 			nee(ctx, path, pixel);
 		return (scatter(ctx, path, pixel));
 	}
-	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure, ctx->scene.skydome_uv_offset);
+	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure, ctx->renderer.cam.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
