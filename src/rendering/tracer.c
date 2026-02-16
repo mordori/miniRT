@@ -39,6 +39,9 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		bg_color;
+	float		weight;
+	float		pdf;
+	t_vec3		indirect_light;
 
 	if ((int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
@@ -46,8 +49,18 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		set_material_data(path);
 		if (path->mat->is_emissive)
 		{
-			if (path->bounce == 0 || path->sample_spec)
-				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), MAX_BRIGHTNESS));
+			weight = 1.0f;
+			if (path->bounce > 0)
+			{
+				pdf = light_pdf(vec3_sub(path->ray.origin, path->n), path->hit.obj->shape.sphere.radius_sq);
+				if (ctx->scene.lights.total > 0)
+					pdf /= (float)ctx->scene.lights.total;
+				weight = power_heuristic(path->pdf, pdf);
+			}
+			indirect_light = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
+			if (path->bounce > 0)
+				indirect_light = vec3_clamp_mag(indirect_light, MAX_BRIGHTNESS);
+			path->color = vec3_add(path->color, indirect_light);
 			return (false);
 		}
 		if (ctx->scene.has_directional_light)

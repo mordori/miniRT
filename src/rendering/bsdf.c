@@ -5,6 +5,16 @@
 // https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
 // https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
+float	power_heuristic(float pdf_d, float pdf_r)
+{
+	float		d2;
+	float		r2;
+
+	d2 = pdf_d * pdf_d;
+	r2 = pdf_r * pdf_r;
+	return (d2 / (d2 + r2 + G_EPSILON));
+}
+
 void	set_material_data(t_path *path)
 {
 	t_vec3		albedo;
@@ -23,7 +33,6 @@ void	set_shader_data(t_path *path)
 {
 	path->h = vec3_normalize(vec3_add(path->v, path->l));
 	path->ndotl = clampf01(vec3_dot(path->n, path->l));
-	path->ndotv = clampf01(vec3_dot(path->n, path->v));
 	path->ndoth = clampf01(vec3_dot(path->n, path->h));
 	path->vdoth = clampf01(vec3_dot(path->v, path->h));
 	path->ldoth = clampf01(vec3_dot(path->l, path->h));
@@ -39,10 +48,23 @@ t_vec3	bsdf(t_path *path)
 	return (vec3_add(diffuse, specular));
 }
 
-bool	sample_bsdf(t_path *path)
+float	bsdf_pdf(t_path *path)
 {
 	float		pdf_d;
 	float		pdf_r;
+	float		pdf;
+
+	pdf_d = pdf_cos(path->ndotl);
+	pdf_r = pdf_ggx(path);
+	if (path->mat->metallic >= 0.9f)
+		pdf = pdf_r;
+	else
+		pdf = (path->p_spec * pdf_r) + ((1.0f - path->p_spec) * pdf_d);
+	return (pdf);
+}
+
+bool	sample_bsdf(t_path *path)
+{
 	t_vec3		weight;
 
 	if (path->sample_spec)
@@ -55,12 +77,7 @@ bool	sample_bsdf(t_path *path)
 	set_shader_data(path);
 	if (path->ndotl <= 1e-12f)
 		return (false);
-	pdf_d = pdf_cos(path->ndotl);
-	pdf_r = pdf_ggx(path);
-	if (path->mat->metallic >= 0.9f)
-		path->pdf = pdf_r;
-	else
-		path->pdf = (path->p_spec * pdf_r) + ((1.0f - path->p_spec) * pdf_d);
+	path->pdf = bsdf_pdf(path);
 	path->pdf = fmaxf(path->pdf, G_EPSILON);
 	weight = vec3_scale(bsdf(path), path->ndotl / path->pdf);
 	path->throughput = vec3_mul(path->throughput, weight);
