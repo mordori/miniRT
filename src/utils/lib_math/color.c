@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 00:44:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/08 11:50:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:29:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,6 @@ t_vec3	lerp_color(uint32_t c1, uint32_t c2, float t)
 	return (res);
 }
 
-/**
- * Converts a 32-bit RGBA color value to ABGR format.
- *
- * It does so by extracting each channel using bitmasks and shifts,
- * then reassembling them in the new order.
- *
- * @param rgba 32-bit unsigned integer in RGBA format.
- * @return 32-bit unsigned integer in ABGR format.
- */
 uint32_t	rgba_to_abgr(uint32_t rgba)
 {
 	t_color	abgr;

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 19:39:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/08 14:06:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/15 19:40:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ float	clampf(float value, float min, float max)
 	return (value);
 }
 
-float	degrees_to_rad(float degrees)
+float	clampfn11(float value)
 {
-	return (degrees * M_PI / 180.0f);
+	return (clampf(value, -1.0f, 1.0f));
 }
 
 uint32_t	ft_uint_min(uint32_t a, uint32_t b)

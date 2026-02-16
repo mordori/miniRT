@@ -53,7 +53,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input.c mouse.c keys.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
-				lighting.c ambient.c point.c shadows.c)
+				ambient.c point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
@@ -61,7 +61,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				renderer.c tracer.c post_processing.c skydome.c diffuse.c specular.c post_processing_fast.c frame.c)
+				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \

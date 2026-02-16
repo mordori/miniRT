@@ -43,15 +43,16 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 	if ((int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
 		path->mat = path->hit.obj->mat;
+		set_material_data(path);
 		if (path->mat->is_emissive)
 		{
-			if (path->bounce == 0 || path->last_bounce_was_spec)
-				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), 40.0f));
+			if (path->bounce == 0 || path->sample_spec)
+				path->color = vec3_add(path->color, vec3_clamp_mag(vec3_mul(path->throughput, path->mat->emission), MAX_BRIGHTNESS));
 			return (false);
 		}
 		if (ctx->scene.has_directional_light)
 			add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel);
-		if (ctx->scene.lights.total > 0 && path->mat->metallic < 0.9f)
+		if (ctx->scene.lights.total > 0)
 			nee(ctx, path, pixel);
 		return (scatter(ctx, path, pixel));
 	}
@@ -88,25 +89,19 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel)
 
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	t_vec3		f0;
-	t_vec3		fresnel;
-	float		ndotv;
-	float		f0_dielectric;
+	t_vec3		f;
+	float		p;
 
 	random_uv(ctx, path, pixel, BN_SC_U);
-	ndotv = clampf01(vec3_dot(path->hit.normal, vec3_negate(path->ray.dir)));
-	f0_dielectric = reflectance(path->mat->ior);
-	f0 = vec3_lerp(vec3_n(f0_dielectric), get_surface_color(path->mat, &path->hit), path->mat->metallic);
-	fresnel = vec3_schlick(f0, ndotv);
-	specular_probability(path, pixel, fresnel);
-	if (path->last_bounce_was_spec)
-	{
-		if (!bounce_specular(path, f0, ndotv))
-			return (false);
-	}
-	else
-		bounce_diffuse(path);
-	path->ray = new_ray(vec3_bias(path->hit.point, path->hit.normal), path->dir_bounce);
+	f = vec3_schlick(path->f0, path->ndotv);
+	p = fmaxf(fmaxf(f.r, f.g), f.b);
+	path->p_spec = clampf(p, 0.1f, 0.9f);
+	if (path->mat->metallic >= 0.9f)
+		path->p_spec = 1.0f;
+	path->sample_spec = randomf01(pixel->seed) < path->p_spec;
+	if (!sample_bsdf(path))
+		return (false);
+	path->ray = new_ray(vec3_bias(path->hit.point, path->n), path->l);
 	return (russian_roulette(path, pixel));
 }
 

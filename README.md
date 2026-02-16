@@ -24,7 +24,7 @@
 - BVH acceleration structure for rapid intersection testing
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
-- PBR material model with importance-sampled GGX specular, Smith-Schlick geometry shadowing, and Burley diffuse
+- PBR material model with importance-sampled GGX specular, Smith-Schlick geometry shadowing, and Disney diffuse
 
 #### TODO
 - Additional primitive objects
@@ -33,12 +33,12 @@
 - Extented camera properties and trackball controls
 - Quaternions
 - Object editing with simplified rendering mode
-- Additional post-processing modules
-- Extented scene description format
 
-#### Post-validation Features
+#### Future Work
 - Discard the restrictive coding standard required by the subject and refactor to more efficient code
-- HDRi texture loading for skydome
+- Image based lighting
+- VNDF sampling for indirect specular light
+- Additional post-processing modules
 - Denoising solution
 - Loading .ojb meshes
 - Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
@@ -126,6 +126,12 @@ As the project is still under construction, we recommend to run the program with
 | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
 | <kbd>Left ALT</kbd> + <kbd>Left Mouse Button</kbd> and drag    | Orbit Camera                                              |
+
+### Editing
+
+| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         |
+|----------------------------------------------------------------|-----------------------------------------------------------|
+| <kbd>Left Arrow</kbd> - <kbd>Right Arrow</kbd>                 | Rotate skydome                                            |
 
 ### General
 

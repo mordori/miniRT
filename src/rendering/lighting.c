@@ -1,0 +1,77 @@
+#include "materials.h"
+#include "objects.h"
+#include "utils.h"
+#include "rendering.h"
+#include "scene.h"
+
+static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
+static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *pdf);
+static inline bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist);
+
+void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
+{
+	t_vec3			lighting;
+
+	lighting = direct_lighting(ctx, path, light, pixel);
+	if (path->bounce > 0)
+		lighting = vec3_clamp_mag(lighting, MAX_BRIGHTNESS);
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+}
+
+static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
+{
+	t_vec3		res;
+	t_vec3		hit_biased;
+	t_vec3		hit_to_light_center;
+	float		dist;
+	float		t_ca;
+	float		ca_dist_sq;
+	float		t_hc;
+
+	random_uv(ctx, path, pixel, BN_CO_U);
+	hit_biased = vec3_bias(path->hit.point, path->n);
+	hit_to_light_center = vec3_sub(light->pos, hit_biased);
+	path->l = sample_light(hit_to_light_center, light->obj->shape.sphere.radius_sq, path->uv, &path->pdf);
+	if (vec3_dot(path->l, path->l) < LEN_SQ_EPSILON)
+		return (vec3_n(0.0f));
+	set_shader_data(path);
+	if (path->ndotl <= G_EPSILON)
+		return (vec3_n(0.0f));
+	t_ca = vec3_dot(hit_to_light_center, path->l);
+	ca_dist_sq = vec3_dot(hit_to_light_center, hit_to_light_center) - t_ca * t_ca;
+	t_hc = sqrtf(fmaxf(0.0f, light->obj->shape.sphere.radius_sq - ca_dist_sq));
+	dist = t_ca - t_hc;
+	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, path->l, dist - B_EPSILON))
+		return (vec3_n(0.0f));
+	res = vec3_mul(light->mat->emission, bsdf(path));
+	res = vec3_scale(res, path->ndotl / path->pdf);
+	return (res);
+}
+
+static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *pdf)
+{
+	float		dist_sq;
+	float		sin_theta_sq;
+	float		cos_theta_max;
+	t_vec3		res;
+	t_vec3		l_dir;
+
+	dist_sq = vec3_dot(l, l);
+	if (dist_sq <= radius_sq)
+		return (vec3_n(0.0f));
+	l_dir = vec3_scale(l, 1.0f / sqrtf(dist_sq));
+	sin_theta_sq = radius_sq / dist_sq;
+	sin_theta_sq = fminf(sin_theta_sq, 0.9999f);
+	cos_theta_max = sqrtf(1.0f - sin_theta_sq);
+	*pdf = 1.0f / fmaxf((M_TAU * (1.0f - cos_theta_max)), G_EPSILON);
+	res = sample_cone(l_dir, cos_theta_max, uv);
+	return (res);
+}
+
+static inline bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist)
+{
+	t_ray		ray;
+
+	ray = new_ray(orig, dir);
+	return (hit_bvh_shadow(scene->bvh_root, &ray, dist));
+}

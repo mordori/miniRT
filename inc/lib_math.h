@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/13 23:08:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/15 19:41:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ float		ft_lerp(float a, float b, float t);
 float		ft_lerp_fast(float a, float b, float t);
 float		ft_normalize(float value, float min, float max);
 float		clampf01(float value);
+float		clampfn11(float value);
 float		clampf(float value, float min, float max);
 float		f_schlick(float u, float f0, float f90);
 float		degrees_to_rad(float degrees);
