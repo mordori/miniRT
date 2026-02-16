@@ -14,11 +14,11 @@ tex		earth_albedo	earth_daymap.png
 # Material
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags	[albedo_tex]
 # mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		_
-mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		_
-mat		1		245,245,250		0.0			0.05		1.45	0.0				0.0					0,0,0				1		moon_albedo
+mat		0		170,170,170		0.0			0.95		1.45	0.0				0.0					0,0,0				0		earth_albedo
+mat		1		245,70,50		0.0			0.05		1.45	0.0				0.0					0,0,0				0		moon_albedo
 
 # Material - emissive
-mat		2		170,170,170		0.0			0.0			1.0		1.0				18000.0				255,255,255			1
+mat		2		255,255,255		0.0			0.0			1.0		1.0				18000.0				255,255,255			0
 
 # Camera
 C		0,0,-1			-1,0,0			70				0.2

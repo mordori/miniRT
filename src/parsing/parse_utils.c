@@ -20,6 +20,13 @@ inline bool	is_placeholder(const char *str)
 	return (str && ft_strcmp(str, "_") == 0);
 }
 
+t_material	*get_material_by_id(t_parser *p, uint32_t id)
+{
+	if (id >= p->mat_count || !p->materials[id].defined)
+		return (NULL);
+	return (&p->materials[id].material);
+}
+
 int	count_tokens(char **tokens)
 {
 	int	count;

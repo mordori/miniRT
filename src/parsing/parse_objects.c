@@ -82,30 +82,27 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 /**
  * Cone: co <apex> <axis> <angle_deg> <height> <color|mat_id>
  */
-// t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
-// {
-// 	t_cone	cone;
-// 	// t_material	mat;
-// 	uint32_t	mat_id;
-// 	float		angle_deg;
-// 	t_error		err;
+t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
+{
+	t_cone		cone;
+	uint32_t	mat_id;
+	float		angle_deg;
+	t_error		err;
 
-// 	if (count_tokens(tkns) < 6)
-// 		return (E_MISSING_ARGS);
-// 	if (!parse_vec3(tkns[1], &cone.apex) || !parse_vec3(tkns[2], &cone.axis))
-// 		return (E_INVALID_NUM);
-// 	if (!validate_normalized(cone.axis))
-// 		return (E_RANGE);
-// 	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4], &cone.height))
-// 		return (E_INVALID_NUM);
-// 	if (angle_deg <= 0.0f || angle_deg >= 90.0f || cone.height <= 0.0f)
-// 		return (E_RANGE);
-// 	cone.angle = angle_deg * (M_PI / 180.0f); // Precompute these for faster intersection tests
-// 	cone.cos_sq = cosf(cone.angle) * cosf(cone.angle);
-// 	cone.tan_sq = tanf(cone.angle) * tanf(cone.angle);
-// 	err = resolve_material(ctx, p, tkns[5], &mat_id);
-// 	if (err != E_OK)
-// 		return  (err);
-// 	p->has_cone = true;
-// 	return (init_cone(ctx, &cone, mat_id));
-// }
+	if (count_tokens(tkns) < 6)
+		return (E_MISSING_ARGS);
+	if (!parse_vec3(tkns[1], &cone.apex) || !parse_vec3(tkns[2], &cone.axis))
+		return (E_INVALID_NUM);
+	if (!validate_normalized(cone.axis))
+		return (E_RANGE);
+	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4], &cone.height))
+		return (E_INVALID_NUM);
+	if (angle_deg <= 0.0f || angle_deg >= 90.0f || cone.height <= 0.0f)
+		return (E_RANGE);
+	cone.angle = angle_deg * (M_PI / 180.0f);
+	err = resolve_material(ctx, p, tkns[5], &mat_id);
+	if (err != E_OK)
+		return  (err);
+	p->has_cone = true;
+	return (init_cone(ctx, &cone, mat_id));
+}

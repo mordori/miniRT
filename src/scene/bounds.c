@@ -37,3 +37,18 @@ t_aabb	cylinder_bounds(const t_object *obj)
 	aabb.max = vec3_add(obj->transform.pos, half);
 	return (aabb);
 }
+
+t_aabb	cone_bounds(const t_object *obj)
+{
+	t_aabb		aabb;
+	t_cone		cone;
+	t_vec3		base_center;
+	t_vec3		r;
+
+	cone = obj->shape.cone;
+	base_center = vec3_add(cone.apex, vec3_scale(cone.axis, cone.height));
+	r = vec3_n(cone.base_radius);
+	aabb.min.v = _mm_min_ps(cone.apex.v, vec3_sub(base_center, r).v);
+	aabb.max.v = _mm_max_ps(cone.apex.v, vec3_add(base_center, r).v);
+	return (aabb);
+}

@@ -26,12 +26,15 @@ t_aabb	get_object_bounds(const t_object *obj)
 {
 	t_aabb res;
 
+	res = (t_aabb){0};
 	if (obj->type == OBJ_SPHERE)
 		res = sphere_bounds(obj);
 	else if (obj->type == OBJ_PLANE)
 		res = plane_bounds(obj);
-	else
+	else if (obj->type == OBJ_CYLINDER)
 		res = cylinder_bounds(obj);
+	else if (obj->type == OBJ_CONE)
+		res = cone_bounds(obj);
 	return(res);
 }
 

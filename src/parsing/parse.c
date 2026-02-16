@@ -68,11 +68,11 @@ static bool	validate_scene(t_context *ctx, t_parser *p)
 		fatal_error(ctx, "Missing camera (C)", __FILE__, p->line_num);
 		return (false);
 	}
-	// if (!p->has_plane && !p->has_sphere && !p->has_cylinder)
-	// {
-	// 	fatal_error(ctx, "No objects defined in scene", __FILE__, p->line_num);
-	// 	return (false);
-	// }
+	if (!p->has_plane && !p->has_sphere && !p->has_cylinder && !p->has_cone)
+	{
+		fatal_error(ctx, "No objects defined in scene", __FILE__, p->line_num);
+		return (false);
+	}
 	return (true);
 }
 
@@ -80,8 +80,6 @@ static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
 {
 	const char	*id;
 
-	if (!tokens[0])
-		return (E_MALLOC);
 	id = tokens[0];
 	if (ft_strcmp(id, "mat") == 0)
 		return (parse_material_def(ctx, p, tokens));
@@ -101,8 +99,8 @@ static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
 		return (parse_plane(ctx, p, tokens));
 	if (ft_strcmp(id, "cy") == 0)
 		return (parse_cylinder(ctx, p, tokens));
-	// if (ft_strcmp(id, "co") == 0)
-	// 	return (parse_cone(ctx, p, tokens));
+	if (ft_strcmp(id, "co") == 0)
+		return (parse_cone(ctx, p, tokens));
 	return (E_UNKNOWN_ID);
 }
 
