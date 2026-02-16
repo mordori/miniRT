@@ -4,7 +4,7 @@
 
 static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
 static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *pdf);
-static inline bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist);
+static inline bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist, const t_object *skip);
 
 void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
@@ -18,6 +18,7 @@ void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pi
 
 static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
+	t_ray		shadow_ray;
 	t_vec3		res;
 	t_vec3		hit_biased;
 	t_vec3		hit_to_light_center;
@@ -40,7 +41,9 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	ca_dist_sq = vec3_dot(hit_to_light_center, hit_to_light_center) - t_ca * t_ca;
 	t_hc = sqrtf(fmaxf(0.0f, light->obj->shape.sphere.radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
-	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, path->l, dist - B_EPSILON))
+	shadow_ray = new_ray(hit_biased, path->l);
+	// if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, path->l, dist - B_EPSILON))
+	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON, path->hit.obj))
 		return (vec3_n(0.0f));
 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
 	res = vec3_mul(light->mat->emission, bsdf(path));
@@ -83,10 +86,15 @@ static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *p
 	return (res);
 }
 
-static inline bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist)
-{
-	t_ray		ray;
+// static inline bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist)
+// {
+// 	t_ray		ray;
 
-	ray = new_ray(orig, dir);
-	return (hit_bvh_shadow(scene->bvh_root, &ray, dist));
+// 	ray = new_ray(orig, dir);
+// 	return (hit_bvh_shadow(scene->bvh_root, &ray, dist));
+// }
+
+static inline bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist, const t_object *skip)
+{
+	return (hit_bvh_shadow(scene->bvh_root, ray, dist, skip));
 }

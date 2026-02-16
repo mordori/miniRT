@@ -14,13 +14,6 @@ static inline bool	is_color_token(const char *str)
 	return (str && ft_strchr(str, ',') != NULL);
 }
 
-t_material	*get_material_by_id(t_parser *p, uint32_t id)
-{
-	if (id >= p->mat_count || !p->materials[id].defined)
-		return (NULL);
-	return (&p->materials[id].material);
-}
-
 /**
  * Parse material from either inline color or material ID reference.
  * Color format: "R,G,B" (0-255)
@@ -39,9 +32,6 @@ t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
 		*out = (t_material){0};
 		out->albedo = color;
 		out->base_color = BASE_COLOR;
-		// out->roughness = 1.0f;
-		// out->ior = 1.45f;
-		// out->flags = 1;
 		return (E_OK);
 	}
 	if (!parse_uint((char *)token, &id))

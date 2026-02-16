@@ -35,7 +35,7 @@
 # define M_EPSILON			1e-6f
 # define LEN_EPSILON		1e-6f
 # define LEN_SQ_EPSILON		1e-12f
-# define B_EPSILON			1e-4f
+# define B_EPSILON			1e-3f
 # define G_EPSILON			1e-5f
 
 typedef struct s_vec2i		t_vec2i;

@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			512
+# define RENDER_SAMPLES			128
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -242,6 +242,8 @@ struct __attribute__((aligned(16))) s_cone
 	float			height;
 	float			cos_sq;
 	float			tan_sq;
+	float			base_radius;
+	float			inv_height;
 };
 
 union __attribute__((aligned(16))) u_shape

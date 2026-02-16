@@ -29,8 +29,8 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 		result = hit_plane(&obj->shape, ray, hit);
 	else if (obj->type == OBJ_CYLINDER)
 		result = hit_cylinder(&obj->shape, ray, hit);
-	// else if (obj->type == OBJ_CONE)
-	// 	result = hit_cone(&obj->shape, ray, hit);
+	else if (obj->type == OBJ_CONE)
+		result = hit_cone(&obj->shape, ray, hit);
 	else
 		return (false);
 	if (result)
@@ -40,26 +40,26 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 
 t_vec3	random_point_on_object(const t_object *obj, float u, float v)
 {
-	t_vec3	result;
-
 	if (obj->type == OBJ_SPHERE)
-		result = random_point_on_sphere(&obj->shape, u, v);
+		return (random_point_on_sphere(&obj->shape, u, v));
 	else if (obj->type == OBJ_PLANE)
-		result = random_point_on_plane(&obj->shape, u, v);
-	else
-		result = random_point_on_cylinder(&obj->shape, u, v);
-	return (result);
+		return (random_point_on_plane(&obj->shape, u, v));
+	else if (obj->type == OBJ_CYLINDER)
+		return (random_point_on_cylinder(&obj->shape, u, v));
+	else if (obj->type == OBJ_CONE)
+		return (random_point_on_cone(&obj->shape, u, v));
+	return (vec3_n(0.0f));
 }
 
 t_vec3	normal_at_point(const t_object *obj, const t_vec3 pos)
 {
-	t_vec3	result;
-
 	if (obj->type == OBJ_SPHERE)
-		result = normal_at_sphere(&obj->shape, pos);
+		return (normal_at_sphere(&obj->shape, pos));
 	else if (obj->type == OBJ_PLANE)
-		result = normal_at_plane(&obj->shape, pos);
-	else
-		result = normal_at_cylinder(&obj->shape, pos);
-	return (result);
+		return (normal_at_plane(&obj->shape, pos));
+	else if (obj->type == OBJ_CYLINDER)
+		return (normal_at_cylinder(&obj->shape, pos));
+	else if (obj->type == OBJ_CONE)
+		return (normal_at_cone(&obj->shape, pos));
+	return (vec3_n(0.0f));
 }
