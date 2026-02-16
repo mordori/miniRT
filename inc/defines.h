@@ -16,9 +16,9 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			256
+# define RENDER_SAMPLES			512
 # define PREVIEW_BOUNCES		3
-# define REFINE_BOUNCES			32
+# define REFINE_BOUNCES			16
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64
@@ -27,6 +27,8 @@
 # define SENS_ORBIT				0.0025f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
+
+# define MAX_BRIGHTNESS			40.0f
 
 # define OBJ_HIDDEN_SCENE		(1 << 0)
 # define OBJ_HIDDEN_CAM			(1 << 1)
@@ -313,13 +315,24 @@ struct __attribute__((aligned(16))) s_path
 	t_hit			hit;
 	t_vec3			color;
 	t_vec3			throughput;
-	t_vec3			dir_bounce;
+	t_vec3			f0;
+	t_vec3			n;
+	t_vec3			l;
+	t_vec3			v;
+	t_vec3			h;
 	t_vec2			uv;
 	t_material		*mat;
 	int32_t			bounce;
+	float			ndotl;
+	float			ndotv;
+	float			ndoth;
+	float			vdoth;
+	float			ldoth;
+	float			alpha;
+	float			pdf;
 	float			p_spec;
 	t_render_mode	mode;
-	bool			last_bounce_was_spec;
+	bool			sample_spec;
 };
 
 struct s_tex_entry

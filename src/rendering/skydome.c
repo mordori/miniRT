@@ -32,7 +32,7 @@ bool	rotate_skydome(t_context *ctx)
 (mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT)) || \
 (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT)))
 	{
-		delta = 0.05f * ctx->mlx->delta_time;
+		delta = 0.085f * ctx->mlx->delta_time;
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT))
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;
