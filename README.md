@@ -2,6 +2,10 @@
 ## Introduction
 **High-Performance CPU Path Tracer with Monte Carlo Integration.**
 
+<p align="center">
+	<img src="doc/ball.gif" alt="Demo" />
+</p>
+
 > [!IMPORTANT]
 >
 > ⚠ This project is work in progress! ⚠
@@ -24,7 +28,7 @@
 - BVH acceleration structure for rapid intersection testing
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
-- PBR material model with importance-sampled GGX specular, Smith-Schlick geometry shadowing, and Disney diffuse
+- PBR material model with GGX specular, Smith height-correlated visibility term (Hammon), Disney diffuse, and Multiple Importance Sampling (MIS)
 
 #### TODO
 - Additional primitive objects

@@ -1,7 +1,5 @@
-#include "materials.h"
-#include "objects.h"
-#include "utils.h"
 #include "rendering.h"
+#include "utils.h"
 #include "scene.h"
 
 static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
@@ -27,6 +25,7 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	float		t_ca;
 	float		ca_dist_sq;
 	float		t_hc;
+	float		weight;
 
 	random_uv(ctx, path, pixel, BN_CO_U);
 	hit_biased = vec3_bias(path->hit.point, path->n);
@@ -43,9 +42,25 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	dist = t_ca - t_hc;
 	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, path->l, dist - B_EPSILON))
 		return (vec3_n(0.0f));
+	weight = power_heuristic(path->pdf, bsdf_pdf(path));
 	res = vec3_mul(light->mat->emission, bsdf(path));
-	res = vec3_scale(res, path->ndotl / path->pdf);
+	res = vec3_scale(res, (path->ndotl / path->pdf) *  weight);
 	return (res);
+}
+
+float	light_pdf(t_vec3 l, float radius_sq)
+{
+	float		dist_sq;
+	float		sin_theta_sq;
+	float		cos_theta_max;
+	float		pdf;
+
+	dist_sq = vec3_dot(l, l);
+	sin_theta_sq = radius_sq / dist_sq;
+	sin_theta_sq = fminf(sin_theta_sq, 0.9999f);
+	cos_theta_max = sqrtf(1.0f - sin_theta_sq);
+	pdf = 1.0f / fmaxf((M_TAU * (1.0f - cos_theta_max)), G_EPSILON);
+	return (pdf);
 }
 
 static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *pdf)

@@ -18,7 +18,7 @@
 # define TILE_SIZE				32
 # define RENDER_SAMPLES			512
 # define PREVIEW_BOUNCES		3
-# define REFINE_BOUNCES			16
+# define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64
