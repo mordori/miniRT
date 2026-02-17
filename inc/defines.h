@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			128
+# define RENDER_SAMPLES			512
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -27,10 +27,18 @@
 # define SENS_ORBIT				0.0025f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
+# define SENS_MOVE				5.0f
 
 # define MAX_BRIGHTNESS			40.0f
 
-# define OBJ_HIDDEN_SCENE		(1 << 0)
+# define KEY_FORWARD			MLX_KEY_W
+# define KEY_LEFT				MLX_KEY_A
+# define KEY_BACK				MLX_KEY_S
+# define KEY_RIGHT				MLX_KEY_D
+# define KEY_UP					MLX_KEY_SPACE
+# define KEY_DOWN				MLX_KEY_LEFT_SHIFT
+
+# define OBJ_HIDDEN_SCENE		(1 << 0) // norm issue, must only contain consts
 # define OBJ_HIDDEN_CAM			(1 << 1)
 # define OBJ_NO_CAST_SHADOW		(1 << 2)
 # define MAT_NO_REC_SHADOW		(1 << 3)
@@ -120,7 +128,8 @@ enum e_cam_state
 	CAM_DEFAULT,
 	CAM_ZOOM,
 	CAM_PAN,
-	CAM_ORBIT
+	CAM_ORBIT,
+	CAM_MOVE
 };
 
 enum e_base_color
@@ -381,6 +390,8 @@ struct __attribute__((aligned(64))) s_renderer
 		uint32_t			height;
 		uint32_t			pixels;
 		t_render_mode		mode;
+		uint32_t			render_samples; //
+		uint32_t			refine_bounces;
 		uint32_t			frame;
 		uint8_t				ray_bounces;
 		_Atomic bool		render_cancel;
