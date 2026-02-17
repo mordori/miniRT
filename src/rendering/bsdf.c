@@ -12,7 +12,7 @@ float	power_heuristic(float pdf_d, float pdf_r)
 
 	d2 = pdf_d * pdf_d;
 	r2 = pdf_r * pdf_r;
-	return (d2 / (d2 + r2 + G_EPSILON));
+	return (d2 / fmaxf(d2 + r2, G_EPSILON));
 }
 
 void	set_material_data(t_path *path)

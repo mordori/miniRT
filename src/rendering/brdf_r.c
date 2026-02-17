@@ -54,5 +54,5 @@ static inline float	v_hammon(float ndotv, float ndotl, float alpha)
 
 	a = 2.0f * ndotl * ndotv;
 	b = ndotl + ndotv;
-	return (0.5f / (ft_lerp_fast(a, b, alpha) + G_EPSILON));
+	return (0.5f / fmaxf(ft_lerp_fast(a, b, alpha), G_EPSILON));
 }

@@ -18,8 +18,8 @@ t_vec3	sample_ggx(t_vec3 n, float alpha, t_vec2 uv)
 	float		sin_theta;
 	t_vec3		res;
 
-	uv.v = fminf(uv.v, 0.999999f);
-	uv.v = fmaxf(uv.v, 0.000001f);
+	uv.v = fminf(uv.v, 0.99999999f);
+	uv.v = fmaxf(uv.v, 0.00000001f);
 	cos_theta = sqrtf((1.0f - uv.v) / (1.0f + (alpha * alpha - 1.0f) * uv.v));
 	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
 	res = spherical_to_world(n, uv.u, cos_theta, sin_theta);

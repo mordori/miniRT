@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/10 19:39:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/16 22:28:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,23 @@ float	vec3_dot(t_vec3 a, t_vec3 b)
 	return (res[0] + res[1] + res[2]);
 }
 
-t_vec3	vec3_div(t_vec3 vec, float div)
+t_vec3	vec3_div(t_vec3 vec, float den)
 {
-	if (fabsf(div) < LEN_EPSILON)
+	if (fabsf(den) < LEN_EPSILON)
 		return (vec3_n(0.0f));
-	return (vec3_scale(vec, 1.0f / div));
+	return (vec3_scale(vec, 1.0f / den));
 }
 
 t_vec3	vec3_normalize(t_vec3 vec)
 {
-	return (vec3_div(vec, vec3_length(vec)));
+	float		len2;
+	float		len_recip;
+
+	len2 = vec3_dot(vec, vec);
+	if (len2 < LEN_SQ_EPSILON)
+		return (vec3_n(0.0f));
+	len_recip = 1.0f / sqrtf(len2);
+	return (vec3_scale(vec, len_recip));
 }
 
 float	vec3_length(t_vec3 vec)

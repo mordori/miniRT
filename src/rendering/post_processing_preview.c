@@ -5,7 +5,7 @@ static inline t_vec3	tonemap_aces_preview(t_vec3 color);
 t_vec3	post_process_preview(const t_context *ctx, t_vec3 c)
 {
 	c = vec3_max(c, 0.0f);
-	c = vec3_scale(c, ctx->scene.cam.exposure * 0.6f);
+	c = vec3_scale(c, ctx->scene.cam.exposure * 0.565f);
 	c = tonemap_aces_preview(c);
 	c = vec3_sqrt(c);
 	return (c);
