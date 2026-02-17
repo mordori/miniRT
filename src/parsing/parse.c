@@ -4,95 +4,77 @@
 #include "parsing.h"
 #include "utils.h"
 
-static void		print_error(t_context *ctx, t_error err, int line_num);
-static bool		validate_scene(t_context *ctx, t_parser *p);
-static t_error	parse_line(t_context *ctx, t_parser *p, char *line);
-static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens);
-
 bool	parse_scene(t_context *ctx, int fd)
 {
 	t_parser	parser;
 	char		*line;
-	t_error		err;
+	char		*lines[MAX_LINES + 1];
+	int			count;
 
 	if (!ctx || fd < 0)
 		return (false);
 	parser = (t_parser){0};
+	count = 0;
+	ctx->renderer.render_samples = RENDER_SAMPLES;
+	ctx->renderer.refine_bounces = REFINE_BOUNCES;
 	while (try_gnl(ctx, fd, &line) == GNL_OK)
 	{
-		parser.line_num++;
-		err = parse_line(ctx, &parser, line);
-		free(line);
-		if (err != E_OK && err != E_EMPTY)
+		if (count >= MAX_LINES)
 		{
-			print_error(ctx, err, parser.line_num);
-			return (false);
+			free(line);
+			try_free_all(lines, count);
+			fatal_error(ctx, "Too many lines in scene", __FILE__, count);
 		}
+		lines[count++] = line;
 	}
-	if (!validate_scene(ctx, &parser))
-		return (false);
+	lines[count] = NULL;
+	count = 0;
+	while (count < 3)
+		try_pass(ctx, &parser, lines, count++);
+	validate_scene(ctx, &parser);
+	try_free_all(lines, count);
 	return (true);
 }
 
-static t_error	parse_line(t_context *ctx, t_parser *p, char *line)
-{
-	char	**tokens;
-	t_error	ret;
-
-	while (*line && ft_isspace(*line))
-		line++;
-	if (*line == '\0' || *line == '#')
-		return (E_EMPTY);
-	tokens = try_split(line);
-	if (!tokens)
-		return (E_MALLOC);
-	ret = identify_input(ctx, p, tokens);
-	free_tokens(tokens);
-	return (ret);
-}
-
-static bool	validate_scene(t_context *ctx, t_parser *p)
-{
-	if (!p->has_ambient)
-	{
-		fatal_error(ctx, "Missing ambient light (A)", __FILE__, p->line_num);
-		return (false);
-	}
-	if (!p->has_light)
-	{
-		fatal_error(ctx, "Missing light source (L)", __FILE__, p->line_num);
-		return (false);
-	}
-	if (!p->has_camera)
-	{
-		fatal_error(ctx, "Missing camera (C)", __FILE__, p->line_num);
-		return (false);
-	}
-	if (!p->has_plane && !p->has_sphere && !p->has_cylinder && !p->has_cone)
-	{
-		fatal_error(ctx, "No objects defined in scene", __FILE__, p->line_num);
-		return (false);
-	}
-	return (true);
-}
-
-static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
+t_error	dispatch_pass(t_context *ctx, t_parser *p,
+					char **tokens, int pass)
 {
 	const char	*id;
 
 	id = tokens[0];
-	if (ft_strcmp(id, "mat") == 0)
-		return (parse_material_def(ctx, p, tokens));
-	if (ft_strcmp(id, "tex") == 0)
-		return (parse_texture_def(ctx, tokens));
+	if (pass == 0)
+	{
+		if (ft_strcmp(id, "tex") == 0)
+			return (parse_texture_def(ctx, tokens));
+		if (ft_strcmp(id, "sky") == 0)
+			return (parse_skydome(ctx, tokens));
+		return (E_EMPTY);
+	}
+	if (pass == 1)
+	{
+		if (ft_strcmp(id, "mat") == 0)
+			return (parse_material_def(ctx, p, tokens));
+		if (ft_strcmp(id, "render") == 0)
+			return (try_render_settings(ctx, tokens));
+		return (E_EMPTY);
+	}
+	if (ft_strcmp(id, "mat") == 0 || ft_strcmp(id, "tex") == 0
+		|| ft_strcmp(id, "sky") == 0 || ft_strcmp(id, "render") == 0)
+		return (E_EMPTY);
+	return (identify_element(ctx, p, tokens));
+}
+
+t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
+{
+	const char	*id;
+
+	id = tokens[0];
 	if (ft_strcmp(id, "A") == 0)
 		return (parse_ambient(ctx, p, tokens));
 	if (ft_strcmp(id, "L") == 0)
 		return (parse_light(ctx, p, tokens));
 	if (ft_strcmp(id, "C") == 0)
 		return (parse_camera(ctx, p, tokens));
-	if (ft_strcmp(id, "sky") == 0)
-		return (parse_skydome(ctx, tokens));
 	if (ft_strcmp(id, "sp") == 0)
 		return (parse_sphere(ctx, p, tokens));
 	if (ft_strcmp(id, "pl") == 0)
@@ -104,7 +86,19 @@ static t_error	identify_input(t_context *ctx, t_parser *p, char **tokens)
 	return (E_UNKNOWN_ID);
 }
 
-static void	print_error(t_context *ctx, t_error err, int line_num)
+void	validate_scene(t_context *ctx, t_parser *p)
+{
+	if (!p->has_ambient)
+		fatal_error(ctx, "Missing ambient light (A)", __FILE__, p->line_num);
+	if (!p->has_light)
+		fatal_error(ctx, "Missing light source (L)", __FILE__, p->line_num);
+	if (!p->has_camera)
+		fatal_error(ctx, "Missing camera (C)", __FILE__, p->line_num);
+	if (!p->has_plane && !p->has_sphere && !p->has_cylinder && !p->has_cone)
+		fatal_error(ctx, "No objects defined in scene", __FILE__, p->line_num);
+}
+
+void	print_error(t_context *ctx, t_error err, int line_num)
 {
 	static char	*msgs[] = {
 	[E_UNKNOWN_ID] = "Unknown element identifier",

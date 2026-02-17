@@ -46,3 +46,6 @@ sp			-1,-1,6				1.0				5
 
 # Sphere - large background
 sp			0,-52,10			100				1
+
+# Render settings (samples, bounces) - use _ for default
+render	128		32

@@ -81,28 +81,24 @@ bool	parse_int(char *str, int *out)
 bool	parse_color(char *str, t_vec3 *color)
 {
 	char	**tokens;
-	float	r;
-	float	g;
-	float	b;
 	bool	ret;
 
-	if (!str || !color)
-		return (false);
-	tokens = ft_split(str, ',');
 	ret = false;
+	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (false);
-	if (count_tokens(tokens) >= 3 && count_tokens(tokens) <= 4)
+	if (count_tokens(tokens) == 3)
 	{
-		if (parse_float(tokens[0], &r) && parse_float(tokens[1], &g)
-			&& parse_float(tokens[2], &b))
+		if (parse_float(tokens[0], &(color->r))
+			&& parse_float(tokens[1], &(color->g))
+			&& parse_float(tokens[2], &(color->b)))
 		{
-			if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
+			if (color->r >= 0 && color->r <= 255 && color->g >= 0
+				&& color->g <= 255 && color->b >= 0 && color->b <= 255)
 			{
-				color->r = r / 255.0f;
-				color->g = g / 255.0f;
-				color->b = b / 255.0f;
-				// color->a = 1.0f; // fully opaque
+				color->r = color->r / 255.0f;
+				color->g = color->g / 255.0f;
+				color->b = color->b / 255.0f;
 				ret = true;
 			}
 		}

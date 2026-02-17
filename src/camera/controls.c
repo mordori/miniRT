@@ -1,12 +1,12 @@
 #include "camera.h"
 #include "input.h"
 
-static inline void	set_cam_state(\
-t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos);
-static inline void	orbit(\
-t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
-static inline void	zoom(\
-t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos);
+static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos,
+						t_vec2i *previous_pos);
+static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos,
+						t_vec2i original_pos);
+static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos,
+						t_vec2i original_pos);
 static inline void	pan(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos);
 
 bool	control_camera(t_context *ctx)
@@ -22,7 +22,7 @@ bool	control_camera(t_context *ctx)
 	if (cam->state == CAM_DEFAULT)
 	{
 		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
-		return (false);
+		return (camera_movement(ctx));
 	}
 	mlx_get_mouse_pos(ctx->mlx, &pos.x, &pos.y);
 	if (cam->state != CAM_PAN)
@@ -38,13 +38,14 @@ bool	control_camera(t_context *ctx)
 	return (true);
 }
 
-static inline void	set_cam_state(\
-t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos)
+static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos,
+		t_vec2i *previous_pos)
 {
 	t_camera	*cam;
 
 	cam = &ctx->scene.cam;
-	if (cam->state == CAM_DEFAULT && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
+	if (cam->state == CAM_DEFAULT && mlx_is_key_down(ctx->mlx,
+			MLX_KEY_LEFT_ALT))
 	{
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			cam->state = CAM_ORBIT;
@@ -61,8 +62,8 @@ t_context *ctx, t_vec2i *original_pos, t_vec2i *previous_pos)
 	}
 }
 
-static inline void	orbit(\
-t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
+static inline void	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos,
+		t_vec2i original_pos)
 {
 	float		speed;
 	t_vec2i		delta;
@@ -91,19 +92,21 @@ t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
 	}
 }
 
-static inline void	zoom(\
-t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
+static inline void	zoom(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos,
+		t_vec2i original_pos)
 {
-	float		speed;
-	t_vec2i		delta;
+	float	speed;
+	t_vec2i	delta;
 
 	if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 	{
 		delta = vec2i_sub(pos, *previous_pos);
 		if (delta.x || delta.y)
 		{
-			speed = ctx->scene.cam.distance * ctx->mlx->delta_time * 60.0f * SENS_ZOOM;
-			ctx->scene.cam.distance = fmaxf(0.1f, ctx->scene.cam.distance - delta.y * speed);
+			speed = ctx->scene.cam.distance * ctx->mlx->delta_time * 60.0f
+				* SENS_ZOOM;
+			ctx->scene.cam.distance = fmaxf(0.1f, ctx->scene.cam.distance
+					- delta.y * speed);
 		}
 		*previous_pos = pos;
 	}
@@ -116,15 +119,16 @@ t_context *ctx, t_vec2i pos, t_vec2i *previous_pos, t_vec2i original_pos)
 
 static inline void	pan(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos)
 {
-	float		speed;
-	t_vec2i		delta;
+	float	speed;
+	t_vec2i	delta;
 
 	if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
 	{
 		delta = vec2i_sub(pos, *previous_pos);
 		if (delta.x || delta.y)
 		{
-			speed = fmaxf(ctx->scene.cam.distance, 1.0f) * (ctx->scene.cam.fov / (M_PI / 2.5f));
+			speed = fmaxf(ctx->scene.cam.distance, 1.0f) * (ctx->scene.cam.fov
+					/ (M_PI / 2.5f));
 			speed *= ctx->mlx->delta_time * 60.0f * SENS_PAN;
 		}
 		*previous_pos = pos;

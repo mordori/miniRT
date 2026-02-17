@@ -3,6 +3,17 @@
 # Ambient
 A		0.1				20,20,30
 
+# Camera
+C		0,0,-1			-1,0,0			70				0.2
+
+# Light
+L		15,5,8				0.9			255,250,240		0.5			2
+
+# Sphere
+sp			0,0,5				4.0				0
+sp			-2.5,-1,2			1.0				1
+
+
 # Skydome
 sky		stars.png
 # sky		sky.png
@@ -20,12 +31,5 @@ mat		1		245,70,50		0.0			0.05		1.45	0.0				0.0					0,0,0				0		moon_albedo
 # Material - emissive
 mat		2		255,255,255		0.0			0.0			1.0		1.0				18000.0				255,255,255			0
 
-# Camera
-C		0,0,-1			-1,0,0			70				0.2
-
-# Light
-L		15,5,8				0.9			255,250,240		0.5			2
-
-# Sphere
-sp			0,0,5				4.0				0
-sp			-2.5,-1,2			1.0				1
+# Render settings (samples, bounces) - use _ for default
+render	128		32

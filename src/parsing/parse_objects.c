@@ -95,14 +95,15 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 		return (E_INVALID_NUM);
 	if (!validate_normalized(cone.axis))
 		return (E_RANGE);
-	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4], &cone.height))
+	if (!parse_float(tkns[3], &angle_deg)
+		|| !parse_float(tkns[4], &cone.height))
 		return (E_INVALID_NUM);
 	if (angle_deg <= 0.0f || angle_deg >= 90.0f || cone.height <= 0.0f)
 		return (E_RANGE);
 	cone.angle = angle_deg * (M_PI / 180.0f);
 	err = resolve_material(ctx, p, tkns[5], &mat_id);
 	if (err != E_OK)
-		return  (err);
+		return (err);
 	p->has_cone = true;
 	return (init_cone(ctx, &cone, mat_id));
 }

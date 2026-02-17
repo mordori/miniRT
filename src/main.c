@@ -24,9 +24,6 @@ int	main(int argc, char *argv[])
 	validate_file_type(file);
 	printf("[miniRT]\n");
 	printf("Loaded scene: %s\n\n", file);
-	printf("Render settings\n");
-	printf("Samples:\t%d\n", RENDER_SAMPLES);
-	printf("Bounces:\t%d\n\n\n", REFINE_BOUNCES);
 	ctx.fd = try_open(file, O_RDONLY, 0);
 	initialize(&ctx);
 	try_write(&ctx, STDOUT_FILENO, "\n\nGoodbye!\n");
@@ -50,6 +47,9 @@ static inline void	initialize(t_context *ctx)
 		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
+	printf("Render settings\n");
+	printf("Samples:\t%d\n", ctx->renderer.render_samples);
+	printf("Bounces:\t%d\n\n\n", ctx->renderer.refine_bounces);
 	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
 	if (!ctx->tex_bn.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
