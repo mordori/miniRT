@@ -14,8 +14,6 @@ void	init_point_light(t_context *ctx, t_light *light)
 	if (!l)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
 	*l = *light;
-	if (l->intensity < 1.01f)
-		l->intensity *= 100.0f;
 	l->mat = ((t_material **)ctx->scene.materials.items)[l->material_id];
 	l->max_brightness = MAX_BRIGHTNESS;
 	obj = (t_object){0};
@@ -28,6 +26,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	obj.flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	if (l->radius > 20.0f)
 	{
+		l->intensity = 100000.0f;
 		l->max_brightness = 2.0f;
 		init_dir_light(ctx, l, &obj);
 		return ;

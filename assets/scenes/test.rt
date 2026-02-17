@@ -1,6 +1,6 @@
 # Ambient
 #		intensity		color
-A		0.2				128,128,128
+A		0.6				128,170,240
 
 # Skydome
 #		file
@@ -24,7 +24,7 @@ C		0,0,0 			0,0,1			70				1.2
 
 # Light
 #		pos					intensity	color			radius		mat_id
-L		705,485,520			0.0			255,20,40		30.0		3
+L		705,485,520			1.0			255,255,255		30.0		3
 
 # Sphere
 #		pos					radius		mat_id

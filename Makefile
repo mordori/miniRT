@@ -62,6 +62,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c try_parse.c \
 				 parse_patterns.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
+				editing/tracer.c editing/lighting.c \
 				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)

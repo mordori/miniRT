@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 13:28:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/16 22:28:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/17 18:20:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ t_vec3	vec3_div(t_vec3 vec, float den)
 
 t_vec3	vec3_normalize(t_vec3 vec)
 {
-	float		len2;
+	float		len_sq;
 	float		len_recip;
 
-	len2 = vec3_dot(vec, vec);
-	if (len2 < LEN_SQ_EPSILON)
+	len_sq = vec3_dot(vec, vec);
+	if (len_sq < LEN_SQ_EPSILON)
 		return (vec3_n(0.0f));
-	len_recip = 1.0f / sqrtf(len2);
+	len_recip = 1.0f / sqrtf(len_sq);
 	return (vec3_scale(vec, len_recip));
 }
 

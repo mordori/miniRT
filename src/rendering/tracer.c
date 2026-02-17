@@ -10,7 +10,7 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
 static inline bool	russian_roulette(t_path *path, t_pixel *pixel);
 
-t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
+t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint8_t bounces)
 {
 	const t_viewport	*vp;
 	const t_renderer	*r;
@@ -24,14 +24,19 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel)
 	path = (t_path){0};
 	path.ray = new_ray(r->cam.transform.pos, vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos)));
 	path.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
-	path.mode = r->mode;
-	while (path.bounce < r->ray_bounces)
+	while (path.bounce < bounces)
 	{
-		path.hit = (t_hit){0};
-		path.hit.t = M_INF;
-		path.hit.is_primary = (path.bounce == 0);
-		if (!trace_ray(ctx, &path, pixel))
-			break ;
+		init_hit(&path);
+		if (mode == RENDER_EDIT)
+		{
+			if (!trace_ray_editing(ctx, &path, pixel))
+				break ;
+		}
+		else
+		{
+			if (!trace_ray(ctx, &path, pixel))
+				break ;
+		}
 	}
 	return (path.color);
 }
@@ -49,7 +54,12 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		set_material_data(path);
 		if (path->mat->is_emissive)
 		{
-			if (path->bounce > 0)
+			if (path->bounce == 0)
+			{
+				indirect_light = vec3_mul(path->throughput, path->mat->emission);
+				indirect_light = vec3_clamp_mag(indirect_light, 2.0f);
+			}
+			else
 			{
 				pdf = light_pdf(vec3_sub(path->ray.origin, path->n), path->hit.obj->shape.sphere.radius_sq);
 				if (ctx->scene.lights.total > 0)
@@ -57,11 +67,6 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 				weight = power_heuristic(path->pdf, pdf);
 				indirect_light = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
 				indirect_light = vec3_clamp_mag(indirect_light, MAX_BRIGHTNESS);
-			}
-			else
-			{
-				indirect_light = vec3_mul(path->throughput, path->mat->emission);
-				indirect_light = vec3_clamp_mag(indirect_light, 2.0f);
 			}
 			path->color = vec3_add(path->color, indirect_light);
 			return (false);
@@ -96,9 +101,8 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel)
 		i = 0;
 		while (i < ctx->scene.lights.total)
 		{
-			light = ((t_light **)ctx->scene.lights.items)[i];
+			light = ((t_light **)ctx->scene.lights.items)[i++];
 			add_lighting(ctx, path, light, pixel);
-			++i;
 		}
 	}
 }
