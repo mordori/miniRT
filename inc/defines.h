@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			2048
+# define RENDER_SAMPLES			1024
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -346,7 +346,6 @@ struct __attribute__((aligned(16))) s_path
 	float			alpha;
 	float			pdf;
 	float			p_spec;
-	t_render_mode	mode;
 	bool			sample_spec;
 };
 

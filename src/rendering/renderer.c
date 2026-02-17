@@ -117,7 +117,7 @@ static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
 		pixel->u = (float)pixel->x + blue_noise(&ctx->tex_bn, pixel, BN_PX_U);
 		pixel->v = (float)pixel->y + blue_noise(&ctx->tex_bn, pixel, BN_PX_V);
 	}
-	color = trace_path(ctx, pixel);
+	color = trace_path(ctx, pixel, r->mode, r->ray_bounces);
 	if (r->frame == 1)
 		*pixel->color = color;
 	else

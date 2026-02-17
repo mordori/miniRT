@@ -60,5 +60,6 @@ void		set_render_refine(t_renderer *r);
 void		print_render_status(t_context *ctx, t_renderer *r);
 void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);
+void	init_hit(t_path *path);
 
 #endif

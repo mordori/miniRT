@@ -4,6 +4,8 @@
 # include "defines.h"
 
 uint32_t	new_material(t_context *ctx, t_material *mat);
+void	set_material_data(t_path *path);
+void	set_shader_data(t_path *path);
 
 /* Texture sampling */
 t_vec3		sample_texture(const t_texture *tex, t_vec2 uv);

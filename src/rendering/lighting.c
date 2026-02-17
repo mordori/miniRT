@@ -1,4 +1,5 @@
 #include "rendering.h"
+#include "materials.h"
 #include "utils.h"
 #include "scene.h"
 
@@ -8,11 +9,11 @@ static inline bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist
 
 void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
-	t_vec3			lighting;
+	t_vec3		res;
 
-	lighting = direct_lighting(ctx, path, light, pixel);
-	lighting = vec3_clamp_mag(lighting, light->max_brightness);
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, lighting));
+	res = direct_lighting(ctx, path, light, pixel);
+	res = vec3_clamp_mag(res, light->max_brightness);
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, res));
 }
 
 static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
