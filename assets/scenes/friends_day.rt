@@ -13,3 +13,6 @@ L	4,8,0	0.0	255,250,240	0.3	1
 sp	-1,4,1	2	0
 sp	1,4,1	2	0
 co	0,1,0.5	0,1,0	35	3.0 0
+
+# Render settings (samples, bounces) - use _ for default
+render	128		32

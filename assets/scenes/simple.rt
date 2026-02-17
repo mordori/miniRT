@@ -12,13 +12,6 @@ tex		moon_albedo		8k_moon.png
 
 # Material - emissive (required for light)
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags
-mat		0		255,255,255		0.0			0.0			0   	1.0				5000.0				255,255,255			1		_
-
-
-mat		1		245,245,250		0.0			0.05		0	    0.0				0.0					0,0,0				0		earth_albedo
-mat		2		245,245,250		0.0			0.05		0	    0.0				0.0					0,0,0				0		moon_albedo
-
-mat     3		255,255,255		0.0			0.5			0	    0.0				0.0					0,0,0				0		_
 
 
 # Camera (position, look direction, FOV, exposure)
@@ -44,3 +37,14 @@ sp			0,-1,4				2.0				1
 
 # Cone with ring pattern (right-front)
 # co	2,2,1	0,-1,0	35	3.0	255,128,0
+
+mat		0		255,255,255		0.0			0.0			0   	1.0				5000.0				255,255,255			1		_
+
+
+mat		1		245,245,250		0.0			0.05		0	    0.0				0.0					0,0,0				0		earth_albedo
+mat		2		245,245,250		0.0			0.05		0	    0.0				0.0					0,0,0				0		moon_albedo
+
+mat     3		255,255,255		0.0			0.5			0	    0.0				0.0					0,0,0				0		_
+
+# Render settings (samples, bounces) - use _ for default
+render	128		32

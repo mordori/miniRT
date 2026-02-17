@@ -29,10 +29,10 @@ void	frame_loop(void *param)
 	}
 	else if (!r->threads_running && update)
 		set_render_preview(ctx, r, &update);
-	else if (!r->threads_running && r->frame < RENDER_SAMPLES + 1)
+	else if (!r->threads_running && r->frame < r->render_samples + 1)
 		set_render_refine(r);
 	pthread_mutex_unlock(&r->mutex);
-	limit_polling_rate(r->frame);
+	limit_polling_rate(r);
 }
 
 void	blit(const t_context *ctx, const t_renderer *r)
@@ -100,12 +100,12 @@ static inline void	process_frame(t_context *ctx, t_renderer *r)
 	uint32_t		render_time;
 
 	print_render_status(ctx, r);
-	if (r->mode != RENDER_REFINE || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 || r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame == RENDER_SAMPLES))
+	if (r->mode != RENDER_REFINE || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 || r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame == r->render_samples))
 	{
 		blit(ctx, r);
 		r->blit_time = time_now();
 		render_time = time_now() - r->render_time;
-		if (r->frame == RENDER_SAMPLES)
+		if (r->frame == r->render_samples)
 			printf("\nDone!\t\t    Time: %.1fs\n\n", render_time / 1000.0f);
 	}
 	r->frame_complete = false;

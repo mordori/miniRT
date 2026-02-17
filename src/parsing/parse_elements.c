@@ -1,6 +1,6 @@
 #include "camera.h"
-#include "libft_io.h"
 #include "lib_math.h"
+#include "libft_io.h"
 #include "libft_str.h"
 #include "lights.h"
 #include "parsing.h"
@@ -38,12 +38,12 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
  */
 t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
-	float	ratio;
-	float	radius;
-	t_vec3	position;
-	t_vec3	color;
-	t_light	light;
-	int		token_count;
+	float		ratio;
+	float		radius;
+	t_vec3		position;
+	t_vec3		color;
+	t_light		light;
+	int			token_count;
 	uint32_t	mat_id;
 	t_material	*mat;
 

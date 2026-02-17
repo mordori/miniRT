@@ -2,9 +2,9 @@
 #include "libft_str.h"
 #include "libft_utils.h"
 #include "lights.h"
-#include "parsing.h"
 #include "materials.h"
 #include "objects.h"
+#include "parsing.h"
 #include "utils.h"
 #include <stdlib.h>
 #include <string.h>
@@ -67,8 +67,8 @@ t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
 	return (E_OK);
 }
 
-static t_error parse_material_textures(t_context *ctx, char **tkn, t_material *mat,
-	int token_count)
+static t_error	parse_material_textures(t_context *ctx, char **tkn,
+		t_material *mat, int token_count)
 {
 	t_texture	*tex;
 
@@ -86,7 +86,7 @@ static t_error parse_material_textures(t_context *ctx, char **tkn, t_material *m
 	if (token_count == 12)
 	{
 		if (is_placeholder(tkn[11]))
-			return(E_OK);
+			return (E_OK);
 		tex = find_texture_by_name(&ctx->scene, tkn[11]);
 		if (!tex)
 			return (E_TEXTURE);
@@ -110,14 +110,14 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3		color;
 	t_vec3		emission_color;
 	float		emission_strength;
-	int 		tokens_count;
+	int			tokens_count;
 
 	tokens_count = count_tokens(tokens);
 	if (tokens_count < 10)
 		return (E_MISSING_ARGS);
 	if (p->mat_count >= MAX_MATERIALS)
 		return (E_TOO_MANY);
-	if (!parse_uint(tokens[1], &id) || id != p->mat_count) // Enforce sequential IDs, no gaps allowed
+	if (!parse_uint(tokens[1], &id) || id != p->mat_count)
 		return (E_MATERIAL);
 	if (!parse_color(tokens[2], &color))
 		return (E_INVALID_NUM);
@@ -126,17 +126,17 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	*mat = (t_material){0};
 	mat->albedo = color;
 	mat->base_color = BASE_COLOR;
-	if (!parse_float(tokens[3], &mat->metallic)
-		|| !parse_float(tokens[4], &mat->roughness)
-		|| !parse_float(tokens[5], &mat->ior)
+	if (!parse_float(tokens[3], &mat->metallic) || !parse_float(tokens[4],
+			&mat->roughness) || !parse_float(tokens[5], &mat->ior)
 		|| !parse_float(tokens[6], &mat->transmission)
 		|| !parse_float(tokens[7], &emission_strength)
-		|| !parse_color(tokens[8], &emission_color)
-		|| !parse_uint(tokens[9], &mat->flags))
+		|| !parse_color(tokens[8], &emission_color) || !parse_uint(tokens[9],
+			&mat->flags))
 		return (E_INVALID_NUM);
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);
-	if (tokens_count > 10 && parse_material_textures(ctx, tokens, mat, tokens_count) != E_OK)
+	if (tokens_count > 10 && parse_material_textures(ctx, tokens, mat,
+			tokens_count) != E_OK)
 		return (E_MATERIAL);
 	entry->defined = true;
 	new_material(ctx, mat);

@@ -1,9 +1,11 @@
 #include "camera.h"
 #include "rendering.h"
 
-static inline void	update_viewport(const t_camera *cam, float img_width, float img_height);
+static inline void	update_viewport(const t_camera *cam, float img_width,
+						float img_height);
 
-void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation, float fov)
+void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
+		float fov)
 {
 	t_camera	*cam;
 
@@ -46,7 +48,8 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	update_viewport(cam, (float)ctx->img->width, (float)ctx->img->height);
 }
 
-static inline void	update_viewport(const t_camera *cam, float img_width, float img_height)
+static inline void	update_viewport(const t_camera *cam, float img_width,
+		float img_height)
 {
 	t_viewport	*vp;
 	t_vec3		u;
@@ -61,7 +64,8 @@ static inline void	update_viewport(const t_camera *cam, float img_width, float i
 	v = vec3_scale(cam->up, -vp->height);
 	vp->d_u = vec3_div(u, img_width);
 	vp->d_v = vec3_div(v, img_height);
-	vp_center = vec3_add(cam->transform.pos, vec3_scale(cam->forward, cam->focal_length));
+	vp_center = vec3_add(cam->transform.pos, vec3_scale(cam->forward,
+				cam->focal_length));
 	vp_up_left = vec3_sub(vp_center, vec3_scale(u, 0.5f));
 	vp_up_left = vec3_sub(vp_up_left, vec3_scale(v, 0.5f));
 	vp->pixel_00_loc = vp_up_left;
