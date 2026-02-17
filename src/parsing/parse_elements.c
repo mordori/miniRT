@@ -110,9 +110,11 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 		return (E_INVALID_NUM);
 	if (!validate_range(fov, 0.0f, 180.0f))
 		return (E_RANGE);
-	exposure = 0.085f;
+	exposure = 0.0f;
 	if (token_count == 5 && !parse_float(tokens[4], &exposure))
 		return (E_INVALID_NUM);
+	if (!validate_range(exposure, 0.01f, 10.0f))
+		return (E_RANGE);
 	ctx->scene.cam.exposure = exposure;
 	init_camera(ctx, position, orientation, fov);
 	p->has_camera = true;

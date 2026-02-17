@@ -16,7 +16,7 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			512
+# define RENDER_SAMPLES			2048
 # define PREVIEW_BOUNCES		3
 # define REFINE_BOUNCES			32
 # define DEPTH_ENABLE_RR		3
@@ -29,7 +29,7 @@
 # define SENS_PAN				0.0006f
 # define SENS_MOVE				5.0f
 
-# define MAX_BRIGHTNESS			40.0f
+# define MAX_BRIGHTNESS			10.0f
 
 # define KEY_FORWARD			MLX_KEY_W
 # define KEY_LEFT				MLX_KEY_A
@@ -289,6 +289,7 @@ struct __attribute__((aligned(16))) s_light
 	t_material		*mat;
 	float			radius;
 	float			intensity;
+	float			max_brightness;
 	uint32_t		material_id;
 	t_light_type	type;
 };

@@ -12,7 +12,7 @@ bool	init_renderer(t_context *ctx);
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel);
 t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c);
 t_vec3	post_process_preview(const t_context *ctx, t_vec3 c);
-t_vec3	background_color(const t_texture *tex, const t_ray *ray, const float lux, t_vec2 uv_offset);
+t_vec3	background_color(const t_texture *tex, const t_ray *ray, t_vec2 uv_offset);
 t_vec3	background_gradient(const float t);
 float	reflectance(float ior);
 t_vec3	disney_brdf(const t_path *path);

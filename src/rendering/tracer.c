@@ -49,17 +49,20 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		set_material_data(path);
 		if (path->mat->is_emissive)
 		{
-			weight = 1.0f;
 			if (path->bounce > 0)
 			{
 				pdf = light_pdf(vec3_sub(path->ray.origin, path->n), path->hit.obj->shape.sphere.radius_sq);
 				if (ctx->scene.lights.total > 0)
 					pdf /= (float)ctx->scene.lights.total;
 				weight = power_heuristic(path->pdf, pdf);
-			}
-			indirect_light = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
-			if (path->bounce > 0)
+				indirect_light = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
 				indirect_light = vec3_clamp_mag(indirect_light, MAX_BRIGHTNESS);
+			}
+			else
+			{
+				indirect_light = vec3_mul(path->throughput, path->mat->emission);
+				indirect_light = vec3_clamp_mag(indirect_light, 2.0f);
+			}
 			path->color = vec3_add(path->color, indirect_light);
 			return (false);
 		}
@@ -69,7 +72,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 			nee(ctx, path, pixel);
 		return (scatter(ctx, path, pixel));
 	}
-	bg_color = background_color(&ctx->scene.skydome, &path->ray, 1.0f / ctx->renderer.cam.exposure, ctx->renderer.cam.skydome_uv_offset);
+	bg_color = background_color(&ctx->scene.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
