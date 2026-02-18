@@ -17,44 +17,43 @@ void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *lig
 
 static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path, const t_light *light)
 {
-	t_vec3		res;
 	t_vec3		l;
 	t_vec3		hit_biased;
+	float		dist_sq;
 	float		dist;
 
 	path->n = path->hit.normal;
 	hit_biased = vec3_bias(path->hit.point, path->n);
 	l = vec3_sub(light->pos, hit_biased);
-	dist = vec3_dot(l, l);
-	if (dist < LEN_SQ_EPSILON)
+	dist_sq = vec3_dot(l, l);
+	if (dist_sq < LEN_SQ_EPSILON)
 		return (vec3_n(0.0f));
-	dist = sqrtf(dist);
+	dist = sqrtf(dist_sq);
 	path->l = vec3_scale(l, 1.0f / dist);
 	path->ndotl = clampf01(vec3_dot(path->n, path->l));
 	if (path->ndotl <= G_EPSILON)
 		return (vec3_n(0.0f));
-	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, path->l, dist - B_EPSILON))
+	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, hit_biased, path->l, dist - light->radius - B_EPSILON))
 		return (vec3_n(0.0f));
-	res = add_light(path, light, dist);
-	return (res);
+	return (add_light(path, light, dist_sq));
 }
 
 void	ambient_lighting(t_path *path, const t_light *light)
 {
 	t_vec3		res;
 
-	res = vec3_mul(light->color, get_surface_color(path->mat, &path->hit));
+	res = vec3_mul(light->color, path->mat->albedo);
 	res = vec3_scale(res, light->intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, res));
 }
 
-static inline t_vec3	add_light(const t_path *path, const t_light *light, float dist)
+static inline t_vec3	add_light(const t_path *path, const t_light *light, float dist_sq)
 {
 	t_vec3		res;
 	float		attenuation;
 
-	attenuation = (light->intensity * path->ndotl) / fmaxf(1.0f + (0.9f * dist) + (0.032f * dist * dist), G_EPSILON);
-	res = vec3_mul(get_surface_color(path->mat, &path->hit), light->color);
+	attenuation = light->intensity * path->ndotl / fmax(dist_sq, G_EPSILON);
+	res = vec3_mul(path->mat->albedo, light->color);
 	res = vec3_scale(res, attenuation * M_1_PI);
 	return (res);
 }

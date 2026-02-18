@@ -11,12 +11,21 @@ static inline void	nee_editing(const t_context *ctx, t_path *path, t_pixel *pixe
 bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		bg_color;
+	t_vec3		light_emission;
 
 	if ((int)hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | \
+(int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
 (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);
+		if (path->mat->is_emissive)
+		{
+			light_emission = vec3_mul(path->throughput, path->mat->emission);
+			light_emission = vec3_clamp_mag(light_emission, 2.0f);
+			path->color = vec3_add(path->color, light_emission);
+			return (false);
+		}
 		if (ctx->scene.has_directional_light)
 			add_lighting_editing(ctx, path, &ctx->renderer.cam.directional_light);
 		if (ctx->scene.lights.total > 0)
@@ -35,16 +44,17 @@ static inline void	nee_editing(const t_context *ctx, t_path *path, t_pixel *pixe
 	const t_light	*light;
 	size_t			i;
 
-	if (ctx->renderer.mode == RENDER_PREVIEW)
-	{
-		i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
-		if (i >= ctx->scene.lights.total)
-			i = ctx->scene.lights.total - 1;
-		light = ((t_light **)ctx->scene.lights.items)[i];
-		add_lighting_editing(ctx, path, light);
-		path->color = vec3_scale(path->color, (float)ctx->scene.lights.total);
-	}
-	else
+	(void)pixel;
+	// if (ctx->renderer.mode == RENDER_PREVIEW)
+	// {
+	// 	i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
+	// 	if (i >= ctx->scene.lights.total)
+	// 		i = ctx->scene.lights.total - 1;
+	// 	light = ((t_light **)ctx->scene.lights.items)[i];
+	// 	add_lighting_editing(ctx, path, light);
+	// 	path->color = vec3_scale(path->color, (float)ctx->scene.lights.total);
+	// }
+	// else
 	{
 		i = 0;
 		while (i < ctx->scene.lights.total)

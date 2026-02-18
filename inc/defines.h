@@ -16,9 +16,10 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			1024
+# define RENDERED_SAMPLES		256
+# define SOLID_BOUNCES			3
 # define PREVIEW_BOUNCES		3
-# define REFINE_BOUNCES			32
+# define RENDERED_BOUNCES		32
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64
@@ -154,9 +155,9 @@ enum e_entity
 
 enum e_render_mode
 {
-	RENDER_REFINE,
-	RENDER_PREVIEW,
-	RENDER_EDIT
+	RENDERED,
+	PREVIEW,
+	SOLID
 };
 
 enum e_bn_channel

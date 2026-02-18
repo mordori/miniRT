@@ -5,8 +5,8 @@
 #include "utils.h"
 #include "materials.h"
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel);
-static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel);
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
+static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
 static inline bool	russian_roulette(t_path *path, t_pixel *pixel);
 
@@ -27,26 +27,23 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 	while (path.bounce < bounces)
 	{
 		init_hit(&path);
-		if (mode == RENDER_EDIT)
+		if (mode == SOLID)
 		{
 			if (!trace_ray_editing(ctx, &path, pixel))
 				break ;
 		}
-		else
-		{
-			if (!trace_ray(ctx, &path, pixel))
-				break ;
-		}
+		else if (!trace_ray(ctx, &path, pixel, mode))
+			break ;
 	}
 	return (path.color);
 }
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
+static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
 {
 	t_vec3		bg_color;
 	float		weight;
 	float		pdf;
-	t_vec3		indirect_light;
+	t_vec3		light_emission;
 
 	if ((int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
@@ -56,8 +53,8 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 		{
 			if (path->bounce == 0)
 			{
-				indirect_light = vec3_mul(path->throughput, path->mat->emission);
-				indirect_light = vec3_clamp_mag(indirect_light, 2.0f);
+				light_emission = vec3_mul(path->throughput, path->mat->emission);
+				light_emission = vec3_clamp_mag(light_emission, 2.0f);
 			}
 			else
 			{
@@ -65,16 +62,16 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 				if (ctx->scene.lights.total > 0)
 					pdf /= (float)ctx->scene.lights.total;
 				weight = power_heuristic(path->pdf, pdf);
-				indirect_light = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
-				indirect_light = vec3_clamp_mag(indirect_light, MAX_BRIGHTNESS);
+				light_emission = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
+				light_emission = vec3_clamp_mag(light_emission, MAX_BRIGHTNESS);
 			}
-			path->color = vec3_add(path->color, indirect_light);
+			path->color = vec3_add(path->color, light_emission);
 			return (false);
 		}
 		if (ctx->scene.has_directional_light)
 			add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel);
 		if (ctx->scene.lights.total > 0)
-			nee(ctx, path, pixel);
+			nee(ctx, path, pixel, mode);
 		return (scatter(ctx, path, pixel));
 	}
 	bg_color = background_color(&ctx->scene.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
@@ -82,12 +79,12 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel)
 	return (false);
 }
 
-static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel)
+static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
 {
 	const t_light	*light;
 	size_t			i;
 
-	if (ctx->renderer.mode == RENDER_PREVIEW)
+	if (mode == PREVIEW)
 	{
 		i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
 		if (i >= ctx->scene.lights.total)
