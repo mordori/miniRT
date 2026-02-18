@@ -24,10 +24,8 @@ void	init_point_light(t_context *ctx, t_light *light)
 	obj.shape.sphere.radius = l->radius;
 	obj.shape.sphere.radius_sq = l->radius * l->radius;
 	obj.material_id = l->material_id;
-	if (l->radius > 20.0f)
+	if (vec3_length(obj.transform.pos) > 500.0f)
 	{
-		l->intensity = 4000000.0f;
-		l->max_brightness = 2.0f;
 		init_dir_light(ctx, l, &obj);
 		return ;
 	}
@@ -47,6 +45,9 @@ static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 	*new_obj = *obj;
 	new_obj->mat = ((t_material **)ctx->scene.materials.items)[obj->material_id];
 	light->obj = new_obj;
+	light->intensity = 4000000.0f;
+	light->max_brightness = 2.0f;
+	light->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	ctx->scene.cam.directional_light = *light;
 	ctx->scene.has_directional_light = true;
 	free(light);
