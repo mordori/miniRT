@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc);
+
 static inline bool	is_color_token(const char *str)
 {
 	return (str && ft_strchr(str, ',') != NULL);
@@ -108,12 +110,10 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	t_material	*mat;
 	uint32_t	id;
 	t_vec3		color;
-	t_vec3		emission_color;
-	float		emission_strength;
-	int			tokens_count;
+	int			tc;
 
-	tokens_count = count_tokens(tokens);
-	if (tokens_count < 10)
+	tc = count_tokens(tokens);
+	if (tc < 10)
 		return (E_MISSING_ARGS);
 	if (p->mat_count >= MAX_MATERIALS)
 		return (E_TOO_MANY);
@@ -126,17 +126,32 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	*mat = (t_material){0};
 	mat->albedo = color;
 	mat->base_color = BASE_COLOR;
-	if (!parse_float(tokens[3], &mat->metallic) || !parse_float(tokens[4],
-			&mat->roughness) || !parse_float(tokens[5], &mat->ior)
-		|| !parse_float(tokens[6], &mat->transmission)
-		|| !parse_float(tokens[7], &emission_strength)
-		|| !parse_color(tokens[8], &emission_color) || !parse_uint(tokens[9],
-			&mat->flags))
+	mat->pattern_scale = 1.0f;
+	return (parse_mat_fields(ctx, p, tokens, tc));
+}
+
+static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc)
+{
+	t_mat_entry *entry;
+	t_material *mat;
+	float emission_strength;
+	t_vec3 emission_color;
+
+	entry = &p->materials[p->mat_count];
+	mat = &entry->material;
+	if (!parse_float(tkns[3], &mat->metallic)
+		|| !parse_float(tkns[4], &mat->roughness)
+		|| !parse_float(tkns[5], &mat->ior)
+		|| !parse_float(tkns[6], &mat->transmission)
+		|| !parse_float(tkns[7], &emission_strength)
+		|| !parse_color(tkns[8], &emission_color)
+		|| !parse_uint(tkns[9], &mat->flags))
 		return (E_INVALID_NUM);
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);
-	if (tokens_count > 10 && parse_material_textures(ctx, tokens, mat,
-			tokens_count) != E_OK)
+	if (tc > 10 && parse_material_textures(ctx, tkns, mat, tc) != E_OK)
+		return (E_MATERIAL);
+	if (parse_mat_pattern(mat, tkns, tc) != E_OK)
 		return (E_MATERIAL);
 	entry->defined = true;
 	new_material(ctx, mat);

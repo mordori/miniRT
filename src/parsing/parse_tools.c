@@ -13,16 +13,17 @@ bool	parse_float(char *str, float *out)
 
 	if (!str || !out)
 		return (false);
+	end = NULL;
 	while (ft_isspace(*str))
 		str++;
-	if (*str == '\0')
+	if (*str == '\0' || *str == '.')
 		return (false);
 	value = ft_atof(str, &end);
-	if (end == str)
+	if (end == str || !end)
 		return (false);
 	while (ft_isspace(*end))
 		end++;
-	if (*end != '\0')
+	if (isnan(value) || isinf(value) || *end != '\0')
 		return (false);
 	*out = value;
 	return (true);
@@ -87,7 +88,7 @@ bool	parse_color(char *str, t_vec3 *color)
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (false);
-	if (count_tokens(tokens) == 3)
+	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2)
 	{
 		if (parse_float(tokens[0], &(color->r))
 			&& parse_float(tokens[1], &(color->g))
@@ -120,7 +121,7 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (ret);
-	if (count_tokens(tokens) >= 3 && count_tokens(tokens) <= 4)
+	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2)
 	{
 		ret = parse_float(tokens[0], &vec->x) && parse_float(tokens[1], &vec->y)
 			&& parse_float(tokens[2], &vec->z);

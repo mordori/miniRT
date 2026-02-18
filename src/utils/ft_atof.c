@@ -67,7 +67,12 @@ float	ft_atof(const char *str, char **endptr)
 	start = str;
 	sign = skip_whitespace_and_sign(&str);
 	result = parse_integer_part(&str);
-	if (*str == '.')
+	if (*str == '.' && !ft_isdigit(*(str + 1)))
+	{
+		*endptr = (char *)str;
+		return (result * sign);
+	}
+	if (*str == '.' && ft_isdigit(*(str + 1)))
 		result += parse_fraction(&str);
 	set_end_pointer(start, str, endptr);
 	return (result * sign);

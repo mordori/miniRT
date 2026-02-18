@@ -54,6 +54,8 @@ bool			parse_int(char *str, int *out);
 bool			parse_color(char *str, t_vec3 *color);
 bool			parse_vec3(char *str, t_vec3 *vec);
 int				count_tokens(char **tokens);
+int				count_delimiter(const char *str, char delim);
+
 void			free_tokens(char **tokens);
 void			try_free_all(char **lines, int count);
 
@@ -84,6 +86,8 @@ t_material		*get_material_by_id(t_parser *p, uint32_t id);
 void			try_pass(t_context *ctx, t_parser *p, char **lines, int pass);
 t_error			dispatch_pass(t_context *ctx, t_parser *p, char **tokens,
 					int pass);
+bool			parse_pattern_token(const char *tkn, t_pattern *out);
+t_error 		parse_mat_pattern(t_material *mat, char **tkns, int tc);
 
 t_error			try_render_settings(t_context *ctx, char **tokens);
 t_error			parse_texture_def(t_context *ctx, char **tokens);

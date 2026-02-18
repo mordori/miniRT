@@ -39,6 +39,22 @@ int	count_tokens(char **tokens)
 	return (count);
 }
 
+int	count_delimiter(const char *str, char delim)
+{
+	int	count;
+
+	if (!str)
+		return (0);
+	count = 0;
+	while (*str)
+	{
+		if (*str == delim)
+			count++;
+		str++;
+	}
+	return (count);
+}
+
 void	free_tokens(char **tokens)
 {
 	ft_free_split(tokens);
