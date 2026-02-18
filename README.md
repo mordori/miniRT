@@ -64,7 +64,7 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 - Used during the camera movement. Achieves pure SIMD execution, processing 4 pixels in parallel per instruction cycle to maximize frame rate at the cost of slight image quality reduction.
 
-#### Pipelined Refine Mode
+#### Pipelined Rendered Mode
 
 - Leverages explicit loop unrolling to maximize Instruction Level Parallelism (ILP). While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
 

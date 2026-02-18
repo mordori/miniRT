@@ -55,8 +55,8 @@ t_ray		new_ray(t_vec3 origin, t_vec3 dir);
 void		random_uv(const t_context *ctx, t_path *path, t_pixel *pixel,
 				t_bn_channel c);
 void		cancel_render(t_renderer *r);
-void		set_render_preview(t_context *ctx, t_renderer *r, bool *update);
-void		set_render_refine(t_renderer *r);
+void		set_mode_preview_or_solid(t_context *ctx, t_renderer *r, bool *update);
+void		set_mode_rendered(t_renderer *r);
 void		print_render_status(t_context *ctx, t_renderer *r);
 void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);

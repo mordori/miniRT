@@ -14,7 +14,7 @@ void	process_input(t_context *ctx, bool *update)
 		dirty = true;
 	if (dirty)
 	{
-		if (ctx->renderer.mode == RENDER_REFINE)
+		if (ctx->renderer.mode == RENDERED)
 			atomic_store(&ctx->renderer.render_cancel, true);
 		*update = true;
 	}
