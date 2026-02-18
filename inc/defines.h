@@ -211,11 +211,14 @@ struct __attribute__((aligned(16))) s_material
 	t_texture		texture;
 	t_texture		normal_map;
 	t_vec3			albedo;
+	t_vec3			albedo2;
 	t_vec3			emission;
 	float			metallic;
 	float			roughness;
 	float			ior;
 	float			transmission;
+	float			pattern_scale;
+	float			bump_strength;
 	uint32_t		flags;
 	t_base_color	base_color;
 	t_pattern		pattern;

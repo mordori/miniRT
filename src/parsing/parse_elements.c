@@ -58,8 +58,10 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 		return (E_RANGE);
 	if (!parse_color(tokens[3], &color))
 		return (E_INVALID_NUM);
-	radius = 0.5f; // Default radius for area light
+	// radius = 0.5f; // Default radius for area light
 	if (token_count >= 5 && !parse_float(tokens[4], &radius))
+		return (E_INVALID_NUM);
+	if (token_count >= 5 && (radius <= 0.0f))
 		return (E_INVALID_NUM);
 	mat_id = 0; // Default material ID
 	if (token_count >= 6 && !parse_uint(tokens[5], &mat_id))
