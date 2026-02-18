@@ -135,6 +135,7 @@ As the project is still under construction, we recommend to run the program with
 
 | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         |
 |----------------------------------------------------------------|-----------------------------------------------------------|
+| <kbd>Tab</kbd>                                                 | Edit mode                                                 |
 | <kbd>Left Arrow</kbd> - <kbd>Right Arrow</kbd>                 | Rotate skydome                                            |
 
 ### General

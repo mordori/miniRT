@@ -29,7 +29,7 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 		init_hit(&path);
 		if (mode == SOLID)
 		{
-			if (!trace_ray_editing(ctx, &path, pixel))
+			if (!trace_ray_editing(ctx, &path))
 				break ;
 		}
 		else if (!trace_ray(ctx, &path, pixel, mode))

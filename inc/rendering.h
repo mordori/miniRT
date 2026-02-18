@@ -31,7 +31,7 @@ float	light_pdf(t_vec3 l, float radius_sq);
 bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist);
 
 
-bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel);
+bool	trace_ray_editing(const t_context *ctx, t_path *path);
 void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light);
 void	ambient_lighting(t_path *path, const t_light *light);
 
