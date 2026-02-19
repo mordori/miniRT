@@ -21,6 +21,9 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->yaw = atan2f(orientation.x, orientation.z);
 	cam->pitch = asinf(orientation.y);
 	cam->distance = 0.0f;
+	cam->init_pos = position;
+	cam->init_pitch = cam->pitch;
+	cam->init_yaw = cam->yaw;
 }
 
 void	update_camera(t_context *ctx, t_camera *cam)

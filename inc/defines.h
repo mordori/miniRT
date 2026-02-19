@@ -27,9 +27,10 @@
 # define SENS_ORBIT				0.0025f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				5.0f
+# define SENS_MOVE				10.0f
 
 # define MAX_BRIGHTNESS			40.0f
+# define CAMERA_LIMIT			999.0f
 
 # define KEY_FORWARD			MLX_KEY_W
 # define KEY_LEFT				MLX_KEY_A
@@ -37,6 +38,7 @@
 # define KEY_RIGHT				MLX_KEY_D
 # define KEY_UP					MLX_KEY_SPACE
 # define KEY_DOWN				MLX_KEY_LEFT_SHIFT
+# define KEY_RESET				MLX_KEY_R
 
 # define OBJ_HIDDEN_SCENE		(1 << 0) // norm issue, must only contain consts
 # define OBJ_HIDDEN_CAM			(1 << 1)
@@ -218,7 +220,7 @@ struct __attribute__((aligned(16))) s_material
 	float			ior;
 	float			transmission;
 	float			pattern_scale;
-	float			bump_strength;
+	// float			bump_strength;
 	uint32_t		flags;
 	t_base_color	base_color;
 	t_pattern		pattern;
@@ -312,7 +314,10 @@ struct __attribute__((aligned(16))) s_camera
 	t_vec3			up;
 	t_vec3			right;
 	t_vec3			forward;
+	t_vec3			init_pos;
 	t_vec2			skydome_uv_offset;
+	float			init_pitch;
+	float			init_yaw;
 	float			aspect;
 	float			focal_length;
 	float			fov;
