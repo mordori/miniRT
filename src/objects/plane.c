@@ -34,8 +34,8 @@ bool	hit_plane(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
 	hit->normal = plane.normal;
-	if (denom > 0)
-		hit->normal = vec3_scale(hit->normal, -1.0f);
+	// if (denom > 0)
+	// 	hit->normal = vec3_scale(hit->normal, -1.0f);
 	return (true);
 }
 

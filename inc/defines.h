@@ -19,7 +19,7 @@
 # define RENDERED_SAMPLES		256
 # define SOLID_BOUNCES			3
 # define PREVIEW_BOUNCES		3
-# define RENDERED_BOUNCES		32
+# define RENDERED_BOUNCES		64
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64
@@ -28,7 +28,7 @@
 # define SENS_ORBIT				0.0025f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				5.0f
+# define SENS_MOVE				1.0f
 
 # define MAX_BRIGHTNESS			10.0f
 
