@@ -26,5 +26,8 @@ L		705,485,520			1.0			255,255,255		30.0		4
 
 # Sphere
 #		pos					radius		mat_id
-sp		0,-50.4,1			100			3
-sp		0.0,-0.0,1.5		0.8			3
+sp		0,-50.4,1			100			1
+sp		0.0,-0.0,1.5		0.8			2
+
+# Render settings (samples, bounces) - use _ for default
+render	256		64

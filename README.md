@@ -31,17 +31,17 @@
 - PBR material model with GGX specular, Smith height-correlated visibility term (Hammon), Disney diffuse, and Multiple Importance Sampling (MIS)
 
 #### TODO
+- VNDF sampling
 - Additional primitive objects
-- Texture maps and procedural patterns
+- Procedural patterns
 - Normal maps
 - Extented camera properties and trackball controls
 - Quaternions
-- Object editing with simplified rendering mode
+- Object editing
 
 #### Future Work
 - Discard the restrictive coding standard required by the subject and refactor to more efficient code
 - Image based lighting
-- VNDF sampling for indirect specular light
 - Additional post-processing modules
 - Denoising solution
 - Loading .ojb meshes
@@ -125,21 +125,23 @@ As the project is still under construction, we recommend to run the program with
 
 ## Controls
 
-### Camera
+### Rendering mode
 
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
+| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Left ALT</kbd> + <kbd>Left Mouse Button</kbd> and drag    | Orbit Camera                                              |
+| <kbd>Left Mouse Button</kbd> + drag                          | Rotate Camera                                             |
+| <kbd>WASD</kbd>                                                | Move Camera                                               |
+| <kbd>Space</kbd> / <kbd>Left Shift</kbd>                       | Elevate / Lower Camera                                    |
 
-### Editing
+### Editing mode
 
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         |
+| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
 | <kbd>Tab</kbd>                                                 | Edit mode                                                 |
-| <kbd>Left Arrow</kbd> - <kbd>Right Arrow</kbd>                 | Rotate skydome                                            |
 
 ### General
 
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         |
+| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
+| <kbd>Left / Right Arrow</kbd>                                  | Rotate skydome                                            |
 | <kbd>Esc</kbd>                                                 | Quit                                                      |
