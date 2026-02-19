@@ -10,8 +10,8 @@ bool	camera_movement(t_context *ctx)
 	t_vec3		move;
 
 	cam = &ctx->scene.cam;
-	if (cam->state != CAM_DEFAULT)
-		return (false);
+	// if (cam->state != CAM_DEFAULT)
+	// 	return (false);
 	input = get_key_input(ctx->mlx);
 	if (input.x == 0.0f && input.y == 0.0f && input.z == 0.0f)
 		return (false);
@@ -40,8 +40,8 @@ static inline t_vec3	compute_move_vec(t_camera *cam, t_vec3 input, float dt)
 	t_vec3	move_z;
 	t_vec3	vec;
 
-	move_x = vec3_normalize((t_vec3){{cam->right.x, 0.0f, cam->right.z}});
-	move_z = vec3_normalize((t_vec3){{cam->forward.x, 0.0f, cam->forward.z}});
+	move_x = cam->right;
+	move_z = cam->forward;
 	vec = (t_vec3){{0.0f, input.y, 0.0f}};
 	vec = vec3_add(vec, vec3_scale(move_x, input.x));
 	vec = vec3_add(vec, vec3_scale(move_z, input.z));
