@@ -11,4 +11,9 @@ void	set_shader_data(t_path *path);
 t_vec3		sample_texture(const t_texture *tex, t_vec2 uv);
 t_vec3		get_surface_color(const t_material *mat, const t_hit *hit);
 
+/*Procedural patterns*/
+t_vec3		eval_pattern(t_material *mat, t_hit *hit);
+
+
+
 #endif

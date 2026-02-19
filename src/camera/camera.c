@@ -24,6 +24,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->focal_len_mm = SENSOR_HEIGHT_MM * 0.5f / tanf(fov * 0.5f);
 	cam->f_stop = 0.3f;
 	cam->focus_dist = 1.3f;
+	cam->init_pos = position;
 }
 
 t_vec3	sample_defocus_disk(const t_context *ctx, t_pixel *pixel)
