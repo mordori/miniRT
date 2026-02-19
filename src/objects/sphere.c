@@ -31,10 +31,12 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	t = solve_quadratic(&sphere, ray, hit->t);
 	if (t >= hit->t)
 		return (false);
-	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
 	hit->normal = vec3_div(vec3_sub(hit->point, sphere.center), sphere.radius);
+	if (vec3_dot(vec3_negate(ray->dir), hit->normal) < G_EPSILON)
+		return (false);
 	hit->uv = spherical_uv(hit->normal); // Use normal for UV mapping since it's a sphere
+	hit->t = t;
 	return (true);
 }
 

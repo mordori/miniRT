@@ -23,7 +23,7 @@ bool	parse_float(char *str, float *out)
 		return (false);
 	while (ft_isspace(*end))
 		end++;
-	if (isnan(value) || isinf(value) || *end != '\0')
+	if (*end != '\0')
 		return (false);
 	*out = value;
 	return (true);
