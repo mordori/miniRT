@@ -90,7 +90,7 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist, const t_obje
 		if (node->obj)
 		{
 			temp.t = dist;
-			if (node->obj != skip && !(node->obj->flags & OBJ_NO_CAST_SHADOW) 
+			if (/*node->obj != skip && */!(node->obj->flags & OBJ_NO_CAST_SHADOW) // not needed any more?!
 				&& hit_object(node->obj, ray, &temp))
 				return (true);
 			continue ;

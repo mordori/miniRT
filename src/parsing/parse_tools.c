@@ -16,7 +16,7 @@ bool	parse_float(char *str, float *out)
 	end = NULL;
 	while (ft_isspace(*str))
 		str++;
-	if (*str == '\0' || *str == '.')
+	if (*str == '\0' || *str == '.' || (count_delimiter(str, '.') > 1))
 		return (false);
 	value = ft_atof(str, &end);
 	if (end == str || !end)

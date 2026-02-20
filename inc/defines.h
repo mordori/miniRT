@@ -27,7 +27,7 @@
 # define SENS_ORBIT				0.0025f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				10.0f
+# define SENS_MOVE				5.0f
 
 # define MAX_BRIGHTNESS			40.0f
 # define CAMERA_LIMIT			999.0f
@@ -144,7 +144,8 @@ enum e_base_color
 enum e_pattern
 {
 	PAT_NONE,
-	PAT_CHECKERBOARD
+	PAT_CHECKERBOARD,
+	PAT_GRADIENT
 };
 
 enum e_entity

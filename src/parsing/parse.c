@@ -102,7 +102,7 @@ void	print_error(t_context *ctx, t_error err, int line_num)
 {
 	static char	*msgs[] = {
 	[E_UNKNOWN_ID] = "Unknown element identifier",
-	[E_MISSING_ARGS] = "Missing arguments for element",
+	[E_MISSING_ARGS] = "Invalid argument count for element",
 	[E_INVALID_NUM] = "Invalid number format",
 	[E_RANGE] = "Value out of valid range",
 	[E_DUPLICATE] = "Duplicate unique element (A, L, or C)",
