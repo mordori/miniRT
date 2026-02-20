@@ -151,7 +151,8 @@ enum e_base_color
 enum e_pattern
 {
 	PAT_NONE,
-	PAT_CHECKERBOARD
+	PAT_CHECKERBOARD,
+	PAT_GRADIENT
 };
 
 enum e_entity
