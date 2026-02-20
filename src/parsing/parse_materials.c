@@ -136,6 +136,7 @@ static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc
 	t_material *mat;
 	float emission_strength;
 	t_vec3 emission_color;
+	t_error err;
 
 	entry = &p->materials[p->mat_count];
 	mat = &entry->material;
@@ -149,10 +150,12 @@ static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc
 		return (E_INVALID_NUM);
 	mat->emission = vec3_scale(emission_color, emission_strength);
 	mat->is_emissive = (emission_strength > 0.0f);
-	if (tc > 10 && parse_material_textures(ctx, tkns, mat, tc) != E_OK)
-		return (E_MATERIAL);
-	if (parse_mat_pattern(mat, tkns, tc) != E_OK)
-		return (E_MATERIAL);
+	if (tc > 12 && (err = parse_mat_pattern(mat, tkns, tc)) != E_OK)
+		return (err);
+	else if (tc > 10 && (err = parse_material_textures(ctx, tkns, mat, tc)) != E_OK)
+		return (err);
+	// if (parse_mat_pattern(mat, tkns, tc) != E_OK)
+		// return (E_MATERIAL);
 	entry->defined = true;
 	new_material(ctx, mat);
 	p->mat_count++;
