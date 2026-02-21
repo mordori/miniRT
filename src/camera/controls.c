@@ -36,8 +36,6 @@ bool	control_camera(t_context *ctx)
 		if (orbit(ctx, pos, &previous_pos, original_pos))
 			dirty = true;
 	}
-	if (dirty)
-		update_camera(ctx, cam);
 	return (dirty);
 }
 

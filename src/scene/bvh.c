@@ -3,7 +3,7 @@
 #include "utils.h"
 
 static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n, t_bvh_node *tree, uint32_t *nodes);
-static inline void	add_nodes_to_bvh_stack(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
+static inline void	branch_idx(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
 
 void	init_bvh(t_context *ctx)
 {
@@ -71,7 +71,7 @@ bool	hit_bvh(uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_n
 			}
 			continue ;
 		}
-		add_nodes_to_bvh_stack(ray, node, stack, &i);
+		branch_idx(ray, node, stack, &i);
 	}
 	return (res);
 }
@@ -98,21 +98,16 @@ bool	hit_bvh_shadow(uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node 
 				return (true);
 			continue ;
 		}
-		add_nodes_to_bvh_stack(ray, node, stack, &i);
+		branch_idx(ray, node, stack, &i);
 	}
 	return (false);
 }
 
-static inline void	add_nodes_to_bvh_stack(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i)
+static inline void	branch_idx(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i)
 {
-	if (ray->signs[node->axis])
-	{
-		stack[(*i)++] = node->left_idx;
-		stack[(*i)++] = node->right_idx;
-	}
-	else
-	{
-		stack[(*i)++] = node->right_idx;
-		stack[(*i)++] = node->left_idx;
-	}
+	uint32_t		mask;
+
+	mask = 0u - (uint32_t)(ray->signs[node->axis]);
+	stack[(*i)++] = (node->left_idx & mask) | (node->right_idx & ~mask);
+	stack[(*i)++] = (node->right_idx & mask) | (node->left_idx & ~mask);
 }

@@ -24,14 +24,17 @@
 </p>
 
 ## Features
-- Monte Carlo integration with importance sampling for Global Illumination
+- Monte Carlo integration with multiple importance sampling for Global Illumination
 - BVH acceleration structure for rapid intersection testing
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
 - Modern PBR pipeline with microfacet BSDF
+- Custom scene description format
+- Bilinear texture filtering
+- Plane, sphere, cylinder, and cone primitives
 
 #### TODO
-- Anisotropic & Clear coat BRDF
+- Anisotropic & clear coat BRDF
 - BTDF for BSDF
 - Procedural patterns
 - Normal maps
@@ -40,7 +43,6 @@
 - Object editing
 
 #### Future Work
-- Discard the restrictive coding standard required by the subject and refactor to more efficient code
 - Image based lighting
 - Additional post-processing modules
 - Denoising solution
@@ -54,8 +56,7 @@
 Principled BSDF, a hybrid material model featuring Disney diffuse and Cook-Torrance specular lobes.
 
 - Implements Dupuy's 2023 spherical cap VNDF sampling method for efficient visible microfacet normal generation.
-- Height-correlated Smith G2 visibility and analytical Smith G1 masking to guarantee stable Monte Carlo weights.
-- Singularity elimination with analytically simplified VNDF PDF to maintain 32-bit floating point stability.
+- Height-correlated Smith G2 visibility and analytically simplified Smith G1 masking to maintain stable 32-bit floating point weights.
 - Firefly mitigation and defense against variance spikes with indirect weight clamping, path roughing, and NaN/Inf sanitisation.
 
 ## Optimisation & Performance
@@ -73,7 +74,7 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 - Used during the camera movement. Achieves pure SIMD execution, processing 4 pixels in parallel per instruction cycle to maximize frame rate at the cost of slight image quality reduction.
 
 #### Pipelined Rendered Mode
-- Leverages loop unrolling to maximize Instruction Level Parallelism (ILP). While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
+- Leverages loop unrolling to maximize instruction level parallelism. While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
 
 ### BVH
 - Documentation under construction
@@ -118,23 +119,39 @@ As the project is still under construction, we recommend to run the program with
 ```
 
 ## Controls
-### Rendering Mode
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
-|----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Left Mouse Button</kbd> + drag                            | Rotate Camera                                             |
-| <kbd>WASD</kbd>                                                | Move Camera                                               |
-| <kbd>Space</kbd> / <kbd>Left Shift</kbd>                       | Elevate / Lower Camera                                    |
+#### Render Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>LMB</kbd>                                                 | Rotate                                        |
+| <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
+| <kbd>L Shift</kbd> / <kbd>Space</kbd>                          | Lower / Elevate                               |
+| <kbd></kbd>                                                    | Reset                                         |
 
-### Editing Mode
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
-|----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Tab</kbd>                                                 | Edit mode                                                 |
+#### Edit Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>Tab</kbd>                                                 | Toggle Edit Mode                              |
+| <kbd></kbd>                                                    | Frame                                         |
+| <kbd></kbd>                                                    | Orbit                                         |
+| <kbd></kbd>                                                    | Zoom                                          |
+| <kbd></kbd>                                                    | Pan                                           |
 
-### General
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
-|----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Left / Right Arrow</kbd>                                  | Rotate skydome                                            |
-| <kbd>Esc</kbd>                                                 | Quit                                                      |
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd></kbd>                                                    | Select Object                                 |
+| <kbd></kbd>                                                    | Move                                          |
+| <kbd></kbd>                                                    | Rotate                                        |
+| <kbd></kbd>                                                    | Scale                                         |
+| <kbd></kbd>                                                    | Transform Axis Constraint                     |
+| <kbd></kbd>                                                    | Transform Plane Constraint                    |
+
+#### General
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>←</kbd> / <kbd>→</kbd>                                    | Rotate skydome                                |
+| <kbd></kbd>                                                    | Adjust DoF                                    |
+| <kbd>,</kbd> / <kbd>.</kbd>                                    | Adjust FoV                                    |
+| <kbd>Esc</kbd>                                                 | Quit                                          |
 
 ## Project Review
 - Documentation under construction
@@ -172,3 +189,7 @@ Blue noise
 RNG
 - https://www.reedbeta.com/blog/hash-functions-for-gpu-rendering/
 - https://old.reddit.com/r/RNG/comments/jqnq20/the_wang_and_jenkins_integer_hash_functions_just/
+
+ACES
+- https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+- https://github.com/TheRealMJP/BakingLab/blob/master/BakingLab/ACES.hlsl

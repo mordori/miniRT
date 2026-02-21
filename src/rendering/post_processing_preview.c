@@ -11,7 +11,6 @@ t_vec3	post_process_preview(const t_context *ctx, t_vec3 c)
 	return (c);
 }
 
-// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 static inline t_vec3	tonemap_aces_preview(t_vec3 c)
 {
 	t_vec3		res;

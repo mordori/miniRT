@@ -40,7 +40,6 @@ static inline t_vec3	rrt_and_odt_fit(t_vec3 vec)
 }
 
 // ACES workflow by Stephen Hill
-// https://github.com/TheRealMJP/BakingLab/blob/master/BakingLab/ACES.hlsl
 static inline t_vec3	tonemap_aces(t_vec3 color)
 {
 	static const t_mat4	aces_input =
