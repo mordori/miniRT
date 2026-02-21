@@ -8,11 +8,6 @@ bool	resize_timer(const t_context *ctx)
 	return (time > 250);
 }
 
-/**
- * @brief Returns the current time in milliseconds.
- *
- * @return Time in milliseconds since Epoch.
- */
 uint32_t	time_now(void)
 {
 	struct timeval	tv;

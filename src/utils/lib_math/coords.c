@@ -1,6 +1,24 @@
 #include "lib_math.h"
 
-static void	orthonormal_basis(t_vec3 n, t_vec3 *t, t_vec3 *b);
+t_vec3	spherical_coords(float u, float sin_theta, float z)
+{
+	t_vec2		phi;
+	float		x;
+	float		y;
+
+	sincosf(M_TAU * u, &phi.sin, &phi.cos);
+	x = sin_theta * phi.cos;
+	y = sin_theta * phi.sin;
+	return (vec3(x, y, z));
+}
+
+t_vec3	spherical_to_world(t_vec3 n, float u, float sin_theta, float z)
+{
+	t_vec3		local;
+
+	local = spherical_coords(u, sin_theta, z);
+	return (tangent_to_world(local, n));
+}
 
 t_vec3	tangent_to_world(t_vec3 vec, t_vec3 n)
 {
@@ -14,17 +32,7 @@ t_vec3	tangent_to_world(t_vec3 vec, t_vec3 n)
 	return (res);
 }
 
-t_vec3	spherical_to_world(t_vec3 n, float u, float cos_theta, float sin_theta)
-{
-	t_vec3		local;
-	t_vec2		phi;
-
-	sincosf(M_TAU * u, &phi.sin, &phi.cos);
-	local = vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
-	return (tangent_to_world(local, n));
-}
-
-static void	orthonormal_basis(t_vec3 n, t_vec3 *t, t_vec3 *b)
+void	orthonormal_basis(t_vec3 n, t_vec3 *t, t_vec3 *b)
 {
 	t_vec3		temp;
 

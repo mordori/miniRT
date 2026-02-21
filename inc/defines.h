@@ -25,12 +25,13 @@
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_ORBIT				0.0025f
+# define SENS_ORBIT				0.0015f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
 # define SENS_MOVE				1.0f
 
-# define MAX_BRIGHTNESS			10.0f
+# define MAX_RADIANCE			10.0f
+# define CLAMP_INDIRECT			10.0f
 
 # define KEY_FORWARD			MLX_KEY_W
 # define KEY_LEFT				MLX_KEY_A
@@ -287,10 +288,11 @@ struct __attribute__((aligned(16))) s_light
 	};
 	t_vec3			color;
 	t_object		*obj;
-	t_material		*mat;
+	t_vec3			emission;
 	float			radius;
 	float			intensity;
-	float			max_brightness;
+	float			max_radiance;
+	float			radius_sq;
 	uint32_t		material_id;
 	t_light_type	type;
 };
@@ -454,6 +456,7 @@ struct __attribute__((aligned(64))) s_context
 	t_editor		editor;
 	mlx_t			*mlx;
 	t_image			*img;
+	char			*file;
 	uint32_t		resize_time;
 	int				fd;
 };

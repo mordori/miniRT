@@ -72,7 +72,7 @@ bool	hit_bvh(t_bvh_node *root, const t_ray *ray, t_hit *hit, int32_t i)
 	return (res);
 }
 
-bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist, const t_object *skip)
+bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist)
 {
 	t_bvh_node	*stack[64];
 	int32_t		i;
@@ -89,7 +89,7 @@ bool	hit_bvh_shadow(t_bvh_node *root, const t_ray *ray, float dist, const t_obje
 		if (node->obj)
 		{
 			temp.t = dist;
-			if (node->obj != skip && !(node->obj->flags & OBJ_NO_CAST_SHADOW) // Skip self-shadowing and objects that don't cast shadows
+			if (!(node->obj->flags & OBJ_NO_CAST_SHADOW)
 				&& hit_object(node->obj, ray, &temp))
 				return (true);
 			continue ;

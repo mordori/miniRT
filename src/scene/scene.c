@@ -16,6 +16,10 @@ void	init_scene(t_context *ctx)
 	vector_try_init(ctx, &ctx->scene.materials, false, free);
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
+	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
+	if (!ctx->tex_bn.pixels)
+		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
+	printf_init(ctx);
 	close(ctx->fd);
 	ctx->fd = ERROR;
 	init_bvh(ctx);
