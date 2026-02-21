@@ -78,6 +78,9 @@ typedef struct s_pixel			t_pixel;
 typedef struct s_ray			t_ray;
 typedef struct s_transform		t_transform;
 typedef struct s_tex_entry		t_tex_entry;
+typedef struct s_geo			t_geo;
+typedef struct s_env			t_env;
+typedef struct s_assets			t_assets;
 
 typedef union u_shape			t_shape;
 
@@ -354,21 +357,35 @@ struct s_tex_entry
 	bool		loaded;
 };
 
+struct s_assets
+{
+	t_vector		materials;
+	int				tex_count;
+	t_tex_entry		textures[MAX_TEXTURES];
+};
+
+struct s_env
+{
+	t_vector		lights;
+	t_light			ambient_light;
+	t_texture		skydome;
+	bool			has_directional_light;
+};
+
+struct s_geo
+{
+	t_vector		objs;
+	t_vector		planes;
+	t_bvh_node		*bvh_nodes;
+	uint32_t		bvh_root_idx;
+};
+
 struct __attribute__((aligned(16))) s_scene
 {
 	t_camera		cam;
-	t_vector		objs;
-	t_vector		planes;
-	t_vector		lights;
-	t_vector		materials;
-	t_light			ambient_light;
-	t_texture		skydome;
-	t_object		*selected_obj;
-	t_bvh_node		*bvh_nodes;
-	uint32_t		bvh_root_idx;
-	int				tex_count;
-	bool			has_directional_light;
-	t_tex_entry		textures[MAX_TEXTURES];
+	t_geo			geo;
+	t_env			env;
+	t_assets		assets;
 };
 
 struct __attribute__((aligned(64))) s_renderer
@@ -451,6 +468,7 @@ struct __attribute__((aligned(64))) s_context
 	t_scene			scene;
 	t_texture		tex_bn;
 	t_editor		editor;
+	t_object		*selected_obj;
 	mlx_t			*mlx;
 	t_image			*img;
 	char			*file;

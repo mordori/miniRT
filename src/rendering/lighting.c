@@ -87,5 +87,5 @@ static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *p
 
 bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist)
 {
-	return (hit_bvh_shadow(scene->bvh_root_idx, ray, dist, scene->bvh_nodes));
+	return (hit_bvh_shadow(scene->geo.bvh_root_idx, ray, dist, scene->geo.bvh_nodes));
 }

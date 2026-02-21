@@ -15,9 +15,9 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 	obj->shape.plane.point = point;
 	obj->shape.plane.normal = normal;
 	obj->material_id = mat_id;
-	obj->mat = ((t_material **)ctx->scene.materials.items)[mat_id];
+	obj->mat = ((t_material **)ctx->scene.assets.materials.items)[mat_id];
 	obj->flags = obj->mat->flags;
-	vector_try_add(ctx, &ctx->scene.planes, obj);
+	vector_try_add(ctx, &ctx->scene.geo.planes, obj);
 	return (E_OK);
 }
 
@@ -28,10 +28,10 @@ bool	hit_planes(const t_context *ctx, const t_ray *ray, t_hit *hit)
 	t_object	*obj;
 
 	res = false;
-	idx = ctx->scene.planes.total;
+	idx = ctx->scene.geo.planes.total;
 	while (idx--)
 	{
-		obj = ((t_object **)ctx->scene.planes.items)[idx];
+		obj = ((t_object **)ctx->scene.geo.planes.items)[idx];
 		if (hit_plane(&obj->shape, ray, hit))
 		{
 			hit->obj = obj;

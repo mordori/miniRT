@@ -13,15 +13,15 @@ void	init_bvh(t_context *ctx)
 	uint32_t	nodes;
 
 	scene = &ctx->scene;
-	n = scene->objs.total;
+	n = scene->geo.objs.total;
 	if (n == 0)
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-	objs = (t_object **)scene->objs.items;
-	scene->bvh_nodes = malloc(sizeof(t_bvh_node) * ((2 * n) - 1));
-	if (!scene->bvh_nodes)
+	objs = (t_object **)scene->geo.objs.items;
+	scene->geo.bvh_nodes = malloc(sizeof(t_bvh_node) * ((2 * n) - 1));
+	if (!scene->geo.bvh_nodes)
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	nodes = 0;
-	scene->bvh_root_idx = build_bvh(ctx, (const t_object **)objs, n, scene->bvh_nodes, &nodes);
+	scene->geo.bvh_root_idx = build_bvh(ctx, (const t_object **)objs, n, scene->geo.bvh_nodes, &nodes);
 }
 
 static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n, t_bvh_node *tree, uint32_t *nodes)

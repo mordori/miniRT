@@ -24,9 +24,9 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 		return (E_RANGE);
 	if (!parse_color(tokens[2], &color))
 		return (E_INVALID_NUM);
-	ctx->scene.ambient_light.type = LIGHT_AMBIENT;
-	ctx->scene.ambient_light.intensity = ratio;
-	ctx->scene.ambient_light.color = color;
+	ctx->scene.env.ambient_light.type = LIGHT_AMBIENT;
+	ctx->scene.env.ambient_light.intensity = ratio;
+	ctx->scene.env.ambient_light.color = color;
 	p->has_ambient = true;
 	return (E_OK);
 }

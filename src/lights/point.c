@@ -15,7 +15,7 @@ void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 	if (!l)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
 	*l = *light;
-	mat = ((t_material **)ctx->scene.materials.items)[mat_id];
+	mat = ((t_material **)ctx->scene.assets.materials.items)[mat_id];
 	l->emission = mat->emission;
 	l->max_radiance = MAX_RADIANCE;
 	obj = (t_object){0};
@@ -33,9 +33,9 @@ void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 		return ;
 	}
 	add_object(ctx, &obj);
-	l->obj = (t_object *)vector_getlast(&ctx->scene.objs);
+	l->obj = (t_object *)vector_getlast(&ctx->scene.geo.objs);
 	l->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
-	vector_try_add(ctx, &ctx->scene.lights, l);
+	vector_try_add(ctx, &ctx->scene.env.lights, l);
 }
 
 static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
@@ -46,12 +46,12 @@ static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 	if (!new_obj)
 		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
 	*new_obj = *obj;
-	new_obj->mat = ((t_material **)ctx->scene.materials.items)[obj->material_id];
+	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
 	light->obj = new_obj;
 	light->intensity = 4000000.0f;
 	light->max_radiance = 2.0f;
 	light->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	ctx->scene.cam.directional_light = *light;
-	ctx->scene.has_directional_light = true;
+	ctx->scene.env.has_directional_light = true;
 	free(light);
 }

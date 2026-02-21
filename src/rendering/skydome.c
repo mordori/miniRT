@@ -36,7 +36,7 @@ bool	rotate_skydome(t_context *ctx)
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT))
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;
-		if (ctx->scene.has_directional_light)
+		if (ctx->scene.env.has_directional_light)
 		{
 			light = &ctx->scene.cam.directional_light;
 			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);

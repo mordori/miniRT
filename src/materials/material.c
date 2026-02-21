@@ -11,8 +11,8 @@ uint32_t	new_material(t_context *ctx, t_material *mat)
 		fatal_error(ctx, errors(ERR_MATADD), __FILE__, __LINE__);
 	mat->ior = fmaxf(mat->ior, 1.0f);
 	*new_mat = *mat;
-	vector_try_add(ctx, &ctx->scene.materials, new_mat);
-	return (ctx->scene.materials.total - 1);
+	vector_try_add(ctx, &ctx->scene.assets.materials, new_mat);
+	return (ctx->scene.assets.materials.total - 1);
 }
 
 void	set_material_data(t_path *path)

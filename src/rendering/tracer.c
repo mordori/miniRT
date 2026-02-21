@@ -49,7 +49,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 
 	if (\
 (int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
-(int)hit_bvh(ctx->scene.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.bvh_nodes) | \
+(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
 (int)hit_planes(ctx, &path->ray, &path->hit))
 	{
 		path->mat = path->hit.obj->mat;
@@ -64,21 +64,21 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 			else
 			{
 				pdf = light_pdf(vec3_sub(path->ray.origin, path->hit.obj->transform.pos), path->hit.obj->shape.sphere.radius_sq);
-				if (mode == PREVIEW && ctx->scene.lights.total > 0)
-					pdf /= (float)ctx->scene.lights.total;
+				if (mode == PREVIEW && ctx->scene.env.lights.total > 0)
+					pdf /= (float)ctx->scene.env.lights.total;
 				weight = power_heuristic(path->pdf, pdf);
 				light_emission = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
 			}
 			path->color = vec3_add(path->color, vec3_clamp_mag(light_emission, MAX_RADIANCE));
 			return (false);
 		}
-		if (ctx->scene.has_directional_light)
+		if (ctx->scene.env.has_directional_light)
 			add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel);
-		if (ctx->scene.lights.total > 0)
+		if (ctx->scene.env.lights.total > 0)
 			nee(ctx, path, pixel, mode);
 		return (scatter(ctx, path, pixel));
 	}
-	bg_color = background_color(&ctx->scene.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	bg_color = background_color(&ctx->scene.env.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
@@ -90,19 +90,19 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_ren
 
 	if (mode == PREVIEW)
 	{
-		i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.lights.total);
-		if (i >= ctx->scene.lights.total)
-			i = ctx->scene.lights.total - 1;
-		light = ((t_light **)ctx->scene.lights.items)[i];
+		i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.env.lights.total);
+		if (i >= ctx->scene.env.lights.total)
+			i = ctx->scene.env.lights.total - 1;
+		light = ((t_light **)ctx->scene.env.lights.items)[i];
 		add_lighting(ctx, path, light, pixel);
-		path->color = vec3_scale(path->color, (float)ctx->scene.lights.total);
+		path->color = vec3_scale(path->color, (float)ctx->scene.env.lights.total);
 	}
 	else
 	{
 		i = 0;
-		while (i < ctx->scene.lights.total)
+		while (i < ctx->scene.env.lights.total)
 		{
-			light = ((t_light **)ctx->scene.lights.items)[i++];
+			light = ((t_light **)ctx->scene.env.lights.items)[i++];
 			add_lighting(ctx, path, light, pixel);
 		}
 	}
