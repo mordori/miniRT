@@ -16,7 +16,7 @@ bool	parse_scene(t_context *ctx, int fd)
 	parser = (t_parser){0};
 	count = 0;
 	ctx->renderer.render_samples = RENDERED_SAMPLES;
-	ctx->renderer.refine_bounces = RENDERED_BOUNCES;
+	ctx->renderer.rendered_bounces = RENDERED_BOUNCES;
 	while (try_gnl(ctx, fd, &line) == GNL_OK)
 	{
 		if (count >= MAX_LINES)

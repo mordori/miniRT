@@ -259,35 +259,3 @@ bool	hit_cone(const t_shape *shape, const t_ray *ray, t_hit *hit)
 		return (*hit = temp_hit, true);
 	return (found);
 }
-
-/*
-** Generate a random point on the cone surface (stub implementation).
-** Used for area light sampling and importance sampling.
-**
-** @param shape   - Union containing the cone geometry
-** @param u       - Random parameter in [0, 1]
-** @param v       - Random parameter in [0, 1]
-** @return        - A point on the cone surface
-*/
-t_vec3	random_point_on_cone(const t_shape *shape, float u, float v)
-{
-	(void)shape;
-	(void)u;
-	(void)v;
-	return (vec3_n(1.0f));
-}
-
-/*
-** Calculate the outward normal at a point on the cone (stub).
-** Used when normal information is needed separately from intersection.
-**
-** @param shape   - Union containing the cone geometry
-** @param pos     - Point on the cone surface
-** @return        - Unit normal vector at that point
-*/
-t_vec3	normal_at_cone(const t_shape *shape, const t_vec3 pos)
-{
-	(void)shape;
-	(void)pos;
-	return (vec3_n(1.0f));
-}

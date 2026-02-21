@@ -40,24 +40,6 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	return (true);
 }
 
-t_vec3	random_point_on_sphere(const t_shape *shape, float u, float v)
-{
-	t_vec3	result;
-
-	result = map_spherical(u, v);
-	result = vec3_scale(result, shape->sphere.radius);
-	result = vec3_add(shape->sphere.center, result);
-	return (result);
-}
-
-t_vec3	normal_at_sphere(const t_shape *shape, const t_vec3 pos)
-{
-	t_vec3	result;
-
-	result = vec3_div(vec3_sub(pos, shape->sphere.center), shape->sphere.radius);
-	return (result);
-}
-
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max)
 {
 	t_vec3		oc;

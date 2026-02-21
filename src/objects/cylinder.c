@@ -237,35 +237,3 @@ bool	hit_cylinder(const t_shape *shape, const t_ray *ray, t_hit *hit)
 		return (*hit = temp_hit, true);
 	return (found);
 }
-
-/*
-** Generate a random point on the cylinder surface (stub implementation).
-** Used for area light sampling and importance sampling.
-**
-** @param shape     - Union containing the cylinder geometry
-** @param u         - Random parameter in [0, 1]
-** @param v         - Random parameter in [0, 1]
-** @return          - A point on the cylinder surface
-*/
-t_vec3	random_point_on_cylinder(const t_shape *shape, float u, float v)
-{
-	(void)shape;
-	(void)u;
-	(void)v;
-	return (vec3_n(1.0f));
-}
-
-/*
-** Calculate the outward normal at a point on the cylinder (stub).
-** Used when normal information is needed separately from intersection.
-**
-** @param shape     - Union containing the cylinder geometry
-** @param pos       - Point on the cylinder surface
-** @return          - Unit normal vector at that point
-*/
-t_vec3	normal_at_cylinder(const t_shape *shape, const t_vec3 pos)
-{
-	(void)shape;
-	(void)pos;
-	return (vec3_n(1.0f));
-}

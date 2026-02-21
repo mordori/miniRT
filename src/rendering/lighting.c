@@ -1,3 +1,4 @@
+#include "objects.h"
 #include "rendering.h"
 #include "materials.h"
 #include "utils.h"
@@ -41,7 +42,7 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	t_hc = sqrtf(fmaxf(0.0f, light->radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
 	shadow_ray = new_ray(hit_biased, path->l);
-	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON))
+	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON) | (int)hit_planes(ctx, &path->ray, &path->hit)))
 		return (vec3_n(0.0f));
 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
 	radiance = vec3_mul(light->emission, bsdf(path));
@@ -86,5 +87,5 @@ static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *p
 
 bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist)
 {
-	return (hit_bvh_shadow(scene->bvh_root, ray, dist));
+	return (hit_bvh_shadow(scene->bvh_root_idx, ray, dist, scene->bvh_nodes));
 }

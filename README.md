@@ -51,12 +51,12 @@
 - Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
 ## Physically Based Rendering
-Principled BSDF featuring Disney diffuse and Cook-Torrance specular.
+Principled BSDF, a hybrid material model featuring Disney diffuse and Cook-Torrance specular lobes.
 
-- Implements Dupuy's 2023 spherical cap VNDF sampling method for efficient visible indirect normal generation
-- Height-correlated Smith G2 visibility and analytical Smith G1 to quarantee MIS weight cancellation
-- Singularity elimination in VNDF PDF to maintain 32-bit floating point stability
-- Firefly mitigation and defence against variance spikes with indirect weight clamping, path roughing, and NaN/Inf sanitisation
+- Implements Dupuy's 2023 spherical cap VNDF sampling method for efficient visible microfacet normal generation.
+- Height-correlated Smith G2 visibility and analytical Smith G1 masking to guarantee stable Monte Carlo weights.
+- Singularity elimination with analytically simplified VNDF PDF to maintain 32-bit floating point stability.
+- Firefly mitigation and defense against variance spikes with indirect weight clamping, path roughing, and NaN/Inf sanitisation.
 
 ## Optimisation & Performance
 Implements a highly optimised CPU rendering engine, balancing code readability with raw performance.
@@ -84,7 +84,6 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 - Strategically segregated write-heavy synchronization primitives from read-only render data to eliminate false sharing and cache line invalidation.
 
 ## Monte Carlo Integration
-
 - Documentation under construction
 
 ## How to use
@@ -119,14 +118,14 @@ As the project is still under construction, we recommend to run the program with
 ```
 
 ## Controls
-### Rendering mode
+### Rendering Mode
 | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
 | <kbd>Left Mouse Button</kbd> + drag                            | Rotate Camera                                             |
 | <kbd>WASD</kbd>                                                | Move Camera                                               |
 | <kbd>Space</kbd> / <kbd>Left Shift</kbd>                       | Elevate / Lower Camera                                    |
 
-### Editing mode
+### Editing Mode
 | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                    | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
 |----------------------------------------------------------------|-----------------------------------------------------------|
 | <kbd>Tab</kbd>                                                 | Edit mode                                                 |
@@ -137,8 +136,11 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>Left / Right Arrow</kbd>                                  | Rotate skydome                                            |
 | <kbd>Esc</kbd>                                                 | Quit                                                      |
 
+## Project Review
+- Documentation under construction
+
 ## Resources
-Ray/path tracing
+Path tracing
 - https://raytracing.github.io/
 - https://scratchapixel.com/index.html
 - https://gabrielgambetta.com/computer-graphics-from-scratch/
@@ -151,7 +153,7 @@ PBR
 - https://www.pbr-book.org/
 - https://google.github.io/filament/main/filament.html#materialsystem/specularbrdf
 - https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
-https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
+- https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
 VNDF
 - https://arxiv.org/pdf/2306.05044
