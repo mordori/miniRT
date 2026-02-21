@@ -12,7 +12,7 @@ t_error	parse_skydome(t_context *ctx, char **tokens)
 {
 	if (count_tokens(tokens) != 2)
 		return (E_MISSING_ARGS);
-	return (load_texture_file(tokens[1], &ctx->scene.skydome));
+	return (load_texture_file(tokens[1], &ctx->scene.env.skydome));
 }
 
 inline bool	is_placeholder(const char *str)

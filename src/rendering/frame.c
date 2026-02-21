@@ -28,7 +28,7 @@ void	frame_loop(void *param)
 		return ;
 	}
 	else if (!r->threads_running && (update || r->mode == SOLID))
-		set_mode_preview_or_solid(ctx, r, &update);
+		set_mode_preview(ctx, r, &update);
 	else if (!r->threads_running && r->frame < r->render_samples + 1)
 		set_mode_rendered(r);
 	pthread_mutex_unlock(&r->mutex);

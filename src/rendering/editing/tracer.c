@@ -15,9 +15,9 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 	float		rough;
 	float		attenuation;
 
-	if ((int)hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | \
+	if ((int)hit_object(ctx->selected_obj, &path->ray, &path->hit) | \
 (int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
-(int)hit_bvh(ctx->scene.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.bvh_nodes) | \
+(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
 (int)hit_planes(ctx, &path->ray, &path->hit))
 	{
 		if (path->bounce > 0)
@@ -38,16 +38,16 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 		}
 		if (path->bounce > 0)
 			return (false);
-		if (ctx->scene.has_directional_light)
+		if (ctx->scene.env.has_directional_light)
 			add_lighting_editing(ctx, path, &ctx->renderer.cam.directional_light);
-		if (ctx->scene.lights.total > 0)
+		if (ctx->scene.env.lights.total > 0)
 			nee_editing(ctx, path);
-		ambient_lighting(path, &ctx->scene.ambient_light);
+		ambient_lighting(path, &ctx->scene.env.ambient_light);
 		return (scatter_editing(path));
 	}
 	if (path->bounce > 0)
 		return (false);
-	bg_color = background_color(&ctx->scene.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	bg_color = background_color(&ctx->scene.env.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
@@ -58,9 +58,9 @@ static inline void	nee_editing(const t_context *ctx, t_path *path)
 	size_t			i;
 
 	i = 0;
-	while (i < ctx->scene.lights.total)
+	while (i < ctx->scene.env.lights.total)
 	{
-		light = ((t_light **)ctx->scene.lights.items)[i++];
+		light = ((t_light **)ctx->scene.env.lights.items)[i++];
 		add_lighting_editing(ctx, path, light);
 	}
 }

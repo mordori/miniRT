@@ -35,7 +35,7 @@ void	cancel_render(t_renderer *r)
 	r->frame_complete = false;
 }
 
-void	set_mode_preview_or_solid(t_context *ctx, t_renderer *r, bool *update)
+void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
 {
 	if (r->mode == RENDERED)
 		r->mode = PREVIEW;

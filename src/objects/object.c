@@ -11,9 +11,9 @@ t_error add_object(t_context *ctx, t_object *obj)
 	if (!new_obj)
 		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
 	*new_obj = *obj;
-	new_obj->mat = ((t_material **)ctx->scene.materials.items)[obj->material_id];
+	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
 	new_obj->flags = new_obj->mat->flags;
-	vector_try_add(ctx, &ctx->scene.objs, new_obj);
+	vector_try_add(ctx, &ctx->scene.geo.objs, new_obj);
 	return (E_OK);
 }
 
