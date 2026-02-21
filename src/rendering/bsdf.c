@@ -1,10 +1,6 @@
 #include "rendering.h"
 #include "materials.h"
 
-// https://google.github.io/filament/main/filament.html#materialsystem/specularbrdf
-// https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
-// https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
-
 float	power_heuristic(float a, float b)
 {
 	float		a2;
@@ -32,7 +28,7 @@ float	bsdf_pdf(t_path *path)
 	float		pdf;
 
 	pdf_d = pdf_cos(path->ndotl);
-	pdf_r = pdf_ggx(path);
+	pdf_r = pdf_ggx_vndf(path);
 	if (path->mat->metallic >= 0.9f)
 		pdf = pdf_r;
 	else
@@ -46,17 +42,17 @@ bool	sample_bsdf(t_path *path)
 
 	if (path->sample_spec)
 	{
-		path->h = sample_ggx(path->n, path->alpha, path->uv);
+		sample_ggx_vndf(path, path->alpha, path->uv);
 		path->l = vec3_reflect(path->ray.dir, path->h);
 	}
 	else
 		path->l = sample_cos_hemisphere(path->n, path->uv);
 	set_shader_data(path);
-	if (path->ndotl <= 1e-12f)
+	if (path->ndotl <= LEN_SQ_EPSILON)
 		return (false);
 	path->pdf = bsdf_pdf(path);
-	path->pdf = fmaxf(path->pdf, G_EPSILON);
 	weight = vec3_scale(bsdf(path), path->ndotl / path->pdf);
+	weight = vec3_clamp_mag(weight, CLAMP_INDIRECT);
 	path->throughput = vec3_mul(path->throughput, weight);
 	return (true);
 }

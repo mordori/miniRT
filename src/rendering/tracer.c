@@ -35,6 +35,8 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 		else if (!trace_ray(ctx, &path, pixel, mode))
 			break ;
 	}
+	if (vec3_is_nan_inf(path.color))
+		return (vec3_n(0.0f));
 	return (path.color);
 }
 
@@ -58,14 +60,13 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 			}
 			else
 			{
-				pdf = light_pdf(vec3_sub(path->ray.origin, path->n), path->hit.obj->shape.sphere.radius_sq);
-				if (ctx->scene.lights.total > 0)
+				pdf = light_pdf(vec3_sub(path->ray.origin, path->hit.obj->transform.pos), path->hit.obj->shape.sphere.radius_sq);
+				if (mode == PREVIEW && ctx->scene.lights.total > 0)
 					pdf /= (float)ctx->scene.lights.total;
 				weight = power_heuristic(path->pdf, pdf);
 				light_emission = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
-				light_emission = vec3_clamp_mag(light_emission, MAX_BRIGHTNESS);
 			}
-			path->color = vec3_add(path->color, light_emission);
+			path->color = vec3_add(path->color, vec3_clamp_mag(light_emission, MAX_RADIANCE));
 			return (false);
 		}
 		if (ctx->scene.has_directional_light)

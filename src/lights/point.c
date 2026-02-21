@@ -9,20 +9,23 @@ void	init_point_light(t_context *ctx, t_light *light)
 {
 	t_light			*l;
 	t_object		obj;
+	t_material		*mat;
 
 	l = malloc(sizeof(*l));
 	if (!l)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
 	*l = *light;
-	l->mat = ((t_material **)ctx->scene.materials.items)[l->material_id];
-	l->max_brightness = MAX_BRIGHTNESS;
+	mat = ((t_material **)ctx->scene.materials.items)[l->material_id];
+	l->emission = mat->emission;
+	l->max_radiance = MAX_RADIANCE;
 	obj = (t_object){0};
 	obj.type = OBJ_SPHERE;
 	l->intensity = 10.0f;
+	l->radius_sq = l->radius * l->radius;
 	obj.transform.pos = l->pos;
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = l->radius;
-	obj.shape.sphere.radius_sq = l->radius * l->radius;
+	obj.shape.sphere.radius_sq = l->radius_sq;
 	obj.material_id = l->material_id;
 	if (vec3_length(obj.transform.pos) > 500.0f)
 	{
@@ -46,7 +49,7 @@ static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 	new_obj->mat = ((t_material **)ctx->scene.materials.items)[obj->material_id];
 	light->obj = new_obj;
 	light->intensity = 4000000.0f;
-	light->max_brightness = 2.0f;
+	light->max_radiance = 2.0f;
 	light->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	ctx->scene.cam.directional_light = *light;
 	ctx->scene.has_directional_light = true;

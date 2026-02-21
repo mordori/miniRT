@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/16 07:37:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/21 05:21:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define M_EPSILON			1e-6f
 # define LEN_EPSILON		1e-6f
 # define LEN_SQ_EPSILON		1e-12f
-# define B_EPSILON			1e-3f
+# define B_EPSILON			1e-4f
 # define G_EPSILON			1e-5f
 
 typedef struct s_vec2i		t_vec2i;
@@ -46,6 +46,7 @@ typedef struct s_mat3		t_mat3;
 typedef struct s_mat4		t_mat4;
 
 typedef union u_f_ui		t_f_ui;
+typedef union u_v4ui_ui		t_v4ui_ui;
 typedef union u_vec2		t_point;
 typedef union u_vec2		t_float2;
 typedef union u_vec2		t_vec2;
@@ -77,6 +78,12 @@ struct __attribute__((aligned(16))) s_mat4
 		float	m[4][4];
 		t_v4sf	rows[4];
 	};
+};
+
+union u_v4ui_ui
+{
+	t_v4ui		v;
+	uint32_t	s[4];
 };
 
 union u_f_ui
@@ -188,6 +195,7 @@ float		degrees_to_rad(float degrees);
 bool		ft_is_pot(size_t n);
 size_t		ft_pow(size_t n, size_t e);
 uint32_t	ft_uint_min(uint32_t a, uint32_t b);
+bool		is_nan_inf(float x);
 
 // mat3
 // -----------------------------------------------------------------
@@ -257,6 +265,7 @@ t_vec3		vec3_schlick(t_vec3 f0, float u);
 t_vec3		vec3_bias(t_vec3 vec, t_vec3 n);
 uint32_t	vec3_to_uint32(t_vec3 vec);
 float		vec3_dist_sq(t_vec3 a, t_vec3 b);
+bool		vec3_is_nan_inf(t_vec3 vec);
 
 // vec4
 // -----------------------------------------------------------------
@@ -289,13 +298,9 @@ uint32_t	rgba_to_abgr(uint32_t rgba);
 
 // Coordinate systems
 // -----------------------------------------------------------------
+t_vec3		spherical_coords(float u, float sin_theta, float z);
+t_vec3		spherical_to_world(t_vec3 n, float u, float sin_theta, float z);
 t_vec3		tangent_to_world(t_vec3 vec, t_vec3 n);
-t_vec3		spherical_to_world(t_vec3 n, float u, float cos_theta, float sin_theta);
-
-// Sampling
-// -----------------------------------------------------------------
-t_vec3		sample_cos_hemisphere(t_vec3 n, t_vec2 uv);
-t_vec3		sample_ggx(t_vec3 n, float alpha, t_vec2 uv);
-t_vec3		sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
+void		orthonormal_basis(t_vec3 n, t_vec3 *t, t_vec3 *b);
 
 #endif

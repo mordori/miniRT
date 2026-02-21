@@ -11,7 +11,7 @@ void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *lig
 	t_vec3		radiance;
 
 	radiance = direct_lighting_editing(ctx, path, light);
-	radiance = vec3_clamp_mag(radiance, light->max_brightness);
+	radiance = vec3_clamp_mag(radiance, light->max_radiance);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
 }
 
@@ -35,7 +35,7 @@ static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path,
 	if (path->ndotl <= G_EPSILON)
 		return (vec3_n(0.0f));
 	shadow_ray = new_ray(hit_biased, path->l);
-	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON, path->hit.obj))
+	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON))
 		return (vec3_n(0.0f));
 	return (add_light(path, light, dist_sq));
 }

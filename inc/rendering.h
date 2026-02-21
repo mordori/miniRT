@@ -23,13 +23,19 @@ t_vec3	bsdf(t_path *path);
 void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
 t_vec3	cook_torrance_brdf(const t_path *path);
 float	pdf_cos(float ndotl);
-float	pdf_ggx(const t_path *path);
+float	pdf_ggx_vndf(const t_path *path);
 bool	sample_bsdf(t_path *path);
 float	power_heuristic(float pdf_d, float pdf_r);
 float	bsdf_pdf(t_path *path);
 float	light_pdf(t_vec3 l, float radius_sq);
-// bool	hit_shadow(const t_scene *scene, t_vec3 orig, t_vec3 dir, float dist);
-bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist, const t_object *skip);
+bool	hit_shadow(const t_scene *scene, const t_ray *ray, float dist);
+
+// Sampling
+// -----------------------------------------------------------------
+t_vec3		sample_cos_hemisphere(t_vec3 n, t_vec2 uv);
+t_vec3		sample_ggx(t_vec3 n, float alpha, t_vec2 uv);
+t_vec3		sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
+void		sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv);
 
 
 bool	trace_ray_editing(const t_context *ctx, t_path *path);

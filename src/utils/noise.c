@@ -4,7 +4,6 @@
 // possible, using Cranley-Patterson Rotation (random shift modulo).
 //
 // Pre-calculated texture in /assets/textures/ by Christoph Peters
-// https://momentsingraphics.de/BlueNoise.html
 float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
 {
 	uint32_t	tx;

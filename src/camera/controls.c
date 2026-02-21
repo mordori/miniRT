@@ -51,10 +51,10 @@ static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos,
 	{
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			cam->state = CAM_ORBIT;
-		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
-			cam->state = CAM_ZOOM;
-		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
-			cam->state = CAM_PAN;
+		// else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
+		// 	cam->state = CAM_ZOOM;
+		// else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
+		// 	cam->state = CAM_PAN;
 		if (cam->state == CAM_DEFAULT)
 			return ;
 		if (cam->state != CAM_PAN)

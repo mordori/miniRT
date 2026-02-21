@@ -12,20 +12,27 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 {
 	t_vec3		bg_color;
 	t_vec3		light_emission;
+	float		rough;
+	float		attenuation;
 
 	if ((int)hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | \
 (int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
 (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
 	{
+		if (path->bounce > 0)
+			rough = path->mat->roughness;
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);
 		if (path->mat->is_emissive)
 		{
 			light_emission = vec3_mul(path->throughput, path->mat->emission);
 			if (path->bounce > 0)
-				light_emission = vec3_scale(light_emission, (1.0f - path->mat->roughness));
+			{
+				attenuation = powf(fmaxf(0.0f, 1.0f - rough), 10.0f);
+				light_emission = vec3_scale(light_emission, attenuation);
+			}
 			light_emission = vec3_clamp_mag(light_emission, 2.0f);
-			path->color = vec3_add(path->color, vec3_mul(path->throughput, light_emission));
+			path->color = vec3_add(path->color, light_emission);
 			return (false);
 		}
 		if (path->bounce > 0)
