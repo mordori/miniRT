@@ -1,6 +1,6 @@
 # Renderer
 #				samples		bounces
-render			512			64
+render			256			64
 
 # Ambient
 #		intensity		color
@@ -12,7 +12,7 @@ sky		sky.png
 
 # Material
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags
-mat		0		255,255,255		1.0			0.5			1.5		1.0				0.0					255,255,255			0			_
+mat		0		255,255,255		0.95		0.4			1.5		1.0				0.0					255,255,255			0			_
 mat		1		210,210,210		0.0			0.15		1.5		1.0				0.0					255,255,255			0			_
 mat		2		210,10,10		0.0			0.0			1.5		1.0				0.0					255,255,255			0			_
 mat		3		255,217,145		0.9			0.1			1.5		1.0				0.0					255,255,255			0			_
@@ -32,4 +32,3 @@ L		705,485,520			1.0			255,255,255		30.0		4
 #		pos					radius		mat_id
 sp		0,-50.4,1			100			0
 sp		0.0,-0.0,1.5		0.8			2
-

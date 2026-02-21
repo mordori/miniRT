@@ -352,9 +352,9 @@ struct __attribute__((aligned(16))) s_path
 
 struct s_tex_entry
 {
-	char		name[MAX_NAME_LEN];
-	t_texture	texture;
-	bool		loaded;
+	char			name[MAX_NAME_LEN];
+	t_texture		texture;
+	bool			loaded;
 };
 
 struct s_assets
