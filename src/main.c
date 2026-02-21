@@ -54,7 +54,7 @@ void	printf_init(t_context *ctx)
 {
 	printf("\nRender settings\n");
 	printf("Samples:\t%d\n", ctx->renderer.render_samples);
-	printf("Bounces:\t%d\n\n", ctx->renderer.refine_bounces);
+	printf("Bounces:\t%d\n\n", ctx->renderer.rendered_bounces);
 }
 
 void	clean(t_context *ctx)

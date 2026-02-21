@@ -17,7 +17,8 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 
 	if ((int)hit_object(ctx->scene.selected_obj, &path->ray, &path->hit) | \
 (int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
-(int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
+(int)hit_bvh(ctx->scene.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.bvh_nodes) | \
+(int)hit_planes(ctx, &path->ray, &path->hit))
 	{
 		if (path->bounce > 0)
 			rough = path->mat->roughness;

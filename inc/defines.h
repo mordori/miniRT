@@ -25,7 +25,7 @@
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_ORBIT				0.0015f
+# define SENS_ORBIT				0.0017f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
 # define SENS_MOVE				1.0f
@@ -281,11 +281,7 @@ struct __attribute__((aligned(16))) s_object
 
 struct __attribute__((aligned(16))) s_light
 {
-	union
-	{
-		t_vec3		pos;
-		t_vec3		dir;
-	};
+	t_vec3			pos;
 	t_vec3			color;
 	t_object		*obj;
 	t_vec3			emission;
@@ -293,7 +289,6 @@ struct __attribute__((aligned(16))) s_light
 	float			intensity;
 	float			max_radiance;
 	float			radius_sq;
-	uint32_t		material_id;
 	t_light_type	type;
 };
 
@@ -363,12 +358,14 @@ struct __attribute__((aligned(16))) s_scene
 {
 	t_camera		cam;
 	t_vector		objs;
+	t_vector		planes;
 	t_vector		lights;
 	t_vector		materials;
-	t_bvh_node		*bvh_root;
 	t_light			ambient_light;
 	t_texture		skydome;
 	t_object		*selected_obj;
+	t_bvh_node		*bvh_nodes;
+	uint32_t		bvh_root_idx;
 	int				tex_count;
 	bool			has_directional_light;
 	t_tex_entry		textures[MAX_TEXTURES];
@@ -396,8 +393,8 @@ struct __attribute__((aligned(64))) s_renderer
 		uint32_t			height;
 		uint32_t			pixels;
 		t_render_mode		mode;
-		uint32_t			render_samples; //
-		uint32_t			refine_bounces;
+		uint32_t			render_samples;
+		uint32_t			rendered_bounces;
 		uint32_t			frame;
 		uint8_t				ray_bounces;
 		_Atomic bool		render_cancel;
@@ -442,9 +439,9 @@ struct __attribute__((aligned(16))) s_aabb
 struct __attribute__((aligned(16))) s_bvh_node
 {
 	t_aabb			aabb;
-	t_bvh_node		*left;
-	t_bvh_node		*right;
 	t_object		*obj;
+	uint32_t		left_idx;
+	uint32_t		right_idx;
 	int				axis;
 };
 

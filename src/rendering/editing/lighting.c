@@ -1,3 +1,4 @@
+#include "objects.h"
 #include "rendering.h"
 #include "materials.h"
 #include "utils.h"
@@ -35,7 +36,7 @@ static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path,
 	if (path->ndotl <= G_EPSILON)
 		return (vec3_n(0.0f));
 	shadow_ray = new_ray(hit_biased, path->l);
-	if (!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON))
+	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON)) | (int)hit_planes(ctx, &path->ray, &path->hit))
 		return (vec3_n(0.0f));
 	return (add_light(path, light, dist_sq));
 }

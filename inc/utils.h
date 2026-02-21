@@ -37,7 +37,6 @@ void		free_texture(t_texture *tex);
 void		resize_window(t_context *ctx);
 bool		resize_timer(const t_context *ctx);
 uint32_t	time_now(void);
-void		clean_bvh(t_bvh_node *node);
 void		start_render(t_renderer *r, const t_camera *cam);
 void		stop_render(t_renderer *r);
 float		ft_atof(const char *str, char **endptr);

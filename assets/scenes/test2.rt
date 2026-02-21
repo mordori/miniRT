@@ -1,7 +1,10 @@
+# Renderer
+#				samples		bounces
+render			512			64
+
 # Ambient
 #		intensity		color
 A		0.2				128,128,128
-
 
 # Material
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags

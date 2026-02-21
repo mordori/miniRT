@@ -47,7 +47,10 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 	float		pdf;
 	t_vec3		light_emission;
 
-	if ((int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | (int)hit_bvh(ctx->scene.bvh_root, &path->ray, &path->hit, 0))
+	if (\
+(int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
+(int)hit_bvh(ctx->scene.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.bvh_nodes) | \
+(int)hit_planes(ctx, &path->ray, &path->hit))
 	{
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);

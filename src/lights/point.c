@@ -5,7 +5,7 @@
 
 static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj);
 
-void	init_point_light(t_context *ctx, t_light *light)
+void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 {
 	t_light			*l;
 	t_object		obj;
@@ -15,7 +15,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	if (!l)
 		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
 	*l = *light;
-	mat = ((t_material **)ctx->scene.materials.items)[l->material_id];
+	mat = ((t_material **)ctx->scene.materials.items)[mat_id];
 	l->emission = mat->emission;
 	l->max_radiance = MAX_RADIANCE;
 	obj = (t_object){0};
@@ -26,7 +26,7 @@ void	init_point_light(t_context *ctx, t_light *light)
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = l->radius;
 	obj.shape.sphere.radius_sq = l->radius_sq;
-	obj.material_id = l->material_id;
+	obj.material_id = mat_id;
 	if (vec3_length(obj.transform.pos) > 500.0f)
 	{
 		init_dir_light(ctx, l, &obj);

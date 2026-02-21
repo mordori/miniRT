@@ -46,7 +46,7 @@ t_error	try_render_settings(t_context *ctx, char **tokens)
 	{
 		if (!parse_uint(tokens[2], &val) || val == 0)
 			return (E_RANGE);
-		ctx->renderer.refine_bounces = val;
+		ctx->renderer.rendered_bounces = val;
 	}
 	return (E_OK);
 }

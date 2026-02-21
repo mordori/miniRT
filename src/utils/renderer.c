@@ -9,7 +9,7 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	r->tile_index = 0;
 	r->cam = *cam;
 	r->mode = RENDERED;
-	r->ray_bounces = r->refine_bounces;
+	r->ray_bounces = r->rendered_bounces;
 	r->frame = 1;
 	r->render_time = time_now();
 	pthread_cond_broadcast(&r->cond);
@@ -57,7 +57,7 @@ void	set_mode_rendered(t_renderer *r)
 		r->frame = 1;
 	}
 	r->mode = RENDERED;
-	r->ray_bounces = r->refine_bounces;
+	r->ray_bounces = r->rendered_bounces;
 	r->tile_index = 0;
 	pthread_cond_broadcast(&r->cond);
 }

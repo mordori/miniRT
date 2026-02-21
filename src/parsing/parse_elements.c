@@ -77,8 +77,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	light.intensity = ratio;
 	light.color = color;
 	light.radius = radius;
-	light.material_id = mat_id;
-	init_point_light(ctx, &light);
+	init_point_light(ctx, &light, mat_id);
 	p->has_light = true;
 	return (E_OK);
 }
