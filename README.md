@@ -151,7 +151,7 @@ Path tracing
 
 PBR
 - https://www.pbr-book.org/
-- https://google.github.io/filament/main/filament.html#materialsystem/specularbrdf
+- https://google.github.io/filament/main/filament.html
 - https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
 - https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
@@ -159,11 +159,16 @@ VNDF
 - https://arxiv.org/pdf/2306.05044
 - https://www.youtube.com/watch?v=u7TafvTVmbo
 
-Blue noise
-- https://momentsingraphics.de/BlueNoise.html
-
 Math
 - https://immersivemath.com/ila/index.html
 - https://www.3blue1brown.com/
 - https://betterexplained.com/
 - https://gamemath.com/book/intro.html
+- https://www.wikipedia.org/
+
+Blue noise
+- https://momentsingraphics.de/BlueNoise.html
+
+RNG
+- https://www.reedbeta.com/blog/hash-functions-for-gpu-rendering/
+- https://old.reddit.com/r/RNG/comments/jqnq20/the_wang_and_jenkins_integer_hash_functions_just/

@@ -6,15 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 20:46:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/01 07:35:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/21 11:29:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib_math.h"
 
-// Stateless mixer for seed hashing
-// https://old.reddit.com/r/RNG/comments/jqnq20/the_wang_and_jenkins_integer_hash_functions_just/
-// Marc B. Reynolds
+// Stateless mixer for seed hashing by Marc B. Reynolds
 uint32_t	hash_lowerbias32(uint32_t seed)
 {
 	seed ^= seed >> 16;
@@ -26,7 +24,6 @@ uint32_t	hash_lowerbias32(uint32_t seed)
 }
 
 // Permutated Congruential Generator for sequences
-// https://www.reedbeta.com/blog/hash-functions-for-gpu-rendering/
 uint32_t	pcg(uint32_t *state)
 {
 	uint32_t		old_state;
