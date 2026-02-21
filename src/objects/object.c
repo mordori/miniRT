@@ -25,8 +25,6 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 		return (false);
 	if (obj->type == OBJ_SPHERE)
 		result = hit_sphere(&obj->shape, ray, hit);
-	else if (obj->type == OBJ_PLANE)
-		result = hit_plane(&obj->shape, ray, hit);
 	else if (obj->type == OBJ_CYLINDER)
 		result = hit_cylinder(&obj->shape, ray, hit);
 	else if (obj->type == OBJ_CONE)

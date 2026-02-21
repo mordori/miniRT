@@ -2,11 +2,11 @@
 
 t_ray	new_ray(t_vec3 origin, t_vec3 dir)
 {
-	static const t_v4ui	sign_bit = {0x80000000u, 0x80000000u, 0x80000000u, 0x80000000u};
-	static const t_v4sf	epsilon = {1e-20f, 1e-20f, 1e-20f, 1e-20f};
-	static const t_v4sf	one = {1.0f, 1.0f, 1.0f, 1.0f};
-	t_v4ui				signed_eps;
-	t_ray				ray;
+	static const uint32_t	sign_bit = 0x80000000u;
+	static const t_v4sf		epsilon = {1e-20f, 1e-20f, 1e-20f, 1e-20f};
+	static const t_v4sf		one = {1.0f, 1.0f, 1.0f, 1.0f};
+	t_v4ui					signed_eps;
+	t_ray					ray;
 
 	ray.origin = origin;
 	ray.dir = dir;

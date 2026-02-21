@@ -119,7 +119,7 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	path->p_spec = clampf(p, 0.1f, 0.9f);
 	if (path->mat->metallic >= 0.9f)
 		path->p_spec = 1.0f;
-	path->sample_spec = randomf01(pixel->seed) < path->p_spec;
+	path->sample_spec = fminf(randomf01(pixel->seed), 1.0f) < path->p_spec;
 	if (!sample_bsdf(path))
 		return (false);
 	path->ray = new_ray(vec3_bias(path->hit.point, path->n), path->l);

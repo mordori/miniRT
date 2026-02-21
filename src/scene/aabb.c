@@ -29,8 +29,6 @@ t_aabb	get_object_bounds(const t_object *obj)
 	res = (t_aabb){0};
 	if (obj->type == OBJ_SPHERE)
 		res = sphere_bounds(obj);
-	else if (obj->type == OBJ_PLANE)
-		res = plane_bounds(obj);
 	else if (obj->type == OBJ_CYLINDER)
 		res = cylinder_bounds(obj);
 	else if (obj->type == OBJ_CONE)
@@ -63,4 +61,3 @@ bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t, float enter
 	exit = fminf(fminf(far[0], far[1]), fminf(far[2], closest_t));
 	return (enter < exit);
 }
-

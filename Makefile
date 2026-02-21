@@ -9,7 +9,7 @@ WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow \
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
-OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto
+OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto -DNDEBUG -falign-loops=16 -falign-functions=32
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || echo 4)
