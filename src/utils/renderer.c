@@ -8,8 +8,8 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	r->tiles_total = r->tiles.x * r->tiles.y;
 	r->tile_index = 0;
 	r->cam = *cam;
-	r->mode = RENDER_REFINE;
-	r->ray_bounces = r->refine_bounces;
+	r->mode = RENDERED;
+	r->ray_bounces = r->rendered_bounces;
 	r->frame = 1;
 	r->render_time = time_now();
 	pthread_cond_broadcast(&r->cond);
@@ -35,11 +35,11 @@ void	cancel_render(t_renderer *r)
 	r->frame_complete = false;
 }
 
-void	set_render_preview(t_context *ctx, t_renderer *r, bool *update)
+void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
 {
+	if (r->mode == RENDERED)
+		r->mode = PREVIEW;
 	r->cam = ctx->scene.cam;
-	if (r->mode == RENDER_REFINE)
-		r->mode = RENDER_PREVIEW;
 	r->ray_bounces = PREVIEW_BOUNCES;
 	r->frame = 1;
 	r->tile_index = 0;
@@ -48,16 +48,16 @@ void	set_render_preview(t_context *ctx, t_renderer *r, bool *update)
 	pthread_cond_broadcast(&r->cond);
 }
 
-void	set_render_refine(t_renderer *r)
+void	set_mode_rendered(t_renderer *r)
 {
-	if (r->mode == RENDER_PREVIEW)
+	if (r->mode != RENDERED)
 	{
 		r->blit_time = 0;
 		r->render_time = time_now();
 		r->frame = 1;
 	}
-	r->mode = RENDER_REFINE;
-	r->ray_bounces = r->refine_bounces;
+	r->mode = RENDERED;
+	r->ray_bounces = r->rendered_bounces;
 	r->tile_index = 0;
 	pthread_cond_broadcast(&r->cond);
 }

@@ -27,10 +27,10 @@ void	frame_loop(void *param)
 			resize_window(ctx);
 		return ;
 	}
-	else if (!r->threads_running && update)
-		set_render_preview(ctx, r, &update);
+	else if (!r->threads_running && (update || r->mode == SOLID))
+		set_mode_preview(ctx, r, &update);
 	else if (!r->threads_running && r->frame < r->render_samples + 1)
-		set_render_refine(r);
+		set_mode_rendered(r);
 	pthread_mutex_unlock(&r->mutex);
 	limit_polling_rate(r);
 }
@@ -52,7 +52,7 @@ void	blit(const t_context *ctx, const t_renderer *r)
 		pixel.scale = 1.0f;
 		pixel.frame = 1;
 	}
-	if (r->mode == RENDER_REFINE)
+	if (r->mode == RENDERED)
 		copy_frame_buffer(ctx, buf, pixels, &pixel);
 	else
 		copy_frame_buffer_preview(ctx, buf, pixels);
@@ -100,7 +100,7 @@ static inline void	process_frame(t_context *ctx, t_renderer *r)
 	uint32_t		render_time;
 
 	print_render_status(ctx, r);
-	if (r->mode != RENDER_REFINE || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 || r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame == r->render_samples))
+	if (r->mode != RENDERED || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 || r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame == r->render_samples))
 	{
 		blit(ctx, r);
 		r->blit_time = time_now();

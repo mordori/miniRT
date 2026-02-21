@@ -9,7 +9,7 @@ WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow \
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
-OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto
+OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto -DNDEBUG -falign-loops=16 -falign-functions=32
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
 MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || echo 4)
@@ -62,7 +62,8 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c try_parse.c \
 				 parse_patterns.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c)
+				editing/tracer.c editing/lighting.c \
+				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c sampling.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
@@ -72,7 +73,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \
 				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \
 				vec2.c vec4_2.c vec2i.c vec2i_2.c math_2.c math_3.c \
-				vec3_3.c color.c v4sf.c v4si.c coords.c sampling.c \
+				vec3_3.c color.c v4sf.c v4si.c coords.c \
 				mat4_transforms_2.c random.c vec3_4.c vec3_5.c vec3_6.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \

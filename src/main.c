@@ -15,16 +15,13 @@ static inline void	initialize(t_context *ctx);
 int	main(int argc, char *argv[])
 {
 	t_context	ctx;
-	char		*file;
 
 	if (argc != 2)
 		fatal_error(NULL, errors(ERR_ARGINVL), __FILE__, __LINE__);
 	ctx = (t_context){0};
-	file = argv[1];
-	validate_file_type(file);
-	printf("[miniRT]\n");
-	printf("Loaded scene: %s\n\n", file);
-	ctx.fd = try_open(file, O_RDONLY, 0);
+	ctx.file = argv[1];
+	validate_file_type(ctx.file);
+	ctx.fd = try_open(ctx.file, O_RDONLY, 0);
 	initialize(&ctx);
 	try_write(&ctx, STDOUT_FILENO, "\n\nGoodbye!\n");
 	clean(&ctx);
@@ -47,16 +44,17 @@ static inline void	initialize(t_context *ctx)
 		return ;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
-	printf("Render settings\n");
-	printf("Samples:\t%d\n", ctx->renderer.render_samples);
-	printf("Bounces:\t%d\n\n\n", ctx->renderer.refine_bounces);
-	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
-	if (!ctx->tex_bn.pixels)
-		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	resize_window(ctx);
 	if (mlx_loop_hook(ctx->mlx, frame_loop, ctx))
 		mlx_loop(ctx->mlx);
 	stop_render(&ctx->renderer);
+}
+
+void	printf_init(t_context *ctx)
+{
+	printf("\nRender settings\n");
+	printf("Samples:\t%d\n", ctx->renderer.render_samples);
+	printf("Bounces:\t%d\n\n", ctx->renderer.rendered_bounces);
 }
 
 void	clean(t_context *ctx)
@@ -84,14 +82,3 @@ void	clean(t_context *ctx)
 	if (ctx->mlx)
 		mlx_terminate(ctx->mlx);
 }
-
-// dof
-// fog
-// scene saving
-// parse .obj files
-// save render .png
-// Stochastic Bilinear Interpolation for textures
-
-// Netpractise:
-// pbaube guide
-// crashcourse youtube 28-31

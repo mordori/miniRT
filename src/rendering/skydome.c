@@ -2,15 +2,15 @@
 #include "materials.h"
 #include "utils.h"
 
-t_vec3	background_color(const t_texture *tex, const t_ray *ray, const float lux, t_vec2 uv_offset)
+t_vec3	background_color(const t_texture *tex, const t_ray *ray, t_vec2 uv_offset)
 {
 	t_vec2		uv;
 
 	if (!tex->pixels)
-		return (vec3_scale(background_gradient((ray->dir.y + 1.0f) * 0.5f), lux * 1.5f));
+		return (background_gradient((ray->dir.y + 1.0f) * 0.5f));
 	uv = spherical_uv(ray->dir);
 	uv = vec2_add(uv, uv_offset);
-	return (vec3_scale(sample_texture(tex, uv), lux));
+	return (sample_texture(tex, uv));
 }
 
 t_vec3	background_gradient(const float t)
@@ -36,7 +36,7 @@ bool	rotate_skydome(t_context *ctx)
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT))
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;
-		if (ctx->scene.has_directional_light)
+		if (ctx->scene.env.has_directional_light)
 		{
 			light = &ctx->scene.cam.directional_light;
 			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);

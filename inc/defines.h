@@ -16,20 +16,22 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDER_SAMPLES			512
+# define RENDERED_SAMPLES		256
+# define SOLID_BOUNCES			3
 # define PREVIEW_BOUNCES		3
-# define REFINE_BOUNCES			32
+# define RENDERED_BOUNCES		64
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_ORBIT				0.0025f
+# define SENS_ORBIT				0.0017f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				5.0f
+# define SENS_MOVE				1.0f
 
-# define MAX_BRIGHTNESS			40.0f
+# define MAX_RADIANCE			10.0f
+# define CLAMP_INDIRECT			10.0f
 
 # define KEY_FORWARD			MLX_KEY_W
 # define KEY_LEFT				MLX_KEY_A
@@ -76,6 +78,9 @@ typedef struct s_pixel			t_pixel;
 typedef struct s_ray			t_ray;
 typedef struct s_transform		t_transform;
 typedef struct s_tex_entry		t_tex_entry;
+typedef struct s_geo			t_geo;
+typedef struct s_env			t_env;
+typedef struct s_assets			t_assets;
 
 typedef union u_shape			t_shape;
 
@@ -154,9 +159,9 @@ enum e_entity
 
 enum e_render_mode
 {
-	RENDER_REFINE,
-	RENDER_PREVIEW,
-	RENDER_EDIT
+	RENDERED,
+	PREVIEW,
+	SOLID
 };
 
 enum e_bn_channel
@@ -279,17 +284,14 @@ struct __attribute__((aligned(16))) s_object
 
 struct __attribute__((aligned(16))) s_light
 {
-	union
-	{
-		t_vec3		pos;
-		t_vec3		dir;
-	};
+	t_vec3			pos;
 	t_vec3			color;
 	t_object		*obj;
-	t_material		*mat;
+	t_vec3			emission;
 	float			radius;
 	float			intensity;
-	uint32_t		material_id;
+	float			max_radiance;
+	float			radius_sq;
 	t_light_type	type;
 };
 
@@ -345,30 +347,45 @@ struct __attribute__((aligned(16))) s_path
 	float			alpha;
 	float			pdf;
 	float			p_spec;
-	t_render_mode	mode;
 	bool			sample_spec;
 };
 
 struct s_tex_entry
 {
-	char		name[MAX_NAME_LEN];
-	t_texture	texture;
-	bool		loaded;
+	char			name[MAX_NAME_LEN];
+	t_texture		texture;
+	bool			loaded;
+};
+
+struct s_assets
+{
+	t_vector		materials;
+	int				tex_count;
+	t_tex_entry		textures[MAX_TEXTURES];
+};
+
+struct s_env
+{
+	t_vector		lights;
+	t_light			ambient_light;
+	t_texture		skydome;
+	bool			has_directional_light;
+};
+
+struct s_geo
+{
+	t_vector		objs;
+	t_vector		planes;
+	t_bvh_node		*bvh_nodes;
+	uint32_t		bvh_root_idx;
 };
 
 struct __attribute__((aligned(16))) s_scene
 {
 	t_camera		cam;
-	t_vector		objs;
-	t_vector		lights;
-	t_vector		materials;
-	t_bvh_node		*bvh_root;
-	t_light			ambient_light;
-	t_texture		skydome;
-	t_object		*selected_obj;
-	int				tex_count;
-	bool			has_directional_light;
-	t_tex_entry		textures[MAX_TEXTURES];
+	t_geo			geo;
+	t_env			env;
+	t_assets		assets;
 };
 
 struct __attribute__((aligned(64))) s_renderer
@@ -393,8 +410,8 @@ struct __attribute__((aligned(64))) s_renderer
 		uint32_t			height;
 		uint32_t			pixels;
 		t_render_mode		mode;
-		uint32_t			render_samples; //
-		uint32_t			refine_bounces;
+		uint32_t			render_samples;
+		uint32_t			rendered_bounces;
 		uint32_t			frame;
 		uint8_t				ray_bounces;
 		_Atomic bool		render_cancel;
@@ -439,9 +456,9 @@ struct __attribute__((aligned(16))) s_aabb
 struct __attribute__((aligned(16))) s_bvh_node
 {
 	t_aabb			aabb;
-	t_bvh_node		*left;
-	t_bvh_node		*right;
 	t_object		*obj;
+	uint32_t		left_idx;
+	uint32_t		right_idx;
 	int				axis;
 };
 
@@ -451,8 +468,10 @@ struct __attribute__((aligned(64))) s_context
 	t_scene			scene;
 	t_texture		tex_bn;
 	t_editor		editor;
+	t_object		*selected_obj;
 	mlx_t			*mlx;
 	t_image			*img;
+	char			*file;
 	uint32_t		resize_time;
 	int				fd;
 };

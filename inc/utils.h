@@ -37,7 +37,6 @@ void		free_texture(t_texture *tex);
 void		resize_window(t_context *ctx);
 bool		resize_timer(const t_context *ctx);
 uint32_t	time_now(void);
-void		clean_bvh(t_bvh_node *node);
 void		start_render(t_renderer *r, const t_camera *cam);
 void		stop_render(t_renderer *r);
 float		ft_atof(const char *str, char **endptr);
@@ -55,10 +54,12 @@ t_ray		new_ray(t_vec3 origin, t_vec3 dir);
 void		random_uv(const t_context *ctx, t_path *path, t_pixel *pixel,
 				t_bn_channel c);
 void		cancel_render(t_renderer *r);
-void		set_render_preview(t_context *ctx, t_renderer *r, bool *update);
-void		set_render_refine(t_renderer *r);
+void		set_mode_preview(t_context *ctx, t_renderer *r, bool *update);
+void		set_mode_rendered(t_renderer *r);
 void		print_render_status(t_context *ctx, t_renderer *r);
 void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);
+void		init_hit(t_path *path);
+void		printf_init(t_context *ctx);
 
 #endif

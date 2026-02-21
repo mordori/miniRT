@@ -1,16 +1,5 @@
 #include "scene.h"
 
-// TODO: verify
-t_aabb	plane_bounds(const t_object *obj)
-{
-	t_aabb		aabb;
-
-	(void)obj;
-	aabb.min = (t_vec3){{-1000, -1000, -1000}};
-	aabb.max = (t_vec3){{1000, 1000, 1000}};
-	return (aabb);
-}
-
 t_aabb	sphere_bounds(const t_object *obj)
 {
 	t_aabb		aabb;

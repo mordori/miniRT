@@ -107,17 +107,17 @@ static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
 		seed = 1;
 	pixel->seed = &seed;
 	pixel->frame = r->frame;
-	if (r->mode == RENDER_PREVIEW)
-	{
-		pixel->u = (float)pixel->x + 0.5f;
-		pixel->v = (float)pixel->y + 0.5f;
-	}
-	else
+	if (r->mode == RENDERED)
 	{
 		pixel->u = (float)pixel->x + blue_noise(&ctx->tex_bn, pixel, BN_PX_U);
 		pixel->v = (float)pixel->y + blue_noise(&ctx->tex_bn, pixel, BN_PX_V);
 	}
-	color = trace_path(ctx, pixel);
+	else
+	{
+		pixel->u = (float)pixel->x + 0.5f;
+		pixel->v = (float)pixel->y + 0.5f;
+	}
+	color = trace_path(ctx, pixel, r->mode, r->ray_bounces);
 	if (r->frame == 1)
 		*pixel->color = color;
 	else

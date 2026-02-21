@@ -50,11 +50,11 @@ t_texture	*find_texture_by_name(t_scene *scene, const char *name)
 	int	i;
 
 	i = 0;
-	while (i < scene->tex_count)
+	while (i < scene->assets.tex_count)
 	{
-		if (scene->textures[i].loaded
-			&& ft_strcmp(scene->textures[i].name, name) == 0)
-			return (&scene->textures[i].texture);
+		if (scene->assets.textures[i].loaded
+			&& ft_strcmp(scene->assets.textures[i].name, name) == 0)
+			return (&scene->assets.textures[i].texture);
 		i++;
 	}
 	return (NULL);
@@ -70,16 +70,16 @@ t_error	parse_texture_def(t_context *ctx, char **tokens)
 
 	if (count_tokens(tokens) != 3)
 		return (E_MISSING_ARGS);
-	if (ctx->scene.tex_count >= MAX_TEXTURES)
+	if (ctx->scene.assets.tex_count >= MAX_TEXTURES)
 		return (E_TOO_MANY);
 	if (find_texture_by_name(&ctx->scene, tokens[1]))
 		return (E_DUPLICATE);
-	entry = &ctx->scene.textures[ctx->scene.tex_count];
+	entry = &ctx->scene.assets.textures[ctx->scene.assets.tex_count];
 	ft_strlcpy(entry->name, tokens[1], MAX_NAME_LEN);
 	err = load_texture_file(tokens[2], &entry->texture);
 	if (err != E_OK)
 		return (err);
 	entry->loaded = true;
-	ctx->scene.tex_count++;
+	ctx->scene.assets.tex_count++;
 	return (E_OK);
 }

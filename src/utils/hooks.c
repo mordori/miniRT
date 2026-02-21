@@ -7,6 +7,14 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	ctx = (t_context *)param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
+	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_RELEASE)
+	{
+		atomic_store(&ctx->renderer.render_cancel, true);
+		if (ctx->renderer.mode != SOLID)
+			ctx->renderer.mode = SOLID;
+		else
+			ctx->renderer.mode = RENDERED;
+	}
 }
 
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)

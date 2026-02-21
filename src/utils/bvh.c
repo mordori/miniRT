@@ -17,17 +17,3 @@ void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n)
 	else
 		qsort(objs, n, sizeof(t_object *), cmp_bounds_z);
 }
-
-void	clean_bvh(t_bvh_node *node)
-{
-	if (!node)
-		return ;
-	if (node->obj)
-	{
-		free(node);
-		return ;
-	}
-	clean_bvh(node->left);
-	clean_bvh(node->right);
-	free(node);
-}

@@ -24,32 +24,43 @@
 </p>
 
 ## Features
-- Monte Carlo integration with importance sampling for Global Illumination
+- Monte Carlo integration with multiple importance sampling for Global Illumination
 - BVH acceleration structure for rapid intersection testing
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
-- PBR material model with GGX specular, Smith height-correlated visibility term (Hammon), Disney diffuse, and Multiple Importance Sampling (MIS)
+- Modern PBR pipeline with microfacet BSDF
+- Custom scene description format
+- Bilinear texture filtering
+- Plane, sphere, cylinder, and cone primitives
 
 #### TODO
-- Additional primitive objects
-- Texture maps and procedural patterns
+- Anisotropic & clear coat BRDF
+- BTDF for BSDF
+- Procedural patterns
 - Normal maps
 - Extented camera properties and trackball controls
 - Quaternions
-- Object editing with simplified rendering mode
+- Object editing
 
 #### Future Work
-- Discard the restrictive coding standard required by the subject and refactor to more efficient code
 - Image based lighting
-- VNDF sampling for indirect specular light
 - Additional post-processing modules
 - Denoising solution
+- Quads and boxes
 - Loading .ojb meshes
+- Improve the BVH
 - Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
 - Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
+## Physically Based Rendering
+Principled BSDF, a hybrid material model featuring Disney diffuse and Cook-Torrance specular lobes.
+
+- Implements Dupuy's 2023 spherical cap VNDF sampling method for efficient visible microfacet normal generation.
+- Height-correlated Smith G2 visibility and analytically simplified Smith G1 masking to maintain stable 32-bit floating point weights.
+- Firefly mitigation and defense against variance spikes with indirect weight clamping, path roughing, and NaN/Inf sanitisation.
+
 ## Optimisation & Performance
-This project implements a highly optimised CPU rendering engine, balancing code readability with raw performance.
+Implements a highly optimised CPU rendering engine, balancing code readability with raw performance.
 
 By analysing assembly output with GDB and compiler behaviour, several optimisations were implemented to maximise throughput with auto-vectorisation. Building on these performance gains, data structures were vectorised explicitly.
 
@@ -59,37 +70,24 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 - High-performance linear algebra library providing SIMD-accelerated, memory-aligned vector and matrix primitives.
 
 ### Blit Function
-
 #### Vectorised Preview Mode
-
 - Used during the camera movement. Achieves pure SIMD execution, processing 4 pixels in parallel per instruction cycle to maximize frame rate at the cost of slight image quality reduction.
 
-#### Pipelined Refine Mode
-
-- Leverages explicit loop unrolling to maximize Instruction Level Parallelism (ILP). While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
+#### Pipelined Rendered Mode
+- Leverages loop unrolling to maximize instruction level parallelism. While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
 
 ### BVH
-
 - Documentation under construction
 
 ### Micro-optimisations
-
 - Invariant caching to local variables to prevent pointer aliasing.
-
 - Branchless arithmetic to minimise CPU stalls in performance-critical loops.
-
 - Strategically segregated write-heavy synchronization primitives from read-only render data to eliminate false sharing and cache line invalidation.
 
-## Physically Based Rendering
-
-- Documentation under construction
-
 ## Monte Carlo Integration
-
 - Documentation under construction
 
 ## How to use
-
 > [!NOTE]
 > The default build configuration targets the Haswell microarchitecture (Intel 2013+ / AMD Ryzen).
 >
@@ -111,7 +109,6 @@ To delete all of the generated files, use
 ``` Makefile
 make fclean
 ```
-<br>
 
 ## Scene description
 Premade scenes can be found in `📁assets/scenes/`.
@@ -121,24 +118,78 @@ As the project is still under construction, we recommend to run the program with
 ./miniRT assets/scenes/test.rt
 ```
 
-<br>
-
 ## Controls
+#### Render Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>LMB</kbd>                                                 | Rotate                                        |
+| <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
+| <kbd>L Shift</kbd> / <kbd>Space</kbd>                          | Lower / Elevate                               |
+| <kbd></kbd>                                                    | Reset                                         |
 
-### Camera
+#### Edit Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>Tab</kbd>                                                 | Toggle Edit Mode                              |
+| <kbd></kbd>                                                    | Frame                                         |
+| <kbd></kbd>                                                    | Orbit                                         |
+| <kbd></kbd>                                                    | Zoom                                          |
+| <kbd></kbd>                                                    | Pan                                           |
 
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        |
-|----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Left ALT</kbd> + <kbd>Left Mouse Button</kbd> and drag    | Orbit Camera                                              |
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd></kbd>                                                    | Select Object                                 |
+| <kbd></kbd>                                                    | Move                                          |
+| <kbd></kbd>                                                    | Rotate                                        |
+| <kbd></kbd>                                                    | Scale                                         |
+| <kbd></kbd>                                                    | Transform Axis Constraint                     |
+| <kbd></kbd>                                                    | Transform Plane Constraint                    |
 
-### Editing
+#### General
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>←</kbd> / <kbd>→</kbd>                                    | Rotate skydome                                |
+| <kbd></kbd>                                                    | Adjust DoF                                    |
+| <kbd>,</kbd> / <kbd>.</kbd>                                    | Adjust FoV                                    |
+| <kbd>Esc</kbd>                                                 | Quit                                          |
 
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         |
-|----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Left Arrow</kbd> - <kbd>Right Arrow</kbd>                 | Rotate skydome                                            |
+## Project Review
+- Documentation under construction
 
-### General
+## Resources
+Path tracing
+- https://raytracing.github.io/
+- https://scratchapixel.com/index.html
+- https://gabrielgambetta.com/computer-graphics-from-scratch/
+- https://blog.selfshadow.com/
+- https://users.aalto.fi/~lehtinj7/CS-E5520/2023/
+- https://jacco.ompf2.com/articles/
+- The Ray Tracer Challenge by Jamis Buck
 
-| ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Description⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         |
-|----------------------------------------------------------------|-----------------------------------------------------------|
-| <kbd>Esc</kbd>                                                 | Quit                                                      |
+PBR
+- https://www.pbr-book.org/
+- https://google.github.io/filament/main/filament.html
+- https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
+- https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
+
+VNDF
+- https://arxiv.org/pdf/2306.05044
+- https://www.youtube.com/watch?v=u7TafvTVmbo
+
+Math
+- https://immersivemath.com/ila/index.html
+- https://www.3blue1brown.com/
+- https://betterexplained.com/
+- https://gamemath.com/book/intro.html
+- https://www.wikipedia.org/
+
+Blue noise
+- https://momentsingraphics.de/BlueNoise.html
+
+RNG
+- https://www.reedbeta.com/blog/hash-functions-for-gpu-rendering/
+- https://old.reddit.com/r/RNG/comments/jqnq20/the_wang_and_jenkins_integer_hash_functions_just/
+
+ACES
+- https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+- https://github.com/TheRealMJP/BakingLab/blob/master/BakingLab/ACES.hlsl

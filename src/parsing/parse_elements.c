@@ -24,9 +24,9 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 		return (E_RANGE);
 	if (!parse_color(tokens[2], &color))
 		return (E_INVALID_NUM);
-	ctx->scene.ambient_light.type = LIGHT_AMBIENT;
-	ctx->scene.ambient_light.intensity = ratio;
-	ctx->scene.ambient_light.color = color;
+	ctx->scene.env.ambient_light.type = LIGHT_AMBIENT;
+	ctx->scene.env.ambient_light.intensity = ratio;
+	ctx->scene.env.ambient_light.color = color;
 	p->has_ambient = true;
 	return (E_OK);
 }
@@ -77,8 +77,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	light.intensity = ratio;
 	light.color = color;
 	light.radius = radius;
-	light.material_id = mat_id;
-	init_point_light(ctx, &light);
+	init_point_light(ctx, &light, mat_id);
 	p->has_light = true;
 	return (E_OK);
 }
@@ -110,9 +109,11 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 		return (E_INVALID_NUM);
 	if (!validate_range(fov, 0.0f, 180.0f))
 		return (E_RANGE);
-	exposure = 0.085f;
+	exposure = 0.0f;
 	if (token_count == 5 && !parse_float(tokens[4], &exposure))
 		return (E_INVALID_NUM);
+	if (!validate_range(exposure, 0.01f, 10.0f))
+		return (E_RANGE);
 	ctx->scene.cam.exposure = exposure;
 	init_camera(ctx, position, orientation, fov);
 	p->has_camera = true;
