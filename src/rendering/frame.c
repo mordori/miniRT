@@ -100,6 +100,7 @@ static inline void	copy_frame_buffer_preview(const t_context *ctx, t_vec3 *buf, 
 static inline void	process_frame(t_context *ctx, t_renderer *r)
 {
 	uint32_t		render_time;
+	static char		buf[128];
 
 	print_render_status(ctx, r);
 	if (r->mode != RENDERED || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 || r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame == r->render_samples))
@@ -108,7 +109,10 @@ static inline void	process_frame(t_context *ctx, t_renderer *r)
 		r->blit_time = time_now();
 		render_time = time_now() - r->render_time;
 		if (r->frame == r->render_samples)
-			printf("\nDone!\t\t    Time: %.1fs\n\n", render_time / 1000.0f);
+		{
+			snprintf(buf, sizeof(buf), "\r\033[K\033[1;32mDone!   Render time: %.1fs\033[0m", render_time / 1000.0f);
+			try_write(ctx, STDOUT_FILENO, buf);
+		}
 	}
 	r->frame_complete = false;
 	++r->frame;

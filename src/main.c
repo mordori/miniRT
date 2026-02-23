@@ -23,7 +23,7 @@ int	main(int argc, char *argv[])
 	validate_file_type(ctx.file);
 	ctx.fd = try_open(ctx.file, O_RDONLY, 0);
 	initialize(&ctx);
-	try_write(&ctx, STDOUT_FILENO, "\n\nGoodbye!\n");
+	try_write(&ctx, STDOUT_FILENO, "\033[?25h\n\nGoodbye!\n\n");
 	clean(&ctx);
 	return (EXIT_SUCCESS);
 }
@@ -52,7 +52,7 @@ static inline void	initialize(t_context *ctx)
 
 void	printf_init(t_context *ctx)
 {
-	printf("\nRENDER SETTINGS\n");
+	printf("\033[?25l\nRENDER SETTINGS\n");
 	printf("Samples:\t%d\n", ctx->renderer.render_samples);
 	printf("Bounces:\t%d\n\n", ctx->renderer.render_bounces);
 
@@ -98,8 +98,8 @@ void	printf_init(t_context *ctx)
 	printf("| ↓ / ↑               | Focus Distance         |\n");
 	printf("| ← / →               | F-Stop                 |\n");
 	printf("| K / L               | Focal Length           |\n");
-	printf("| O / P               | Samples (PoT)          |\n");
-	printf("| U / I               | Bounces (PoT)          |\n");
+	printf("| O / P               | Samples                |\n");
+	printf("| U / I               | Bounces                |\n");
 	printf("| N                   | Toggle Settings        |\n");
 	printf("| ESC                 | Quit                   |\n");
 	printf("|---------------------|------------------------|\n");
