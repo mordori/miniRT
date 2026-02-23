@@ -160,8 +160,8 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>↓</kbd> / <kbd>↑</kbd>                                    | Focus Distance                                |
 | <kbd>←</kbd> / <kbd>→</kbd>                                    | F-Stop                                        |
 | <kbd>K</kbd> / <kbd>L</kbd>                                    | Focal Length                                  |
-| <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples (PoT)                                 |
-| <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces (PoT)                                 |
+| <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
+| <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
 | <kbd>N</kbd>                                                   | Toggle Settings                               |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 
