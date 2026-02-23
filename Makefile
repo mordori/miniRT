@@ -9,10 +9,24 @@ WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow \
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
-OPTS		:=-Ofast -march=haswell -funroll-loops -fno-plt -flto -DNDEBUG -falign-loops=16 -falign-functions=32
+
+UNAME_S		:=$(shell uname -s)
+UNAME_M		:=$(shell uname -m)
+OPTS		:=-O3 -ffast-math -funroll-loops -flto -DNDEBUG
+LDFLAGS		:=-lglfw -pthread -lm -flto
+ifeq ($(UNAME_S),Darwin)
+	ifeq ($(UNAME_M),arm64)
+		OPTS	+=-mcpu=native
+	else
+		OPTS	+=-march=native
+	endif
+	LDFLAGS		+=-L"/opt/homebrew/lib" -L"/usr/local/lib" -L"/opt/local/lib" -framework Cocoa -framework OpenGL -framework IOKit
+else
+	OPTS		+=-march=haswell -fno-plt -falign-loops=16 -falign-functions=32
+	LDFLAGS		+=-ldl
+endif
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
-LDFLAGS		:=-ldl -lglfw -pthread -lm -flto
-MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || echo 4)
+MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 
 DIR_INC		:=inc/
 DIR_SRC		:=src/
@@ -44,6 +58,9 @@ INCS		:=$(addprefix -I, \
 				$(DIR_MLX)include/MLX42 \
 				$(DIR_INC) \
 				$(DIR_INC)$(DIR_LIBFT))
+ifeq ($(UNAME_S),Darwin)
+	INCS	+=-I"/opt/homebrew/include" -I"/usr/local/include" -I"/opt/local/include"
+endif
 
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
@@ -105,7 +122,7 @@ COLOR		:=\033[0m
 # Removed config dependencies to use parallel compilation
 # For debug commands to work, add $(CONF) back to NAME and %.o and compile serially
 # TODO: remove config completely for shipping
-all: config $(MLX42) $(NAME)
+all: $(MLX42) $(NAME)
 
 config:
 	@$(call check_config,$(BUILD_TYPE))
