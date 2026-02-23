@@ -30,21 +30,22 @@ t_vec3	tangent_to_world(t_vec3 vec, t_vec3 n)
 	t_vec3		t;
 	t_vec3		b;
 
-	orthonormal_basis(n, &t, &b);
+	branchlessONB(n, &t, &b);
 	world = mul_tbn(vec, n, t, b);
 	return (world);
 }
 
-void	orthonormal_basis(t_vec3 n, t_vec3 *t, t_vec3 *b)
+void	branchlessONB(t_vec3 n, t_vec3 *b1, t_vec3 *b2)
 {
-	t_vec3		temp;
+	float		sign;
+	float		a;
+	float		b;
 
-	if (fabsf(n.x) > 0.9f)
-		temp = vec3(0.0f, 1.0f, 0.0f);
-	else
-		temp = vec3(1.0f, 0.0f, 0.0f);
-	*b = vec3_normalize(vec3_cross(n, temp));
-	*t = vec3_cross(n, *b);
+	sign = copysignf(1.0f, n.z);
+	a = -1.0f / (sign + n.z);
+	b = n.x * n.y * a;
+	*b1 = vec3(1.0f + sign * n.x * n.x * a, sign * b, -sign * n.x);
+	*b2 = vec3(b, sign + n.y * n.y * a, -n.y);
 }
 
 t_vec3	mul_tbn(t_vec3 vec, t_vec3 n, t_vec3 t, t_vec3 b)

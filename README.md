@@ -172,8 +172,6 @@ As the project is still under construction, we recommend to run the program with
 Path tracing
 - https://raytracing.github.io/
 - https://scratchapixel.com/index.html
-- https://gabrielgambetta.com/computer-graphics-from-scratch/
-- https://blog.selfshadow.com/
 - https://users.aalto.fi/~lehtinj7/CS-E5520/2023/
 - https://jacco.ompf2.com/articles/
 - The Ray Tracer Challenge by Jamis Buck
@@ -181,6 +179,7 @@ Path tracing
 PBR
 - https://www.pbr-book.org/
 - https://google.github.io/filament/main/filament.html
+- https://blog.selfshadow.com/
 - https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
 - https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
@@ -192,7 +191,6 @@ Math
 - https://immersivemath.com/ila/index.html
 - https://www.3blue1brown.com/
 - https://betterexplained.com/
-- https://gamemath.com/book/intro.html
 - https://www.wikipedia.org/
 
 Blue noise
