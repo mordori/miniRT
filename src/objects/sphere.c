@@ -35,7 +35,7 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	hit->normal = vec3_div(vec3_sub(hit->point, sphere.center), sphere.radius);
 	if (vec3_dot(vec3_negate(ray->dir), hit->normal) < G_EPSILON)
 		return (false);
-	hit->uv = spherical_uv(hit->normal); // Use normal for UV mapping since it's a sphere
+	hit->uv = spherical_uv(hit->normal);
 	hit->t = t;
 	return (true);
 }

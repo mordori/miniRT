@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/21 05:21:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/23 00:31:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ float		clampfn11(float value);
 float		clampf(float value, float min, float max);
 float		f_schlick(float u, float f0, float f90);
 float		degrees_to_rad(float degrees);
+float		rad_to_degrees(float rad);
 bool		ft_is_pot(size_t n);
 size_t		ft_pow(size_t n, size_t e);
 uint32_t	ft_uint_min(uint32_t a, uint32_t b);
@@ -298,9 +299,10 @@ uint32_t	rgba_to_abgr(uint32_t rgba);
 
 // Coordinate systems
 // -----------------------------------------------------------------
-t_vec3		spherical_coords(float u, float sin_theta, float z);
-t_vec3		spherical_to_world(t_vec3 n, float u, float sin_theta, float z);
+t_vec3		spherical_to_cartesian(float u, float sin_theta, float cos_theta);
+t_vec3		spherical_to_world(t_vec3 n, float u, float sin_theta, float cos_theta);
 t_vec3		tangent_to_world(t_vec3 vec, t_vec3 n);
 void		orthonormal_basis(t_vec3 n, t_vec3 *t, t_vec3 *b);
+t_vec3		mul_tbn(t_vec3 vec, t_vec3 n, t_vec3 t, t_vec3 b);
 
 #endif

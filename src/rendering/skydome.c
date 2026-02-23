@@ -23,20 +23,20 @@ t_vec3	background_gradient(const float t)
 
 bool	rotate_skydome(t_context *ctx)
 {
-	static t_vec3 initial_pos = (t_vec3){{704.2f,484.1f,519.4f,0.0f}};
+	static t_vec3 initial_pos = (t_vec3){{704000.0f, 484000.0f, 520000.0f, 0.0f}};
 	t_light		*light;
 	float		delta;
 	t_vec2		theta;
 
 	if (\
-(mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT)) || \
-(mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT)))
+(mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) && !mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) || \
+(mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) && !mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD)))
 	{
 		delta = 0.085f * ctx->mlx->delta_time;
-		if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT))
+		if (mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA))
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;
-		if (ctx->scene.env.has_directional_light)
+		if (ctx->scene.env.has_dir_light)
 		{
 			light = &ctx->scene.cam.directional_light;
 			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);

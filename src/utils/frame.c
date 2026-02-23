@@ -2,28 +2,27 @@
 
 void	print_render_status(t_context *ctx, t_renderer *r)
 {
-	int					step;
-	int					i;
-	static const char	empty[INT64_LENGTH] = {0};
-	char				str[INT64_LENGTH];
+	const int		bar_width = 20;
+	char			buf[128];
+	char			bar[21];
+	int				hashes;
+	int				i;
 
-	memcpy(str, empty, INT64_LENGTH);
-	try_write(ctx, STDOUT_FILENO, "\rRendering...   ");
-	try_write(ctx, STDOUT_FILENO, "[");
-	step = r->frame / (r->render_samples / 19);
-	i = step;
-	while (i-- > 0)
-		try_write(ctx, STDOUT_FILENO, "#");
-	i = 19 - step;
-	while (i-- > 0)
-		try_write(ctx, STDOUT_FILENO, " ");
-	try_write(ctx, STDOUT_FILENO, "] [");
-	uint64_to_str(r->frame, str);
-	try_write(ctx, STDOUT_FILENO, str);
-	try_write(ctx, STDOUT_FILENO, "/");
-	uint64_to_str(r->render_samples, str);
-	try_write(ctx, STDOUT_FILENO, str);
-	try_write(ctx, STDOUT_FILENO, "] ");
+	hashes = (r->frame * bar_width) / r->render_samples;
+	if (hashes > bar_width)
+		hashes = bar_width;
+	i = 0;
+	while (i < bar_width)
+	{
+		if (i < hashes)
+			bar[i] = '#';
+		else
+			bar[i] = ' ';
+		++i;
+	}
+	bar[bar_width] = '\0';
+	snprintf(buf, sizeof(buf), "\rRendering...   [%s] [%u/%u] ", bar, r->frame, r->render_samples);
+	try_write(ctx, STDOUT_FILENO, buf);
 }
 
 void	limit_polling_rate(t_renderer *r)

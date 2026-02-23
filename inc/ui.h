@@ -3,4 +3,6 @@
 
 #include "defines.h"
 
+void	update_ui(t_context *ctx);
+
 #endif
