@@ -20,7 +20,11 @@
 > Please ignore the section about XServer as it is no longer required for WSL2.
 
 <p align="center">
-	<img src="doc/rt.png" alt="Demo" />
+	<img src="doc/still.png" alt="Demo" />
+</p>
+
+<p align="center">
+	<img src="doc/still2.png" alt="Demo" />
 </p>
 
 ## Features
@@ -32,14 +36,15 @@
 - Custom scene description format
 - Bilinear texture filtering
 - Plane, sphere, cylinder, and cone primitives
+- Physical camera with fly controller
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
 - Procedural patterns
 - Normal maps
-- Extented camera properties and trackball controls
-- Quaternions
+- Trackball controller for Edit Mode
+- Quaternions and proper transforms
 - Object editing
 
 #### Future Work
@@ -119,39 +124,46 @@ As the project is still under construction, we recommend to run the program with
 ```
 
 ## Controls
-#### Render Mode
-| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+### Render Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Rotate                                        |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
-| <kbd>L Shift</kbd> / <kbd>Space</kbd>                          | Lower / Elevate                               |
+| <kbd>L Shift</kbd> / <kbd>Space</kbd>                          | Descend / Ascend                              |
 | <kbd></kbd>                                                    | Reset                                         |
 
-#### Edit Mode
+### Edit Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+|----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>TAB</kbd>                                                 | Toggle Edit Mode                              |
+
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>Tab</kbd>                                                 | Toggle Edit Mode                              |
 | <kbd></kbd>                                                    | Frame                                         |
 | <kbd></kbd>                                                    | Orbit                                         |
 | <kbd></kbd>                                                    | Zoom                                          |
 | <kbd></kbd>                                                    | Pan                                           |
 
-| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Editing          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd></kbd>                                                    | Select Object                                 |
 | <kbd></kbd>                                                    | Move                                          |
 | <kbd></kbd>                                                    | Rotate                                        |
 | <kbd></kbd>                                                    | Scale                                         |
-| <kbd></kbd>                                                    | Transform Axis Constraint                     |
-| <kbd></kbd>                                                    | Transform Plane Constraint                    |
+| <kbd></kbd>                                                    | Axis Constraint                               |
+| <kbd></kbd>                                                    | Plane Constraint                              |
 
-#### General
+### General
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>←</kbd> / <kbd>→</kbd>                                    | Rotate skydome                                |
-| <kbd></kbd>                                                    | Adjust DoF                                    |
-| <kbd>,</kbd> / <kbd>.</kbd>                                    | Adjust FoV                                    |
-| <kbd>Esc</kbd>                                                 | Quit                                          |
+| <kbd>,</kbd> / <kbd>.</kbd>                                    | Rotate Skydome                                |
+| <kbd>↓</kbd> / <kbd>↑</kbd>                                    | Focus Distance                                |
+| <kbd>←</kbd> / <kbd>→</kbd>                                    | F-Stop                                        |
+| <kbd>K</kbd> / <kbd>L</kbd>                                    | Focal Length                                  |
+| <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples (PoT)                                 |
+| <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces (PoT)                                 |
+| <kbd>N</kbd>                                                   | Toggle Settings                               |
+| <kbd>ESC</kbd>                                                 | Quit                                          |
 
 ## Project Review
 - Documentation under construction
@@ -193,3 +205,6 @@ RNG
 ACES
 - https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 - https://github.com/TheRealMJP/BakingLab/blob/master/BakingLab/ACES.hlsl
+
+ONB
+- https://jcgt.org/published/0006/01/01/

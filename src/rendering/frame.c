@@ -1,6 +1,7 @@
 #include "rendering.h"
 #include "input.h"
 #include "utils.h"
+#include "ui.h"
 
 static inline void	process_frame(t_context *ctx, t_renderer *r);
 static inline void	copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
@@ -32,6 +33,7 @@ void	frame_loop(void *param)
 	else if (!r->threads_running && r->frame < r->render_samples + 1)
 		set_mode_rendered(r);
 	pthread_mutex_unlock(&r->mutex);
+	update_ui(ctx);
 	limit_polling_rate(r);
 }
 

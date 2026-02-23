@@ -15,7 +15,7 @@ void	fatal_error(t_context *ctx, char *msg, char *file, int line)
 	}
 	if (ctx && line > 0)
 	{
-		ft_putstr_fd("Line: ", STDERR_FILENO);
+		ft_putstr_fd(", line: ", STDERR_FILENO);
 		int_to_str(line, str);
 		ft_putendl_fd(str, STDERR_FILENO);
 	}

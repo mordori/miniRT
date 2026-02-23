@@ -52,9 +52,58 @@ static inline void	initialize(t_context *ctx)
 
 void	printf_init(t_context *ctx)
 {
-	printf("\nRender settings\n");
+	printf("\nRENDER SETTINGS\n");
 	printf("Samples:\t%d\n", ctx->renderer.render_samples);
-	printf("Bounces:\t%d\n\n", ctx->renderer.rendered_bounces);
+	printf("Bounces:\t%d\n\n", ctx->renderer.render_bounces);
+
+	printf("CONTROLS\n");
+	printf("                 RENDER MODE                    \n");
+	printf("|---------------------|------------------------|\n");
+	printf("|         Key         |       Navigation       |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("| LMB                 | Rotate                 |\n");
+	printf("| W A S D             | Move                   |\n");
+	printf("| L SHIFT / SPACE     | Descend / Ascend       |\n");
+	printf("| n/a                 | Reset                  |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("\n");
+	printf("                  EDIT MODE                     \n");
+	printf("|---------------------|------------------------|\n");
+	printf("|         Key         |         Action         |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("| TAB                 | Toggle Edit Mode       |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("|         Key         |       Navigation       |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("| n/a                 | Frame                  |\n");
+	printf("| n/a                 | Orbit                  |\n");
+	printf("| n/a                 | Zoom                   |\n");
+	printf("| n/a                 | Pan                    |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("|         Key         |        Editing         |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("| n/a                 | Select Object          |\n");
+	printf("| n/a                 | Move                   |\n");
+	printf("| n/a                 | Rotate                 |\n");
+	printf("| n/a                 | Scale                  |\n");
+	printf("| n/a                 | Axis Constraint        |\n");
+	printf("| n/a                 | Plane Constraint       |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("\n");
+	printf("                   GENERAL                      \n");
+	printf("|---------------------|------------------------|\n");
+	printf("|         Key         |         Action         |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("| , / .               | Rotate Skydome         |\n");
+	printf("| ↓ / ↑               | Focus Distance         |\n");
+	printf("| ← / →               | F-Stop                 |\n");
+	printf("| K / L               | Focal Length           |\n");
+	printf("| O / P               | Samples (PoT)          |\n");
+	printf("| U / I               | Bounces (PoT)          |\n");
+	printf("| N                   | Toggle Settings        |\n");
+	printf("| ESC                 | Quit                   |\n");
+	printf("|---------------------|------------------------|\n");
+	printf("\n");
 }
 
 void	clean(t_context *ctx)

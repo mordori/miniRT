@@ -1,5 +1,5 @@
-#include "objects.h"
 #include "rendering.h"
+#include "objects.h"
 #include "materials.h"
 #include "utils.h"
 #include "scene.h"
@@ -27,6 +27,7 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	float		ca_dist_sq;
 	float		t_hc;
 	float		weight;
+	t_hit		dummy_hit;
 
 	random_uv(ctx, path, pixel, BN_CO_U);
 	hit_biased = vec3_bias(path->hit.point, path->n);
@@ -42,13 +43,42 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	t_hc = sqrtf(fmaxf(0.0f, light->radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
 	shadow_ray = new_ray(hit_biased, path->l);
-	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON) | (int)hit_planes(ctx, &path->ray, &path->hit)))
+	dummy_hit.t = M_INF;
+	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
 		return (vec3_n(0.0f));
 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
 	radiance = vec3_mul(light->emission, bsdf(path));
 	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) *  weight);
 	return (radiance);
 }
+
+// void	add_directional_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
+// {
+// 	t_ray		shadow_ray;
+// 	t_vec3		radiance;
+// 	t_vec3		hit_biased;
+// 	float		weight;
+// 	t_hit		dummy_hit;
+
+// 	random_uv(ctx, path, pixel, BN_CO_U);
+// 	hit_biased = vec3_bias(path->hit.point, path->n);
+// 	path->l = sample_cone(light->pos, light->cos_theta_max, path->uv);
+// 	if (vec3_dot(path->l, path->l) < LEN_SQ_EPSILON)
+// 		return ;
+// 	set_shader_data(path);
+// 	if (path->ndotl <= G_EPSILON)
+// 		return ;
+// 	shadow_ray = new_ray(hit_biased, path->l);
+// 	dummy_hit.t = M_INF;
+// 	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, M_INF) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
+// 		return ;
+// 	path->pdf = 1.0f / fmaxf((M_TAU * (1.0f - light->cos_theta_max)), G_EPSILON);
+// 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
+// 	radiance = vec3_mul(light->emission, bsdf(path));
+// 	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) *  weight);
+// 	radiance = vec3_clamp_mag(radiance, light->max_radiance);
+// 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
+// }
 
 float	light_pdf(t_vec3 l, float radius_sq)
 {

@@ -9,7 +9,7 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	r->tile_index = 0;
 	r->cam = *cam;
 	r->mode = RENDERED;
-	r->ray_bounces = r->rendered_bounces;
+	r->ray_bounces = r->render_bounces;
 	r->frame = 1;
 	r->render_time = time_now();
 	pthread_cond_broadcast(&r->cond);
@@ -33,6 +33,9 @@ void	cancel_render(t_renderer *r)
 		pthread_cond_wait(&r->cond, &r->mutex);
 	atomic_store(&r->render_cancel, false);
 	r->frame_complete = false;
+	r->frame = 1;
+	r->render_time = time_now();
+	r->blit_time = 0;
 }
 
 void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
@@ -57,7 +60,7 @@ void	set_mode_rendered(t_renderer *r)
 		r->frame = 1;
 	}
 	r->mode = RENDERED;
-	r->ray_bounces = r->rendered_bounces;
+	r->ray_bounces = r->render_bounces;
 	r->tile_index = 0;
 	pthread_cond_broadcast(&r->cond);
 }

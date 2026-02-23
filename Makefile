@@ -32,6 +32,7 @@ DIR_OBJECTS	:=objects/
 DIR_PARSE	:=parsing/
 DIR_RENDER	:=rendering/
 DIR_SCENE	:=scene/
+DIR_UI		:=ui/
 DIR_UTILS	:=utils/
 DIR_LIBFT	:=libft/
 DIR_MATH	:=lib_math/
@@ -66,6 +67,8 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c sampling.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
+				stats.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c random.c window.c frame.c \
 				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c ft_strtod.c)

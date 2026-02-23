@@ -16,19 +16,21 @@
 # define HEIGHT					1080
 # define THREADS_DFL			4
 # define TILE_SIZE				32
-# define RENDERED_SAMPLES		256
-# define SOLID_BOUNCES			3
-# define PREVIEW_BOUNCES		3
-# define RENDERED_BOUNCES		64
+# define RENDER_SAMPLES			256
+# define PREVIEW_BOUNCES		2
+# define SOLID_BOUNCES			1
+# define RENDER_BOUNCES			64
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_ORBIT				0.0017f
+# define SENS_ORBIT				0.001f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				1.0f
+# define SENS_MOVE				0.5f
+
+# define SENSOR_HEIGHT_MM		24.0f
 
 # define MAX_RADIANCE			10.0f
 # define CLAMP_INDIRECT			10.0f
@@ -175,7 +177,9 @@ enum e_bn_channel
 	BN_LI,
 	BN_PP_R,
 	BN_PP_G,
-	BN_PP_B
+	BN_PP_B,
+	BN_DD_U,
+	BN_DD_V,
 };
 
 struct __attribute__((aligned(16))) s_transform
@@ -292,6 +296,8 @@ struct __attribute__((aligned(16))) s_light
 	float			intensity;
 	float			max_radiance;
 	float			radius_sq;
+	float			angle;
+	float			cos_theta_max;
 	t_light_type	type;
 };
 
@@ -314,12 +320,16 @@ struct __attribute__((aligned(16))) s_camera
 	t_vec3			up;
 	t_vec3			right;
 	t_vec3			forward;
+	t_vec3			defocus_disk_u;
+	t_vec3			defocus_disk_v;
 	t_vec2			skydome_uv_offset;
 	float			aspect;
-	float			focal_length;
-	float			fov;
+	float			focal_len;
+	float			focal_len_mm;
+	float			f_stop;
 	float			pitch;
 	float			yaw;
+	float			focus_dist;
 	float			distance;
 	float			exposure;
 	t_cam_state		state;
@@ -367,9 +377,10 @@ struct s_assets
 struct s_env
 {
 	t_vector		lights;
-	t_light			ambient_light;
+	t_light			dir_light;
+	t_light			amb_light;
 	t_texture		skydome;
-	bool			has_directional_light;
+	bool			has_dir_light;
 };
 
 struct s_geo
@@ -411,7 +422,7 @@ struct __attribute__((aligned(64))) s_renderer
 		uint32_t			pixels;
 		t_render_mode		mode;
 		uint32_t			render_samples;
-		uint32_t			rendered_bounces;
+		uint32_t			render_bounces;
 		uint32_t			frame;
 		uint8_t				ray_bounces;
 		_Atomic bool		render_cancel;
@@ -474,6 +485,7 @@ struct __attribute__((aligned(64))) s_context
 	char			*file;
 	uint32_t		resize_time;
 	int				fd;
+	bool			hide_stats;
 };
 
 #endif

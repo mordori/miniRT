@@ -1,6 +1,6 @@
 # Renderer
 #				samples		bounces
-render			256			64
+render			256			32
 
 # Ambient
 #		intensity		color
@@ -26,7 +26,7 @@ C		0,0,0 			0,0,1			70				1.2
 
 # Light
 #		pos					intensity	color			radius		mat_id
-L		705,485,520			1.0			255,255,255		30.0		4
+L		705000,485000,520000			1.0			255,255,255		30000.0		4
 
 # Sphere
 #		pos					radius		mat_id

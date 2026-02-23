@@ -4,6 +4,7 @@
 #include "objects.h"
 #include "utils.h"
 #include "materials.h"
+#include "camera.h"
 
 static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
 static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
@@ -16,13 +17,17 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 	const t_renderer	*r;
 	t_path				path;
 	t_vec3				pixel_loc;
+	t_vec3				ray_orig;
 
 	r = &ctx->renderer;
 	vp = &r->cam.viewport;
 	pixel_loc = vec3_add(vec3_scale(vp->d_u, pixel->u), vec3_scale(vp->d_v, pixel->v));
 	pixel_loc = vec3_add(vp->pixel_00_loc, pixel_loc);
 	path = (t_path){0};
-	path.ray = new_ray(r->cam.transform.pos, vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos)));
+	ray_orig = r->cam.transform.pos;
+	if (r->cam.f_stop > 0.0f)
+		ray_orig = sample_defocus_disk(ctx, pixel);
+	path.ray = new_ray(ray_orig, vec3_normalize(vec3_sub(pixel_loc, ray_orig)));
 	path.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
 	while (path.bounce < bounces)
 	{
@@ -47,6 +52,9 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 	float		pdf;
 	t_vec3		light_emission;
 
+	// if (\
+	// (int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
+	// (int)hit_planes(ctx, &path->ray, &path->hit))
 	if (\
 (int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
 (int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
@@ -72,13 +80,20 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 			path->color = vec3_add(path->color, vec3_clamp_mag(light_emission, MAX_RADIANCE));
 			return (false);
 		}
-		if (ctx->scene.env.has_directional_light)
+		if (ctx->scene.env.has_dir_light)
 			add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel);
+		// add_directional_lighting(ctx, path, &ctx->scene.env.dir_light, pixel);
 		if (ctx->scene.env.lights.total > 0)
 			nee(ctx, path, pixel, mode);
 		return (scatter(ctx, path, pixel));
 	}
 	bg_color = background_color(&ctx->scene.env.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	// if (ctx->scene.env.has_dir_light)
+	// {
+	// 	float alignment = vec3_dot(path->ray.dir, ctx->scene.env.dir_light.pos);
+	// 	if (alignment >= ctx->scene.env.dir_light.cos_theta_max)
+	// 		bg_color =  ctx->scene.env.dir_light.emission;
+	// }
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }

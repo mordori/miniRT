@@ -38,17 +38,15 @@ t_error	try_render_settings(t_context *ctx, char **tokens)
 		return (E_MISSING_ARGS);
 	if (!is_placeholder(tokens[1]))
 	{
-		if (!parse_uint(tokens[1], &val) || val == 0)
+		if (!parse_uint(tokens[1], &val) || val == 0 || !ft_is_pot(val))
 			return (E_RANGE);
-		if (val < 20)
-			val = 20;
 		ctx->renderer.render_samples = val;
 	}
 	if (!is_placeholder(tokens[2]))
 	{
-		if (!parse_uint(tokens[2], &val) || val == 0)
+		if (!parse_uint(tokens[2], &val) || val == 0 || !ft_is_pot(val))
 			return (E_RANGE);
-		ctx->renderer.rendered_bounces = val;
+		ctx->renderer.render_bounces = val;
 	}
 	return (E_OK);
 }

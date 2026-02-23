@@ -3,18 +3,52 @@
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
 	t_context	*ctx;
+	bool		dirty;
 
 	ctx = (t_context *)param;
+	dirty = false;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
 	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_RELEASE)
 	{
-		atomic_store(&ctx->renderer.render_cancel, true);
+		dirty = true;
 		if (ctx->renderer.mode != SOLID)
 			ctx->renderer.mode = SOLID;
 		else
 			ctx->renderer.mode = RENDERED;
 	}
+	if (keydata.key == MLX_KEY_O && keydata.action == MLX_RELEASE)
+	{
+		dirty = true;
+		ctx->renderer.render_samples >>= 1u;
+		if (ctx->renderer.render_samples < 2u)
+			ctx->renderer.render_samples = 2u;
+	}
+	if (keydata.key == MLX_KEY_P && keydata.action == MLX_RELEASE)
+	{
+		dirty = true;
+		ctx->renderer.render_samples <<= 1u;
+		if (ctx->renderer.render_samples > 8192u)
+			ctx->renderer.render_samples = 8192u;
+	}
+	if (keydata.key == MLX_KEY_U && keydata.action == MLX_RELEASE)
+	{
+		dirty = true;
+		ctx->renderer.render_bounces >>= 1u;
+		if (ctx->renderer.render_bounces < 2u)
+			ctx->renderer.render_bounces = 2u;
+	}
+	if (keydata.key == MLX_KEY_I && keydata.action == MLX_RELEASE)
+	{
+		dirty = true;
+		ctx->renderer.render_bounces <<= 1u;
+		if (ctx->renderer.render_bounces > 128u)
+			ctx->renderer.render_bounces = 128u;
+	}
+	if (keydata.key == MLX_KEY_N && keydata.action == MLX_RELEASE)
+		ctx->hide_stats = !ctx->hide_stats;
+	if (dirty)
+		atomic_store(&ctx->renderer.render_cancel, true);
 }
 
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)

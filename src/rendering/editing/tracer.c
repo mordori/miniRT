@@ -36,13 +36,13 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 			path->color = vec3_add(path->color, light_emission);
 			return (false);
 		}
-		if (path->bounce > 0)
-			return (false);
-		if (ctx->scene.env.has_directional_light)
+		// if (path->bounce > 0)
+		// 	return (false);
+		if (ctx->scene.env.has_dir_light)
 			add_lighting_editing(ctx, path, &ctx->renderer.cam.directional_light);
 		if (ctx->scene.env.lights.total > 0)
 			nee_editing(ctx, path);
-		ambient_lighting(path, &ctx->scene.env.ambient_light);
+		ambient_lighting(path, &ctx->scene.env.amb_light);
 		return (scatter_editing(path));
 	}
 	if (path->bounce > 0)
