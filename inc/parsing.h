@@ -50,14 +50,13 @@ bool			parse_scene(t_context *ctx, int fd);
 /* Basic parsing utilities */
 bool			parse_float(char *str, float *out);
 bool			parse_uint(char *str, uint32_t *out);
-bool			parse_int(char *str, int *out);
+bool			is_color_token(const char *str);
 bool			parse_color(char *str, t_vec3 *color);
 bool			parse_vec3(char *str, t_vec3 *vec);
 int				count_tokens(char **tokens);
 int				count_delimiter(const char *str, char delim);
 
-void			free_tokens(char **tokens);
-void			try_free_all(char **lines, int count);
+void			try_free_all(char **lines);
 
 /* Validation helpers */
 void			validate_scene(t_context *ctx, t_parser *p);

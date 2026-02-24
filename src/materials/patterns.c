@@ -3,6 +3,7 @@
 
 
 static t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat);
+static t_vec3   pattern_stripe(const t_hit *hit, const t_material *mat);
 static t_vec3 pattern_checkerboard2(t_hit *hit, t_material *mat);
 // static t_vec3 pattern_checkerboard(t_hit *hit, t_material *mat);
 
@@ -14,7 +15,9 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
 		return (pattern_checkerboard2(hit, mat));
 	if (mat->pattern == PAT_GRADIENT)
 		return (pattern_gradient(hit, mat));
-	return (mat->albedo);
+    if (mat->pattern == PAT_STRIPES)
+        return (pattern_stripe(hit, mat));
+    return (mat->albedo);
 }
 
 // static t_vec3 pattern_checkerboard(t_hit *hit, t_material *mat)
@@ -64,4 +67,27 @@ static t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 
     t = hit->uv.v;
     return (vec3_lerp(mat->albedo, mat->albedo2, t));
+}
+
+/*
+** Stripe pattern along the Y-axis in world space.
+** Creates parallel bands by using a sine wave on the scaled Y coordinate.
+** The sign of sin() determines which color to use.
+**
+** @param hit  - Hit record with world-space point
+** @param mat  - Material with primary and secondary albedo colors
+** @return     - albedo or albedo2 in alternating bands
+*/
+static t_vec3   pattern_stripe(const t_hit *hit, const t_material *mat)
+{
+	float	scale;
+	float	value;
+
+	scale = mat->pattern_scale;
+	if (scale < 0.001f)
+		scale = 1.0f;
+	value = sinf(hit->point.y * scale);
+	if (value < 0.0f)
+		return (mat->albedo2);
+	return (mat->albedo);
 }

@@ -75,14 +75,11 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 	t_vec3		top;
 	t_vec3		bottom;
 
-	if (__builtin_expect(!tex->pixels, 0))
-		return (vec3_n(1.0f));
 	compute_bilinear_coords(tex, uv, coords, weights);
 	row[0] = coords[1] * (tex->width << 2);
 	row[1] = coords[3] * (tex->width << 2);
 	col[0] = coords[0] << 2;
 	col[1] = coords[2] << 2;
-	// add some preprocessing later
 	top = vlerp(
 			get_texel(tex->pixels, row[0] + col[0]),
 			get_texel(tex->pixels, row[0] + col[1]),
@@ -100,7 +97,7 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
  */
 t_vec3	get_surface_color(const t_material *mat, const t_hit *hit)
 {
-	if (mat->base_color == BASE_TEXTURE && mat->texture.pixels)
+	if (mat->base_color == BASE_TEXTURE)
 		return (vec3_mul(mat->albedo, sample_texture(&mat->texture, hit->uv)));
 	if (mat->base_color == BASE_PATTERN)
 		return (eval_pattern((t_material *)mat, (t_hit *)hit));

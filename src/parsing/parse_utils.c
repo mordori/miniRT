@@ -54,8 +54,3 @@ int	count_delimiter(const char *str, char delim)
 	}
 	return (count);
 }
-
-void	free_tokens(char **tokens)
-{
-	ft_free_split(tokens);
-}

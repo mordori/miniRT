@@ -22,7 +22,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	fov = degrees_to_rad(fov);
 	fov = clampf(fov, degrees_to_rad(0.1f), degrees_to_rad(179.9f));
 	cam->focal_len_mm = SENSOR_HEIGHT_MM * 0.5f / tanf(fov * 0.5f);
-	cam->f_stop = 0.3f;
+	cam->f_stop = 16.0f;
 	cam->focus_dist = 1.3f;
 	cam->init_pos = position;
 }

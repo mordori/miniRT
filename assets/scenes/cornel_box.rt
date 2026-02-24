@@ -14,7 +14,7 @@ L 0,10,0 1.0 25,255,255 1.5 0
 tex		sky			sky.png
 
 #Mat for Light
-#	ID	Albedo			Metal		Rough		Ior		Trans		EmiStr		EmiColor		Flag		Tex_Image		Tex_Norm		Pat			Pat_Scal		Albedo2
+#	ID	Albedo			Metal		Rough		Ior		Trans		EmiStr		EmiColor		Flag		Tex_Image		Tex_Norm	Bump_strength		Pat			Pat_Scal		Albedo2
 mat	0	200,200,200		0.0			0.0			1.0		0.0			10.0		255,255,255		0			_				_
 
 
@@ -44,4 +44,4 @@ pl	-5,0,0	1,0,0	3
 #Spheres
 sp	-2.5,2.5,0	5.0	5
 
-# need to clamp all the input of materials specifications from 0 to 1 for metallic, roughness, ior, transmission, and emission strength to prevent any potential issues with artifacts.
+# 2K textures

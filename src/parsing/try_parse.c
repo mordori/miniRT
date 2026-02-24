@@ -1,4 +1,5 @@
 #include "libft_utils.h"
+#include "libft_str.h"
 #include "parsing.h"
 #include "utils.h"
 
@@ -23,10 +24,38 @@ void	try_pass(t_context *ctx, t_parser *p,
 		if (!tokens)
 			print_error(ctx, E_MALLOC, p->line_num);
 		err = dispatch_pass(ctx, p, tokens, pass);
-		free_tokens(tokens);
+		ft_free_split(tokens);
 		if (err != E_OK && err != E_EMPTY)
 			print_error(ctx, err, p->line_num);
 	}
+}
+
+t_error	dispatch_pass(t_context *ctx, t_parser *p,
+					char **tokens, int pass)
+{
+	const char	*id;
+
+	id = tokens[0];
+	if (pass == 0)
+	{
+		if (ft_strcmp(id, "tex") == 0)
+			return (parse_texture_def(ctx, tokens));
+		if (ft_strcmp(id, "sky") == 0)
+			return (parse_skydome(ctx, tokens));
+		return (E_EMPTY);
+	}
+	if (pass == 1)
+	{
+		if (ft_strcmp(id, "mat") == 0)
+			return (parse_material_def(ctx, p, tokens));
+		if (ft_strcmp(id, "render") == 0)
+			return (try_render_settings(ctx, tokens));
+		return (E_EMPTY);
+	}
+	if (ft_strcmp(id, "mat") == 0 || ft_strcmp(id, "tex") == 0
+		|| ft_strcmp(id, "sky") == 0 || ft_strcmp(id, "render") == 0)
+		return (E_EMPTY);
+	return (identify_element(ctx, p, tokens));
 }
 
 // Render settings: render <samples> <bounces>, '_' is the placeholder
@@ -51,11 +80,17 @@ t_error	try_render_settings(t_context *ctx, char **tokens)
 	return (E_OK);
 }
 
-void	try_free_all(char **lines, int count)
+void	try_free_all(char **lines)
 {
 	int	i;
 
 	i = 0;
-	while (i < count)
-		free(lines[i++]);
+	if (!lines)
+		return ;
+	while (lines[i])
+	{
+		free(lines[i]);
+		lines[i] = NULL;
+		i++;
+	}
 }

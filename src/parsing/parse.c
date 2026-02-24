@@ -4,64 +4,47 @@
 #include "parsing.h"
 #include "utils.h"
 
+static int	read_lines(t_context *ctx, int fd, char **lines);
+
 bool	parse_scene(t_context *ctx, int fd)
 {
 	t_parser	parser;
-	char		*line;
 	char		*lines[MAX_LINES + 1];
-	int			count;
+	int			pass;
 
 	if (!ctx || fd < 0)
 		return (false);
 	parser = (t_parser){0};
-	count = 0;
+	read_lines(ctx, fd, lines);
+	pass = 0;
+	while (pass < 3)
+		try_pass(ctx, &parser, lines, pass++);
+	validate_scene(ctx, &parser);
 	ctx->renderer.render_samples = RENDER_SAMPLES;
 	ctx->renderer.render_bounces = RENDER_BOUNCES;
+	try_free_all(lines);
+	return (true);
+}
+
+static int	read_lines(t_context *ctx, int fd, char **lines)
+{
+	char	*line;
+	int		count;
+
+	count = 0;
 	while (try_gnl(ctx, fd, &line) == GNL_OK)
 	{
 		if (count >= MAX_LINES)
 		{
 			free(line);
-			try_free_all(lines, count);
+			lines[count] = NULL;
+			try_free_all(lines);
 			fatal_error(ctx, "Too many lines in scene", __FILE__, count);
 		}
 		lines[count++] = line;
 	}
 	lines[count] = NULL;
-	count = 0;
-	while (count < 3)
-		try_pass(ctx, &parser, lines, count++);
-	validate_scene(ctx, &parser);
-	try_free_all(lines, count);
-	return (true);
-}
-
-t_error	dispatch_pass(t_context *ctx, t_parser *p,
-					char **tokens, int pass)
-{
-	const char	*id;
-
-	id = tokens[0];
-	if (pass == 0)
-	{
-		if (ft_strcmp(id, "tex") == 0)
-			return (parse_texture_def(ctx, tokens));
-		if (ft_strcmp(id, "sky") == 0)
-			return (parse_skydome(ctx, tokens));
-		return (E_EMPTY);
-	}
-	if (pass == 1)
-	{
-		if (ft_strcmp(id, "mat") == 0)
-			return (parse_material_def(ctx, p, tokens));
-		if (ft_strcmp(id, "render") == 0)
-			return (try_render_settings(ctx, tokens));
-		return (E_EMPTY);
-	}
-	if (ft_strcmp(id, "mat") == 0 || ft_strcmp(id, "tex") == 0
-		|| ft_strcmp(id, "sky") == 0 || ft_strcmp(id, "render") == 0)
-		return (E_EMPTY);
-	return (identify_element(ctx, p, tokens));
+	return (count);
 }
 
 t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)

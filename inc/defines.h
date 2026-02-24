@@ -152,7 +152,8 @@ enum e_pattern
 {
 	PAT_NONE,
 	PAT_CHECKERBOARD,
-	PAT_GRADIENT
+	PAT_GRADIENT,
+	PAT_STRIPES
 };
 
 enum e_entity
@@ -230,7 +231,7 @@ struct __attribute__((aligned(16))) s_material
 	float			ior;
 	float			transmission;
 	float			pattern_scale;
-	// float			bump_strength;
+	float			bump_strength;
 	uint32_t		flags;
 	t_base_color	base_color;
 	t_pattern		pattern;

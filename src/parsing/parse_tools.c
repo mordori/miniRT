@@ -21,6 +21,8 @@ bool	parse_float(char *str, float *out)
 	value = ft_atof(str, &end);
 	if (end == str || !end)
 		return (false);
+	if (is_nan_inf(value))
+		return (false);
 	while (ft_isspace(*end))
 		end++;
 	if (*end != '\0')
@@ -54,29 +56,9 @@ bool	parse_uint(char *str, uint32_t *out)
 	return (true);
 }
 
-bool	parse_int(char *str, int *out)
+bool	is_color_token(const char *str)
 {
-	long	value;
-	int		i;
-
-	if (!str || !out)
-		return (false);
-	while (ft_isspace(*str))
-		str++;
-	if (*str == '\0')
-		return (false);
-	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
-	while (str[i] && ft_isdigit(str[i]))
-		i++;
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	if (str[i] != '\0')
-		return (false);
-	value = ft_atoi(str);
-	*out = (int)value;
-	return (true);
+	return (str && ft_strchr(str, ',') != NULL);
 }
 
 bool	parse_color(char *str, t_vec3 *color)
@@ -104,7 +86,7 @@ bool	parse_color(char *str, t_vec3 *color)
 			}
 		}
 	}
-	free_tokens(tokens);
+	ft_free_split(tokens);
 	return (ret);
 }
 
@@ -127,6 +109,6 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 			&& parse_float(tokens[2], &vec->z);
 		vec->data[3] = 0.0f;
 	}
-	free_tokens(tokens);
+	ft_free_split(tokens);
 	return (ret);
 }
