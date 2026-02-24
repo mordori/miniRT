@@ -10,6 +10,8 @@
 >
 > ⚠ This project is work in progress! ⚠
 >
+> MacOS / Apple Silicon is not currently supported.
+>
 > Some of the features will not be implemented until the project has been validated. This is due to restrictions placed upon the subject.
 
 > [!NOTE]
@@ -48,7 +50,9 @@
 - Object editing
 
 #### Future Work
+- Support for MacOS and Apple Silicon
 - Image based lighting
+- EV100 exposure triangle
 - Additional post-processing modules
 - Denoising solution
 - Quads and boxes
@@ -58,11 +62,16 @@
 - Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
 ## Physically Based Rendering
+### BSDF
 Principled BSDF, a hybrid material model featuring Disney diffuse and Cook-Torrance specular lobes.
 
 - Implements Dupuy's 2023 spherical cap VNDF sampling method for efficient visible microfacet normal generation.
 - Height-correlated Smith G2 visibility and analytically simplified Smith G1 masking to maintain stable 32-bit floating point weights.
 - Firefly mitigation and defense against variance spikes with indirect weight clamping, path roughing, and NaN/Inf sanitisation.
+
+### Camera
+- Physically based lens model with adjustable Focal Length, Focus Distance, and F-Stop.
+- Utilises a simplified manual exposure. Full EV100 exposure triangle integration is planned for future updates.
 
 ## Optimisation & Performance
 Implements a highly optimised CPU rendering engine, balancing code readability with raw performance.
@@ -123,13 +132,23 @@ As the project is still under construction, we recommend to run the program with
 ./miniRT assets/scenes/test.rt
 ```
 
+> [!TIP]
+>
+> Adjust the camera's focus distance to desired surfaces easily in edit mode when using a lower f-stop to produce a shallow depth of field.
+>
+> **Previously accumulated frames are not wasted.**
+>
+> Find the desired angle for the shot first with lower amount of samples. Then increment the amount of samples for better image quality.
+>
+> Setting the samples amount to be less than the current frame pauses the rendering. To continue, raise the samples to the previous amount.
+
 ## Controls
 ### Render Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Rotate                                        |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
-| <kbd>L Shift</kbd> / <kbd>Space</kbd>                          | Descend / Ascend                              |
+| <kbd>L SHIFT</kbd> / <kbd>SPACE</kbd>                          | Descend / Ascend                              |
 | <kbd></kbd>                                                    | Reset                                         |
 
 ### Edit Mode
@@ -171,13 +190,13 @@ As the project is still under construction, we recommend to run the program with
 ## Resources
 Path tracing
 - https://raytracing.github.io/
+- https://www.pbr-book.org/
 - https://scratchapixel.com/index.html
 - https://users.aalto.fi/~lehtinj7/CS-E5520/2023/
 - https://jacco.ompf2.com/articles/
 - The Ray Tracer Challenge by Jamis Buck
 
 PBR
-- https://www.pbr-book.org/
 - https://google.github.io/filament/main/filament.html
 - https://blog.selfshadow.com/
 - https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html

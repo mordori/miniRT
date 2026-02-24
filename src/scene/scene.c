@@ -20,6 +20,10 @@ void	init_scene(t_context *ctx)
 	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
 	if (!ctx->tex_bn.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
+	// ctx->scene.cam.directional_light.emission = vec3_scale(ctx->scene.cam.directional_light.emission, powf(ctx->scene.env.amb_light.intensity, 4.0f));
+	// if (ctx->scene.cam.directional_light.obj && ctx->scene.cam.directional_light.obj->mat)
+	// 	ctx->scene.cam.directional_light.obj->mat->emission = ctx->scene.cam.directional_light.emission;
+	// ctx->scene.env.amb_light.intensity *= 40000.0f;
 	printf_init(ctx);
 	close(ctx->fd);
 	ctx->fd = ERROR;

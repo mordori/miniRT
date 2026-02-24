@@ -19,14 +19,12 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	}
 	if (keydata.key == MLX_KEY_O && keydata.action == MLX_RELEASE)
 	{
-		dirty = true;
 		ctx->renderer.render_samples >>= 1u;
 		if (ctx->renderer.render_samples < 2u)
 			ctx->renderer.render_samples = 2u;
 	}
 	if (keydata.key == MLX_KEY_P && keydata.action == MLX_RELEASE)
 	{
-		dirty = true;
 		ctx->renderer.render_samples <<= 1u;
 		if (ctx->renderer.render_samples > 8192u)
 			ctx->renderer.render_samples = 8192u;

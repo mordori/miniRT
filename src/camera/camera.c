@@ -22,7 +22,6 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	fov = degrees_to_rad(fov);
 	fov = clampf(fov, degrees_to_rad(0.1f), degrees_to_rad(179.9f));
 	cam->focal_len_mm = SENSOR_HEIGHT_MM * 0.5f / tanf(fov * 0.5f);
-	cam->f_stop = 16.0f;
 	cam->focus_dist = 1.3f;
 	cam->init_pos = position;
 }
@@ -51,7 +50,10 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	t_vec3				dir;
 	t_vec2				pitch;
 	t_vec2				yaw;
+	// float				ev100;
 
+	// ev100 = log2f(cam->f_stop * cam->f_stop / cam->shutter_speed * 100.0f / cam->iso);
+	// cam->exposure = 1.0f / (powf(2.0f, ev100) * 1.2f);
 	cam->pitch = clampf(cam->pitch, -limit, limit);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
 	if (ctx->selected_obj)
@@ -80,34 +82,21 @@ static inline void	update_viewport(t_camera *cam, float img_width, float img_hei
 	float				fov_vertical;
 
 	vp = (t_viewport *)&cam->viewport;
-
 	fov_vertical = 2.0f * atanf(SENSOR_HEIGHT_MM / (2.0f * cam->focal_len_mm));
 	vp->height = 2.0f * tanf(fov_vertical * 0.5f) * cam->focus_dist;
-
-
-	// vp->height = 2.0f * tanf(cam->focal_len * 0.5f) * cam->focus_dist;
 	vp->width = vp->height * cam->aspect;
 	u = vec3_scale(cam->right, vp->width);
 	v = vec3_scale(cam->up, -vp->height);
 	vp->d_u = vec3_div(u, img_width);
 	vp->d_v = vec3_div(v, img_height);
-	vp_center = vec3_add(cam->transform.pos, vec3_scale(cam->forward,
-				cam->focus_dist));
+	vp_center = vec3_add(cam->transform.pos, vec3_scale(cam->forward, cam->focus_dist));
 	vp_up_left = vec3_sub(vp_center, vec3_scale(u, 0.5f));
 	vp_up_left = vec3_sub(vp_up_left, vec3_scale(v, 0.5f));
 	vp->pixel_00_loc = vp_up_left;
-
-
 	if (cam->f_stop > 0.0f)
 		defocus_r = cam->focal_len_mm * 0.001f / (2.0f * cam->f_stop);
 	else
 		defocus_r = 0.0f;
-
-
-	// defocus_r = cam->focus_dist * tanf(degrees_to_rad(cam->aperture * 0.5f));
-
-
-
 	cam->defocus_disk_u = vec3_scale(cam->right, defocus_r);
 	cam->defocus_disk_v = vec3_scale(cam->up, defocus_r);
 }

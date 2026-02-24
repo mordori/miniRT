@@ -76,6 +76,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 					pdf /= (float)ctx->scene.env.lights.total;
 				weight = power_heuristic(path->pdf, pdf);
 				light_emission = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
+				// light_emission = vec3_clamp_mag(light_emission, ctx->scene.env.amb_light.intensity);
 			}
 			path->color = vec3_add(path->color, vec3_clamp_mag(light_emission, MAX_RADIANCE));
 			return (false);
@@ -88,6 +89,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 		return (scatter(ctx, path, pixel));
 	}
 	bg_color = background_color(&ctx->scene.env.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	// bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	// if (ctx->scene.env.has_dir_light)
 	// {
 	// 	float alignment = vec3_dot(path->ray.dir, ctx->scene.env.dir_light.pos);

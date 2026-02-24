@@ -36,8 +36,6 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 			path->color = vec3_add(path->color, light_emission);
 			return (false);
 		}
-		// if (path->bounce > 0)
-		// 	return (false);
 		if (ctx->scene.env.has_dir_light)
 			add_lighting_editing(ctx, path, &ctx->renderer.cam.directional_light);
 		if (ctx->scene.env.lights.total > 0)
@@ -48,6 +46,7 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 	if (path->bounce > 0)
 		return (false);
 	bg_color = background_color(&ctx->scene.env.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	// bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }

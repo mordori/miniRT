@@ -44,11 +44,11 @@
 # define KEY_DOWN				MLX_KEY_LEFT_SHIFT
 # define KEY_RESET				MLX_KEY_R
 
-# define OBJ_HIDDEN_SCENE		(1 << 0) // norm issue, must only contain consts
-# define OBJ_HIDDEN_CAM			(1 << 1)
-# define OBJ_NO_CAST_SHADOW		(1 << 2)
-# define MAT_NO_REC_SHADOW		(1 << 3)
-# define MAT_DOUBLE_SIDED		(1 << 4)
+# define OBJ_HIDDEN_SCENE		1
+# define OBJ_HIDDEN_CAM			2
+# define OBJ_NO_CAST_SHADOW		4
+# define MAT_NO_REC_SHADOW		8
+# define MAT_DOUBLE_SIDED		16
 
 typedef enum e_obj_type			t_obj_type;
 typedef enum e_light_type		t_light_type;
@@ -360,6 +360,8 @@ struct __attribute__((aligned(16))) s_camera
 	float			focus_dist;
 	float			distance;
 	float			exposure;
+	float			shutter_speed;
+	float			iso;
 	t_cam_state		state;
 };
 
