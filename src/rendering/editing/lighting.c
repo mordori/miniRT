@@ -12,7 +12,8 @@ void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *lig
 	t_vec3		radiance;
 
 	radiance = direct_lighting_editing(ctx, path, light);
-	radiance = vec3_clamp_mag(radiance, light->max_radiance);
+	// if (path->bounce > 0)
+		radiance = vec3_clamp_mag(radiance, light->max_radiance);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
 }
 

@@ -15,16 +15,15 @@ UNAME_M		:=$(shell uname -m)
 OPTS		:=-O3 -ffast-math -funroll-loops -flto -DNDEBUG
 LDFLAGS		:=-lglfw -pthread -lm -flto
 ifeq ($(UNAME_S),Darwin)
+	LDFLAGS		+=-L"/opt/homebrew/lib" -L"/usr/local/lib" -L"/opt/local/lib" -framework Cocoa -framework OpenGL -framework IOKit
 	ifeq ($(UNAME_M),arm64)
 		OPTS	+=-mcpu=native
 	else
 		OPTS	+=-march=native
 	endif
-	LDFLAGS		+=-L"/opt/homebrew/lib" -L"/usr/local/lib" -L"/opt/local/lib" -framework Cocoa -framework OpenGL -framework IOKit
 else
-# 	OPTS		+=-march=haswell -fno-plt -falign-loops -falign-functions=32
-	OPTS		+=-march=haswell -fno-plt -falign-functions=32
 	LDFLAGS		+=-ldl
+	OPTS		+=-march=haswell -fno-plt -falign-loops=16 -falign-functions=32
 endif
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
@@ -86,7 +85,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
-				stats.c )
+				settings.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c random.c window.c frame.c \
 				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c ft_strtod.c)

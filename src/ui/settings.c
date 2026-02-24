@@ -11,11 +11,15 @@ void	update_ui(t_context *ctx)
 	static mlx_image_t	*img_f_stop;
 	static mlx_image_t	*img_focal_len_mm;
 	static mlx_image_t	*img_focus_dist;
+	// static mlx_image_t	*img_shutter_speed;
+	// static mlx_image_t	*img_iso;
 	static int			last_samples = -1;
 	static int			last_bounces = -1;
 	static float		last_f_stop = -1.0f;
 	static float		last_focal_len_mm = -1.0f;
 	static float		last_focus_dist = -1.0f;
+	// static float		last_shutter_speed = -1.0f;
+	// static float		last_iso = -1.0f;
 	static char			buf[128];
 
 	snprintf(buf, sizeof(buf), "Samples: %d", ctx->renderer.render_samples);
@@ -26,12 +30,14 @@ void	update_ui(t_context *ctx)
 
 	snprintf(buf, sizeof(buf), "F-Stop:         f/%.1f", ctx->renderer.cam.f_stop);
 	display_text_f(ctx, buf, &img_f_stop, &last_f_stop, ctx->renderer.cam.f_stop, 50, 100);
-
 	snprintf(buf, sizeof(buf), "Focal Length:   %.0fmm", ctx->renderer.cam.focal_len_mm);
 	display_text_f(ctx, buf, &img_focal_len_mm, &last_focal_len_mm, ctx->renderer.cam.focal_len_mm, 50, 120);
-
 	snprintf(buf, sizeof(buf), "Focus Distance: %.1fm", ctx->renderer.cam.focus_dist);
 	display_text_f(ctx, buf, &img_focus_dist, &last_focus_dist, ctx->renderer.cam.focus_dist, 50, 140);
+// 	snprintf(buf, sizeof(buf), "ISO:            %d", (uint32_t)ctx->renderer.cam.iso);
+// 	display_text_f(ctx, buf, &img_iso, &last_iso, ctx->renderer.cam.iso, 50, 120);
+// 	snprintf(buf, sizeof(buf), "Shutter Speed:  %.4fs", ctx->renderer.cam.shutter_speed);
+// 	display_text_f(ctx, buf, &img_shutter_speed, &last_shutter_speed, ctx->renderer.cam.shutter_speed, 50, 180);
 }
 
 static inline void	display_text_ui(t_context *ctx, char *buf, mlx_image_t **img, int *last, int current, int32_t x, int32_t y)
@@ -66,7 +72,7 @@ static inline void	display_text_f(t_context *ctx, char *buf, mlx_image_t **img, 
 		}
 		return ;
 	}
-	if (*img && fabsf(*last - current) < 0.001f)
+	if (*img && fabsf(*last - current) < 0.00001f)
 		return ;
 	if (*img)
 		mlx_delete_image(ctx->mlx, *img);

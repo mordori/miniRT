@@ -1,42 +1,78 @@
 #include "input.h"
 
+
 bool	is_key_down(t_context *ctx)
 {
 	bool		dirty;
-	float		d_focal_len;
-	float		d_f_stop_d;
-	float		d_focus_dist;
+	float		mul;
+	float		div;
 
 	dirty = false;
 	if (\
 (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT)) || \
 (mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT)))
 	{
-		d_f_stop_d = ctx->scene.cam.f_stop * ctx->mlx->delta_time * 0.35f;
+		mul = powf(2.0f, 0.15f * ctx->mlx->delta_time);
+		div = 1.0f / mul;
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT))
-			d_f_stop_d = -d_f_stop_d;
-		ctx->scene.cam.f_stop = clampf(ctx->scene.cam.f_stop + d_f_stop_d, 0.1f, 128.0f);
+			ctx->scene.cam.f_stop *= div;
+		else
+			ctx->scene.cam.f_stop *= mul;
+		ctx->scene.cam.f_stop = clampf(ctx->scene.cam.f_stop, 0.1f, 128.0f);
 		dirty = true;
 	}
 	if (\
 (mlx_is_key_down(ctx->mlx, MLX_KEY_L) && !mlx_is_key_down(ctx->mlx, MLX_KEY_K)) || \
 (mlx_is_key_down(ctx->mlx, MLX_KEY_K) && !mlx_is_key_down(ctx->mlx, MLX_KEY_L)))
 	{
-		d_focal_len = ctx->scene.cam.focal_len_mm * ctx->mlx->delta_time * 0.35f;
+		mul = powf(2.0f, 0.5f * ctx->mlx->delta_time);
+		div = 1.0f / mul;
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_K))
-			d_focal_len = -d_focal_len;
-		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm + d_focal_len, 1.0f, 1000.0f);
+			ctx->scene.cam.focal_len_mm *= div;
+		else
+			ctx->scene.cam.focal_len_mm *= mul;
+		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 1.0f, 1000.0f);
 		dirty = true;
 	}
 	if (\
 (mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN) && !mlx_is_key_down(ctx->mlx, MLX_KEY_UP)) || \
 (mlx_is_key_down(ctx->mlx, MLX_KEY_UP) && !mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN)))
 	{
-		d_focus_dist = ctx->scene.cam.focus_dist * ctx->mlx->delta_time * 0.35f;
+		mul = powf(2.0f, 0.3f * ctx->mlx->delta_time);
+		div = 1.0f / mul;
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN))
-			d_focus_dist = -d_focus_dist;
-		ctx->scene.cam.focus_dist = clampf(ctx->scene.cam.focus_dist + d_focus_dist, 0.1f, M_INF);
+			ctx->scene.cam.focus_dist *= div;
+		else
+			ctx->scene.cam.focus_dist *= mul;
+		ctx->scene.cam.focus_dist = clampf(ctx->scene.cam.focus_dist, 0.1f, M_INF);
 		dirty = true;
 	}
+// 	if (\
+// (mlx_is_key_down(ctx->mlx, MLX_KEY_9) && !mlx_is_key_down(ctx->mlx, MLX_KEY_0)) || \
+// (mlx_is_key_down(ctx->mlx, MLX_KEY_0) && !mlx_is_key_down(ctx->mlx, MLX_KEY_9)))
+// 	{
+// 		mul = powf(2.0f, 0.5f * ctx->mlx->delta_time);
+// 		div = 1.0f / mul;
+// 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_9))
+// 			ctx->scene.cam.shutter_speed *= div;
+// 		else
+// 			ctx->scene.cam.shutter_speed *= mul;
+// 		ctx->scene.cam.shutter_speed = clampf(ctx->scene.cam.shutter_speed, 0.0001f, 60.0f);
+// 		dirty = true;
+// 	}
+// 	if (\
+// (mlx_is_key_down(ctx->mlx, MLX_KEY_7) && !mlx_is_key_down(ctx->mlx, MLX_KEY_8)) || \
+// (mlx_is_key_down(ctx->mlx, MLX_KEY_8) && !mlx_is_key_down(ctx->mlx, MLX_KEY_7)))
+// 	{
+// 		mul = powf(2.0f, 0.5f * ctx->mlx->delta_time);
+// 		div = 1.0f / mul;
+// 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_7))
+// 			ctx->scene.cam.iso *= div;
+// 		else
+// 			ctx->scene.cam.iso *= mul;
+// 		ctx->scene.cam.iso = clampf(ctx->scene.cam.iso, 100.0f, 200000.0f);
+// 		dirty = true;
+// 	}
 	return (dirty);
 }
+

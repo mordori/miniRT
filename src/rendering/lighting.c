@@ -12,7 +12,8 @@ void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pi
 	t_vec3		radiance;
 
 	radiance = direct_lighting(ctx, path, light, pixel);
-	radiance = vec3_clamp_mag(radiance, light->max_radiance);
+	// if (path->bounce > 0)
+		radiance = vec3_clamp_mag(radiance, light->max_radiance);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
 }
 
