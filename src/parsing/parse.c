@@ -15,13 +15,13 @@ bool	parse_scene(t_context *ctx, int fd)
 	if (!ctx || fd < 0)
 		return (false);
 	parser = (t_parser){0};
+	ctx->renderer.render_samples = RENDER_SAMPLES;
+	ctx->renderer.render_bounces = RENDER_BOUNCES;
 	read_lines(ctx, fd, lines);
 	pass = 0;
 	while (pass < 3)
 		try_pass(ctx, &parser, lines, pass++);
 	validate_scene(ctx, &parser);
-	ctx->renderer.render_samples = RENDER_SAMPLES;
-	ctx->renderer.render_bounces = RENDER_BOUNCES;
 	try_free_all(lines);
 	return (true);
 }

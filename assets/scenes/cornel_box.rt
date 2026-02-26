@@ -1,21 +1,21 @@
 #Rendering Settings
-render		32		32
+render		128		32
 
 #Ambient
-A	0.0		255,255,255
+A	0.3		255,255,255
 
 #Camera
-C	0,5,-10 	0,0,1	70	0.3
+C	0,5,-10 	0,0,1	70	1.5
 
 #Light
-L 0,10,0 1.0 25,255,255 1.5 0
+L 0,11,0 1.0 255,255,255 1.5 0
 
 #Skydome
-tex		sky			sky.png
+# sky sky.png
 
 #Mat for Light
 #	ID	Albedo			Metal		Rough		Ior		Trans		EmiStr		EmiColor		Flag		Tex_Image		Tex_Norm	Bump_strength		Pat			Pat_Scal		Albedo2
-mat	0	200,200,200		0.0			0.0			1.0		0.0			10.0		255,255,255		0			_				_
+mat	0	200,200,200		0.0			0.0			1.0		0.0			10000.0		255,255,255		2			_				_
 
 
 #Mat for Objects
@@ -25,9 +25,9 @@ mat	2	255,0,0			0.0			1.0			1.0		0.0			0.0			0,0,0			0			_
 
 mat	3	0,255,0			0.0			1.0			1.0		0.0			0.0			0,0,0			0			_
 
-mat	4	0,0,255			0.5			0.0			0.5		1.0			0.0			0,0,0			0			_
+mat	4	0,0,255			0.5			0.0			1.0		1.0			0.0			0,0,0			0			_
 
-mat	5	255,160,60		0.0		0.5			0.5		10.0				0.0					0,0,0				0		_				_ 				 checker		 2.0	 		 0,0,0
+mat	5	255,160,60		0.0			0.5			1.0		1.0			0.0			0,0,0			0			_				_ 			_	 				checker		 2.0	 		 0,0,0
 
 
 #Planes
@@ -42,6 +42,6 @@ pl	5,0,0	-1,0,0	2
 pl	-5,0,0	1,0,0	3
 
 #Spheres
-sp	-2.5,2.5,0	5.0	5
+sp	-2.5,2.5,0	5.0				4
 
-# 2K textures
+sp 	2.5,1,-3  2.0				5

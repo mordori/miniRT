@@ -27,5 +27,13 @@ bool	parse_pattern_token(const char *tkn, t_pattern *out)
 		return (*out = PAT_GRADIENT, true);
 	if (ft_strcmp(tkn, "stripes") == 0)
 		return (*out = PAT_STRIPES, true);
+	if (ft_strcmp(tkn, "spiral") == 0)
+		return (*out = PAT_SPIRAL, true);
+	if (ft_strcmp(tkn, "grid") == 0)
+		return (*out = PAT_GRID, true);
+	if (ft_strcmp(tkn, "brick") == 0)
+		return (*out = PAT_BRICK, true);
+	if (ft_strcmp(tkn, "marble") == 0)
+		return (*out = PAT_MARBLE, true);
 	return (false);
 }

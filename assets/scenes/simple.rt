@@ -9,7 +9,8 @@ sky		sky.png
 
 # Texture
 # tex		earth_albedo	earth_daymap.png
-# tex		moon_albedo		8k_moon.png
+tex		moon_albedo		moon_color.png
+tex		moon_normal		moon_normal.png
 
 
 # Camera (position, look direction, FOV, exposure)
@@ -22,12 +23,12 @@ L		0,5,8				0.8			255,255,255		0.5			0
 pl			0,-3,0				0,1,0			3
 
 # Sphere
-sp			0,8,15				2.0				5
+sp			4,0,4				2.0				5
 # sp			3,0,10				1.5				50,255,50
 # sp			-3,0,10				1.5				50,50,255
 sp			0,-1,4				2.0				6
 
-co	-1,3,10	0,-1,0	30	3.0	6
+co			-4,0,8		0,-1,0	30	3.0	4
 
 # Cylinder  center				normal			radius			height			albedo
 # cy			0,-4,4				0,1,0			2				4				255,128,0
@@ -52,7 +53,9 @@ mat     3		255,255,255		0.0			0.5			1.0	    0.0				0.0					0,0,0				0		_
 
 
 # patterned materials
-mat		4		255,160,60		0.0			0.5			1.0		0.0				0.0					0,0,0				0		_				_				_				checker			20.50			0,0,0
+mat		4		255,200,0		0.0			0.6			1.5		0.0				0.0					0,0,0				0		_				_				_				spiral			3.5			100,0,150
+
+# mat		4		255,160,60		0.0			0.5			1.0		0.0				0.0					0,0,0				0		_				_				_				checker			20.50			0,0,0
 
 mat		5		255,60,60		0.0			0.5			1.0		0.0				0.0					0,0,0				0		_				_				_				gradient		1.0			5,5,255
 

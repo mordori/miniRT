@@ -38,6 +38,10 @@
 # define B_EPSILON			1e-4f
 # define G_EPSILON			1e-5f
 
+# define GOLDEN_RATIO		0.61803398875f
+# define PLASTIC_CONSTANT	0.7548776662466927f
+# define PLASTIC_CONSTANT2	0.5698402909980532f
+
 typedef struct s_vec2i		t_vec2i;
 typedef struct s_vec2i		t_int2;
 typedef struct s_vec2ui		t_uint2;

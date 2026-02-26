@@ -43,7 +43,7 @@ static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
 	uint32_t	mask_x;
 	uint32_t	mask_y;
 
-	mask_x = tex->width - 1;		/* POT bitmask: 256 → 0xFF */
+	mask_x = tex->width - 1;
 	mask_y = tex->height - 1;
 	px = uv.u * mask_x;
 	py = uv.v * mask_y;

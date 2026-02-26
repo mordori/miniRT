@@ -123,10 +123,29 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_ren
 	}
 }
 
+// static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
+// {
+// 	t_vec3		f;
+// 	float		p;
+
+// 	random_uv(ctx, path, pixel, BN_SC_U);
+// 	f = vec3_schlick(path->f0, path->ndotv);
+// 	p = fmaxf(fmaxf(f.r, f.g), f.b);
+// 	path->p_spec = clampf(p, 0.1f, 0.9f);
+// 	if (path->mat->metallic >= 0.9f)
+// 		path->p_spec = 1.0f;
+// 	path->sample_spec = fminf(randomf01(pixel->seed), 1.0f) < path->p_spec;
+// 	if (!sample_bsdf(path))
+// 		return (false);
+// 	path->ray = new_ray(vec3_bias(path->hit.point, path->n), path->l);
+// 	return (russian_roulette(path, pixel));
+// }
+
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		f;
 	float		p;
+	float		spec_rand;
 
 	random_uv(ctx, path, pixel, BN_SC_U);
 	f = vec3_schlick(path->f0, path->ndotv);
@@ -134,7 +153,8 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	path->p_spec = clampf(p, 0.1f, 0.9f);
 	if (path->mat->metallic >= 0.9f)
 		path->p_spec = 1.0f;
-	path->sample_spec = fminf(randomf01(pixel->seed), 1.0f) < path->p_spec;
+	spec_rand = r1_sequence(path->bounce, blue_noise(&ctx->tex_bn, pixel, BN_PP_R));
+	path->sample_spec = spec_rand < path->p_spec;
 	if (!sample_bsdf(path))
 		return (false);
 	path->ray = new_ray(vec3_bias(path->hit.point, path->n), path->l);
