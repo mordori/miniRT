@@ -69,7 +69,7 @@ t_error	parse_texture_def(t_context *ctx, char **tokens)
 	t_error		err;
 
 	if (count_tokens(tokens) != 3)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (ctx->scene.assets.tex_count >= MAX_TEXTURES)
 		return (E_TOO_MANY);
 	if (find_texture_by_name(&ctx->scene, tokens[1]))

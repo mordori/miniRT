@@ -24,6 +24,7 @@ float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
 ** Uses Cranley-Patterson Rotation by adding an offset and wrapping modulo 1.0
 ** This gracefully preserves the spatial correlation of Blue Noise on deeper
 ** bounces without degrading into white noise (which causes clumping).
+** https://www.graphics.rwth-aachen.de/media/papers/jgt.pdf
 */
 float	r1_sequence(uint32_t n, float offset)
 {

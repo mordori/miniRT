@@ -64,7 +64,7 @@ t_error	try_render_settings(t_context *ctx, char **tokens)
 	uint32_t	val;
 
 	if (count_tokens(tokens) != 3)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (!is_placeholder(tokens[1]))
 	{
 		if (!parse_uint(tokens[1], &val) || val == 0 || !ft_is_pot(val))

@@ -29,6 +29,8 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 		result = hit_cylinder(&obj->shape, ray, hit);
 	else if (obj->type == OBJ_CONE)
 		result = hit_cone(&obj->shape, ray, hit);
+	else if (obj->type == OBJ_QUAD)
+		result = hit_quad(&obj->shape, ray, hit);
 	else
 		return (false);
 	if (result)

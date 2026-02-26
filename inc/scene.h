@@ -14,6 +14,7 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n);
 t_aabb	sphere_bounds(const t_object *obj);
 t_aabb	cylinder_bounds(const t_object *obj);
 t_aabb	cone_bounds(const t_object *obj);
+t_aabb	quad_bounds(const t_object *obj);
 t_aabb	get_object_bounds(const t_object *obj);
 
 #endif

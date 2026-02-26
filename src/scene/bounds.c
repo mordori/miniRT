@@ -41,3 +41,41 @@ t_aabb	cone_bounds(const t_object *obj)
 	aabb.max.v = _mm_max_ps(cone.apex.v, vec3_add(base_center, r).v);
 	return (aabb);
 }
+
+t_aabb	quad_bounds(const t_object *obj)
+{
+	t_aabb		aabb;
+	t_quad		quad;
+	t_vec3		p1;
+	t_vec3		p2;
+	t_vec3		p3;
+
+	quad = obj->shape.quad;
+	p1 = vec3_add(quad.q, quad.u);
+	p2 = vec3_add(quad.q, quad.v);
+	p3 = vec3_add(p1, quad.v);
+	aabb.min.v = _mm_min_ps(_mm_min_ps(quad.q.v, p1.v),
+			_mm_min_ps(p2.v, p3.v));
+	aabb.max.v = _mm_max_ps(_mm_max_ps(quad.q.v, p1.v),
+			_mm_max_ps(p2.v, p3.v));
+	aabb.min = vec3_sub(aabb.min, vec3_n(B_EPSILON));
+	aabb.max = vec3_add(aabb.max, vec3_n(B_EPSILON));
+	return (aabb);
+}
+
+// t_aabb	quad_bounds(const t_object *obj)
+// {
+// 	t_aabb		aabb;
+// 	t_quad		quad;
+// 	t_vec3		z;
+
+// 	quad = obj->shape.quad;
+// 	z.v = _mm_setzero_ps();
+// 	aabb.min.v = _mm_add_ps(quad.q.v, _mm_add_ps(
+// 				_mm_min_ps(quad.u.v, z.v), _mm_min_ps(quad.v.v, z.v)));
+// 	aabb.max.v = _mm_add_ps(quad.q.v, _mm_add_ps(
+// 				_mm_max_ps(quad.u.v, z.v), _mm_max_ps(quad.v.v, z.v)));
+// 	aabb.min = vec3_sub(aabb.min, vec3_n(B_EPSILON));
+// 	aabb.max = vec3_add(aabb.max, vec3_n(B_EPSILON));
+// 	return (aabb);
+// }

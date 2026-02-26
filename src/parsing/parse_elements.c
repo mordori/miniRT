@@ -15,7 +15,7 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	color;
 
 	if (count_tokens(tokens) != 3)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (p->has_ambient)
 		return (E_DUPLICATE);
 	if (!parse_float(tokens[1], &ratio))
@@ -49,7 +49,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 
 	token_count = count_tokens(tokens);
 	if (token_count < 4 || token_count > 6)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (!parse_vec3(tokens[1], &position))
 		return (E_INVALID_NUM);
 	if (!parse_float(tokens[2], &ratio))
@@ -96,7 +96,7 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 
 	token_count = count_tokens(tokens);
 	if (token_count < 4 || token_count > 5)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (p->has_camera)
 		return (E_DUPLICATE);
 	if (!parse_vec3(tokens[1], &position))

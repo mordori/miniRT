@@ -69,6 +69,7 @@ typedef struct s_plane			t_plane;
 typedef struct s_sphere			t_sphere;
 typedef struct s_cylinder		t_cylinder;
 typedef struct s_cone			t_cone;
+typedef struct s_quad			t_quad;
 typedef struct s_light			t_light;
 typedef struct s_scene			t_scene;
 typedef struct s_camera			t_camera;
@@ -120,6 +121,7 @@ enum e_obj_type
 	OBJ_CYLINDER,
 	OBJ_CUBE,
 	OBJ_CONE,
+	OBJ_QUAD,
 	OBJ_HYPERBOLOID,
 	OBJ_PARABOLOID
 };
@@ -246,6 +248,7 @@ struct __attribute__((aligned(16))) s_plane
 {
 	t_vec3			point;
 	t_vec3			normal;
+	float			d;
 };
 
 struct __attribute__((aligned(16))) s_sphere
@@ -275,12 +278,26 @@ struct __attribute__((aligned(16))) s_cone
 	float			inv_height;
 };
 
+struct __attribute__((aligned(16)))	s_quad
+{
+	t_vec3	vec_alpha;
+	t_vec3	vec_beta;
+	t_vec3	q;
+	t_vec3	u;
+	t_vec3	v;
+	t_vec3	normal;
+	t_vec3	w;
+	float	d;
+	float	area;
+};
+
 union __attribute__((aligned(16))) u_shape
 {
 	t_plane			plane;
 	t_sphere		sphere;
 	t_cylinder		cylinder;
 	t_cone			cone;
+	t_quad			quad;
 };
 
 struct __attribute__((aligned(16))) s_object
