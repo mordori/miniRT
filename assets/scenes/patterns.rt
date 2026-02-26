@@ -1,0 +1,47 @@
+# ============================================================================
+# New Procedural Patterns Demo Scene
+# Showcases the newly added: Grid, spiral and Bricks
+# ============================================================================
+
+# Emissive light material
+mat	0	255,255,255	0.0	0.0	1.0	0.0	3000.0	255,250,240	0
+
+# Checkered floor plane (leaving this as standard base)
+mat	1	180,180,180	0.0	1.0	1.5	0.0	0.0	0,0,0	0	_	_	_	checker	2.0	30,30,30
+
+# Grid / Wireframe pattern (Neon Green + Black)
+mat	2	0,0,0	0.0	0.5	1.5	0.0	0.0	0,0,0	0	_	_	_	grid	3.0	0,255,0
+
+# Brick Wall pattern (Red Bricks + Gray Mortar)
+mat	3	255,255,255	0.0	0.9	1.5	0.0	0.0	0,0,0	0	_	_	_	brick	4.0	0,0,0
+
+# Seamless Spiral (Yellow + Purple)
+mat	4	255,200,0	0.0	0.6	1.5	0.0	0.0	0,0,0	0	_	_	_	spiral	4.0	100,0,150
+
+# -------------- Scene Setup ----------------
+
+# Ambient light
+A	0.3	255,255,255
+
+# Camera: position, look direction, FOV, exposure
+C	0,3,-10	0,0,1	70	0.15
+
+# Point light
+L	5,10,-2	0.0	255,250,240	0.5	0
+
+# -------------- Objects ----------------
+
+# Checkered floor plane
+pl	0,-1.5,0	0,1,0	1
+
+# Grid Sphere (center)
+sp	0,0.5,-3	3	2
+
+# Brick Cylinder (far left)
+cy	-7,1,0	0,1,0	2.0	4.0	3
+
+# Seamless Spiral Cone (far right)
+co	7,2,8	0,1,0	30	5.0	4
+
+# Render settings
+render	128	32

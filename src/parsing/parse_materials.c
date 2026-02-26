@@ -147,8 +147,8 @@ static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc
 /**
  * Parse material definition line:
  *   mat <id> <color> <metallic> <roughness> <ior> <transmission>
- *       <emission_strength> <emission_color> <flags> [texture_name] [normal_map]
- *		 [pattern_type] [pattern_scale] [pattern_color] [bump_strength]
+ *       <emission_strength> <emission_color> <flags> [texture_name] [normal_map] [bump_strength]
+ *		 [pattern_type] [pattern_scale] [pattern_color]
  */
 t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 {

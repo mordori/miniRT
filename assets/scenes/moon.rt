@@ -1,13 +1,15 @@
 # Moon Scene - Textures and Materials Demo
+# Render settings (samples, bounces) - use _ for default
+render	128		32
 
 # Ambient
-A		0.1				20,20,30
+A		0.1		220,220,230
 
 # Camera
-C		0,0,-1			-1,0,0			70				0.2
+C		0,0,0			-1,0,0			70				0.2
 
 # Light
-L		15,5,8				0.9			255,250,240		0.5			2
+L		0,0,-20				0.9			255,250,240		0.5			2
 
 # Sphere
 sp			0,0,5				4.0				0
@@ -18,18 +20,18 @@ sp			-2.5,-1,2			1.0				1
 sky		stars.png
 # sky		sky.png
 
-# Texture
-tex		moon_albedo		8k_moon.png
+# Textures
 tex		earth_albedo	earth_daymap.png
+tex		earth_normal	earth_normal.png
+tex		moon_albedo		moon_color.png
+tex		moon_normal		moon_normal.png
 
 # Material
-# mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags	[albedo_tex]
+# mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[normal_map]	[bump_str]	[pattern]	[pat_scale]	[albedo2]
 # mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		_
-mat		0		170,170,170		0.0			0.95		1.45	0.0				0.0					0,0,0				0		earth_albedo
-mat		1		245,70,50		0.0			0.05		1.45	0.0				0.0					0,0,0				0		moon_albedo
+mat		0		170,210,170		0.0			0.55		1.45	0.0				0.0					0,0,0				0		earth_albedo	earth_normal	3.0
+mat		1		245,70,50		0.0			0.05		1.45	0.0				0.0					0,0,0				0		moon_albedo		moon_normal		1.5
 
 # Material - emissive
 mat		2		255,255,255		0.0			0.0			1.0		1.0				18000.0				255,255,255			0
 
-# Render settings (samples, bounces) - use _ for default
-render	128		32

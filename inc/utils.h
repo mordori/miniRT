@@ -45,6 +45,8 @@ char		**try_split(char const *s);
 void		sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
 float		blue_noise(const t_texture *tex, const t_pixel *pixel,
 				uint32_t dim);
+t_vec2		r2_sequence(uint32_t n, t_vec2 offset);
+float		r1_sequence(uint32_t n, float offset);
 t_vec3		map_spherical(float u, float v);
 t_vec2		spherical_uv(t_vec3 dir);
 uint32_t	fast_range(uint32_t n, uint32_t range);
