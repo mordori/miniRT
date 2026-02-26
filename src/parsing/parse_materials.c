@@ -160,7 +160,7 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 
 	tc = count_tokens(tokens);
 	if (tc < 10)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (p->mat_count >= MAX_MATERIALS)
 		return (E_TOO_MANY);
 	if (!parse_uint(tokens[1], &id) || id != p->mat_count)

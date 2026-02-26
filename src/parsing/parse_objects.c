@@ -15,8 +15,8 @@ t_error	parse_sphere(t_context *ctx, t_parser *p, char **tokens)
 	uint32_t	mat_id;
 	t_error		err;
 
-	if (count_tokens(tokens) < 4)
-		return (E_MISSING_ARGS);
+	if (count_tokens(tokens) != 4)
+		return (E_ARGS);
 	if (!parse_vec3(tokens[1], &center))
 		return (E_INVALID_NUM);
 	if (!parse_float(tokens[2], &diameter) || diameter <= 0.0f)
@@ -38,8 +38,8 @@ t_error	parse_plane(t_context *ctx, t_parser *p, char **tokens)
 	uint32_t	mat_id;
 	t_error		err;
 
-	if (count_tokens(tokens) < 4)
-		return (E_MISSING_ARGS);
+	if (count_tokens(tokens) != 4)
+		return (E_ARGS);
 	if (!parse_vec3(tokens[1], &point) || !parse_vec3(tokens[2], &normal))
 		return (E_INVALID_NUM);
 	if (!validate_normalized(normal))
@@ -60,8 +60,8 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 	uint32_t	mat_id;
 	t_error		err;
 
-	if (count_tokens(tkns) < 6)
-		return (E_MISSING_ARGS);
+	if (count_tokens(tkns) != 6)
+		return (E_ARGS);
 	if (!parse_vec3(tkns[1], &cyl.center) || !parse_vec3(tkns[2], &cyl.axis))
 		return (E_INVALID_NUM);
 	if (!validate_normalized(cyl.axis))
@@ -89,8 +89,8 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 	float		angle_deg;
 	t_error		err;
 
-	if (count_tokens(tkns) < 6)
-		return (E_MISSING_ARGS);
+	if (count_tokens(tkns) != 6)
+		return (E_ARGS);
 	if (!parse_vec3(tkns[1], &cone.apex) || !parse_vec3(tkns[2], &cone.axis))
 		return (E_INVALID_NUM);
 	if (!validate_normalized(cone.axis))
@@ -106,4 +106,27 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 		return (err);
 	p->has_cone = true;
 	return (init_cone(ctx, &cone, mat_id));
+}
+
+// qu <q> <u> <v> <color|mat_id>
+t_error			parse_quad(t_context *ctx, t_parser *p, char **tokens)
+{
+	uint32_t	tc;
+	uint32_t	mat_id;
+	t_quad		quad;
+
+	tc = count_tokens(tokens);
+	if (tc != 5)
+		return (E_ARGS);
+	quad = (t_quad){0};
+	if (!parse_vec3(tokens[1], &quad.q))
+		return (E_INVALID_NUM);
+	if (!parse_vec3(tokens[2], &quad.u))
+		return (E_INVALID_NUM);
+	if (!parse_vec3(tokens[3], &quad.v))
+		return (E_INVALID_NUM);
+	if (resolve_material(ctx, p, tokens[4], &mat_id) != E_OK)
+		return (E_MATERIAL);
+	p->has_quad = true;
+	return (init_quad(ctx, &quad, mat_id));
 }

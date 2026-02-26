@@ -33,6 +33,8 @@ t_aabb	get_object_bounds(const t_object *obj)
 		res = cylinder_bounds(obj);
 	else if (obj->type == OBJ_CONE)
 		res = cone_bounds(obj);
+	else if (obj->type == OBJ_QUAD)
+		res = quad_bounds(obj);
 	return(res);
 }
 

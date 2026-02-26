@@ -66,6 +66,8 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 		return (parse_cylinder(ctx, p, tokens));
 	if (ft_strcmp(id, "co") == 0)
 		return (parse_cone(ctx, p, tokens));
+	if (ft_strcmp(id, "qu") == 0)
+		return (parse_quad(ctx, p, tokens));
 	return (E_UNKNOWN_ID);
 }
 
@@ -77,7 +79,8 @@ void	validate_scene(t_context *ctx, t_parser *p)
 		fatal_error(ctx, "Missing light source (L)", __FILE__, p->line_num);
 	if (!p->has_camera)
 		fatal_error(ctx, "Missing camera (C)", __FILE__, p->line_num);
-	if (!p->has_plane && !p->has_sphere && !p->has_cylinder && !p->has_cone)
+	if (!p->has_plane && !p->has_sphere && !p->has_cylinder
+		&& !p->has_cone && !p->has_quad)
 		fatal_error(ctx, "No objects defined in scene", __FILE__, p->line_num);
 }
 
@@ -85,7 +88,7 @@ void	print_error(t_context *ctx, t_error err, int line_num)
 {
 	static char	*msgs[] = {
 	[E_UNKNOWN_ID] = "Unknown element identifier",
-	[E_MISSING_ARGS] = "Invalid argument count for element",
+	[E_ARGS] = "Invalid argument count for element",
 	[E_INVALID_NUM] = "Invalid number format",
 	[E_RANGE] = "Value out of valid range",
 	[E_DUPLICATE] = "Duplicate unique element (A, L, or C)",

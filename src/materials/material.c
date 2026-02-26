@@ -28,8 +28,8 @@ static t_vec3	apply_normal_map(const t_material *mat, t_vec3 n, t_path *path)
 	sampled = vec3_normalize(sampled);
 	branchlessONB(n, &t, &b);
 	n = vec3_normalize(mul_tbn(sampled, n, t, b));
-	if (vec3_dot(n, path->v) < G_EPSILON)
-		return (path->hit.normal);
+	// if (vec3_dot(n, path->v) < G_EPSILON)
+	// 	return (path->hit.normal);
 	return (n);
 }
 

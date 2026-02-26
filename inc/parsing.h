@@ -12,7 +12,7 @@ typedef enum e_error
 	E_OK = 0,
 	E_EMPTY,
 	E_UNKNOWN_ID,
-	E_MISSING_ARGS,
+	E_ARGS,
 	E_INVALID_NUM,
 	E_RANGE,
 	E_DUPLICATE,
@@ -40,6 +40,7 @@ typedef struct s_parser
 	bool		has_plane;
 	bool		has_cylinder;
 	bool		has_cone;
+	bool		has_quad;
 	t_mat_entry	materials[MAX_MATERIALS];
 	uint32_t	mat_count;
 }				t_parser;
@@ -69,6 +70,7 @@ t_error			parse_sphere(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_plane(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_cylinder(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_cone(t_context *ctx, t_parser *p, char **tokens);
+t_error			parse_quad(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_ambient(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_skydome(t_context *ctx, char **tokens);
 t_error			parse_light(t_context *ctx, t_parser *p, char **tokens);

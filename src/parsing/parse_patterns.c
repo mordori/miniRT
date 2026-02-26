@@ -4,7 +4,7 @@
 t_error parse_mat_pattern(t_material *mat, char **tkns, int tc)
 {
 	if  (tc < 16)
-		return (E_MISSING_ARGS);
+		return (E_ARGS);
 	if (!parse_pattern_token(tkns[13], &mat->pattern))
 		return (E_INVALID_NUM);
 	if (mat->pattern == PAT_NONE)
