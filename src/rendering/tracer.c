@@ -25,8 +25,7 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 	pixel_loc = vec3_add(vp->pixel_00_loc, pixel_loc);
 	path = (t_path){0};
 	ray_orig = r->cam.transform.pos;
-	if (r->cam.f_stop > 0.0f)
-		ray_orig = sample_defocus_disk(ctx, pixel);
+	ray_orig = sample_defocus_disk(ctx, pixel);
 	path.ray = new_ray(ray_orig, vec3_normalize(vec3_sub(pixel_loc, ray_orig)));
 	path.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
 	while (path.bounce < bounces)
