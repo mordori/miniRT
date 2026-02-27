@@ -28,7 +28,7 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
     return (mat->albedo);
 }
 
-// static t_vec3 pattern_checkerboard(t_hit *hit, t_material *mat)
+// static t_vec3 pattern_checkerboard(const t_hit *hit, const t_material *mat)
 // {
 // 	float scale;
 // 	int x;
@@ -47,7 +47,7 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
 // }
 
 // #include "immintrin.h" // auto-vectorizes does the same thing as above but in one instruction, and should be faster.. still need more testings though.
-// static t_vec3 pattern_checkerboard2(t_hit *hit, t_material *mat)
+// static t_vec3 pattern_checkerboard(const t_hit *hit, const t_material *mat)
 // {
 //     float   scale;
 //     __m128i cell;
@@ -92,6 +92,7 @@ static t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 		scale = 1.0f;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	if (((int)floorf(p.x * scale) + (int)floorf(p.y * scale) + (int)floorf(p.z * scale)) & 1)
+	// if (((int)(p.x * scale) + (int)(p.y * scale) + (int)(p.z * scale)) & 1)
 		return (mat->albedo2);
 	return (mat->albedo);
 }

@@ -22,7 +22,8 @@ ifeq ($(UNAME_S),Darwin)
 	endif
 	LDFLAGS		+=-L"/opt/homebrew/lib" -L"/usr/local/lib" -L"/opt/local/lib" -framework Cocoa -framework OpenGL -framework IOKit
 else
-	OPTS		+=-march=haswell -fno-plt -falign-loops=16 -falign-functions=32
+# 	OPTS		+=-march=haswell -fno-plt -falign-loops -falign-functions=32
+	OPTS		+=-march=haswell -fno-plt -falign-functions=32
 	LDFLAGS		+=-ldl
 endif
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
