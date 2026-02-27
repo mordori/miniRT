@@ -68,7 +68,6 @@ static inline void	copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t
 	const uint32_t		width = ctx->renderer.width;
 
 	i = 0;
-#pragma unroll 4
 	while (i < limit)
 	{
 		color = vec3_scale(buf[i], pixel->scale);

@@ -2,7 +2,7 @@
 #include "libft_str.h"
 #include "libft_io.h"
 
-ssize_t	try_write(t_context *ctx, int fd, char *src)
+ssize_t	try_write(t_context *ctx, int fd, const char *src)
 {
 	ssize_t		bytes;
 	ssize_t		len;
@@ -21,7 +21,7 @@ ssize_t	try_write(t_context *ctx, int fd, char *src)
 	return (bytes);
 }
 
-ssize_t	try_write_endl(t_context *ctx, int fd, char *src)
+ssize_t	try_write_endl(t_context *ctx, int fd, const char *src)
 {
 	ssize_t		bytes;
 
@@ -30,13 +30,13 @@ ssize_t	try_write_endl(t_context *ctx, int fd, char *src)
 	return (bytes);
 }
 
-int	try_open(char *file, int o_flag, int p_flag)
+int	try_open(t_context *ctx, const char *file, int o_flag, int p_flag)
 {
 	int		fd;
 
 	fd = open(file, o_flag, p_flag);
 	if (fd == ERROR)
-		fatal_error(NULL, errors(ERR_OPEN), __FILE__, __LINE__);
+		fatal_error(ctx, errors(ERR_OPEN), __FILE__, __LINE__);
 	return (fd);
 }
 
