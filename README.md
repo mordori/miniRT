@@ -181,7 +181,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>K</kbd> / <kbd>L</kbd>                                    | Focal Length                                  |
 | <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
 | <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
-| <kbd>N</kbd>                                                   | Toggle Settings                               |
+| <kbd>H</kbd>                                                   | Toggle Settings                               |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 
 ## Project Review

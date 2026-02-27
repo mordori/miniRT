@@ -43,8 +43,10 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 		if (ctx->renderer.render_bounces > 128u)
 			ctx->renderer.render_bounces = 128u;
 	}
-	if (keydata.key == MLX_KEY_N && keydata.action == MLX_RELEASE)
+	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
 		ctx->hide_stats = !ctx->hide_stats;
+	if (keydata.key == MLX_KEY_LEFT_CONTROL && keydata.action == MLX_RELEASE && ctx->renderer.frame >= ctx->renderer.render_samples)
+		screenshot(ctx);
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
 }

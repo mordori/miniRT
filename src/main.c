@@ -21,7 +21,7 @@ int	main(int argc, char *argv[])
 	ctx = (t_context){0};
 	ctx.file = argv[1];
 	validate_file_type(ctx.file);
-	ctx.fd = try_open(ctx.file, O_RDONLY, 0);
+	ctx.fd = try_open(NULL, ctx.file, O_RDONLY, 0);
 	initialize(&ctx);
 	try_write(&ctx, STDOUT_FILENO, "\033[?25h\n\nGoodbye!\n\n");
 	clean(&ctx);
@@ -100,7 +100,8 @@ void	printf_init(t_context *ctx)
 	printf("| K / L               | Focal Length           |\n");
 	printf("| O / P               | Samples                |\n");
 	printf("| U / I               | Bounces                |\n");
-	printf("| N                   | Toggle Settings        |\n");
+	printf("| H                   | Toggle Settings        |\n");
+	printf("| PRNT SCRN           | Screenshot             |\n");
 	printf("| ESC                 | Quit                   |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("\n");

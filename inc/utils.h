@@ -22,9 +22,9 @@ void		clean(t_context *ctx);
 void		vector_try_init(t_context *ctx, t_vector *vec, bool is_shrink,
 				void (*del)(void *));
 void		vector_try_add(t_context *ctx, t_vector *vec, void *item);
-int			try_open(char *file, int o_flag, int p_flag);
-ssize_t		try_write(t_context *ctx, int fd, char *src);
-ssize_t		try_write_endl(t_context *ctx, int fd, char *src);
+int			try_open(t_context *ctx, const char *file, int o_flag, int p_flag);
+ssize_t		try_write(t_context *ctx, int fd, const char *src);
+ssize_t		try_write_endl(t_context *ctx, int fd, const char *src);
 ssize_t		try_read(t_context *ctx, int fd, char *buf, size_t n_bytes);
 bool		cmp_strs(const char **types, const char *src);
 int			try_gnl(t_context *ctx, int fd, char **line);
@@ -63,5 +63,6 @@ void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);
 void		init_hit(t_path *path);
 void		printf_init(t_context *ctx);
+void		screenshot(t_context *ctx);
 
 #endif
