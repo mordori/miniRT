@@ -21,8 +21,11 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->distance = 1.0f;
 	fov = degrees_to_rad(fov);
 	fov = clampf(fov, degrees_to_rad(0.1f), degrees_to_rad(179.9f));
-	cam->focal_len_mm = SENSOR_HEIGHT_MM * 0.5f / tanf(fov * 0.5f);
-	cam->focus_dist = 1.3f;
+	cam->focal_len_mm = SENSOR_HALF_HEIGHT_MM / tanf(fov * 0.5f);
+	cam->focus_dist = 3.5f;
+	cam->f_stop = 5.6f;
+	cam->shutter_speed = 1.0f / 100.0f;
+	cam->iso = 100.0f;
 	cam->init_pos = position;
 }
 
@@ -79,11 +82,9 @@ static inline void	update_viewport(t_camera *cam, float img_width, float img_hei
 	t_vec3				vp_center;
 	t_vec3				vp_up_left;
 	float				defocus_r;
-	float				fov_vertical;
 
 	vp = (t_viewport *)&cam->viewport;
-	fov_vertical = 2.0f * atanf(SENSOR_HEIGHT_MM / (2.0f * cam->focal_len_mm));
-	vp->height = 2.0f * tanf(fov_vertical * 0.5f) * cam->focus_dist;
+	vp->height = SENSOR_HEIGHT_MM / cam->focal_len_mm * cam->focus_dist;
 	vp->width = vp->height * cam->aspect;
 	u = vec3_scale(cam->right, vp->width);
 	v = vec3_scale(cam->up, -vp->height);
@@ -93,10 +94,7 @@ static inline void	update_viewport(t_camera *cam, float img_width, float img_hei
 	vp_up_left = vec3_sub(vp_center, vec3_scale(u, 0.5f));
 	vp_up_left = vec3_sub(vp_up_left, vec3_scale(v, 0.5f));
 	vp->pixel_00_loc = vp_up_left;
-	if (cam->f_stop > 0.0f)
-		defocus_r = cam->focal_len_mm * 0.001f / (2.0f * cam->f_stop);
-	else
-		defocus_r = 0.0f;
+	defocus_r = cam->focal_len_mm * 0.001f / (2.0f * cam->f_stop);
 	cam->defocus_disk_u = vec3_scale(cam->right, defocus_r);
 	cam->defocus_disk_v = vec3_scale(cam->up, defocus_r);
 }

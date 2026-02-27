@@ -18,7 +18,7 @@ bool	is_key_down(t_context *ctx)
 			ctx->scene.cam.f_stop *= div;
 		else
 			ctx->scene.cam.f_stop *= mul;
-		ctx->scene.cam.f_stop = clampf(ctx->scene.cam.f_stop, 0.1f, 128.0f);
+		ctx->scene.cam.f_stop = clampf(ctx->scene.cam.f_stop, 0.95f, 128.0f);
 		dirty = true;
 	}
 	if (\
@@ -31,7 +31,7 @@ bool	is_key_down(t_context *ctx)
 			ctx->scene.cam.focal_len_mm *= div;
 		else
 			ctx->scene.cam.focal_len_mm *= mul;
-		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 1.0f, 1000.0f);
+		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 14.0f, 800.0f);
 		dirty = true;
 	}
 	if (\
@@ -44,7 +44,7 @@ bool	is_key_down(t_context *ctx)
 			ctx->scene.cam.focus_dist *= div;
 		else
 			ctx->scene.cam.focus_dist *= mul;
-		ctx->scene.cam.focus_dist = clampf(ctx->scene.cam.focus_dist, 0.1f, M_INF);
+		ctx->scene.cam.focus_dist = clampf(ctx->scene.cam.focus_dist, 0.1f, 1000.0f);
 		dirty = true;
 	}
 // 	if (\
@@ -57,7 +57,7 @@ bool	is_key_down(t_context *ctx)
 // 			ctx->scene.cam.shutter_speed *= div;
 // 		else
 // 			ctx->scene.cam.shutter_speed *= mul;
-// 		ctx->scene.cam.shutter_speed = clampf(ctx->scene.cam.shutter_speed, 0.0001f, 60.0f);
+// 		ctx->scene.cam.shutter_speed = clampf(ctx->scene.cam.shutter_speed, 0.0001f, 30.0f);
 // 		dirty = true;
 // 	}
 // 	if (\
@@ -70,7 +70,7 @@ bool	is_key_down(t_context *ctx)
 // 			ctx->scene.cam.iso *= div;
 // 		else
 // 			ctx->scene.cam.iso *= mul;
-// 		ctx->scene.cam.iso = clampf(ctx->scene.cam.iso, 100.0f, 200000.0f);
+// 		ctx->scene.cam.iso = clampf(ctx->scene.cam.iso, 100.0f, 51200.0f);
 // 		dirty = true;
 // 	}
 	return (dirty);

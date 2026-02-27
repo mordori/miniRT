@@ -31,6 +31,7 @@
 # define SENS_MOVE				0.5f
 
 # define SENSOR_HEIGHT_MM		24.0f
+# define SENSOR_HALF_HEIGHT_MM	12.0f
 
 # define MAX_RADIANCE			10.0f
 # define CLAMP_INDIRECT			10.0f
