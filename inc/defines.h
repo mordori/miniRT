@@ -113,7 +113,8 @@ enum e_err_code
 	ERR_BVH,
 	ERR_MATADD,
 	ERR_TEXNPOT,
-	ERR_DIR
+	ERR_DIR,
+	ERR_MALLOC
 };
 
 enum e_obj_type

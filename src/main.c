@@ -63,7 +63,7 @@ void	printf_init(t_context *ctx)
 	printf("|---------------------|------------------------|\n");
 	printf("| LMB                 | Rotate                 |\n");
 	printf("| W A S D             | Move                   |\n");
-	printf("| L SHIFT / SPACE     | Descend / Ascend       |\n");
+	printf("| SHIFT / SPACE       | Descend / Ascend       |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("\n");
 	printf("                  EDIT MODE                     \n");
@@ -75,9 +75,9 @@ void	printf_init(t_context *ctx)
 	printf("|         Key         |       Navigation       |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("| F                   | Frame Selected         |\n");
-	printf("| L ALT + LMB         | Orbit                  |\n");
-	printf("| L ALT + RMB         | Zoom                   |\n");
-	printf("| L ALT + MMB         | Pan                    |\n");
+	printf("| ALT + LMB           | Orbit                  |\n");
+	printf("| ALT + RMB           | Zoom                   |\n");
+	printf("| ALT + MMB           | Pan                    |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("|         Key         |        Editing         |\n");
 	printf("|---------------------|------------------------|\n");
@@ -86,7 +86,7 @@ void	printf_init(t_context *ctx)
 	printf("| E                   | Rotate                 |\n");
 	printf("| R                   | Scale                  |\n");
 	printf("| X / Y / Z           | Axis Constraint        |\n");
-	printf("| L SHIFT + X / Y / Z | Plane Constraint       |\n");
+	printf("| SHIFT + X / Y / Z   | Plane Constraint       |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("\n");
 	printf("                   GENERAL                      \n");
@@ -101,7 +101,7 @@ void	printf_init(t_context *ctx)
 	printf("| O / P               | Samples                |\n");
 	printf("| U / I               | Bounces                |\n");
 	printf("| H                   | Toggle Settings        |\n");
-	printf("| L CTRL              | Screenshot             |\n");
+	printf("| Y                   | Save render            |\n");
 	printf("| ESC                 | Quit                   |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("\n");

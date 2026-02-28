@@ -148,7 +148,7 @@ As the project is still under construction, we recommend to run the program with
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Rotate                                        |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
-| <kbd>L SHIFT</kbd> / <kbd>SPACE</kbd>                          | Descend / Ascend                              |
+| <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                          | Descend / Ascend                              |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -158,9 +158,9 @@ As the project is still under construction, we recommend to run the program with
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>F</kbd>                                                   | Frame Selected                                |
-| <kbd>L ALT</kbd> + <kbd>LMB</kbd>                              | Orbit                                         |
-| <kbd>L ALT</kbd> + <kbd>LMB</kbd>                              | Zoom                                          |
-| <kbd>L ALT</kbd> + <kbd>LMB</kbd>                              | Pan                                           |
+| <kbd>ALT</kbd> + <kbd>LMB</kbd>                              | Orbit                                         |
+| <kbd>ALT</kbd> + <kbd>LMB</kbd>                              | Zoom                                          |
+| <kbd>ALT</kbd> + <kbd>LMB</kbd>                              | Pan                                           |
 
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Editing          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
@@ -169,7 +169,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>E</kbd>                                                   | Rotate                                        |
 | <kbd>R</kbd>                                                   | Scale                                         |
 | <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>                     | Axis Constraint                               |
-| <kbd>L SHIFT</kbd> + <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>| Plane Constraint                              |
+| <kbd>SHIFT</kbd> + <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>| Plane Constraint                              |
 
 ### General
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -182,7 +182,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
 | <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
 | <kbd>H</kbd>                                                   | Toggle Settings                               |
-| <kbd>L CTRL</kbd>                                              | Screenshot                                    |
+| <kbd>Y</kbd>                                                   | Save render                                   |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 
 ## Project Review

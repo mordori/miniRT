@@ -35,3 +35,12 @@ void	wait_until(uint32_t end)
 			usleep(500);
 	}
 }
+
+char	*timestamp(char *buf)
+{
+	time_t		now;
+
+	now = time(NULL);
+	strftime(buf, 32, "%Y-%m-%d_%H-%M-%S", localtime(&now));
+	return (buf);
+}
