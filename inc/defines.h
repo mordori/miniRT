@@ -100,7 +100,7 @@ enum e_err_code
 	ERR_VECINIT,
 	ERR_VECADD,
 	ERR_RESIZE,
-	ERR_SSIZE,
+	ERR_SIZE_MAX,
 	ERR_WRITE,
 	ERR_OPEN,
 	ERR_READ,
@@ -112,7 +112,8 @@ enum e_err_code
 	ERR_POINTLADD,
 	ERR_BVH,
 	ERR_MATADD,
-	ERR_TEXNPOT
+	ERR_TEXNPOT,
+	ERR_DIR
 };
 
 enum e_obj_type

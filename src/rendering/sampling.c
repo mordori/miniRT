@@ -44,7 +44,7 @@ void	sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv)
 	t_vec3		t;
 	t_vec3		b;
 
-	branchlessONB(path->n, &t, &b);
+	onb(path->n, &t, &b);
 	wi_std = vec3(vec3_dot(path->v, t), vec3_dot(path->v, b), vec3_dot(path->v, path->n));
 	wi_std = vec3_normalize(vec3(wi_std.x * alpha, wi_std.y * alpha, wi_std.z));
 	wm_std = sample_vndf_hemisphere(wi_std, uv);
