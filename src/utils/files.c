@@ -5,15 +5,13 @@
 ssize_t	try_write(t_context *ctx, int fd, const char *src)
 {
 	ssize_t		bytes;
-	ssize_t		len;
-	size_t		ulen;
+	size_t		len;
 
-	ulen = ft_strlen(src);
-	if (ulen > SSIZE_MAX)
-		fatal_error(ctx, errors(ERR_SSIZE), __FILE__, __LINE__);
-	len = (ssize_t)ulen;
+	len = ft_strlen(src);
+	if (len > SIZE_MAX)
+		fatal_error(ctx, errors(ERR_SIZE_MAX), __FILE__, __LINE__);
 	bytes = write(fd, src, len);
-	if (bytes != len)
+	if (bytes != (ssize_t)len)
 	{
 		close(fd);
 		fatal_error(ctx, errors(ERR_WRITE), __FILE__, __LINE__);

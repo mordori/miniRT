@@ -3,12 +3,12 @@
 dep/
 obj/
 docs/
+renders/
+lib/MLX42/
+profiling/
 *.o
 *.d
 libft.a
 .config
 .clangd
-a.out
 miniRT
-lib/MLX42
-profiling/

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/23 05:41:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/02/28 05:49:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,7 +306,7 @@ uint32_t	rgba_to_abgr(uint32_t rgba);
 t_vec3		spherical_to_cartesian(float u, float sin_theta, float cos_theta);
 t_vec3		spherical_to_world(t_vec3 n, float u, float sin_theta, float cos_theta);
 t_vec3		tangent_to_world(t_vec3 vec, t_vec3 n);
-void		branchlessONB(t_vec3 n, t_vec3 *b1, t_vec3 *b2);
+void		onb(t_vec3 n, t_vec3 *b1, t_vec3 *b2);
 t_vec3		mul_tbn(t_vec3 vec, t_vec3 n, t_vec3 t, t_vec3 b);
 
 #endif

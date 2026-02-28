@@ -149,7 +149,6 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>LMB</kbd>                                                 | Rotate                                        |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
 | <kbd>L SHIFT</kbd> / <kbd>SPACE</kbd>                          | Descend / Ascend                              |
-| <kbd></kbd>                                                    | Reset                                         |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -158,30 +157,32 @@ As the project is still under construction, we recommend to run the program with
 
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd></kbd>                                                    | Frame                                         |
-| <kbd></kbd>                                                    | Orbit                                         |
-| <kbd></kbd>                                                    | Zoom                                          |
-| <kbd></kbd>                                                    | Pan                                           |
+| <kbd>F</kbd>                                                   | Frame Selected                                |
+| <kbd>L ALT</kbd> + <kbd>LMB</kbd>                              | Orbit                                         |
+| <kbd>L ALT</kbd> + <kbd>LMB</kbd>                              | Zoom                                          |
+| <kbd>L ALT</kbd> + <kbd>LMB</kbd>                              | Pan                                           |
 
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Editing          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd></kbd>                                                    | Select Object                                 |
-| <kbd></kbd>                                                    | Move                                          |
-| <kbd></kbd>                                                    | Rotate                                        |
-| <kbd></kbd>                                                    | Scale                                         |
-| <kbd></kbd>                                                    | Axis Constraint                               |
-| <kbd></kbd>                                                    | Plane Constraint                              |
+| <kbd>LMB</kbd>                                                 | Select Object                                 |
+| <kbd>W</kbd>                                                   | Move                                          |
+| <kbd>E</kbd>                                                   | Rotate                                        |
+| <kbd>R</kbd>                                                   | Scale                                         |
+| <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>                     | Axis Constraint                               |
+| <kbd>L SHIFT</kbd> + <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>| Plane Constraint                              |
 
 ### General
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
+| <kbd>R</kbd>                                                   | Reset Camera                                  |
 | <kbd>,</kbd> / <kbd>.</kbd>                                    | Rotate Skydome                                |
 | <kbd>↓</kbd> / <kbd>↑</kbd>                                    | Focus Distance                                |
-| <kbd>←</kbd> / <kbd>→</kbd>                                    | F-Stop                                        |
+| <kbd>←</kbd> / <kbd>→</kbd>                                    | Aperture                                      |
 | <kbd>K</kbd> / <kbd>L</kbd>                                    | Focal Length                                  |
 | <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
 | <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
 | <kbd>H</kbd>                                                   | Toggle Settings                               |
+| <kbd>L CTRL</kbd>                                              | Screenshot                                    |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 
 ## Project Review

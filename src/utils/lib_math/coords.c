@@ -30,12 +30,12 @@ t_vec3	tangent_to_world(t_vec3 vec, t_vec3 n)
 	t_vec3		t;
 	t_vec3		b;
 
-	branchlessONB(n, &t, &b);
+	onb(n, &t, &b);
 	world = mul_tbn(vec, n, t, b);
 	return (world);
 }
 
-void	branchlessONB(t_vec3 n, t_vec3 *b1, t_vec3 *b2)
+void	onb(t_vec3 n, t_vec3 *b1, t_vec3 *b2)
 {
 	float		sign;
 	float		a;

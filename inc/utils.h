@@ -4,12 +4,14 @@
 # define _GNU_SOURCE
 
 # include "defines.h"
+# include <errno.h>
 # include <fcntl.h>
+# include <string.h>
+# include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <sys/time.h>
-# include <unistd.h>
+# include <sys/stat.h>
 
 char		*errors(t_err_code code);
 void		fatal_error(t_context *ctx, char *message, char *file, int line);
@@ -63,6 +65,6 @@ void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);
 void		init_hit(t_path *path);
 void		printf_init(t_context *ctx);
-void		screenshot(t_context *ctx);
+void	screenshot(t_context *ctx, uint8_t *pixels, uint32_t n);
 
 #endif
