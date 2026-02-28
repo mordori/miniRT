@@ -65,6 +65,7 @@ void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);
 void		init_hit(t_path *path);
 void		printf_init(t_context *ctx);
-void	screenshot(t_context *ctx, uint8_t *pixels, uint32_t n);
+void		save_render(t_context *ctx, uint8_t *pixels, uint32_t n);
+char		*timestamp(char *buf);
 
 #endif
