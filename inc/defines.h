@@ -51,6 +51,9 @@
 # define MAT_NO_REC_SHADOW		8
 # define MAT_DOUBLE_SIDED		16
 
+# define UINT_PRIME				15485863u
+# define FP_PRIME				1619u
+
 typedef enum e_obj_type			t_obj_type;
 typedef enum e_light_type		t_light_type;
 typedef enum e_cam_state		t_cam_state;
@@ -193,6 +196,12 @@ enum e_bn_channel
 	BN_PP_B,
 	BN_DD_U,
 	BN_DD_V,
+	BN_SR_U,
+	BN_FILL0,
+	BN_FILL1,
+	BN_FILL2,
+	BN_FILL3,
+	BN_PRIME
 };
 
 struct __attribute__((aligned(16))) s_transform
@@ -214,6 +223,8 @@ struct __attribute__((aligned(16))) s_hit
 {
 	t_vec3			point;
 	t_vec3			normal;
+	t_vec3			tangent;
+	t_vec3			bitangent;
 	t_vec2			uv;
 	const t_object	*obj;
 	float			t;
@@ -320,6 +331,7 @@ struct __attribute__((aligned(16))) s_light
 	t_vec3			color;
 	t_object		*obj;
 	t_vec3			emission;
+	float			idx;
 	float			radius;
 	float			intensity;
 	float			max_radiance;

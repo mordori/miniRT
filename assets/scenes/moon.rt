@@ -5,33 +5,34 @@ render	128		32
 # Ambient
 A		0.7		220,220,230
 
-# Camera
-C		0,0,0			-1,0,0			70				0.2
-
-# Light
-L		0,0,-20				0.9			255,250,240		0.5			2
-
-# Sphere
-sp			0,0,5				4.0				0
-sp			-2.5,-1,2			1.0				1
-
-
 # Skydome
 sky		stars.png
-# sky		sky.png
+
+# Camera
+C		0,0,15			0,0,-1			100				1.2
+
+# Light
+#		pos						intensity	color			radius		mat_id
+L		705000,485000,520000	1.0			255,255,255		30000.0		0
+
+# Material
+# new format:
+# mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[bump_map]	[bump_str]	[pattern]	[pat_scale]	[albedo2]
+
+# Emissive
+mat		0		255,255,255		0.0			0.0			1.0		1.0				1000.0				255,255,255			0
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		earth_albedo	_	1.0
+mat		2		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		moon_albedo		_		1.0
+
+
+# Sphere
+sp			0,0,5				4.0				1
+sp			-5.5,2,2			1.0				2
+
 
 # Textures
 tex		earth_albedo	earth_daymap.png
 tex		earth_normal	earth_normal.png
 tex		moon_albedo		moon_color.png
 tex		moon_normal		moon_normal.png
-
-# Material
-# mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[normal_map]	[bump_str]	[pattern]	[pat_scale]	[albedo2]
-# mat		0		170,170,0		0.0			0.95		1.45	0.0				0.0					0,0,0				1		_
-mat		0		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		earth_albedo	earth_normal	2.0
-mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		moon_albedo		moon_normal		1.0
-
-# Material - emissive
-mat		2		255,255,255		0.0			0.0			1.0		1.0				18000.0				255,255,255			0
-

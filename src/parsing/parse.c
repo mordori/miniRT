@@ -101,5 +101,5 @@ void	print_error(t_context *ctx, t_error err, int line_num)
 	[E_TOO_MANY] = "Too many textures or materials"};
 
 	if (err > E_OK && err <= E_TOO_MANY)
-		fatal_error(ctx, msgs[err], NULL, line_num);
+		fatal_error(ctx, msgs[err], ctx->file, line_num);
 }

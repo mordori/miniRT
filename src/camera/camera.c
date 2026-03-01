@@ -22,6 +22,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	fov = degrees_to_rad(fov);
 	fov = clampf(fov, degrees_to_rad(0.1f), degrees_to_rad(179.9f));
 	cam->focal_len_mm = SENSOR_HALF_HEIGHT_MM / tanf(fov * 0.5f);
+	cam->focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 14.0f, 800.0f);
 	cam->focus_dist = 3.5f;
 	cam->f_stop = 5.6f;
 	cam->shutter_speed = 1.0f / 100.0f;
@@ -37,7 +38,9 @@ t_vec3	sample_defocus_disk(const t_context *ctx, t_pixel *pixel)
 	t_vec3		u;
 	t_vec3		v;
 
-	uv = vec2(blue_noise(&ctx->tex_bn, pixel, BN_DD_U), blue_noise(&ctx->tex_bn, pixel, BN_DD_V));
+	uv = r2_sequence(pixel->frame, vec2(\
+blue_noise(&ctx->tex_bn, pixel, BN_DD_U), \
+blue_noise(&ctx->tex_bn, pixel, BN_DD_V)));
 	disk = sample_disk(uv);
 	u = vec3_scale(ctx->renderer.cam.defocus_disk_u, disk.x);
 	v = vec3_scale(ctx->renderer.cam.defocus_disk_v, disk.y);

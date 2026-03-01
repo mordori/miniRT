@@ -36,6 +36,7 @@ void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 	l->obj = (t_object *)vector_getlast(&ctx->scene.geo.objs);
 	l->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	vector_try_add(ctx, &ctx->scene.env.lights, l);
+	l->idx = ctx->scene.env.lights.total;
 }
 
 static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
@@ -51,6 +52,7 @@ static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 	light->intensity = 4000000000000.0f;
 	light->max_radiance = 2.0f;
 	light->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
+	light->idx = 0;
 	// light->angle = 0.53f;
 	// light->pos = vec3_normalize(light->pos);
 	// light->cos_theta_max = cosf(light->angle * (M_PI / 180.0f) * 0.5f);

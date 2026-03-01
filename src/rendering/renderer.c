@@ -100,6 +100,7 @@ static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
 	const t_renderer	*r;
 	uint32_t			seed;
 	t_vec3				color;
+	t_vec2				aa;
 
 	r = &ctx->renderer;
 	seed = hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
@@ -109,8 +110,11 @@ static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
 	pixel->frame = r->frame;
 	if (r->mode == RENDERED)
 	{
-		pixel->u = (float)pixel->x + blue_noise(&ctx->tex_bn, pixel, BN_PX_U);
-		pixel->v = (float)pixel->y + blue_noise(&ctx->tex_bn, pixel, BN_PX_V);
+		aa = r2_sequence(r->frame, vec2(\
+static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U), \
+static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
+		pixel->u = (float)pixel->x + aa.u;
+		pixel->v = (float)pixel->y + aa.v;
 	}
 	else
 	{

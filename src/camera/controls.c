@@ -23,9 +23,7 @@ bool	control_camera(t_context *ctx)
 	set_cam_state(ctx, &original_pos, &previous_pos);
 	if (cam->state == CAM_DEFAULT)
 		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
-	if (camera_movement(ctx))
-		dirty = true;
-	else if (cam->state == CAM_DEFAULT)
+	if (cam->state == CAM_DEFAULT)
 		return (false);
 	mlx_get_mouse_pos(ctx->mlx, &pos.x, &pos.y);
 	if (cam->state != CAM_PAN)

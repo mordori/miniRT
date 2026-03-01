@@ -1,21 +1,22 @@
 #include "utils.h"
 
-// void	random_uv(const t_context *ctx, t_path *path, t_pixel *pixel, t_bn_channel c)
-// {
-// 	if (path->bounce == 0)
-// 		path->uv = vec2(blue_noise(&ctx->tex_bn, pixel, c), blue_noise(&ctx->tex_bn, pixel, c + 1));
-// 	else
-// 		path->uv = vec2(randomf01(pixel->seed), randomf01(pixel->seed));
-// }
-
 void	random_uv(const t_context *ctx, t_path *path, t_pixel *pixel, t_bn_channel c)
 {
-	t_vec2	offset;
+	t_vec2		offset;
+	uint32_t	dim_u;
+	uint32_t	dim_v;
 
-	offset = vec2(blue_noise(&ctx->tex_bn, pixel, c),
-			blue_noise(&ctx->tex_bn, pixel, c + 1));
+	dim_u = c + (path->bounce * BN_PRIME);
+	dim_v = c + 1 + (path->bounce * BN_PRIME);
 	if (path->bounce == 0)
-		path->uv = offset;
+	{
+		path->uv = vec2(blue_noise(&ctx->tex_bn, pixel, dim_u),
+			blue_noise(&ctx->tex_bn, pixel, dim_v));
+	}
 	else
-		path->uv = r2_sequence(path->bounce, offset);
+	{
+		offset = vec2(static_blue_noise(&ctx->tex_bn, pixel, dim_u),
+			static_blue_noise(&ctx->tex_bn, pixel, dim_v));
+		path->uv = r2_sequence(pixel->frame + (path->bounce * FP_PRIME), offset);
+	}
 }

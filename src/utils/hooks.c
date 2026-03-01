@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "rendering.h"
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
@@ -46,7 +47,18 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
+	{
+		t_renderer		*r;
+
+		r = &ctx->renderer;
+		pthread_mutex_lock(&r->mutex);
+		while (r->threads_running)
+			pthread_cond_wait(&r->cond, &r->mutex);
+		blit(ctx, r);
+		r->blit_time = time_now();
+		pthread_mutex_unlock(&r->mutex);
 		save_render(ctx, ctx->img->pixels, ctx->renderer.pixels);
+	}
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
 }

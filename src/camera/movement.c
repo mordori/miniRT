@@ -11,8 +11,6 @@ bool	camera_movement(t_context *ctx)
 	t_vec3		move;
 
 	cam = &ctx->scene.cam;
-	if (cam->state != CAM_DEFAULT)
-		return (false);
 	if (reset_camera(ctx))
 		return (true);
 	input = get_key_input(ctx->mlx);
