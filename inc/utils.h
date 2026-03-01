@@ -67,5 +67,6 @@ void		init_hit(t_path *path);
 void		printf_init(t_context *ctx);
 void		save_render(t_context *ctx, uint8_t *pixels, uint32_t n);
 char		*timestamp(char *buf);
+float		static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
 
 #endif

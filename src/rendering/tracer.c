@@ -103,10 +103,17 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_ren
 {
 	const t_light	*light;
 	size_t			i;
+	uint32_t		li_dim;
+	float			li_rand;
 
 	if (mode == PREVIEW)
 	{
-		i = (uint32_t)(blue_noise(&ctx->tex_bn, pixel, BN_LI) * ctx->scene.env.lights.total);
+		li_dim = BN_LI + (path->bounce * BN_PRIME);
+		if (path->bounce == 0)
+			li_rand = blue_noise(&ctx->tex_bn, pixel, li_dim);
+		else
+			li_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), static_blue_noise(&ctx->tex_bn, pixel, li_dim));
+		i = (uint32_t)(li_rand * ctx->scene.env.lights.total);
 		if (i >= ctx->scene.env.lights.total)
 			i = ctx->scene.env.lights.total - 1;
 		light = ((t_light **)ctx->scene.env.lights.items)[i];
@@ -124,28 +131,11 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_ren
 	}
 }
 
-// static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
-// {
-// 	t_vec3		f;
-// 	float		p;
-
-// 	random_uv(ctx, path, pixel, BN_SC_U);
-// 	f = vec3_schlick(path->f0, path->ndotv);
-// 	p = fmaxf(fmaxf(f.r, f.g), f.b);
-// 	path->p_spec = clampf(p, 0.1f, 0.9f);
-// 	if (path->mat->metallic >= 0.9f)
-// 		path->p_spec = 1.0f;
-// 	path->sample_spec = fminf(randomf01(pixel->seed), 1.0f) < path->p_spec;
-// 	if (!sample_bsdf(path))
-// 		return (false);
-// 	path->ray = new_ray(vec3_bias(path->hit.point, path->n), path->l);
-// 	return (russian_roulette(path, pixel));
-// }
-
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
 	t_vec3		f;
 	float		p;
+	uint32_t	spec_dim;
 	float		spec_rand;
 
 	random_uv(ctx, path, pixel, BN_SC_U);
@@ -154,7 +144,11 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	path->p_spec = clampf(p, 0.1f, 0.9f);
 	if (path->mat->metallic >= 0.9f)
 		path->p_spec = 1.0f;
-	spec_rand = r1_sequence(path->bounce, blue_noise(&ctx->tex_bn, pixel, BN_PP_R));
+	spec_dim = BN_SR_U + (path->bounce * BN_PRIME);
+	if (path->bounce == 0)
+		spec_rand = blue_noise(&ctx->tex_bn, pixel, spec_dim);
+	else
+		spec_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), static_blue_noise(&ctx->tex_bn, pixel, spec_dim));
 	path->sample_spec = spec_rand < path->p_spec;
 	if (!sample_bsdf(path))
 		return (false);

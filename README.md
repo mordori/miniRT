@@ -1,6 +1,6 @@
 # miniRT
 ## Introduction
-**High-Performance CPU Path Tracer with Monte Carlo Integration.**
+**High-Performance CPU Path Tracer with Quasi-Monte Carlo Integration.**
 
 <p align="center">
 	<img src="doc/ball.gif" alt="Demo" />
@@ -30,7 +30,7 @@
 </p>
 
 ## Features
-- Monte Carlo integration with multiple importance sampling for Global Illumination
+- Quasi-Monte Carlo integration with multiple importance sampling for Global Illumination
 - BVH acceleration structure for rapid intersection testing
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
@@ -98,7 +98,7 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 - Branchless arithmetic to minimise CPU stalls in performance-critical loops.
 - Strategically segregated write-heavy synchronization primitives from read-only render data to eliminate false sharing and cache line invalidation.
 
-## Monte Carlo Integration
+## Quasi-Monte Carlo Integration
 - Documentation under construction
 
 ## How to use
@@ -141,6 +141,8 @@ As the project is still under construction, we recommend to run the program with
 > Find the desired angle for the shot first with lower amount of samples. Then increment the amount of samples for better image quality.
 >
 > Setting the samples amount to be less than the current frame pauses the rendering. To continue, raise the samples to the previous amount.
+>
+> Pressing <kbd>Y</kbd> saves the currently rendered image with PPM format in `📁renders/`.
 
 ## Controls
 ### Render Mode
@@ -148,7 +150,7 @@ As the project is still under construction, we recommend to run the program with
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Rotate                                        |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
-| <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                          | Descend / Ascend                              |
+| <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -158,9 +160,9 @@ As the project is still under construction, we recommend to run the program with
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>F</kbd>                                                   | Frame Selected                                |
-| <kbd>ALT</kbd> + <kbd>LMB</kbd>                              | Orbit                                         |
-| <kbd>ALT</kbd> + <kbd>LMB</kbd>                              | Zoom                                          |
-| <kbd>ALT</kbd> + <kbd>LMB</kbd>                              | Pan                                           |
+| <kbd>ALT</kbd> + <kbd>LMB</kbd>                                | Orbit                                         |
+| <kbd>ALT</kbd> + <kbd>LMB</kbd>                                | Zoom                                          |
+| <kbd>ALT</kbd> + <kbd>LMB</kbd>                                | Pan                                           |
 
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Editing          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
@@ -169,7 +171,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>E</kbd>                                                   | Rotate                                        |
 | <kbd>R</kbd>                                                   | Scale                                         |
 | <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>                     | Axis Constraint                               |
-| <kbd>SHIFT</kbd> + <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>| Plane Constraint                              |
+| <kbd>SHIFT</kbd> + <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>  | Plane Constraint                              |
 
 ### General
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |

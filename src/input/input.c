@@ -10,6 +10,8 @@ void	process_input(t_context *ctx, bool *update)
 	dirty = false;
 	if (control_camera(ctx))
 		dirty = true;
+	if (camera_movement(ctx))
+		dirty = true;
 	if (rotate_skydome(ctx))
 		dirty = true;
 	if (is_key_down(ctx))

@@ -30,7 +30,7 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	float		weight;
 	t_hit		dummy_hit;
 
-	random_uv(ctx, path, pixel, BN_CO_U);
+	random_uv(ctx, path, pixel, BN_CO_U + (light->idx * 2u));
 	hit_biased = vec3_bias(path->hit.point, path->n);
 	hit_to_light_center = vec3_sub(light->pos, hit_biased);
 	path->l = sample_light(hit_to_light_center, light->radius_sq, path->uv, &path->pdf);
@@ -59,7 +59,7 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 // 	float		weight;
 // 	t_hit		dummy_hit;
 
-// 	random_uv(ctx, path, pixel, BN_CO_U);
+// 	random_uv(ctx, path, pixel, BN_CO_U + (light->idx * 2u));
 // 	hit_biased = vec3_bias(path->hit.point, path->n);
 // 	path->l = sample_cone(light->pos, light->cos_theta_max, path->uv);
 // 	set_shader_data(path);
