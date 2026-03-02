@@ -1,6 +1,16 @@
 #include "parsing.h"
 #include "libft.h"
 
+bool	bump_strength(t_material *mat, char **tkns)
+{
+	if (is_placeholder(tkns[12]))
+		return (true);
+	if (!parse_float(tkns[12], &mat->bump_strength)
+		|| !validate_range(mat->bump_strength, 0.0f, 4.0f))
+		return (false);
+	return (true);
+}
+
 t_error parse_mat_pattern(t_material *mat, char **tkns, int tc)
 {
 	if  (tc < 16)
