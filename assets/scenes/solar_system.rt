@@ -1,0 +1,82 @@
+# Solar System Scene
+# Proportional Scale System:
+# - Earth Radius = 1.0 unit. All planet sizes are exactly to scale relative to Earth.
+# - Distances: Compacted. Not proportional. Planets are placed much closer together so they can all be seen at once.
+
+render	256		64
+
+# Ambient Light
+A		0.05	255,255,255
+
+# Cameras
+# Cinematic view near Earth looking roughly towards Jupiter and Outer Planets
+C		140,20,-150			0,0,1			100				0.1
+# Overview from afar (uncomment to see the whole system layout)
+# C		150, 80, -250		0, -0.2, 1			80				0.0
+
+# Central Light Point matching the Sun
+L		150,300,0				1.0			255,250,240		109.0		0
+L		150,-300,0				1.0			255,250,240		109.0		0
+
+# Background
+sky		solar/2k_stars_milky_way.png
+
+# Textures
+tex		sun_alb			solar/2k_sun.png
+tex		mercury_alb		solar/2k_mercury.png
+tex		venus_alb		solar/2k_venus_atmosphere.png
+tex		earth_alb		earth_daymap.png
+tex		moon_alb		solar/2k_moon.png
+tex		mars_alb		solar/2k_mars.png
+tex		jupiter_alb		solar/2k_jupiter.png
+tex		saturn_alb		solar/2k_saturn.png
+tex		uranus_alb		solar/2k_uranus.png
+tex		neptune_alb		solar/2k_neptune.png
+
+# Materials
+# mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[normal_map]	[bump_str]
+# Light
+mat		0		255,255,255		0.0			0.0			1.0		0.0				50000.0				255,250,230			2		_			_
+
+# Planets
+mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		mercury_alb		_			_
+mat		2		255,255,255		0.0			0.80		1.45	0.0				0.0					0,0,0				0		venus_alb		_			_
+mat		3		255,255,255		0.0			0.70		1.45	0.0				0.0					0,0,0				0		earth_alb		_			_
+mat		4		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		moon_alb		_			_
+mat		5		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		mars_alb		_			_
+mat		6		255,255,255		0.0			0.50		1.45	0.0				0.0					0,0,0				0		jupiter_alb		_			_
+mat		7		255,255,255		0.0			0.50		1.45	0.0				0.0					0,0,0				0		saturn_alb		_			_
+mat		8		255,255,255		0.0			0.40		1.45	0.0				0.0					0,0,0				0		uranus_alb		_			_
+mat		9		255,255,255		0.0			0.40		1.45	0.0				0.0					0,0,0				0		neptune_alb		_			_
+mat		10		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		sun_alb			_			_
+
+# Geometry Objects
+# Sun: True relative size (Radius 109 -> Diameter 218)
+sp		0,0,0			218.0			10
+
+# Mercury: Compacted distance. Radius 0.38 -> Diameter 0.76
+sp		130,0,0			0.76			1
+
+# Venus: Compacted distance. Radius 0.95 -> Diameter 1.9
+sp		140,0,0			1.9				2
+
+# Earth: Compacted distance. Radius 1.0 -> Diameter 2.0
+sp		150,0,0			2.0				3
+
+# Moon: Compacted distance + close to Earth. Radius 0.27 -> Diameter 0.54
+sp		153,0,0			0.54			4
+
+# Mars: Compacted distance. Radius 0.53 -> Diameter 1.06
+sp		160,0,0			1.06			5
+
+# Jupiter: Compacted distance. Radius 11.2 -> Diameter 22.4
+sp		190,0,0			22.4			6
+
+# Saturn: Compacted distance. Radius 9.4 -> Diameter 18.8
+sp		240,0,0			18.8			7
+
+# Uranus: Compacted distance. Radius 4.0 -> Diameter 8.0
+sp		270,0,0			8.0				8
+
+# Neptune: Compacted distance. Radius 3.8 -> Diameter 7.6
+sp		290,0,0			7.6				9

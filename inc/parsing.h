@@ -87,6 +87,7 @@ t_material		*get_material_by_id(t_parser *p, uint32_t id);
 void			try_pass(t_context *ctx, t_parser *p, char **lines, int pass);
 t_error			dispatch_pass(t_context *ctx, t_parser *p, char **tokens,
 					int pass);
+bool			bump_strength(t_material *mat, char **tkns);
 bool			parse_pattern_token(const char *tkn, t_pattern *out);
 t_error 		parse_mat_pattern(t_material *mat, char **tkns, int tc);
 
