@@ -4,7 +4,7 @@ render			256			64
 
 # Ambient
 #		intensity		color
-A		0.2				128,128,128
+A		0.4				0,0,255		255,0,0
 
 # Material
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags
@@ -17,20 +17,20 @@ mat		4		170,170,170		0.0			0.0			1.0		1.0				200.0				25,127,255			2			_
 mat		5		170,170,170		0.0			0.0			1.0		1.0				600.0				255,13,13			2			_
 
 # Camera
-#		pos				dir				fov				exposure
-C		0,0,0 			0,0,1			70				1.0
+#		pos			dir			fov			exposure	focus_dist
+C		0,0,-1		0,0,1		30			1.0			2.8
 
 # Light
 #		pos					intensity	color			radius		mat_id
 L		0.0,0.4,0.8			0.9			25,127,255		0.1			4
-L		0.0,0.2,5.0			0.5			255,13,13		0.5			5
+L		0.0,0.15,5.0		0.5			255,13,13		0.5			5
 
 # Sphere
 #			pos					radius			mat_id
-sp			0,-50.4,1			100				0
-sp			0.7,-0.1,1.5		0.6				1
-sp			0,0,2				0.8				3
-sp			-0.7,-0.1,1.5		0.6				2
+sp			0,-50.3,1.5			100				0
+sp			0,0.0,2				0.6				3
+sp			0.7,0.0,1.5			0.6				1
+sp			-0.7,0.0,1.5		0.6				2
 
 
 

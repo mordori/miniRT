@@ -17,8 +17,6 @@ bool	control_camera(t_context *ctx)
 	t_vec2i			pos;
 	t_camera		*cam;
 
-	bool			dirty = false;
-
 	cam = &ctx->scene.cam;
 	set_cam_state(ctx, &original_pos, &previous_pos);
 	if (cam->state == CAM_DEFAULT)
@@ -30,11 +28,8 @@ bool	control_camera(t_context *ctx)
 		logical_mouse = vec2i(wrap_mouse_x(ctx, &pos), wrap_mouse_y(ctx, &pos));
 	pos = vec2i_add(pos, logical_mouse);
 	if (cam->state == CAM_ORBIT)
-	{
-		if (orbit(ctx, pos, &previous_pos, original_pos))
-			dirty = true;
-	}
-	return (dirty);
+		return (orbit(ctx, pos, &previous_pos, original_pos));
+	return (false);
 }
 
 static inline void	set_cam_state(t_context *ctx, t_vec2i *original_pos,
@@ -74,7 +69,7 @@ static inline bool	orbit(t_context *ctx, t_vec2i pos, t_vec2i *previous_pos,
 			delta = vec2i_sub(pos, *previous_pos);
 			if (delta.x || delta.y)
 			{
-				speed = ctx->mlx->delta_time * 60.0f * SENS_ORBIT;
+				speed = ctx->mlx->delta_time * 60.0f * SENS_ORBIT * 14.0f / ctx->renderer.cam.focal_len_mm;
 				ctx->scene.cam.yaw += delta.x * speed;
 				ctx->scene.cam.pitch -= delta.y * speed;
 			}

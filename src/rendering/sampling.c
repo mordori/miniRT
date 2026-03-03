@@ -17,10 +17,24 @@ t_vec3	sample_cos_hemisphere(t_vec3 n, t_vec2 uv)
 t_vec3	sample_disk(t_vec2 uv)
 {
 	t_vec2		phi;
+	float		u;
+	float		v;
 	float		r;
 
-	r = sqrtf(uv.u);
-	sincosf(M_TAU * uv.v, &phi.sin, &phi.cos);
+	u = 2.0f * uv.u - 1.0f;
+	v = 2.0f * uv.v - 1.0f;
+	if (u == 0.0f && v == 0.0f)
+		return (vec3_n(0.0f));
+	if (u * u > v * v)
+	{
+		r = u;
+		sincosf(M_PI_4 * (v / u), &phi.sin, &phi.cos);
+	}
+	else
+	{
+		r = v;
+		sincosf(M_PI_2 - M_PI_4 * (u / v), &phi.sin, &phi.cos);
+	}
 	return (vec3(r * phi.cos, r * phi.sin, 0.0f));
 }
 

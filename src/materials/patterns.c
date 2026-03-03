@@ -91,8 +91,7 @@ static t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 	if (scale < 0.001f)
 		scale = 1.0f;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
-	if (((int)floorf(p.x * scale) + (int)floorf(p.y * scale) + (int)floorf(p.z * scale)) & 1)
-	// if (((int)(p.x * scale) + (int)(p.y * scale) + (int)(p.z * scale)) & 1)
+	if (((int)(p.x * scale) + (int)(p.y * scale) + (int)(p.z * scale)) & 1)
 		return (mat->albedo2);
 	return (mat->albedo);
 }

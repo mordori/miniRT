@@ -20,8 +20,9 @@ void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 	l->max_radiance = MAX_RADIANCE;
 	obj = (t_object){0};
 	obj.type = OBJ_SPHERE;
-	l->intensity = 20.0f;
+	// l->intensity = 20.0f;
 	l->radius_sq = l->radius * l->radius;
+	l->intensity = l->intensity * vec3_length(l->emission) * l->radius;
 	obj.transform.pos = l->pos;
 	obj.shape.sphere.center = obj.transform.pos;
 	obj.shape.sphere.radius = l->radius;
