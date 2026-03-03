@@ -1,23 +1,25 @@
-# Material 0: The Brick Heart
-mat	0	255,0,0	0.0	0.7	1.5	0.0	0.0	0,0,0	0	_	_	_	brick	3.0	150,150,150
-
 # Material 1: The Light
-mat	1	255,255,255	0.0	0.0	1.0	0.0	800.0	255,250,240	0
+mat		0		255,255,255		0.0			0.0			1.0		1.0				1000.0				255,255,255			0
+# Material 0: The Brick Heart
+mat	1	255,0,0	0.0	0.7	1.5	0.0	0.0	0,0,0	0	_	_	_	brick	3.0	150,150,150
+
 
 sky sky.png
 
 A	0.4	255,255,255
 
-C	0,4,10	0,0,-1	70	1.0
+C	0,4,10	0,0,-1	70	1.2	8
 
-L	4,8,0	0.0	255,250,240	0.3	1
+# Light
+#		pos						intensity	color			radius		mat_id
+L		705000,485000,520000	1.0			255,255,255		30000.0		0
 
 # Left half is drifting away...
-sp	-1.5,4.3,1.0	2	0
+sp	-1.5,4.3,1.0	2	1
 # Right half
-sp	1.0,4.0,1.0		2	0
+sp	1.0,4.0,1.0		2	1
 # Bottom part
-co	0.0,1.0,0.5	0,1,0	35	3.0 0
+co	0.0,1.0,0.5	0,1,0	35	3.0 1
 
 # Render settings
 render	64		32

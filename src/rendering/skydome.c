@@ -2,22 +2,24 @@
 #include "materials.h"
 #include "utils.h"
 
-t_vec3	background_color(const t_texture *tex, const t_ray *ray, t_vec2 uv_offset)
+static inline t_vec3	background_gradient(const t_scene *scene,const float t);
+
+t_vec3	background_color(const t_scene *scene, const t_ray *ray, t_vec2 uv_offset)
 {
 	t_vec2		uv;
 
-	if (!tex->pixels)
-		return (background_gradient((ray->dir.y + 1.0f) * 0.5f));
+	if (!scene->env.skydome.pixels)
+		return (background_gradient(scene, (ray->dir.y + 1.0f) * 0.5f));
 	uv = spherical_uv(ray->dir);
 	uv = vec2_add(uv, uv_offset);
-	return (sample_texture(tex, uv));
+	return (sample_texture(&scene->env.skydome, uv));
 }
 
-t_vec3	background_gradient(const float t)
+static inline t_vec3	background_gradient(const t_scene *scene,const float t)
 {
 	t_vec3		res;
 
-	res = lerp_color(RED, BLUE, t);
+	res = vec3_lerp(scene->env.amb_color_2, scene->env.amb_light.color, t);
 	return (res);
 }
 

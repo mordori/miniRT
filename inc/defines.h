@@ -25,7 +25,7 @@
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_ORBIT				0.001f
+# define SENS_ORBIT				0.0009f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
 # define SENS_MOVE				0.5f
@@ -186,22 +186,20 @@ enum e_bn_channel
 {
 	BN_PX_U,
 	BN_PX_V,
+	BN_DD_U,
+	BN_DD_V,
+
 	BN_SC_U,
 	BN_SC_V,
-	BN_CO_U,
-	BN_CO_V,
+	BN_SR_U,
 	BN_LI,
+
 	BN_PP_R,
 	BN_PP_G,
 	BN_PP_B,
-	BN_DD_U,
-	BN_DD_V,
-	BN_SR_U,
-	BN_FILL0,
-	BN_FILL1,
-	BN_FILL2,
-	BN_FILL3,
-	BN_PRIME
+	BN_PP_PAD,
+
+	BN_CO_U
 };
 
 struct __attribute__((aligned(16))) s_transform
@@ -366,8 +364,9 @@ struct __attribute__((aligned(16))) s_camera
 	t_vec2			skydome_uv_offset;
 	float			init_pitch;
 	float			init_yaw;
+	float			init_focal_len_mm;
+	float			init_focus_dist;
 	float			aspect;
-	float			focal_len;
 	float			focal_len_mm;
 	float			f_stop;
 	float			pitch;
@@ -393,7 +392,7 @@ struct __attribute__((aligned(16))) s_path
 	t_vec3			h;
 	t_vec2			uv;
 	t_material		*mat;
-	int32_t			bounce;
+	uint32_t		bounce;
 	float			ndotl;
 	float			ndotv;
 	float			ndoth;
@@ -425,6 +424,7 @@ struct s_env
 	t_light			dir_light;
 	t_light			amb_light;
 	t_texture		skydome;
+	t_vec3			amb_color_2;
 	bool			has_dir_light;
 };
 
@@ -529,6 +529,7 @@ struct __attribute__((aligned(64))) s_context
 	t_image			*img;
 	char			*file;
 	uint32_t		resize_time;
+	uint8_t			bn_stride;
 	int				fd;
 	bool			hide_stats;
 };

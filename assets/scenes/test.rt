@@ -11,15 +11,14 @@ A		0.4				140,185,255
 sky		sky.png
 
 # Camera
-#		pos			dir			fov			exposure
-C		0,0,0 		0,0,1		27			1.2
+#		pos			dir			fov			exposure	focus_dist
+C		0,0,0 		0,0,1		27			1.2			3.5
 
 # Light
 #		pos						intensity	color			radius		mat_id
 L		705000,485000,520000	1.0			255,255,255		30000.0		0
 
 # Material
-# new format:
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[bump_map]	[bump_str]	[pattern]	[pat_scale]		[albedo2]
 
 # Emissive
@@ -37,4 +36,4 @@ mat		5		0,0,0			0.0			0.0			1.4		1.0				0.0					255,255,255			0
 #		pos				radius		mat_id
 sp		0,-50.4,3.5		100			2
 sp		0.0,-0.0,3.5	0.8			3
-sp		1.0,-0.0,10.5	0.8			5
+# sp		1.0,-0.0,10.5	0.8			1

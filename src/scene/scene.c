@@ -25,6 +25,7 @@ void	init_scene(t_context *ctx)
 	// 	ctx->scene.cam.directional_light.obj->mat->emission = ctx->scene.cam.directional_light.emission;
 	// ctx->scene.env.amb_light.intensity *= 40000.0f;
 	printf_init(ctx);
+	ctx->bn_stride = (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
 	close(ctx->fd);
 	ctx->fd = ERROR;
 	init_bvh(ctx);

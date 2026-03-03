@@ -13,20 +13,23 @@ static inline bool	russian_roulette(t_path *path, t_pixel *pixel);
 
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint8_t bounces)
 {
-	const t_viewport	*vp;
-	const t_renderer	*r;
+	const t_renderer	*r = &ctx->renderer;
+	const t_viewport	*vp = &r->cam.viewport;
 	t_path				path;
 	t_vec3				pixel_loc;
+	t_vec3				pixel_dir;
 	t_vec3				ray_orig;
+	t_vec3				focus_point;
+	float				dist;
 
-	r = &ctx->renderer;
-	vp = &r->cam.viewport;
+	path = (t_path){0};
 	pixel_loc = vec3_add(vec3_scale(vp->d_u, pixel->u), vec3_scale(vp->d_v, pixel->v));
 	pixel_loc = vec3_add(vp->pixel_00_loc, pixel_loc);
-	path = (t_path){0};
-	ray_orig = r->cam.transform.pos;
+	pixel_dir = vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos));
+	dist = r->cam.focus_dist / vec3_dot(pixel_dir, r->cam.forward);
+	focus_point = vec3_add(r->cam.transform.pos, vec3_scale(pixel_dir, dist));
 	ray_orig = sample_defocus_disk(ctx, pixel);
-	path.ray = new_ray(ray_orig, vec3_normalize(vec3_sub(pixel_loc, ray_orig)));
+	path.ray = new_ray(ray_orig, vec3_normalize(vec3_sub(focus_point, ray_orig)));
 	path.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
 	while (path.bounce < bounces)
 	{
@@ -87,7 +90,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 			nee(ctx, path, pixel, mode);
 		return (scatter(ctx, path, pixel));
 	}
-	bg_color = background_color(&ctx->scene.env.skydome, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	// bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	// if (ctx->scene.env.has_dir_light)
 	// {
@@ -108,7 +111,7 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_ren
 
 	if (mode == PREVIEW)
 	{
-		li_dim = BN_LI + (path->bounce * BN_PRIME);
+		li_dim = BN_LI + (path->bounce * ctx->bn_stride);
 		if (path->bounce == 0)
 			li_rand = blue_noise(&ctx->tex_bn, pixel, li_dim);
 		else
@@ -138,18 +141,18 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	uint32_t	spec_dim;
 	float		spec_rand;
 
-	random_uv(ctx, path, pixel, BN_SC_U);
 	f = vec3_schlick(path->f0, path->ndotv);
 	p = fmaxf(fmaxf(f.r, f.g), f.b);
 	path->p_spec = clampf(p, 0.1f, 0.9f);
 	if (path->mat->metallic >= 0.9f)
 		path->p_spec = 1.0f;
-	spec_dim = BN_SR_U + (path->bounce * BN_PRIME);
+	spec_dim = BN_SR_U + (path->bounce * ctx->bn_stride);
 	if (path->bounce == 0)
 		spec_rand = blue_noise(&ctx->tex_bn, pixel, spec_dim);
 	else
 		spec_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), static_blue_noise(&ctx->tex_bn, pixel, spec_dim));
 	path->sample_spec = spec_rand < path->p_spec;
+	random_uv(ctx, path, pixel, BN_SC_U);
 	if (!sample_bsdf(path))
 		return (false);
 	path->ray = new_ray(vec3_bias(path->hit.point, path->n), path->l);

@@ -14,7 +14,13 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	float	ratio;
 	t_vec3	color;
 
-	if (count_tokens(tokens) != 3)
+	if (count_tokens(tokens) == 4)
+	{
+		if (!parse_color(tokens[3], &color))
+			return (E_INVALID_NUM);
+		ctx->scene.env.amb_color_2 = color;
+	}
+	else if (count_tokens(tokens) != 3)
 		return (E_ARGS);
 	if (p->has_ambient)
 		return (E_DUPLICATE);
@@ -92,10 +98,11 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	t_vec3	orientation;
 	float	fov;
 	float	exposure;
+	float	focus_dist;
 	int		token_count;
 
 	token_count = count_tokens(tokens);
-	if (token_count < 4 || token_count > 5)
+	if (token_count != 6)
 		return (E_ARGS);
 	if (p->has_camera)
 		return (E_DUPLICATE);
@@ -110,11 +117,14 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	if (!validate_range(fov, 0.0f, 180.0f))
 		return (E_RANGE);
 	exposure = 0.0f;
-	if (token_count == 5 && !parse_float(tokens[4], &exposure))
+	if (!parse_float(tokens[4], &exposure))
 		return (E_INVALID_NUM);
 	if (!validate_range(exposure, 0.01f, 10.0f))
 		return (E_RANGE);
+	if (!parse_float(tokens[5], &focus_dist))
+		return (E_INVALID_NUM);
 	ctx->scene.cam.exposure = exposure;
+	ctx->scene.cam.focus_dist = focus_dist;
 	init_camera(ctx, position, orientation, fov);
 	p->has_camera = true;
 	return (E_OK);

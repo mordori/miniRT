@@ -14,10 +14,11 @@ tex		moon_normal		moon_normal.png
 
 
 # Camera (position, look direction, FOV, exposure)
-C		0,0.01,0.7			0,0,1			80				0.1
+C		0,0.01,0.7		0,0,1		80			1.2		3.3
 
-# Light (pos, intensity, color, radius, mat_id)
-L		0,5,8				0.8			255,255,255		0.5			0
+# Light
+#		pos						intensity	color			radius		mat_id
+L		705000,485000,520000	1.0			255,255,255		30000.0		0
 
 # Plane
 pl			0,-3,0				0,1,0			3
@@ -42,7 +43,7 @@ co			-4,0,8		0,-1,0	30	3.0	4
 
 # Material - emissive (required for light)
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[normal_map]	[bump_str]	[pattern]	[pat_scale]	[albedo2]
-mat		0		255,255,255		0.0			0.0			1.0		1.0				5000.0				255,255,255			1		_
+mat		0		255,255,255		0.0			0.0			1.0		1.0				1000.0				255,255,255			0
 
 # materials with textures
 mat		1		245,245,255		0.0			0.05		1.0	    0.0				0.0					0,0,0				0		_				_

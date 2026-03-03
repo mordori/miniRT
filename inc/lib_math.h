@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/28 05:49:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/02 21:54:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,13 @@
 # define B_EPSILON			1e-4f
 # define G_EPSILON			1e-5f
 
-# define GOLDEN_RATIO		0.61803398875f
+# define GOLDEN_RATIO		0.6180339887498948f
 # define PLASTIC_CONSTANT	0.7548776662466927f
 # define PLASTIC_CONSTANT2	0.5698402909980532f
+
+# define ONE_MINUS_GR		0.3819660112501052f
+# define ONE_MINUS_PC		0.2451223337533073f
+# define ONE_MINUS_PC2		0.4301597090019468f
 
 typedef struct s_vec2i		t_vec2i;
 typedef struct s_vec2i		t_int2;

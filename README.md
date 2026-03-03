@@ -101,6 +101,9 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 ## Quasi-Monte Carlo Integration
 - Documentation under construction
 
+### RNG
+- Documentation under construction
+
 ## How to use
 > [!NOTE]
 > The default build configuration targets the Haswell microarchitecture (Intel 2013+ / AMD Ryzen).
@@ -119,11 +122,6 @@ Run the program with a .rt scene file
 ./miniRT assets/scenes/test.rt
 ```
 
-To delete all of the generated files, use
-``` Makefile
-make fclean
-```
-
 ## Scene description
 Premade scenes can be found in `📁assets/scenes/`.
 
@@ -136,13 +134,13 @@ As the project is still under construction, we recommend to run the program with
 >
 > Adjust the camera's focus distance to desired surfaces easily in edit mode when using a lower f-stop to produce a shallow depth of field.
 >
-> **Previously accumulated frames are not wasted.**
+> **Previously accumulated frames are not wasted!**
 >
-> Find the desired angle for the shot first with lower amount of samples. Then increment the amount of samples for better image quality.
+> Set the amount of samples lower with <kbd>O</kbd> and find the desired angle for the shot first. Then increment the amount with <kbd>P</kbd> for better image quality.
 >
 > Setting the samples amount to be less than the current frame pauses the rendering. To continue, raise the samples to the previous amount.
 >
-> Pressing <kbd>Y</kbd> saves the currently rendered image with PPM format in `📁renders/`.
+> Pressing <kbd>Y</kbd> saves the current render image as a PPM image into `📁renders/`.
 
 ## Controls
 ### Render Mode
@@ -215,12 +213,19 @@ Math
 - https://betterexplained.com/
 - https://www.wikipedia.org/
 
+Disk
+- https://psgraphics.blogspot.com/2011/01/improved-code-for-concentric-map.html
+
 Blue noise
 - https://momentsingraphics.de/BlueNoise.html
 
 RNG
 - https://www.reedbeta.com/blog/hash-functions-for-gpu-rendering/
 - https://old.reddit.com/r/RNG/comments/jqnq20/the_wang_and_jenkins_integer_hash_functions_just/
+
+QMC
+- https://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/
+- https://www.martysmods.com/a-better-r2-sequence/
 
 ACES
 - https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/

@@ -7,13 +7,14 @@
 static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path, const t_light *light);
 static inline t_vec3	add_light(const t_path *path, const t_light *light, float dist);
 
-void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light)
+void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light, float rough)
 {
 	t_vec3		radiance;
 
 	radiance = direct_lighting_editing(ctx, path, light);
-	// if (path->bounce > 0)
-		radiance = vec3_clamp_mag(radiance, light->max_radiance);
+	if (path->bounce > 0)
+		radiance = vec3_scale(radiance, fminf(1.0f - rough, 0.3f));
+	radiance = vec3_clamp_mag(radiance, light->max_radiance);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
 }
 

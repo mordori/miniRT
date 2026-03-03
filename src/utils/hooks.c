@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "rendering.h"
+#include "camera.h"
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
@@ -58,6 +59,11 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 		r->blit_time = time_now();
 		pthread_mutex_unlock(&r->mutex);
 		save_render(ctx, ctx->img->pixels, ctx->renderer.pixels);
+	}
+	if (keydata.key == KEY_RESET && keydata.action == MLX_RELEASE)
+	{
+		dirty = true;
+		reset_camera(ctx);
 	}
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);

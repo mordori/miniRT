@@ -49,6 +49,7 @@ float		blue_noise(const t_texture *tex, const t_pixel *pixel,
 				uint32_t dim);
 t_vec2		r2_sequence(uint32_t n, t_vec2 offset);
 float		r1_sequence(uint32_t n, float offset);
+t_vec2		r4_sequence_d12(uint32_t n, t_vec2 offset);
 t_vec3		map_spherical(float u, float v);
 t_vec2		spherical_uv(t_vec3 dir);
 uint32_t	fast_range(uint32_t n, uint32_t range);

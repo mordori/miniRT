@@ -12,8 +12,7 @@ bool	init_renderer(t_context *ctx);
 t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint8_t bounces);
 t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c);
 t_vec3	post_process_preview(const t_context *ctx, t_vec3 c);
-t_vec3	background_color(const t_texture *tex, const t_ray *ray, t_vec2 uv_offset);
-t_vec3	background_gradient(const float t);
+t_vec3	background_color(const t_scene *scene, const t_ray *ray, t_vec2 uv_offset);
 float	reflectance(float ior);
 t_vec3	disney_brdf(const t_path *path);
 void	frame_loop(void *param);
@@ -38,7 +37,7 @@ t_vec3		sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
 void		sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv);
 
 bool	trace_ray_editing(const t_context *ctx, t_path *path);
-void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light);
+void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light, float rough);
 void	ambient_lighting(t_path *path, const t_light *light);
 // void	add_directional_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
 

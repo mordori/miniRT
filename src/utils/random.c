@@ -6,8 +6,8 @@ void	random_uv(const t_context *ctx, t_path *path, t_pixel *pixel, t_bn_channel 
 	uint32_t	dim_u;
 	uint32_t	dim_v;
 
-	dim_u = c + (path->bounce * BN_PRIME);
-	dim_v = c + 1 + (path->bounce * BN_PRIME);
+	dim_u = c + (path->bounce * ctx->bn_stride);
+	dim_v = c + 1 + (path->bounce * ctx->bn_stride);
 	if (path->bounce == 0)
 	{
 		path->uv = vec2(blue_noise(&ctx->tex_bn, pixel, dim_u),
