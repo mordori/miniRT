@@ -300,6 +300,12 @@ float		randomf01(uint32_t *seed);
 float		randomfn11(uint32_t *seed);
 uint32_t	hash_lowerbias32(uint32_t seed);
 
+// Fast math approximations (cachegrind-motivated optimizations)
+// -----------------------------------------------------------------
+float		fast_atan2f(float y, float x);
+float		fast_acosf(float x);
+float		fast_srgb(float x);
+
 // Colors
 // -----------------------------------------------------------------
 t_vec3		lerp_color(uint32_t color1, uint32_t color2, float t);

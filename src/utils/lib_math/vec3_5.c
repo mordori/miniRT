@@ -25,11 +25,22 @@ t_vec3	vec3_lerp(t_vec3 a, t_vec3 b, float t)
 	return (res);
 }
 
+// t_vec3	vec3_schlick(t_vec3 f0, float u)
+// {
+// 	float		f;
+
+// 	f = powf(1.0f - u, 5.0f);
+// 	return (vec3_add(vec3_scale(f0, (1.0f - f)), vec3_n(f)));
+// }
 t_vec3	vec3_schlick(t_vec3 f0, float u)
 {
+	float		t;
+	float		t2;
 	float		f;
 
-	f = powf(1.0f - u, 5.0f);
+	t = 1.0f - u;
+	t2 = t * t;
+	f = t2 * t2 * t;
 	return (vec3_add(vec3_scale(f0, (1.0f - f)), vec3_n(f)));
 }
 

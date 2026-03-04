@@ -6,7 +6,6 @@ docs/
 renders/
 lib/MLX42/
 profiling/
-cachegrind/
 *.o
 *.d
 libft.a
