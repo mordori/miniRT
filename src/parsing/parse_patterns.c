@@ -45,5 +45,9 @@ bool	parse_pattern_token(const char *tkn, t_pattern *out)
 		return (*out = PAT_BRICK, true);
 	if (ft_strcmp(tkn, "marble") == 0)
 		return (*out = PAT_MARBLE, true);
+	if (ft_strcmp(tkn, "wood") == 0)
+		return (*out = PAT_WOOD, true);
+	if (ft_strcmp(tkn, "turb") == 0)
+		return (*out = PAT_TURBULENCE, true);
 	return (false);
 }

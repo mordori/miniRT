@@ -17,34 +17,22 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
 		return (pattern_checkerboard(hit, mat));
 	if (mat->pattern == PAT_GRADIENT)
 		return (pattern_gradient(hit, mat));
-    if (mat->pattern == PAT_STRIPES)
+	if (mat->pattern == PAT_STRIPES)
         return (pattern_stripe(hit, mat));
-    if (mat->pattern == PAT_SPIRAL)
+	if (mat->pattern == PAT_SPIRAL)
         return (pattern_spiral(hit, mat));
-    if (mat->pattern == PAT_GRID)
+	if (mat->pattern == PAT_GRID)
         return (pattern_grid(hit, mat));
-    if (mat->pattern == PAT_BRICK)
-        return (pattern_brick(hit, mat));
+	if (mat->pattern == PAT_BRICK)
+		return (pattern_brick(hit, mat));
+	if (mat->pattern == PAT_MARBLE)
+		return (pattern_perlin_marble(hit, mat));
+	if (mat->pattern == PAT_WOOD)
+		return (pattern_perlin_wood(hit, mat));
+	if (mat->pattern == PAT_TURBULENCE)
+		return (pattern_perlin_turb(hit, mat));
     return (mat->albedo);
 }
-
-// static t_vec3 pattern_checkerboard(const t_hit *hit, const t_material *mat)
-// {
-// 	float scale;
-// 	int x;
-// 	int y;
-// 	int z;
-
-// 	scale = mat->pattern_scale;
-// 	if (scale < 0.001f)
-// 		scale = 1.0f;
-// 	x = (int)floorf(hit->point.x * scale);
-// 	y = (int)floorf(hit->point.y * scale);
-// 	z = (int)floorf(hit->point.z * scale);
-// 	if ((x + y + z) & 1)
-// 		return (mat->albedo2);
-// 	return (mat->albedo);
-// }
 
 //(Note: While this handles translation/moving perfectly, fully supporting rotation and scaling would require dividing by the object's scale and multiplying by the inverse of its rotation matrix instead of a simple subtraction, but subtraction handles xyz placement perfectly!)
 /*

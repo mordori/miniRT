@@ -1,6 +1,13 @@
 #include "materials.h"
 #include <math.h>
 
+static inline float	safe_scale(float scale)
+{
+	if (scale < 0.001f)
+		return (1.0f);
+	return (scale);
+}
+
 /*
 ** Turbulence: sum of absolute values of noise at decreasing scales.
 ** Each octave doubles the frequency and halves the amplitude,
@@ -56,14 +63,6 @@ t_vec3	compute_bump_offset(t_vec3 p, float strength)
 	offset.y = (turbulence(vec3(p.x, p.y + eps, p.z)) - center) / eps;
 	offset.z = (turbulence(vec3(p.x, p.y, p.z + eps)) - center) / eps;
 	return (vec3_scale(offset, strength));
-}
-
-
-static inline float	safe_scale(float scale)
-{
-	if (scale < 0.001f)
-		return (1.0f);
-	return (scale);
 }
 
 /*

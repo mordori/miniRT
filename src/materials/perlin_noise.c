@@ -1,20 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*   Perlin Noise Implementation                                              */
-/*                                                                            */
-/*   Ken Perlin's improved 3D noise (2002) with:                              */
-/*   - Quintic fade curve for C2 continuity (no grid artifacts)               */
-/*   - 12-direction gradient set via low-4-bit hash                           */
-/*   - Trilinear interpolation of 8 cube-corner gradient contributions        */
-/*                                                                            */
-/*   Also provides turbulence (summed octaves of |noise|) for patterns        */
-/*   like marble, wood grain, and chaotic organic materials.                  */
-/*                                                                            */
-/*   Reference: "Ray Tracing: The Next Week" by Peter Shirley                 */
-/*   https://raytracing.github.io/books/RayTracingTheNextWeek.html            */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "materials.h"
 #include <math.h>
 
@@ -22,6 +5,7 @@
 ** Ken Perlin's permutation table (256 entries, wrapped via & 255).
 ** The original 512-entry table was this same data repeated twice;
 ** masking the index with & 255 achieves identical wrapping.
+** https://raytracing.github.io/books/RayTracingTheNextWeek.html
 */
 static uint8_t	perm(int i)
 {
