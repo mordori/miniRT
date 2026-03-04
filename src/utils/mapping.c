@@ -24,11 +24,19 @@ t_vec3	map_spherical(float u, float v)
  * U = longitude [0, 1], V = latitude [0, 1] (north pole = 0, south = 1)
  * Inverse of map_spherical().
  */
+// t_vec2	spherical_uv(t_vec3 dir)
+// {
+// 	t_vec2	uv;
+
+// 	uv.u = (atan2f(dir.z, dir.x) + (float)M_PI) * M_1_2PI;
+// 	uv.v = acosf(clampfn11(dir.y)) * M_1_PI;
+// 	return (uv);
+// }
 t_vec2	spherical_uv(t_vec3 dir)
 {
 	t_vec2	uv;
 
-	uv.u = (atan2f(dir.z, dir.x) + (float)M_PI) * M_1_2PI; // Map from [-π, π] to [0, 1]
-	uv.v = acosf(clampfn11(dir.y)) * M_1_PI; // Map from [0, π] to [0, 1]
+	uv.u = (fast_atan2f(dir.z, dir.x) + (float)M_PI) * M_1_2PI;
+	uv.v = fast_acosf(clampfn11(dir.y)) * M_1_PI;
 	return (uv);
 }

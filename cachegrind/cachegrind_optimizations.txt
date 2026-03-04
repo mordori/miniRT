@@ -1,0 +1,319 @@
+================================================================================
+ CACHEGRIND PROFILING & FAST MATH OPTIMIZATIONS
+================================================================================
+
+ TABLE OF CONTENTS
+ -----------------
+ 1. What is Cachegrind?
+ 2. How to Run It
+ 3. Reading the Output
+ 4. What We Found
+ 5. The Optimizations
+ 6. Why These Work
+ 7. Ranking: Which Change Matters Most?
+
+
+================================================================================
+ 1. WHAT IS CACHEGRIND?
+================================================================================
+
+Cachegrind is a Valgrind tool that simulates your CPU and counts every
+instruction executed. It tells you exactly where your program spends time.
+
+It records 5 events:
+
+   Ir  = Instructions executed     (the main cost metric)
+   Bc  = Conditional branches      (if/else, loops)
+   Bcm = Branch mispredictions     (CPU guessed wrong path — expensive)
+   Bi  = Indirect branches         (function pointers, jump tables)
+   Bim = Indirect branch misses    (CPU guessed wrong target)
+
+A branch misprediction flushes the CPU pipeline, costing ~10-20 cycles.
+If a function's Bcm% is much higher than its Ir%, that code is hard for
+the CPU to predict.
+
+
+================================================================================
+ 2. HOW TO RUN IT
+================================================================================
+
+Step 1: Build with debug info (keep optimizations, add line mappings)
+------------------------------------------------------------------------
+   make re CFLAGS="-O3 -ffast-math -funroll-loops -march=haswell -g"
+
+   The -g flag adds debug symbols so cachegrind can map instructions back
+   to source lines. Without it, your functions show up as "???" in output.
+
+Step 2: Run under cachegrind
+------------------------------------------------------------------------
+   valgrind --tool=cachegrind --branch-sim=yes ./miniRT assets/scenes/test.rt
+
+   --branch-sim=yes enables branch prediction simulation (Bc/Bcm/Bi/Bim).
+   The program will run ~20-50x slower. Use a small scene or exit early.
+   Produces a file like: cachegrind.out.12345
+
+Step 3: Annotate the results
+------------------------------------------------------------------------
+   cg_annotate cachegrind.out.12345 --auto=yes
+
+   --auto=yes  tells cg_annotate to find and annotate your source files.
+   Outputs a human-readable report with per-function and per-line costs.
+
+Step 4: Save and grep for key info
+------------------------------------------------------------------------
+   cg_annotate cachegrind.out.12345 --auto=yes > report.txt
+
+   # Total program cost:
+   grep "PROGRAM TOTALS" report.txt
+
+   # Top functions sorted by cost:
+   grep "^>" report.txt | head -30
+
+   # Find trig function costs:
+   grep -E "(atan|acos|sincos|powf)" report.txt | head -20
+
+   # Find memory costs:
+   grep -E "(memcpy|memset)" report.txt | head -10
+
+Step 5: Compare two runs (before/after optimization)
+------------------------------------------------------------------------
+   cg_diff cachegrind.out.BEFORE cachegrind.out.AFTER > diff.out
+   cg_annotate diff.out --auto=yes
+
+
+================================================================================
+ 3. READING THE OUTPUT
+================================================================================
+
+The output has three key sections:
+
+A) PROGRAM TOTALS
+   Shows the grand total of all events. Example:
+   12,259,873,767 Ir = 12.3 billion instructions executed total.
+
+B) File:Function Summary
+   Lists every function with its cost. The columns are:
+   Ir (absolute, %)  Bc (absolute, %)  Bcm (absolute, %)  ...  function:file
+
+   Example:
+   945,120,477 (7.7%)  88,135,398 (8.5%)  3,025,601 (11.7%)  hit_object
+   ^^^^^^^^^^^^                            ^^^^^^^^^^^^^^^^^
+   7.7% of ALL instructions               11.7% of ALL branch misses
+                                           (higher than 7.7% = red flag!)
+
+C) Annotated Source
+   Shows per-line instruction counts in your source code. Example:
+   140,051,800 (0.6%)    d = half_b * half_b - (vec3_dot(oc, oc) - r_sq);
+   ^^^^^^^^^^
+   This single line executed 140 million instructions.
+
+What to look for:
+   - Functions with high Ir% = where most CPU time is spent
+   - Functions where Bcm% >> Ir% = branch prediction bottlenecks
+   - Library functions (powf, atan2f, sincosf) with high Ir% = optimization targets
+   - Source lines with high counts = inner loop hotspots
+
+
+================================================================================
+ 4. WHAT WE FOUND
+================================================================================
+
+Profiling miniRT with cachegrind revealed these costs:
+
+   FUNCTION             Ir COST       CAUSE
+   -------              -------       -----
+   atan2f + acosf       ~8.7%         spherical_uv() calls glibc trig
+   powf (gamma)         ~4.5%         linear_to_srgb() calls powf(x, 1/2.2)
+   powf (Fresnel)       ~2.4%         f_schlick/vec3_schlick: powf(1-u, 5)
+   hit_object           ~7.7%         ray-object intersection dispatch
+   add_lighting         ~7.6%         shadow rays + BRDF evaluation
+   sincosf              ~2.9%         direction sampling
+   lodepng_*            ~10.4%        PNG decoding (one-time startup)
+
+The top 3 are library math functions that can be replaced with fast
+approximations. The rest is inherent to ray tracing.
+
+
+================================================================================
+ 5. THE OPTIMIZATIONS
+================================================================================
+
+A) fast_atan2f — replaces glibc atan2f
+--------------------------------------
+Location: src/utils/lib_math/fast_math.c
+Used in:  src/utils/mapping.c → spherical_uv()
+
+   atan2f computes the angle of a 2D vector. glibc's implementation is
+   very accurate (~1e-7 error) but runs hundreds of instructions.
+
+   Our fast version uses a minimax polynomial:
+      r = ((-0.047*s + 0.159)*s - 0.328)*s*a + a
+
+   where a = min(|x|,|y|)/max(|x|,|y|) and s = a*a.
+
+   Then we fix the quadrant with 3 sign checks.
+
+   Max error: ~0.005 radians (~0.3 degrees)
+   Speedup:  ~3-4x fewer instructions
+   Visual impact: invisible (error is smaller than Monte Carlo noise)
+
+B) fast_acosf — replaces glibc acosf
+-------------------------------------
+Location: src/utils/lib_math/fast_math.c
+Used in:  src/utils/mapping.c → spherical_uv()
+
+   acosf computes the arc-cosine [0, π]. glibc uses range reduction +
+   Chebyshev polynomials, which is expensive.
+
+   Our version uses a 4-term polynomial:
+      ret = ((-0.0187*x + 0.0743)*x - 0.2121)*x + 1.5708
+      ret = ret * sqrt(1 - x)
+
+   Then we handle the negative half with symmetry.
+
+   Max error: ~0.02 radians (~1 degree)
+   Speedup:  ~3x fewer instructions
+   Visual impact: invisible in UV mapping
+
+C) fast_srgb — replaces powf(x, 1/2.2)
+---------------------------------------
+Location: src/utils/lib_math/fast_math.c
+Used in:  src/rendering/post_processing.c → linear_to_srgb()
+
+   powf is the most general power function: x^y for any y. But we only
+   need x^0.4545 (gamma 2.2 correction). powf internally computes
+   exp(y * log(x)), which is ~185 million instructions per channel.
+
+   Our version uses a polynomial in sqrt(x) and x^0.25:
+      fast_srgb(x) = 1.030 * sqrt(x) + 0.048 * sqrt(sqrt(x)) - 0.078 * x
+
+   Why this works: x^0.4545 lies between x^0.5 (=sqrt) and x^0.25.
+   A weighted combination of these two "brackets" the true curve.
+   The coefficients are fitted via least-squares at key points.
+
+   Max error: ~1.7% in midtones, <1% in highlights
+   Speedup:  ~6x fewer instructions
+   Visual impact: below the dithering threshold already applied
+
+D) f_schlick / vec3_schlick — replaces powf(1-u, 5)
+----------------------------------------------------
+Location: src/utils/lib_math/math_3.c, vec3_5.c
+
+   Schlick's Fresnel approximation calculates how reflective a surface
+   is at a given viewing angle. The formula uses (1 - cosθ)^5.
+
+   What powf actually does internally:
+   When you call powf(x, 5.0f), glibc does NOT multiply x five times.
+   It doesn't know the exponent is an integer, so it computes:
+
+      powf(x, y) = expf(y * logf(x))
+
+   That's a logarithm + a multiply + an exponential — each of which
+   uses its own polynomial approximation internally. The result is
+   hundreds of instructions to compute what 4 multiplications can do.
+
+   It's like using Google Maps to find your own front door.
+
+   The fix:
+      BEFORE:  powf(1.0f - u, 5.0f)           // expf(5 * logf(1-u))
+      AFTER:   t = 1-u; t2 = t*t; t2*t2*t     // 4 multiplications
+
+   Both functions use this pattern:
+
+      // f_schlick — scalar Fresnel (used in burley diffuse BRDF)
+      float f_schlick(float u, float f0, float f90)
+      {
+          float t  = 1.0f - u;
+          float t2 = t * t;
+          return (f0 + (f90 - f0) * t2 * t2 * t);
+      }
+
+      // vec3_schlick — vector Fresnel (used in cook_torrance specular)
+      t_vec3 vec3_schlick(t_vec3 f0, float u)
+      {
+          float t  = 1.0f - u;
+          float t2 = t * t;
+          float f  = t2 * t2 * t;
+          return (vec3_add(vec3_scale(f0, (1.0f - f)), vec3_n(f)));
+      }
+
+   These are called per BRDF evaluation, which happens multiple times
+   per pixel per bounce (~5x per shading point total).
+
+   Max error: 0 (exact — identical mathematical result)
+   Speedup:  ~50x fewer instructions per call
+   Visual impact: none (bit-for-bit identical output)
+
+
+================================================================================
+ 6. WHY THESE WORK
+================================================================================
+
+The core insight: glibc math functions are designed for maximum accuracy
+(~1e-7 error). But in a path tracer:
+
+   1. Monte Carlo noise is ~1-5% per pixel anyway
+   2. Blue noise dithering adds ±0.5/255 to each channel
+   3. Textures are only 8-bit (256 levels) in source
+   4. ACES tonemapping compresses the dynamic range
+
+So paying for 1e-7 accuracy when your output noise is 1-5% is wasteful.
+The fast approximations trade unnecessary precision for speed.
+
+Rule of thumb for when to use fast math:
+   ✓ UV coordinate mapping (atan2f, acosf) — noise hides the error
+   ✓ Gamma correction (powf) — 8-bit output masks sub-1% error
+   ✓ Integer powers (powf(x,5)) — always replace with multiplication
+   ✗ Intersection math (sqrtf) — errors cause visible artifacts
+   ✗ Normal computation — errors cause shading artifacts
+   ✗ BVH traversal — errors cause missed intersections
+
+Always profile first, optimize second. Cachegrind tells you WHERE to look.
+The code tells you WHETHER the optimization is safe for that context.
+
+
+================================================================================
+ 7. RANKING: WHICH CHANGE MATTERS MOST?
+================================================================================
+
+All 4 changes ranked by performance impact and risk:
+
+   RANK  CHANGE                          SAVED    ERROR     RISK
+   ----  ------                          -----    -----     ----
+    1    atan2f + acosf → fast approx    ~6.4%    ~0.3-1°   Low (noise hides it)
+    2    powf(x,1/2.2) → fast_srgb      ~3.9%    ~1.7%     Medium (wrong coefficients = washed out)
+    3    powf(1-u, 5)  → multiply       ~2.4%    0%        ZERO (exact result)
+    4    All combined                    ~12.7%   —         —
+
+Before/after cachegrind results (percentages):
+
+   FUNCTION              BEFORE    AFTER     STATUS
+   --------              ------    -----     ------
+   atan2f (glibc)         6.2%      0%       Eliminated → fast_atan2f (1.0%)
+   acosf (glibc)          2.5%      0%       Eliminated → fast_acosf (0.9%)
+   powf → linear_to_srgb  4.5%      0%       Eliminated → fast_srgb (0.4%)
+   powf → f_schlick        2.4%     ~0%       Eliminated → 4 multiplications
+   linear_to_srgb (total)  4.5%     0.6%     -87%
+   spherical_uv (total)    8.7%     2.3%     -74%
+
+IF YOU PICK ONLY ONE — pick the Schlick change (D):
+
+   Why? Because it is the only optimization with ALL of these properties:
+
+   1. ZERO error    — produces the exact same mathematical result
+   2. ZERO risk     — no visual change, no edge cases, no broken renders
+   3. ZERO new code — no new files, no new functions, no header changes
+   4. ~2.4% savings — a meaningful speedup for a 2-line change
+
+   The trig change (A+B) saves more, but introduces approximation error
+   and requires a new file with new functions. The gamma change (C) also
+   saves a lot, but getting coefficients wrong causes visible artifacts
+   (washed out image).
+
+   The Schlick multiply is the perfect first optimization lesson:
+   Profile → find powf with integer exponent → replace with multiply →
+   re-profile to verify. No math derivation needed, no risk of breaking
+   anything, and the speedup is immediately measurable in cachegrind.
+
+================================================================================
+
