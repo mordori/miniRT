@@ -1,7 +1,5 @@
-# ============================================================================
-# New Procedural Patterns Demo Scene
-# Showcases the newly added: Grid, spiral and Bricks
-# ============================================================================
+# Render settings
+render	128	32
 
 # Emissive light material
 mat	0	255,255,255	0.0	0.0	1.0	0.0	300.0	255,250,240	2
@@ -43,5 +41,3 @@ cy	-7,0.5,0	0,1,0	2.0	4.0	3
 # Seamless Spiral Cone (far right)
 co	7,2,8	0,1,0	30	5.0	4
 
-# Render settings
-render	128	32
