@@ -22,6 +22,17 @@ float	f_schlick(float u, float f0, float f90)
 	return (f0 + (f90 - f0) * powf(1.0f - u, 5.0f));
 }
 
+// not very effective
+// float	f_schlick(float u, float f0, float f90)
+// {
+// 	float	t;
+// 	float	t2;
+
+// 	t = 1.0f - u;
+// 	t2 = t * t;
+// 	return (f0 + (f90 - f0) * t2 * t2 * t);
+// }
+
 float	degrees_to_rad(float degrees)
 {
 	return (degrees * M_PI / 180.0f);

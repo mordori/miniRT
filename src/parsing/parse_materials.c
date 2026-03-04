@@ -10,8 +10,7 @@
 #include <string.h>
 
 static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc);
-static t_error	parse_mat_values(char **tkns, t_material *mat,
-				float *em_str, t_vec3 *em_col);
+static t_error	parse_mat_values(char **tkns, t_material *mat);
 
 /**
  * Parse material from either inline color or material ID reference.
@@ -93,27 +92,29 @@ static t_error	parse_mat_texture(t_context *ctx, char **tkn,
 		if (mat->normal_map.pixels)
 			mat->base_color = BASE_TEXTURE;
 	}
-	if (token_count >= 13 && !parse_float(tkn[12], &mat->bump_strength))
-		return (E_INVALID_NUM);
 	return (E_OK);
 }
 
-static t_error	parse_mat_values(char **tkns, t_material *mat,
-				float *em_str, t_vec3 *em_col)
+static t_error	parse_mat_values(char **tkns, t_material *mat)
 {
+	float	em_str;
+	t_vec3	em_col;
+
 	if (!parse_float(tkns[3], &mat->metallic)
 		|| !parse_float(tkns[4], &mat->roughness)
 		|| !parse_float(tkns[5], &mat->ior)
 		|| !parse_float(tkns[6], &mat->transmission)
-		|| !parse_float(tkns[7], em_str)
-		|| !parse_color(tkns[8], em_col)
+		|| !parse_float(tkns[7], &em_str)
+		|| !parse_color(tkns[8], &em_col)
 		|| !parse_uint(tkns[9], &mat->flags))
 		return (E_INVALID_NUM);
 	if (!validate_range(mat->metallic, 0.0f, 1.0f)
 		|| !validate_range(mat->roughness, 0.0f, 1.0f)
-		|| !validate_range(mat->ior, 1.0f, 3.0f) // IOR typically ranges from 1.0 (air) to around 2.5 (diamond)
+		|| !validate_range(mat->ior, 1.0f, 3.0f)
 		|| !validate_range(mat->transmission, 0.0f, 1.0f))
 		return (E_INVALID_NUM);
+	mat->emission = vec3_scale(em_col, em_str);
+	mat->is_emissive = (em_str > 0.0f);
 	return (E_OK);
 }
 
@@ -121,26 +122,26 @@ static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc
 {
 	t_mat_entry	*entry;
 	t_material	*mat;
-	float		emission_strength;
-	t_vec3		emission_color;
 	t_error		err;
 
-	entry = &p->materials[p->mat_count];
+	entry = &p->materials[p->mat_count++];
 	mat = &entry->material;
-	err = parse_mat_values(tkns, mat, &emission_strength, &emission_color);
+	err = parse_mat_values(tkns, mat);
 	if (err != E_OK)
 		return (err);
-	mat->emission = vec3_scale(emission_color, emission_strength);
-	mat->is_emissive = (emission_strength > 0.0f);
-	if (tc > 13)
-		err = parse_mat_pattern(mat, tkns, tc);
-	else if (tc > 10)
-		err = parse_mat_texture(ctx, tkns, mat, tc);
+	if (tc >= 13)
+	{
+		if (!bump_strength(mat, tkns))
+			return (E_INVALID_NUM);
+		if (tc > 13)
+			err = parse_mat_pattern(mat, tkns, tc);
+		else if (tc > 10)
+			err = parse_mat_texture(ctx, tkns, mat, tc);
+	}
 	if (err != E_OK)
 		return (err);
 	entry->defined = true;
 	new_material(ctx, mat);
-	p->mat_count++;
 	return (E_OK);
 }
 
@@ -173,6 +174,6 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	mat->albedo = color;
 	mat->base_color = BASE_COLOR;
 	mat->pattern_scale = 1.0f;
-	mat->bump_strength = 1.0f;
+	mat->bump_strength = 0.0f;
 	return (parse_mat_fields(ctx, p, tokens, tc));
 }

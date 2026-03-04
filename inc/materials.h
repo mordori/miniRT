@@ -13,6 +13,13 @@ t_vec3		get_surface_color(const t_material *mat, const t_hit *hit);
 
 /*Procedural patterns*/
 t_vec3		eval_pattern(t_material *mat, t_hit *hit);
+float		perlin_noise(float x, float y, float z);
+float		turbulence(t_vec3 p);
+
+t_vec3		pattern_perlin_marble(t_hit *hit, const t_material *mat);
+t_vec3		pattern_perlin_wood(t_hit *hit, const t_material *mat);
+t_vec3		pattern_perlin_turb(t_hit *hit, const t_material *mat);
+t_vec3		compute_bump_offset(t_vec3 p, float strength);
 
 
 

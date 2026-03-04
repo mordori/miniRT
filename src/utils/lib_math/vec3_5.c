@@ -33,6 +33,19 @@ t_vec3	vec3_schlick(t_vec3 f0, float u)
 	return (vec3_add(vec3_scale(f0, (1.0f - f)), vec3_n(f)));
 }
 
+// not very effective
+// t_vec3	vec3_schlick(t_vec3 f0, float u)
+// {
+// 	float		t;
+// 	float		t2;
+// 	float		f;
+
+// 	t = 1.0f - u;
+// 	t2 = t * t;
+// 	f = t2 * t2 * t;
+// 	return (vec3_add(vec3_scale(f0, (1.0f - f)), vec3_n(f)));
+// }
+
 t_vec3	vec3_bias(t_vec3 vec, t_vec3 n)
 {
 	return (vec3_add(vec, vec3_scale(n, B_EPSILON)));

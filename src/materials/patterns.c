@@ -17,57 +17,22 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
 		return (pattern_checkerboard(hit, mat));
 	if (mat->pattern == PAT_GRADIENT)
 		return (pattern_gradient(hit, mat));
-    if (mat->pattern == PAT_STRIPES)
+	if (mat->pattern == PAT_STRIPES)
         return (pattern_stripe(hit, mat));
-    if (mat->pattern == PAT_SPIRAL)
+	if (mat->pattern == PAT_SPIRAL)
         return (pattern_spiral(hit, mat));
-    if (mat->pattern == PAT_GRID)
+	if (mat->pattern == PAT_GRID)
         return (pattern_grid(hit, mat));
-    if (mat->pattern == PAT_BRICK)
-        return (pattern_brick(hit, mat));
+	if (mat->pattern == PAT_BRICK)
+		return (pattern_brick(hit, mat));
+	if (mat->pattern == PAT_MARBLE)
+		return (pattern_perlin_marble(hit, mat));
+	if (mat->pattern == PAT_WOOD)
+		return (pattern_perlin_wood(hit, mat));
+	if (mat->pattern == PAT_TURBULENCE)
+		return (pattern_perlin_turb(hit, mat));
     return (mat->albedo);
 }
-
-// static t_vec3 pattern_checkerboard(const t_hit *hit, const t_material *mat)
-// {
-// 	float scale;
-// 	int x;
-// 	int y;
-// 	int z;
-
-// 	scale = mat->pattern_scale;
-// 	if (scale < 0.001f)
-// 		scale = 1.0f;
-// 	x = (int)floorf(hit->point.x * scale); // (int) alone is not enough for negative coordinates, floorf works with both positive and negative correctly
-// 	y = (int)floorf(hit->point.y * scale);
-// 	z = (int)floorf(hit->point.z * scale);
-// 	if ((x + y + z) & 1)
-// 		return (mat->albedo2);
-// 	return (mat->albedo);
-// }
-
-// #include "immintrin.h" // auto-vectorizes does the same thing as above but in one instruction, and should be faster.. still need more testings though.
-// static t_vec3 pattern_checkerboard(const t_hit *hit, const t_material *mat)
-// {
-//     float   scale;
-//     __m128i cell;
-//     int     sum;
-
-
-//     scale = mat->pattern_scale;
-//     if (scale < 0.001f)
-//         scale = 1.0f;
-//     // floor(pos * scale) for x, y, z in one instruction
-//     cell = _mm_cvtps_epi32(_mm_floor_ps(_mm_mul_ps(hit->point.v, _mm_set1_ps(scale))));
-//     // The SSE extract instructions (_mm_extract_epi32) to pull the result back out cost cycles too, so the overhead nearly cancels the gain.
-//     sum = _mm_extract_epi32(cell, 0)  // x
-//         + _mm_extract_epi32(cell, 1)  // y
-//         + _mm_extract_epi32(cell, 2); // z
-//     if (sum & 1)
-//         return (mat->albedo2);
-//     return (mat->albedo);
-// }
-
 
 //(Note: While this handles translation/moving perfectly, fully supporting rotation and scaling would require dividing by the object's scale and multiplying by the inverse of its rotation matrix instead of a simple subtraction, but subtraction handles xyz placement perfectly!)
 /*
@@ -91,10 +56,12 @@ static t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 	if (scale < 0.001f)
 		scale = 1.0f;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
-	if (((int)(p.x * scale) + (int)(p.y * scale) + (int)(p.z * scale)) & 1)
+	if (((int)floorf(p.x * scale + 0.5f) + (int)floorf(p.y * scale + 0.5f)
+			+ (int)floorf(p.z * scale + 0.5f)) & 1)
 		return (mat->albedo2);
 	return (mat->albedo);
 }
+
 
 /*
 ** Gradient pattern using UV v-coordinate.
@@ -117,11 +84,6 @@ static t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 	scale = mat->pattern_scale;
 	if (scale < 0.001f)
 		scale = 1.0f;
-
-	/*
-	** Use sine wave on Y axis to create a smooth oscillating transition
-	** sinf returns [-1, 1], so we multiply by 0.5 and add 0.5 to remap to [0, 1]
-	*/
 	y = hit->point.y - hit->obj->transform.pos.y;
 	t = 0.5f * (sinf(y * scale) + 1.0f);
 	return (vec3_lerp(mat->albedo, mat->albedo2, t));
@@ -232,6 +194,6 @@ static t_vec3   pattern_brick(const t_hit *hit, const t_material *mat)
 	p.y = p.y - floorf(p.y);
 	p.z = p.z - floorf(p.z);
 	if (p.x < 0.05f || p.y < 0.05f || p.z < 0.05f)
-		return (mat->albedo2); // Mortar color
-	return (mat->albedo); // Brick color
+		return (mat->albedo2);
+	return (mat->albedo);
 }

@@ -1,6 +1,16 @@
 #include "parsing.h"
 #include "libft.h"
 
+bool	bump_strength(t_material *mat, char **tkns)
+{
+	if (is_placeholder(tkns[12]))
+		return (true);
+	if (!parse_float(tkns[12], &mat->bump_strength)
+		|| !validate_range(mat->bump_strength, 0.0f, 4.0f))
+		return (false);
+	return (true);
+}
+
 t_error parse_mat_pattern(t_material *mat, char **tkns, int tc)
 {
 	if  (tc < 16)
@@ -35,5 +45,9 @@ bool	parse_pattern_token(const char *tkn, t_pattern *out)
 		return (*out = PAT_BRICK, true);
 	if (ft_strcmp(tkn, "marble") == 0)
 		return (*out = PAT_MARBLE, true);
+	if (ft_strcmp(tkn, "wood") == 0)
+		return (*out = PAT_WOOD, true);
+	if (ft_strcmp(tkn, "turb") == 0)
+		return (*out = PAT_TURBULENCE, true);
 	return (false);
 }

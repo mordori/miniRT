@@ -165,7 +165,9 @@ enum e_pattern
 	PAT_SPIRAL,
 	PAT_GRID,
 	PAT_BRICK,
-	PAT_MARBLE
+	PAT_MARBLE,
+	PAT_WOOD,
+	PAT_TURBULENCE
 };
 
 enum e_entity
@@ -217,16 +219,28 @@ struct __attribute__((aligned(16))) s_ray
 	t_v4ui		signs;
 };
 
+// struct __attribute__((aligned(16))) s_hit
+// {
+// 	t_vec3			point;
+// 	t_vec3			normal;
+// 	t_vec3			tangent;
+// 	t_vec3			bitangent;
+// 	t_vec2			uv;
+// 	const t_object	*obj;
+// 	float			t;
+// 	bool			is_primary;
+// };
+
 struct __attribute__((aligned(16))) s_hit
 {
+	float			t;
+	bool			is_primary;
+	const t_object	*obj;
 	t_vec3			point;
 	t_vec3			normal;
 	t_vec3			tangent;
 	t_vec3			bitangent;
 	t_vec2			uv;
-	const t_object	*obj;
-	float			t;
-	bool			is_primary;
 };
 
 struct __attribute__((aligned(16))) s_texture
@@ -312,15 +326,26 @@ union __attribute__((aligned(16))) u_shape
 	t_quad			quad;
 };
 
+// struct __attribute__((aligned(16))) s_object
+// {
+// 	t_transform		transform;
+// 	t_shape			shape;
+// 	t_vec3			bounds_center;
+// 	t_material		*mat;
+// 	uint32_t		material_id;
+// 	uint32_t		flags;
+// 	t_obj_type		type;
+// };
+
 struct __attribute__((aligned(16))) s_object
 {
-	t_transform		transform;
-	t_shape			shape;
-	t_vec3			bounds_center;
-	t_material		*mat;
-	uint32_t		material_id;
-	uint32_t		flags;
 	t_obj_type		type;
+	uint32_t		flags;
+	t_material		*mat;
+	t_shape			shape;
+	t_transform		transform;
+	t_vec3			bounds_center;
+	uint32_t		material_id;
 };
 
 struct __attribute__((aligned(16))) s_light

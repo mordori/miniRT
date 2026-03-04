@@ -1,0 +1,3971 @@
+
+*** Dumping AST Record Layout
+         0 | struct timespec
+         0 |   __time_t tv_sec
+         8 |   __syscall_slong_t tv_nsec
+           | [sizeof=16, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3)
+         0 |   unsigned int __low
+         4 |   unsigned int __high
+           | [sizeof=8, align=4]
+
+*** Dumping AST Record Layout
+         0 | __atomic_wide_counter
+         0 |   unsigned long long __value64
+         0 |   struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+         0 |     unsigned int __low
+         4 |     unsigned int __high
+           | [sizeof=8, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __pthread_internal_list
+         0 |   struct __pthread_internal_list * __prev
+         8 |   struct __pthread_internal_list * __next
+           | [sizeof=16, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __pthread_mutex_s
+         0 |   int __lock
+         4 |   unsigned int __count
+         8 |   int __owner
+        12 |   unsigned int __nusers
+        16 |   int __kind
+        20 |   short __spins
+        22 |   short __elision
+        24 |   struct __pthread_internal_list __list
+        24 |     struct __pthread_internal_list * __prev
+        32 |     struct __pthread_internal_list * __next
+           | [sizeof=40, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __pthread_cond_s
+         0 |   __atomic_wide_counter __wseq
+         0 |     unsigned long long __value64
+         0 |     struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+         0 |       unsigned int __low
+         4 |       unsigned int __high
+         8 |   __atomic_wide_counter __g1_start
+         8 |     unsigned long long __value64
+         8 |     struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+         8 |       unsigned int __low
+        12 |       unsigned int __high
+        16 |   unsigned int[2] __g_refs
+        24 |   unsigned int[2] __g_size
+        32 |   unsigned int __g1_orig_size
+        36 |   unsigned int __wrefs
+        40 |   unsigned int[2] __g_signals
+           | [sizeof=48, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __pthread_rwlock_arch_t
+         0 |   unsigned int __readers
+         4 |   unsigned int __writers
+         8 |   unsigned int __wrphase_futex
+        12 |   unsigned int __writers_futex
+        16 |   unsigned int __pad3
+        20 |   unsigned int __pad4
+        24 |   int __cur_writer
+        28 |   int __shared
+        32 |   signed char __rwelision
+        33 |   unsigned char[7] __pad1
+        40 |   unsigned long __pad2
+        48 |   unsigned int __flags
+           | [sizeof=56, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __cancel_jmp_buf_tag
+         0 |   __jmp_buf __cancel_jmp_buf
+        64 |   int __mask_was_saved
+           | [sizeof=72, align=8]
+
+*** Dumping AST Record Layout
+         0 | __sigset_t
+         0 |   unsigned long[16] __val
+           | [sizeof=128, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct __jmp_buf_tag
+         0 |   __jmp_buf __jmpbuf
+        64 |   int __mask_was_saved
+        72 |   __sigset_t __saved_mask
+        72 |     unsigned long[16] __val
+           | [sizeof=200, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct mlx_texture
+         0 |   uint32_t width
+         4 |   uint32_t height
+         8 |   uint8_t bytes_per_pixel
+        16 |   uint8_t * pixels
+           | [sizeof=24, align=8]
+
+*** Dumping AST Record Layout
+         0 | union s_mat4::(anonymous at inc/lib_math.h:84:2)
+         0 |   float[4][4] m
+         0 |   t_v4sf[4] rows
+           | [sizeof=64, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec2::(anonymous at inc/lib_math.h:117:2)
+         0 |   float x
+         4 |   float y
+           | [sizeof=8, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec3::(anonymous at inc/lib_math.h:138:2)
+         0 |   float x
+         4 |   float y
+         8 |   float z
+           | [sizeof=12, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec3::(anonymous at inc/lib_math.h:144:2)
+         0 |   float r
+         4 |   float g
+         8 |   float b
+           | [sizeof=12, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec3::(anonymous at inc/lib_math.h:150:2)
+         0 |   float right
+         4 |   float up
+         8 |   float forward
+           | [sizeof=12, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec2::(anonymous at inc/lib_math.h:122:2)
+         0 |   float u
+         4 |   float v
+           | [sizeof=8, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec2::(anonymous at inc/lib_math.h:127:2)
+         0 |   float sin
+         4 |   float cos
+           | [sizeof=8, align=4]
+
+*** Dumping AST Record Layout
+         0 | union u_vec2
+         0 |   struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |     float x
+         4 |     float y
+         0 |   struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |     float u
+         4 |     float v
+         0 |   struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |     float sin
+         4 |     float cos
+           | [sizeof=8, align=4]
+
+*** Dumping AST Record Layout
+         0 | union u_vec3
+         0 |   t_v4sf v
+         0 |   float[4] data
+         0 |   struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |     float x
+         4 |     float y
+         8 |     float z
+         0 |   struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |     float r
+         4 |     float g
+         8 |     float b
+         0 |   struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |     float right
+         4 |     float up
+         8 |     float forward
+         0 |   union u_vec2 xy
+         0 |     struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |       float x
+         4 |       float y
+         0 |     struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |       float u
+         4 |       float v
+         0 |     struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |       float sin
+         4 |       float cos
+           | [sizeof=16, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_texture
+         0 |   mlx_texture_t * tex
+         8 |   float * pixels
+        16 |   uint32_t width
+        20 |   uint32_t height
+           | [sizeof=32, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_plane
+         0 |   union u_vec3 point
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 normal
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   float d
+           | [sizeof=48, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec4::(anonymous at inc/lib_math.h:163:2)
+         0 |   float x
+         4 |   float y
+         8 |   float z
+        12 |   float w
+           | [sizeof=16, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct u_vec4::(anonymous at inc/lib_math.h:170:2)
+         0 |   float r
+         4 |   float g
+         8 |   float b
+        12 |   float a
+           | [sizeof=16, align=4]
+
+*** Dumping AST Record Layout
+         0 | union u_vec4
+         0 |   t_v4sf v
+         0 |   float[4] data
+         0 |   struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+         0 |     float x
+         4 |     float y
+         8 |     float z
+        12 |     float w
+         0 |   struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+         0 |     float r
+         4 |     float g
+         8 |     float b
+        12 |     float a
+         0 |   union u_vec3 xyz
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+         0 |   union u_vec3 rgb
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+           | [sizeof=16, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_transform
+         0 |   union u_vec3 pos
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec4 rot
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        28 |       float w
+        16 |     struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        28 |       float a
+        16 |     union u_vec3 xyz
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        16 |     union u_vec3 rgb
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        32 |   union u_vec3 scale
+        32 |     t_v4sf v
+        32 |     float[4] data
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |       float x
+        36 |       float y
+        40 |       float z
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |       float r
+        36 |       float g
+        40 |       float b
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |       float right
+        36 |       float up
+        40 |       float forward
+        32 |     union u_vec2 xy
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |         float x
+        36 |         float y
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |         float u
+        36 |         float v
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |         float sin
+        36 |         float cos
+           | [sizeof=48, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_viewport
+         0 |   union u_vec3 d_u
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 d_v
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   union u_vec3 pixel_00_loc
+        32 |     t_v4sf v
+        32 |     float[4] data
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |       float x
+        36 |       float y
+        40 |       float z
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |       float r
+        36 |       float g
+        40 |       float b
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |       float right
+        36 |       float up
+        40 |       float forward
+        32 |     union u_vec2 xy
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |         float x
+        36 |         float y
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |         float u
+        36 |         float v
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |         float sin
+        36 |         float cos
+        48 |   float width
+        52 |   float height
+           | [sizeof=64, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_ray
+         0 |   union u_vec3 origin
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 dir
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   union u_vec3 dir_recip
+        32 |     t_v4sf v
+        32 |     float[4] data
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |       float x
+        36 |       float y
+        40 |       float z
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |       float r
+        36 |       float g
+        40 |       float b
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |       float right
+        36 |       float up
+        40 |       float forward
+        32 |     union u_vec2 xy
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |         float x
+        36 |         float y
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |         float u
+        36 |         float v
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |         float sin
+        36 |         float cos
+        48 |   t_v4ui signs
+           | [sizeof=64, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_tex_entry
+         0 |   char[64] name
+        64 |   struct s_texture texture
+        64 |     mlx_texture_t * tex
+        72 |     float * pixels
+        80 |     uint32_t width
+        84 |     uint32_t height
+        96 |   _Bool loaded
+           | [sizeof=112, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_light
+         0 |   union u_vec3 pos
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 color
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   t_object * obj
+        48 |   union u_vec3 emission
+        48 |     t_v4sf v
+        48 |     float[4] data
+        48 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |       float x
+        52 |       float y
+        56 |       float z
+        48 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |       float r
+        52 |       float g
+        56 |       float b
+        48 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |       float right
+        52 |       float up
+        56 |       float forward
+        48 |     union u_vec2 xy
+        48 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |         float x
+        52 |         float y
+        48 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |         float u
+        52 |         float v
+        48 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |         float sin
+        52 |         float cos
+        64 |   float idx
+        68 |   float radius
+        72 |   float intensity
+        76 |   float max_radiance
+        80 |   float radius_sq
+        84 |   float angle
+        88 |   float cos_theta_max
+        92 |   t_light_type type
+           | [sizeof=96, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_camera
+         0 |   struct s_viewport viewport
+         0 |     union u_vec3 d_u
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     union u_vec3 d_v
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        32 |     union u_vec3 pixel_00_loc
+        32 |       t_v4sf v
+        32 |       float[4] data
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |         float x
+        36 |         float y
+        40 |         float z
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |         float r
+        36 |         float g
+        40 |         float b
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |         float right
+        36 |         float up
+        40 |         float forward
+        32 |       union u_vec2 xy
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |           float x
+        36 |           float y
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |           float u
+        36 |           float v
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |           float sin
+        36 |           float cos
+        48 |     float width
+        52 |     float height
+        64 |   struct s_light directional_light
+        64 |     union u_vec3 pos
+        64 |       t_v4sf v
+        64 |       float[4] data
+        64 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |         float x
+        68 |         float y
+        72 |         float z
+        64 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |         float r
+        68 |         float g
+        72 |         float b
+        64 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |         float right
+        68 |         float up
+        72 |         float forward
+        64 |       union u_vec2 xy
+        64 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |           float x
+        68 |           float y
+        64 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |           float u
+        68 |           float v
+        64 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |           float sin
+        68 |           float cos
+        80 |     union u_vec3 color
+        80 |       t_v4sf v
+        80 |       float[4] data
+        80 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        80 |         float x
+        84 |         float y
+        88 |         float z
+        80 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        80 |         float r
+        84 |         float g
+        88 |         float b
+        80 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        80 |         float right
+        84 |         float up
+        88 |         float forward
+        80 |       union u_vec2 xy
+        80 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        80 |           float x
+        84 |           float y
+        80 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        80 |           float u
+        84 |           float v
+        80 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        80 |           float sin
+        84 |           float cos
+        96 |     t_object * obj
+       112 |     union u_vec3 emission
+       112 |       t_v4sf v
+       112 |       float[4] data
+       112 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       112 |         float x
+       116 |         float y
+       120 |         float z
+       112 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       112 |         float r
+       116 |         float g
+       120 |         float b
+       112 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       112 |         float right
+       116 |         float up
+       120 |         float forward
+       112 |       union u_vec2 xy
+       112 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       112 |           float x
+       116 |           float y
+       112 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       112 |           float u
+       116 |           float v
+       112 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       112 |           float sin
+       116 |           float cos
+       128 |     float idx
+       132 |     float radius
+       136 |     float intensity
+       140 |     float max_radiance
+       144 |     float radius_sq
+       148 |     float angle
+       152 |     float cos_theta_max
+       156 |     t_light_type type
+       160 |   struct s_transform transform
+       160 |     union u_vec3 pos
+       160 |       t_v4sf v
+       160 |       float[4] data
+       160 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       160 |         float x
+       164 |         float y
+       168 |         float z
+       160 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       160 |         float r
+       164 |         float g
+       168 |         float b
+       160 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       160 |         float right
+       164 |         float up
+       168 |         float forward
+       160 |       union u_vec2 xy
+       160 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       160 |           float x
+       164 |           float y
+       160 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       160 |           float u
+       164 |           float v
+       160 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       160 |           float sin
+       164 |           float cos
+       176 |     union u_vec4 rot
+       176 |       t_v4sf v
+       176 |       float[4] data
+       176 |       struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+       176 |         float x
+       180 |         float y
+       184 |         float z
+       188 |         float w
+       176 |       struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+       176 |         float r
+       180 |         float g
+       184 |         float b
+       188 |         float a
+       176 |       union u_vec3 xyz
+       176 |         t_v4sf v
+       176 |         float[4] data
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       176 |           float x
+       180 |           float y
+       184 |           float z
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       176 |           float r
+       180 |           float g
+       184 |           float b
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       176 |           float right
+       180 |           float up
+       184 |           float forward
+       176 |         union u_vec2 xy
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       176 |             float x
+       180 |             float y
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       176 |             float u
+       180 |             float v
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       176 |             float sin
+       180 |             float cos
+       176 |       union u_vec3 rgb
+       176 |         t_v4sf v
+       176 |         float[4] data
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       176 |           float x
+       180 |           float y
+       184 |           float z
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       176 |           float r
+       180 |           float g
+       184 |           float b
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       176 |           float right
+       180 |           float up
+       184 |           float forward
+       176 |         union u_vec2 xy
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       176 |             float x
+       180 |             float y
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       176 |             float u
+       180 |             float v
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       176 |             float sin
+       180 |             float cos
+       192 |     union u_vec3 scale
+       192 |       t_v4sf v
+       192 |       float[4] data
+       192 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       192 |         float x
+       196 |         float y
+       200 |         float z
+       192 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       192 |         float r
+       196 |         float g
+       200 |         float b
+       192 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       192 |         float right
+       196 |         float up
+       200 |         float forward
+       192 |       union u_vec2 xy
+       192 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       192 |           float x
+       196 |           float y
+       192 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       192 |           float u
+       196 |           float v
+       192 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       192 |           float sin
+       196 |           float cos
+       208 |   struct s_transform target
+       208 |     union u_vec3 pos
+       208 |       t_v4sf v
+       208 |       float[4] data
+       208 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       208 |         float x
+       212 |         float y
+       216 |         float z
+       208 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       208 |         float r
+       212 |         float g
+       216 |         float b
+       208 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       208 |         float right
+       212 |         float up
+       216 |         float forward
+       208 |       union u_vec2 xy
+       208 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       208 |           float x
+       212 |           float y
+       208 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       208 |           float u
+       212 |           float v
+       208 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       208 |           float sin
+       212 |           float cos
+       224 |     union u_vec4 rot
+       224 |       t_v4sf v
+       224 |       float[4] data
+       224 |       struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+       224 |         float x
+       228 |         float y
+       232 |         float z
+       236 |         float w
+       224 |       struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+       224 |         float r
+       228 |         float g
+       232 |         float b
+       236 |         float a
+       224 |       union u_vec3 xyz
+       224 |         t_v4sf v
+       224 |         float[4] data
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       224 |           float x
+       228 |           float y
+       232 |           float z
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       224 |           float r
+       228 |           float g
+       232 |           float b
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       224 |           float right
+       228 |           float up
+       232 |           float forward
+       224 |         union u_vec2 xy
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       224 |             float x
+       228 |             float y
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       224 |             float u
+       228 |             float v
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       224 |             float sin
+       228 |             float cos
+       224 |       union u_vec3 rgb
+       224 |         t_v4sf v
+       224 |         float[4] data
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       224 |           float x
+       228 |           float y
+       232 |           float z
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       224 |           float r
+       228 |           float g
+       232 |           float b
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       224 |           float right
+       228 |           float up
+       232 |           float forward
+       224 |         union u_vec2 xy
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       224 |             float x
+       228 |             float y
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       224 |             float u
+       228 |             float v
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       224 |             float sin
+       228 |             float cos
+       240 |     union u_vec3 scale
+       240 |       t_v4sf v
+       240 |       float[4] data
+       240 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       240 |         float x
+       244 |         float y
+       248 |         float z
+       240 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       240 |         float r
+       244 |         float g
+       248 |         float b
+       240 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       240 |         float right
+       244 |         float up
+       248 |         float forward
+       240 |       union u_vec2 xy
+       240 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       240 |           float x
+       244 |           float y
+       240 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       240 |           float u
+       244 |           float v
+       240 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       240 |           float sin
+       244 |           float cos
+       256 |   union u_vec3 pivot
+       256 |     t_v4sf v
+       256 |     float[4] data
+       256 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       256 |       float x
+       260 |       float y
+       264 |       float z
+       256 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       256 |       float r
+       260 |       float g
+       264 |       float b
+       256 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       256 |       float right
+       260 |       float up
+       264 |       float forward
+       256 |     union u_vec2 xy
+       256 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       256 |         float x
+       260 |         float y
+       256 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       256 |         float u
+       260 |         float v
+       256 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       256 |         float sin
+       260 |         float cos
+       272 |   union u_vec3 up
+       272 |     t_v4sf v
+       272 |     float[4] data
+       272 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       272 |       float x
+       276 |       float y
+       280 |       float z
+       272 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       272 |       float r
+       276 |       float g
+       280 |       float b
+       272 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       272 |       float right
+       276 |       float up
+       280 |       float forward
+       272 |     union u_vec2 xy
+       272 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       272 |         float x
+       276 |         float y
+       272 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       272 |         float u
+       276 |         float v
+       272 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       272 |         float sin
+       276 |         float cos
+       288 |   union u_vec3 right
+       288 |     t_v4sf v
+       288 |     float[4] data
+       288 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       288 |       float x
+       292 |       float y
+       296 |       float z
+       288 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       288 |       float r
+       292 |       float g
+       296 |       float b
+       288 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       288 |       float right
+       292 |       float up
+       296 |       float forward
+       288 |     union u_vec2 xy
+       288 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       288 |         float x
+       292 |         float y
+       288 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       288 |         float u
+       292 |         float v
+       288 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       288 |         float sin
+       292 |         float cos
+       304 |   union u_vec3 forward
+       304 |     t_v4sf v
+       304 |     float[4] data
+       304 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       304 |       float x
+       308 |       float y
+       312 |       float z
+       304 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       304 |       float r
+       308 |       float g
+       312 |       float b
+       304 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       304 |       float right
+       308 |       float up
+       312 |       float forward
+       304 |     union u_vec2 xy
+       304 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       304 |         float x
+       308 |         float y
+       304 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       304 |         float u
+       308 |         float v
+       304 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       304 |         float sin
+       308 |         float cos
+       320 |   union u_vec3 defocus_disk_u
+       320 |     t_v4sf v
+       320 |     float[4] data
+       320 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       320 |       float x
+       324 |       float y
+       328 |       float z
+       320 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       320 |       float r
+       324 |       float g
+       328 |       float b
+       320 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       320 |       float right
+       324 |       float up
+       328 |       float forward
+       320 |     union u_vec2 xy
+       320 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       320 |         float x
+       324 |         float y
+       320 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       320 |         float u
+       324 |         float v
+       320 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       320 |         float sin
+       324 |         float cos
+       336 |   union u_vec3 defocus_disk_v
+       336 |     t_v4sf v
+       336 |     float[4] data
+       336 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       336 |       float x
+       340 |       float y
+       344 |       float z
+       336 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       336 |       float r
+       340 |       float g
+       344 |       float b
+       336 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       336 |       float right
+       340 |       float up
+       344 |       float forward
+       336 |     union u_vec2 xy
+       336 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       336 |         float x
+       340 |         float y
+       336 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       336 |         float u
+       340 |         float v
+       336 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       336 |         float sin
+       340 |         float cos
+       352 |   union u_vec3 init_pos
+       352 |     t_v4sf v
+       352 |     float[4] data
+       352 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       352 |       float x
+       356 |       float y
+       360 |       float z
+       352 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       352 |       float r
+       356 |       float g
+       360 |       float b
+       352 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       352 |       float right
+       356 |       float up
+       360 |       float forward
+       352 |     union u_vec2 xy
+       352 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       352 |         float x
+       356 |         float y
+       352 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       352 |         float u
+       356 |         float v
+       352 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       352 |         float sin
+       356 |         float cos
+       368 |   union u_vec2 skydome_uv_offset
+       368 |     struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       368 |       float x
+       372 |       float y
+       368 |     struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       368 |       float u
+       372 |       float v
+       368 |     struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       368 |       float sin
+       372 |       float cos
+       376 |   float init_pitch
+       380 |   float init_yaw
+       384 |   float init_focal_len_mm
+       388 |   float init_focus_dist
+       392 |   float aspect
+       396 |   float focal_len_mm
+       400 |   float f_stop
+       404 |   float pitch
+       408 |   float yaw
+       412 |   float focus_dist
+       416 |   float distance
+       420 |   float exposure
+       424 |   float shutter_speed
+       428 |   float iso
+       432 |   t_cam_state state
+           | [sizeof=448, align=16]
+
+*** Dumping AST Record Layout
+         0 | pthread_mutex_t
+         0 |   struct __pthread_mutex_s __data
+         0 |     int __lock
+         4 |     unsigned int __count
+         8 |     int __owner
+        12 |     unsigned int __nusers
+        16 |     int __kind
+        20 |     short __spins
+        22 |     short __elision
+        24 |     struct __pthread_internal_list __list
+        24 |       struct __pthread_internal_list * __prev
+        32 |       struct __pthread_internal_list * __next
+         0 |   char[40] __size
+         0 |   long __align
+           | [sizeof=40, align=8]
+
+*** Dumping AST Record Layout
+         0 | pthread_cond_t
+         0 |   struct __pthread_cond_s __data
+         0 |     __atomic_wide_counter __wseq
+         0 |       unsigned long long __value64
+         0 |       struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+         0 |         unsigned int __low
+         4 |         unsigned int __high
+         8 |     __atomic_wide_counter __g1_start
+         8 |       unsigned long long __value64
+         8 |       struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+         8 |         unsigned int __low
+        12 |         unsigned int __high
+        16 |     unsigned int[2] __g_refs
+        24 |     unsigned int[2] __g_size
+        32 |     unsigned int __g1_orig_size
+        36 |     unsigned int __wrefs
+        40 |     unsigned int[2] __g_signals
+         0 |   char[48] __size
+         0 |   long long __align
+           | [sizeof=48, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct s_renderer::(anonymous at inc/defines.h:449:2)
+         0 |   pthread_mutex_t mutex
+         0 |     struct __pthread_mutex_s __data
+         0 |       int __lock
+         4 |       unsigned int __count
+         8 |       int __owner
+        12 |       unsigned int __nusers
+        16 |       int __kind
+        20 |       short __spins
+        22 |       short __elision
+        24 |       struct __pthread_internal_list __list
+        24 |         struct __pthread_internal_list * __prev
+        32 |         struct __pthread_internal_list * __next
+         0 |     char[40] __size
+         0 |     long __align
+        40 |   pthread_cond_t cond
+        40 |     struct __pthread_cond_s __data
+        40 |       __atomic_wide_counter __wseq
+        40 |         unsigned long long __value64
+        40 |         struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+        40 |           unsigned int __low
+        44 |           unsigned int __high
+        48 |       __atomic_wide_counter __g1_start
+        48 |         unsigned long long __value64
+        48 |         struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+        48 |           unsigned int __low
+        52 |           unsigned int __high
+        56 |       unsigned int[2] __g_refs
+        64 |       unsigned int[2] __g_size
+        72 |       unsigned int __g1_orig_size
+        76 |       unsigned int __wrefs
+        80 |       unsigned int[2] __g_signals
+        40 |     char[48] __size
+        40 |     long long __align
+        88 |   uint32_t tile_index
+        92 |   uint32_t threads_running
+        96 |   uint32_t tiles_total
+       100 |   _Bool active
+       101 |   _Bool resize_pending
+       102 |   _Bool frame_complete
+           | [sizeof=128, align=64]
+
+*** Dumping AST Record Layout
+         0 | struct s_sphere
+         0 |   union u_vec3 center
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   float radius
+        20 |   float radius_sq
+           | [sizeof=32, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_cylinder
+         0 |   union u_vec3 axis
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 center
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   float radius
+        36 |   float height
+           | [sizeof=48, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_cone
+         0 |   union u_vec3 apex
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 axis
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   float angle
+        36 |   float height
+        40 |   float cos_sq
+        44 |   float tan_sq
+        48 |   float base_radius
+        52 |   float inv_height
+           | [sizeof=64, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_quad
+         0 |   union u_vec3 vec_alpha
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 vec_beta
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+        32 |   union u_vec3 q
+        32 |     t_v4sf v
+        32 |     float[4] data
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |       float x
+        36 |       float y
+        40 |       float z
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |       float r
+        36 |       float g
+        40 |       float b
+        32 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |       float right
+        36 |       float up
+        40 |       float forward
+        32 |     union u_vec2 xy
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |         float x
+        36 |         float y
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |         float u
+        36 |         float v
+        32 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |         float sin
+        36 |         float cos
+        48 |   union u_vec3 u
+        48 |     t_v4sf v
+        48 |     float[4] data
+        48 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |       float x
+        52 |       float y
+        56 |       float z
+        48 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |       float r
+        52 |       float g
+        56 |       float b
+        48 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |       float right
+        52 |       float up
+        56 |       float forward
+        48 |     union u_vec2 xy
+        48 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |         float x
+        52 |         float y
+        48 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |         float u
+        52 |         float v
+        48 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |         float sin
+        52 |         float cos
+        64 |   union u_vec3 v
+        64 |     t_v4sf v
+        64 |     float[4] data
+        64 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |       float x
+        68 |       float y
+        72 |       float z
+        64 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |       float r
+        68 |       float g
+        72 |       float b
+        64 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |       float right
+        68 |       float up
+        72 |       float forward
+        64 |     union u_vec2 xy
+        64 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |         float x
+        68 |         float y
+        64 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |         float u
+        68 |         float v
+        64 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |         float sin
+        68 |         float cos
+        80 |   union u_vec3 normal
+        80 |     t_v4sf v
+        80 |     float[4] data
+        80 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        80 |       float x
+        84 |       float y
+        88 |       float z
+        80 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        80 |       float r
+        84 |       float g
+        88 |       float b
+        80 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        80 |       float right
+        84 |       float up
+        88 |       float forward
+        80 |     union u_vec2 xy
+        80 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        80 |         float x
+        84 |         float y
+        80 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        80 |         float u
+        84 |         float v
+        80 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        80 |         float sin
+        84 |         float cos
+        96 |   union u_vec3 w
+        96 |     t_v4sf v
+        96 |     float[4] data
+        96 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        96 |       float x
+       100 |       float y
+       104 |       float z
+        96 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        96 |       float r
+       100 |       float g
+       104 |       float b
+        96 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        96 |       float right
+       100 |       float up
+       104 |       float forward
+        96 |     union u_vec2 xy
+        96 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        96 |         float x
+       100 |         float y
+        96 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        96 |         float u
+       100 |         float v
+        96 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        96 |         float sin
+       100 |         float cos
+       112 |   float d
+       116 |   float area
+           | [sizeof=128, align=16]
+
+*** Dumping AST Record Layout
+         0 | union u_shape
+         0 |   struct s_plane plane
+         0 |     union u_vec3 point
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     union u_vec3 normal
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        32 |     float d
+         0 |   struct s_sphere sphere
+         0 |     union u_vec3 center
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     float radius
+        20 |     float radius_sq
+         0 |   struct s_cylinder cylinder
+         0 |     union u_vec3 axis
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     union u_vec3 center
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        32 |     float radius
+        36 |     float height
+         0 |   struct s_cone cone
+         0 |     union u_vec3 apex
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     union u_vec3 axis
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        32 |     float angle
+        36 |     float height
+        40 |     float cos_sq
+        44 |     float tan_sq
+        48 |     float base_radius
+        52 |     float inv_height
+         0 |   struct s_quad quad
+         0 |     union u_vec3 vec_alpha
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     union u_vec3 vec_beta
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        16 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |         float right
+        20 |         float up
+        24 |         float forward
+        16 |       union u_vec2 xy
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |           float x
+        20 |           float y
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |           float u
+        20 |           float v
+        16 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |           float sin
+        20 |           float cos
+        32 |     union u_vec3 q
+        32 |       t_v4sf v
+        32 |       float[4] data
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |         float x
+        36 |         float y
+        40 |         float z
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |         float r
+        36 |         float g
+        40 |         float b
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |         float right
+        36 |         float up
+        40 |         float forward
+        32 |       union u_vec2 xy
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |           float x
+        36 |           float y
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |           float u
+        36 |           float v
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |           float sin
+        36 |           float cos
+        48 |     union u_vec3 u
+        48 |       t_v4sf v
+        48 |       float[4] data
+        48 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |         float x
+        52 |         float y
+        56 |         float z
+        48 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |         float r
+        52 |         float g
+        56 |         float b
+        48 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |         float right
+        52 |         float up
+        56 |         float forward
+        48 |       union u_vec2 xy
+        48 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |           float x
+        52 |           float y
+        48 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |           float u
+        52 |           float v
+        48 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |           float sin
+        52 |           float cos
+        64 |     union u_vec3 v
+        64 |       t_v4sf v
+        64 |       float[4] data
+        64 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |         float x
+        68 |         float y
+        72 |         float z
+        64 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |         float r
+        68 |         float g
+        72 |         float b
+        64 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |         float right
+        68 |         float up
+        72 |         float forward
+        64 |       union u_vec2 xy
+        64 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |           float x
+        68 |           float y
+        64 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |           float u
+        68 |           float v
+        64 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |           float sin
+        68 |           float cos
+        80 |     union u_vec3 normal
+        80 |       t_v4sf v
+        80 |       float[4] data
+        80 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        80 |         float x
+        84 |         float y
+        88 |         float z
+        80 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        80 |         float r
+        84 |         float g
+        88 |         float b
+        80 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        80 |         float right
+        84 |         float up
+        88 |         float forward
+        80 |       union u_vec2 xy
+        80 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        80 |           float x
+        84 |           float y
+        80 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        80 |           float u
+        84 |           float v
+        80 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        80 |           float sin
+        84 |           float cos
+        96 |     union u_vec3 w
+        96 |       t_v4sf v
+        96 |       float[4] data
+        96 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        96 |         float x
+       100 |         float y
+       104 |         float z
+        96 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        96 |         float r
+       100 |         float g
+       104 |         float b
+        96 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        96 |         float right
+       100 |         float up
+       104 |         float forward
+        96 |       union u_vec2 xy
+        96 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        96 |           float x
+       100 |           float y
+        96 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        96 |           float u
+       100 |           float v
+        96 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        96 |           float sin
+       100 |           float cos
+       112 |     float d
+       116 |     float area
+           | [sizeof=128, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_object
+         0 |   struct s_transform transform
+         0 |     union u_vec3 pos
+         0 |       t_v4sf v
+         0 |       float[4] data
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |         float x
+         4 |         float y
+         8 |         float z
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |         float r
+         4 |         float g
+         8 |         float b
+         0 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |         float right
+         4 |         float up
+         8 |         float forward
+         0 |       union u_vec2 xy
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |           float x
+         4 |           float y
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |           float u
+         4 |           float v
+         0 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |           float sin
+         4 |           float cos
+        16 |     union u_vec4 rot
+        16 |       t_v4sf v
+        16 |       float[4] data
+        16 |       struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+        16 |         float x
+        20 |         float y
+        24 |         float z
+        28 |         float w
+        16 |       struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+        16 |         float r
+        20 |         float g
+        24 |         float b
+        28 |         float a
+        16 |       union u_vec3 xyz
+        16 |         t_v4sf v
+        16 |         float[4] data
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |           float x
+        20 |           float y
+        24 |           float z
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |           float r
+        20 |           float g
+        24 |           float b
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |           float right
+        20 |           float up
+        24 |           float forward
+        16 |         union u_vec2 xy
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |             float x
+        20 |             float y
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |             float u
+        20 |             float v
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |             float sin
+        20 |             float cos
+        16 |       union u_vec3 rgb
+        16 |         t_v4sf v
+        16 |         float[4] data
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |           float x
+        20 |           float y
+        24 |           float z
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |           float r
+        20 |           float g
+        24 |           float b
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |           float right
+        20 |           float up
+        24 |           float forward
+        16 |         union u_vec2 xy
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |             float x
+        20 |             float y
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |             float u
+        20 |             float v
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |             float sin
+        20 |             float cos
+        32 |     union u_vec3 scale
+        32 |       t_v4sf v
+        32 |       float[4] data
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |         float x
+        36 |         float y
+        40 |         float z
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |         float r
+        36 |         float g
+        40 |         float b
+        32 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |         float right
+        36 |         float up
+        40 |         float forward
+        32 |       union u_vec2 xy
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |           float x
+        36 |           float y
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |           float u
+        36 |           float v
+        32 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |           float sin
+        36 |           float cos
+        48 |   union u_shape shape
+        48 |     struct s_plane plane
+        48 |       union u_vec3 point
+        48 |         t_v4sf v
+        48 |         float[4] data
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |           float x
+        52 |           float y
+        56 |           float z
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |           float r
+        52 |           float g
+        56 |           float b
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |           float right
+        52 |           float up
+        56 |           float forward
+        48 |         union u_vec2 xy
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |             float x
+        52 |             float y
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |             float u
+        52 |             float v
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |             float sin
+        52 |             float cos
+        64 |       union u_vec3 normal
+        64 |         t_v4sf v
+        64 |         float[4] data
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |           float x
+        68 |           float y
+        72 |           float z
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |           float r
+        68 |           float g
+        72 |           float b
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |           float right
+        68 |           float up
+        72 |           float forward
+        64 |         union u_vec2 xy
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |             float x
+        68 |             float y
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |             float u
+        68 |             float v
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |             float sin
+        68 |             float cos
+        80 |       float d
+        48 |     struct s_sphere sphere
+        48 |       union u_vec3 center
+        48 |         t_v4sf v
+        48 |         float[4] data
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |           float x
+        52 |           float y
+        56 |           float z
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |           float r
+        52 |           float g
+        56 |           float b
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |           float right
+        52 |           float up
+        56 |           float forward
+        48 |         union u_vec2 xy
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |             float x
+        52 |             float y
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |             float u
+        52 |             float v
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |             float sin
+        52 |             float cos
+        64 |       float radius
+        68 |       float radius_sq
+        48 |     struct s_cylinder cylinder
+        48 |       union u_vec3 axis
+        48 |         t_v4sf v
+        48 |         float[4] data
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |           float x
+        52 |           float y
+        56 |           float z
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |           float r
+        52 |           float g
+        56 |           float b
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |           float right
+        52 |           float up
+        56 |           float forward
+        48 |         union u_vec2 xy
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |             float x
+        52 |             float y
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |             float u
+        52 |             float v
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |             float sin
+        52 |             float cos
+        64 |       union u_vec3 center
+        64 |         t_v4sf v
+        64 |         float[4] data
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |           float x
+        68 |           float y
+        72 |           float z
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |           float r
+        68 |           float g
+        72 |           float b
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |           float right
+        68 |           float up
+        72 |           float forward
+        64 |         union u_vec2 xy
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |             float x
+        68 |             float y
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |             float u
+        68 |             float v
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |             float sin
+        68 |             float cos
+        80 |       float radius
+        84 |       float height
+        48 |     struct s_cone cone
+        48 |       union u_vec3 apex
+        48 |         t_v4sf v
+        48 |         float[4] data
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |           float x
+        52 |           float y
+        56 |           float z
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |           float r
+        52 |           float g
+        56 |           float b
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |           float right
+        52 |           float up
+        56 |           float forward
+        48 |         union u_vec2 xy
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |             float x
+        52 |             float y
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |             float u
+        52 |             float v
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |             float sin
+        52 |             float cos
+        64 |       union u_vec3 axis
+        64 |         t_v4sf v
+        64 |         float[4] data
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |           float x
+        68 |           float y
+        72 |           float z
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |           float r
+        68 |           float g
+        72 |           float b
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |           float right
+        68 |           float up
+        72 |           float forward
+        64 |         union u_vec2 xy
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |             float x
+        68 |             float y
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |             float u
+        68 |             float v
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |             float sin
+        68 |             float cos
+        80 |       float angle
+        84 |       float height
+        88 |       float cos_sq
+        92 |       float tan_sq
+        96 |       float base_radius
+       100 |       float inv_height
+        48 |     struct s_quad quad
+        48 |       union u_vec3 vec_alpha
+        48 |         t_v4sf v
+        48 |         float[4] data
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |           float x
+        52 |           float y
+        56 |           float z
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |           float r
+        52 |           float g
+        56 |           float b
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |           float right
+        52 |           float up
+        56 |           float forward
+        48 |         union u_vec2 xy
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |             float x
+        52 |             float y
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |             float u
+        52 |             float v
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |             float sin
+        52 |             float cos
+        64 |       union u_vec3 vec_beta
+        64 |         t_v4sf v
+        64 |         float[4] data
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        64 |           float x
+        68 |           float y
+        72 |           float z
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        64 |           float r
+        68 |           float g
+        72 |           float b
+        64 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        64 |           float right
+        68 |           float up
+        72 |           float forward
+        64 |         union u_vec2 xy
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        64 |             float x
+        68 |             float y
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        64 |             float u
+        68 |             float v
+        64 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        64 |             float sin
+        68 |             float cos
+        80 |       union u_vec3 q
+        80 |         t_v4sf v
+        80 |         float[4] data
+        80 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        80 |           float x
+        84 |           float y
+        88 |           float z
+        80 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        80 |           float r
+        84 |           float g
+        88 |           float b
+        80 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        80 |           float right
+        84 |           float up
+        88 |           float forward
+        80 |         union u_vec2 xy
+        80 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        80 |             float x
+        84 |             float y
+        80 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        80 |             float u
+        84 |             float v
+        80 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        80 |             float sin
+        84 |             float cos
+        96 |       union u_vec3 u
+        96 |         t_v4sf v
+        96 |         float[4] data
+        96 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        96 |           float x
+       100 |           float y
+       104 |           float z
+        96 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        96 |           float r
+       100 |           float g
+       104 |           float b
+        96 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        96 |           float right
+       100 |           float up
+       104 |           float forward
+        96 |         union u_vec2 xy
+        96 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        96 |             float x
+       100 |             float y
+        96 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        96 |             float u
+       100 |             float v
+        96 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        96 |             float sin
+       100 |             float cos
+       112 |       union u_vec3 v
+       112 |         t_v4sf v
+       112 |         float[4] data
+       112 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       112 |           float x
+       116 |           float y
+       120 |           float z
+       112 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       112 |           float r
+       116 |           float g
+       120 |           float b
+       112 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       112 |           float right
+       116 |           float up
+       120 |           float forward
+       112 |         union u_vec2 xy
+       112 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       112 |             float x
+       116 |             float y
+       112 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       112 |             float u
+       116 |             float v
+       112 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       112 |             float sin
+       116 |             float cos
+       128 |       union u_vec3 normal
+       128 |         t_v4sf v
+       128 |         float[4] data
+       128 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       128 |           float x
+       132 |           float y
+       136 |           float z
+       128 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       128 |           float r
+       132 |           float g
+       136 |           float b
+       128 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       128 |           float right
+       132 |           float up
+       136 |           float forward
+       128 |         union u_vec2 xy
+       128 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       128 |             float x
+       132 |             float y
+       128 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       128 |             float u
+       132 |             float v
+       128 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       128 |             float sin
+       132 |             float cos
+       144 |       union u_vec3 w
+       144 |         t_v4sf v
+       144 |         float[4] data
+       144 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       144 |           float x
+       148 |           float y
+       152 |           float z
+       144 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       144 |           float r
+       148 |           float g
+       152 |           float b
+       144 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       144 |           float right
+       148 |           float up
+       152 |           float forward
+       144 |         union u_vec2 xy
+       144 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       144 |             float x
+       148 |             float y
+       144 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       144 |             float u
+       148 |             float v
+       144 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       144 |             float sin
+       148 |             float cos
+       160 |       float d
+       164 |       float area
+       176 |   union u_vec3 bounds_center
+       176 |     t_v4sf v
+       176 |     float[4] data
+       176 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       176 |       float x
+       180 |       float y
+       184 |       float z
+       176 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       176 |       float r
+       180 |       float g
+       184 |       float b
+       176 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       176 |       float right
+       180 |       float up
+       184 |       float forward
+       176 |     union u_vec2 xy
+       176 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       176 |         float x
+       180 |         float y
+       176 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       176 |         float u
+       180 |         float v
+       176 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       176 |         float sin
+       180 |         float cos
+       192 |   t_material * mat
+       200 |   uint32_t material_id
+       204 |   uint32_t flags
+       208 |   t_obj_type type
+           | [sizeof=224, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_aabb
+         0 |   union u_vec3 min
+         0 |     t_v4sf v
+         0 |     float[4] data
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+         0 |       float x
+         4 |       float y
+         8 |       float z
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+         0 |       float r
+         4 |       float g
+         8 |       float b
+         0 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+         0 |       float right
+         4 |       float up
+         8 |       float forward
+         0 |     union u_vec2 xy
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+         0 |         float x
+         4 |         float y
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+         0 |         float u
+         4 |         float v
+         0 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+         0 |         float sin
+         4 |         float cos
+        16 |   union u_vec3 max
+        16 |     t_v4sf v
+        16 |     float[4] data
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |       float x
+        20 |       float y
+        24 |       float z
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |       float r
+        20 |       float g
+        24 |       float b
+        16 |     struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |       float right
+        20 |       float up
+        24 |       float forward
+        16 |     union u_vec2 xy
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |         float x
+        20 |         float y
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |         float u
+        20 |         float v
+        16 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |         float sin
+        20 |         float cos
+           | [sizeof=32, align=16]
+
+*** Dumping AST Record Layout
+         0 | struct s_vec2i
+         0 |   int32_t x
+         4 |   int32_t y
+           | [sizeof=8, align=4]
+
+*** Dumping AST Record Layout
+         0 | struct s_renderer::(anonymous at inc/defines.h:460:2)
+         0 |   t_vec3 * buffer
+        16 |   struct s_camera cam
+        16 |     struct s_viewport viewport
+        16 |       union u_vec3 d_u
+        16 |         t_v4sf v
+        16 |         float[4] data
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        16 |           float x
+        20 |           float y
+        24 |           float z
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        16 |           float r
+        20 |           float g
+        24 |           float b
+        16 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        16 |           float right
+        20 |           float up
+        24 |           float forward
+        16 |         union u_vec2 xy
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        16 |             float x
+        20 |             float y
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        16 |             float u
+        20 |             float v
+        16 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        16 |             float sin
+        20 |             float cos
+        32 |       union u_vec3 d_v
+        32 |         t_v4sf v
+        32 |         float[4] data
+        32 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        32 |           float x
+        36 |           float y
+        40 |           float z
+        32 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        32 |           float r
+        36 |           float g
+        40 |           float b
+        32 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        32 |           float right
+        36 |           float up
+        40 |           float forward
+        32 |         union u_vec2 xy
+        32 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        32 |             float x
+        36 |             float y
+        32 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        32 |             float u
+        36 |             float v
+        32 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        32 |             float sin
+        36 |             float cos
+        48 |       union u_vec3 pixel_00_loc
+        48 |         t_v4sf v
+        48 |         float[4] data
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        48 |           float x
+        52 |           float y
+        56 |           float z
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        48 |           float r
+        52 |           float g
+        56 |           float b
+        48 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        48 |           float right
+        52 |           float up
+        56 |           float forward
+        48 |         union u_vec2 xy
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        48 |             float x
+        52 |             float y
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        48 |             float u
+        52 |             float v
+        48 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        48 |             float sin
+        52 |             float cos
+        64 |       float width
+        68 |       float height
+        80 |     struct s_light directional_light
+        80 |       union u_vec3 pos
+        80 |         t_v4sf v
+        80 |         float[4] data
+        80 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        80 |           float x
+        84 |           float y
+        88 |           float z
+        80 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        80 |           float r
+        84 |           float g
+        88 |           float b
+        80 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        80 |           float right
+        84 |           float up
+        88 |           float forward
+        80 |         union u_vec2 xy
+        80 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        80 |             float x
+        84 |             float y
+        80 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        80 |             float u
+        84 |             float v
+        80 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        80 |             float sin
+        84 |             float cos
+        96 |       union u_vec3 color
+        96 |         t_v4sf v
+        96 |         float[4] data
+        96 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+        96 |           float x
+       100 |           float y
+       104 |           float z
+        96 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+        96 |           float r
+       100 |           float g
+       104 |           float b
+        96 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+        96 |           float right
+       100 |           float up
+       104 |           float forward
+        96 |         union u_vec2 xy
+        96 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+        96 |             float x
+       100 |             float y
+        96 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+        96 |             float u
+       100 |             float v
+        96 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+        96 |             float sin
+       100 |             float cos
+       112 |       t_object * obj
+       128 |       union u_vec3 emission
+       128 |         t_v4sf v
+       128 |         float[4] data
+       128 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       128 |           float x
+       132 |           float y
+       136 |           float z
+       128 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       128 |           float r
+       132 |           float g
+       136 |           float b
+       128 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       128 |           float right
+       132 |           float up
+       136 |           float forward
+       128 |         union u_vec2 xy
+       128 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       128 |             float x
+       132 |             float y
+       128 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       128 |             float u
+       132 |             float v
+       128 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       128 |             float sin
+       132 |             float cos
+       144 |       float idx
+       148 |       float radius
+       152 |       float intensity
+       156 |       float max_radiance
+       160 |       float radius_sq
+       164 |       float angle
+       168 |       float cos_theta_max
+       172 |       t_light_type type
+       176 |     struct s_transform transform
+       176 |       union u_vec3 pos
+       176 |         t_v4sf v
+       176 |         float[4] data
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       176 |           float x
+       180 |           float y
+       184 |           float z
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       176 |           float r
+       180 |           float g
+       184 |           float b
+       176 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       176 |           float right
+       180 |           float up
+       184 |           float forward
+       176 |         union u_vec2 xy
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       176 |             float x
+       180 |             float y
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       176 |             float u
+       180 |             float v
+       176 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       176 |             float sin
+       180 |             float cos
+       192 |       union u_vec4 rot
+       192 |         t_v4sf v
+       192 |         float[4] data
+       192 |         struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+       192 |           float x
+       196 |           float y
+       200 |           float z
+       204 |           float w
+       192 |         struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+       192 |           float r
+       196 |           float g
+       200 |           float b
+       204 |           float a
+       192 |         union u_vec3 xyz
+       192 |           t_v4sf v
+       192 |           float[4] data
+       192 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       192 |             float x
+       196 |             float y
+       200 |             float z
+       192 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       192 |             float r
+       196 |             float g
+       200 |             float b
+       192 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       192 |             float right
+       196 |             float up
+       200 |             float forward
+       192 |           union u_vec2 xy
+       192 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       192 |               float x
+       196 |               float y
+       192 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       192 |               float u
+       196 |               float v
+       192 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       192 |               float sin
+       196 |               float cos
+       192 |         union u_vec3 rgb
+       192 |           t_v4sf v
+       192 |           float[4] data
+       192 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       192 |             float x
+       196 |             float y
+       200 |             float z
+       192 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       192 |             float r
+       196 |             float g
+       200 |             float b
+       192 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       192 |             float right
+       196 |             float up
+       200 |             float forward
+       192 |           union u_vec2 xy
+       192 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       192 |               float x
+       196 |               float y
+       192 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       192 |               float u
+       196 |               float v
+       192 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       192 |               float sin
+       196 |               float cos
+       208 |       union u_vec3 scale
+       208 |         t_v4sf v
+       208 |         float[4] data
+       208 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       208 |           float x
+       212 |           float y
+       216 |           float z
+       208 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       208 |           float r
+       212 |           float g
+       216 |           float b
+       208 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       208 |           float right
+       212 |           float up
+       216 |           float forward
+       208 |         union u_vec2 xy
+       208 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       208 |             float x
+       212 |             float y
+       208 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       208 |             float u
+       212 |             float v
+       208 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       208 |             float sin
+       212 |             float cos
+       224 |     struct s_transform target
+       224 |       union u_vec3 pos
+       224 |         t_v4sf v
+       224 |         float[4] data
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       224 |           float x
+       228 |           float y
+       232 |           float z
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       224 |           float r
+       228 |           float g
+       232 |           float b
+       224 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       224 |           float right
+       228 |           float up
+       232 |           float forward
+       224 |         union u_vec2 xy
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       224 |             float x
+       228 |             float y
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       224 |             float u
+       228 |             float v
+       224 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       224 |             float sin
+       228 |             float cos
+       240 |       union u_vec4 rot
+       240 |         t_v4sf v
+       240 |         float[4] data
+       240 |         struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+       240 |           float x
+       244 |           float y
+       248 |           float z
+       252 |           float w
+       240 |         struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+       240 |           float r
+       244 |           float g
+       248 |           float b
+       252 |           float a
+       240 |         union u_vec3 xyz
+       240 |           t_v4sf v
+       240 |           float[4] data
+       240 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       240 |             float x
+       244 |             float y
+       248 |             float z
+       240 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       240 |             float r
+       244 |             float g
+       248 |             float b
+       240 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       240 |             float right
+       244 |             float up
+       248 |             float forward
+       240 |           union u_vec2 xy
+       240 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       240 |               float x
+       244 |               float y
+       240 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       240 |               float u
+       244 |               float v
+       240 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       240 |               float sin
+       244 |               float cos
+       240 |         union u_vec3 rgb
+       240 |           t_v4sf v
+       240 |           float[4] data
+       240 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       240 |             float x
+       244 |             float y
+       248 |             float z
+       240 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       240 |             float r
+       244 |             float g
+       248 |             float b
+       240 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       240 |             float right
+       244 |             float up
+       248 |             float forward
+       240 |           union u_vec2 xy
+       240 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       240 |               float x
+       244 |               float y
+       240 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       240 |               float u
+       244 |               float v
+       240 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       240 |               float sin
+       244 |               float cos
+       256 |       union u_vec3 scale
+       256 |         t_v4sf v
+       256 |         float[4] data
+       256 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       256 |           float x
+       260 |           float y
+       264 |           float z
+       256 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       256 |           float r
+       260 |           float g
+       264 |           float b
+       256 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       256 |           float right
+       260 |           float up
+       264 |           float forward
+       256 |         union u_vec2 xy
+       256 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       256 |             float x
+       260 |             float y
+       256 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       256 |             float u
+       260 |             float v
+       256 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       256 |             float sin
+       260 |             float cos
+       272 |     union u_vec3 pivot
+       272 |       t_v4sf v
+       272 |       float[4] data
+       272 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       272 |         float x
+       276 |         float y
+       280 |         float z
+       272 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       272 |         float r
+       276 |         float g
+       280 |         float b
+       272 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       272 |         float right
+       276 |         float up
+       280 |         float forward
+       272 |       union u_vec2 xy
+       272 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       272 |           float x
+       276 |           float y
+       272 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       272 |           float u
+       276 |           float v
+       272 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       272 |           float sin
+       276 |           float cos
+       288 |     union u_vec3 up
+       288 |       t_v4sf v
+       288 |       float[4] data
+       288 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       288 |         float x
+       292 |         float y
+       296 |         float z
+       288 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       288 |         float r
+       292 |         float g
+       296 |         float b
+       288 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       288 |         float right
+       292 |         float up
+       296 |         float forward
+       288 |       union u_vec2 xy
+       288 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       288 |           float x
+       292 |           float y
+       288 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       288 |           float u
+       292 |           float v
+       288 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       288 |           float sin
+       292 |           float cos
+       304 |     union u_vec3 right
+       304 |       t_v4sf v
+       304 |       float[4] data
+       304 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       304 |         float x
+       308 |         float y
+       312 |         float z
+       304 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       304 |         float r
+       308 |         float g
+       312 |         float b
+       304 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       304 |         float right
+       308 |         float up
+       312 |         float forward
+       304 |       union u_vec2 xy
+       304 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       304 |           float x
+       308 |           float y
+       304 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       304 |           float u
+       308 |           float v
+       304 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       304 |           float sin
+       308 |           float cos
+       320 |     union u_vec3 forward
+       320 |       t_v4sf v
+       320 |       float[4] data
+       320 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       320 |         float x
+       324 |         float y
+       328 |         float z
+       320 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       320 |         float r
+       324 |         float g
+       328 |         float b
+       320 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       320 |         float right
+       324 |         float up
+       328 |         float forward
+       320 |       union u_vec2 xy
+       320 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       320 |           float x
+       324 |           float y
+       320 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       320 |           float u
+       324 |           float v
+       320 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       320 |           float sin
+       324 |           float cos
+       336 |     union u_vec3 defocus_disk_u
+       336 |       t_v4sf v
+       336 |       float[4] data
+       336 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       336 |         float x
+       340 |         float y
+       344 |         float z
+       336 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       336 |         float r
+       340 |         float g
+       344 |         float b
+       336 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       336 |         float right
+       340 |         float up
+       344 |         float forward
+       336 |       union u_vec2 xy
+       336 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       336 |           float x
+       340 |           float y
+       336 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       336 |           float u
+       340 |           float v
+       336 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       336 |           float sin
+       340 |           float cos
+       352 |     union u_vec3 defocus_disk_v
+       352 |       t_v4sf v
+       352 |       float[4] data
+       352 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       352 |         float x
+       356 |         float y
+       360 |         float z
+       352 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       352 |         float r
+       356 |         float g
+       360 |         float b
+       352 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       352 |         float right
+       356 |         float up
+       360 |         float forward
+       352 |       union u_vec2 xy
+       352 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       352 |           float x
+       356 |           float y
+       352 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       352 |           float u
+       356 |           float v
+       352 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       352 |           float sin
+       356 |           float cos
+       368 |     union u_vec3 init_pos
+       368 |       t_v4sf v
+       368 |       float[4] data
+       368 |       struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       368 |         float x
+       372 |         float y
+       376 |         float z
+       368 |       struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       368 |         float r
+       372 |         float g
+       376 |         float b
+       368 |       struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       368 |         float right
+       372 |         float up
+       376 |         float forward
+       368 |       union u_vec2 xy
+       368 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       368 |           float x
+       372 |           float y
+       368 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       368 |           float u
+       372 |           float v
+       368 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       368 |           float sin
+       372 |           float cos
+       384 |     union u_vec2 skydome_uv_offset
+       384 |       struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       384 |         float x
+       388 |         float y
+       384 |       struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       384 |         float u
+       388 |         float v
+       384 |       struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       384 |         float sin
+       388 |         float cos
+       392 |     float init_pitch
+       396 |     float init_yaw
+       400 |     float init_focal_len_mm
+       404 |     float init_focus_dist
+       408 |     float aspect
+       412 |     float focal_len_mm
+       416 |     float f_stop
+       420 |     float pitch
+       424 |     float yaw
+       428 |     float focus_dist
+       432 |     float distance
+       436 |     float exposure
+       440 |     float shutter_speed
+       444 |     float iso
+       448 |     t_cam_state state
+       464 |   struct s_vec2i tiles
+       464 |     int32_t x
+       468 |     int32_t y
+       472 |   uint32_t width
+       476 |   uint32_t height
+       480 |   uint32_t pixels
+       484 |   t_render_mode mode
+       488 |   uint32_t render_samples
+       492 |   uint32_t render_bounces
+       496 |   uint32_t frame
+       500 |   uint8_t ray_bounces
+       501 |   _Atomic(_Bool) render_cancel
+           | [sizeof=512, align=64]
+
+*** Dumping AST Record Layout
+         0 | struct s_renderer::(anonymous at inc/defines.h:475:2)
+         0 |   pthread_t * threads
+         8 |   uint32_t new_width
+        12 |   uint32_t new_height
+        16 |   int32_t threads_amount
+        20 |   int32_t threads_init
+        24 |   uint32_t render_time
+        28 |   uint32_t blit_time
+        32 |   _Bool init_mutex
+        33 |   _Bool init_cond
+           | [sizeof=64, align=64]
+
+*** Dumping AST Record Layout
+         0 | struct s_renderer
+         0 |   struct s_renderer::(anonymous at inc/defines.h:449:2) 
+         0 |     pthread_mutex_t mutex
+         0 |       struct __pthread_mutex_s __data
+         0 |         int __lock
+         4 |         unsigned int __count
+         8 |         int __owner
+        12 |         unsigned int __nusers
+        16 |         int __kind
+        20 |         short __spins
+        22 |         short __elision
+        24 |         struct __pthread_internal_list __list
+        24 |           struct __pthread_internal_list * __prev
+        32 |           struct __pthread_internal_list * __next
+         0 |       char[40] __size
+         0 |       long __align
+        40 |     pthread_cond_t cond
+        40 |       struct __pthread_cond_s __data
+        40 |         __atomic_wide_counter __wseq
+        40 |           unsigned long long __value64
+        40 |           struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+        40 |             unsigned int __low
+        44 |             unsigned int __high
+        48 |         __atomic_wide_counter __g1_start
+        48 |           unsigned long long __value64
+        48 |           struct __atomic_wide_counter::(unnamed at /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:28:3) __value32
+        48 |             unsigned int __low
+        52 |             unsigned int __high
+        56 |         unsigned int[2] __g_refs
+        64 |         unsigned int[2] __g_size
+        72 |         unsigned int __g1_orig_size
+        76 |         unsigned int __wrefs
+        80 |         unsigned int[2] __g_signals
+        40 |       char[48] __size
+        40 |       long long __align
+        88 |     uint32_t tile_index
+        92 |     uint32_t threads_running
+        96 |     uint32_t tiles_total
+       100 |     _Bool active
+       101 |     _Bool resize_pending
+       102 |     _Bool frame_complete
+       128 |   struct s_renderer::(anonymous at inc/defines.h:460:2) 
+       128 |     t_vec3 * buffer
+       144 |     struct s_camera cam
+       144 |       struct s_viewport viewport
+       144 |         union u_vec3 d_u
+       144 |           t_v4sf v
+       144 |           float[4] data
+       144 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       144 |             float x
+       148 |             float y
+       152 |             float z
+       144 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       144 |             float r
+       148 |             float g
+       152 |             float b
+       144 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       144 |             float right
+       148 |             float up
+       152 |             float forward
+       144 |           union u_vec2 xy
+       144 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       144 |               float x
+       148 |               float y
+       144 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       144 |               float u
+       148 |               float v
+       144 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       144 |               float sin
+       148 |               float cos
+       160 |         union u_vec3 d_v
+       160 |           t_v4sf v
+       160 |           float[4] data
+       160 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       160 |             float x
+       164 |             float y
+       168 |             float z
+       160 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       160 |             float r
+       164 |             float g
+       168 |             float b
+       160 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       160 |             float right
+       164 |             float up
+       168 |             float forward
+       160 |           union u_vec2 xy
+       160 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       160 |               float x
+       164 |               float y
+       160 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       160 |               float u
+       164 |               float v
+       160 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       160 |               float sin
+       164 |               float cos
+       176 |         union u_vec3 pixel_00_loc
+       176 |           t_v4sf v
+       176 |           float[4] data
+       176 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       176 |             float x
+       180 |             float y
+       184 |             float z
+       176 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       176 |             float r
+       180 |             float g
+       184 |             float b
+       176 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       176 |             float right
+       180 |             float up
+       184 |             float forward
+       176 |           union u_vec2 xy
+       176 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       176 |               float x
+       180 |               float y
+       176 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       176 |               float u
+       180 |               float v
+       176 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       176 |               float sin
+       180 |               float cos
+       192 |         float width
+       196 |         float height
+       208 |       struct s_light directional_light
+       208 |         union u_vec3 pos
+       208 |           t_v4sf v
+       208 |           float[4] data
+       208 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       208 |             float x
+       212 |             float y
+       216 |             float z
+       208 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       208 |             float r
+       212 |             float g
+       216 |             float b
+       208 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       208 |             float right
+       212 |             float up
+       216 |             float forward
+       208 |           union u_vec2 xy
+       208 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       208 |               float x
+       212 |               float y
+       208 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       208 |               float u
+       212 |               float v
+       208 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       208 |               float sin
+       212 |               float cos
+       224 |         union u_vec3 color
+       224 |           t_v4sf v
+       224 |           float[4] data
+       224 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       224 |             float x
+       228 |             float y
+       232 |             float z
+       224 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       224 |             float r
+       228 |             float g
+       232 |             float b
+       224 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       224 |             float right
+       228 |             float up
+       232 |             float forward
+       224 |           union u_vec2 xy
+       224 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       224 |               float x
+       228 |               float y
+       224 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       224 |               float u
+       228 |               float v
+       224 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       224 |               float sin
+       228 |               float cos
+       240 |         t_object * obj
+       256 |         union u_vec3 emission
+       256 |           t_v4sf v
+       256 |           float[4] data
+       256 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       256 |             float x
+       260 |             float y
+       264 |             float z
+       256 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       256 |             float r
+       260 |             float g
+       264 |             float b
+       256 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       256 |             float right
+       260 |             float up
+       264 |             float forward
+       256 |           union u_vec2 xy
+       256 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       256 |               float x
+       260 |               float y
+       256 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       256 |               float u
+       260 |               float v
+       256 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       256 |               float sin
+       260 |               float cos
+       272 |         float idx
+       276 |         float radius
+       280 |         float intensity
+       284 |         float max_radiance
+       288 |         float radius_sq
+       292 |         float angle
+       296 |         float cos_theta_max
+       300 |         t_light_type type
+       304 |       struct s_transform transform
+       304 |         union u_vec3 pos
+       304 |           t_v4sf v
+       304 |           float[4] data
+       304 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       304 |             float x
+       308 |             float y
+       312 |             float z
+       304 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       304 |             float r
+       308 |             float g
+       312 |             float b
+       304 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       304 |             float right
+       308 |             float up
+       312 |             float forward
+       304 |           union u_vec2 xy
+       304 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       304 |               float x
+       308 |               float y
+       304 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       304 |               float u
+       308 |               float v
+       304 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       304 |               float sin
+       308 |               float cos
+       320 |         union u_vec4 rot
+       320 |           t_v4sf v
+       320 |           float[4] data
+       320 |           struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+       320 |             float x
+       324 |             float y
+       328 |             float z
+       332 |             float w
+       320 |           struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+       320 |             float r
+       324 |             float g
+       328 |             float b
+       332 |             float a
+       320 |           union u_vec3 xyz
+       320 |             t_v4sf v
+       320 |             float[4] data
+       320 |             struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       320 |               float x
+       324 |               float y
+       328 |               float z
+       320 |             struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       320 |               float r
+       324 |               float g
+       328 |               float b
+       320 |             struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       320 |               float right
+       324 |               float up
+       328 |               float forward
+       320 |             union u_vec2 xy
+       320 |               struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       320 |                 float x
+       324 |                 float y
+       320 |               struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       320 |                 float u
+       324 |                 float v
+       320 |               struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       320 |                 float sin
+       324 |                 float cos
+       320 |           union u_vec3 rgb
+       320 |             t_v4sf v
+       320 |             float[4] data
+       320 |             struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       320 |               float x
+       324 |               float y
+       328 |               float z
+       320 |             struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       320 |               float r
+       324 |               float g
+       328 |               float b
+       320 |             struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       320 |               float right
+       324 |               float up
+       328 |               float forward
+       320 |             union u_vec2 xy
+       320 |               struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       320 |                 float x
+       324 |                 float y
+       320 |               struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       320 |                 float u
+       324 |                 float v
+       320 |               struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       320 |                 float sin
+       324 |                 float cos
+       336 |         union u_vec3 scale
+       336 |           t_v4sf v
+       336 |           float[4] data
+       336 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       336 |             float x
+       340 |             float y
+       344 |             float z
+       336 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       336 |             float r
+       340 |             float g
+       344 |             float b
+       336 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       336 |             float right
+       340 |             float up
+       344 |             float forward
+       336 |           union u_vec2 xy
+       336 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       336 |               float x
+       340 |               float y
+       336 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       336 |               float u
+       340 |               float v
+       336 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       336 |               float sin
+       340 |               float cos
+       352 |       struct s_transform target
+       352 |         union u_vec3 pos
+       352 |           t_v4sf v
+       352 |           float[4] data
+       352 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       352 |             float x
+       356 |             float y
+       360 |             float z
+       352 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       352 |             float r
+       356 |             float g
+       360 |             float b
+       352 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       352 |             float right
+       356 |             float up
+       360 |             float forward
+       352 |           union u_vec2 xy
+       352 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       352 |               float x
+       356 |               float y
+       352 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       352 |               float u
+       356 |               float v
+       352 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       352 |               float sin
+       356 |               float cos
+       368 |         union u_vec4 rot
+       368 |           t_v4sf v
+       368 |           float[4] data
+       368 |           struct u_vec4::(anonymous at inc/lib_math.h:163:2) 
+       368 |             float x
+       372 |             float y
+       376 |             float z
+       380 |             float w
+       368 |           struct u_vec4::(anonymous at inc/lib_math.h:170:2) 
+       368 |             float r
+       372 |             float g
+       376 |             float b
+       380 |             float a
+       368 |           union u_vec3 xyz
+       368 |             t_v4sf v
+       368 |             float[4] data
+       368 |             struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       368 |               float x
+       372 |               float y
+       376 |               float z
+       368 |             struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       368 |               float r
+       372 |               float g
+       376 |               float b
+       368 |             struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       368 |               float right
+       372 |               float up
+       376 |               float forward
+       368 |             union u_vec2 xy
+       368 |               struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       368 |                 float x
+       372 |                 float y
+       368 |               struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       368 |                 float u
+       372 |                 float v
+       368 |               struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       368 |                 float sin
+       372 |                 float cos
+       368 |           union u_vec3 rgb
+       368 |             t_v4sf v
+       368 |             float[4] data
+       368 |             struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       368 |               float x
+       372 |               float y
+       376 |               float z
+       368 |             struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       368 |               float r
+       372 |               float g
+       376 |               float b
+       368 |             struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       368 |               float right
+       372 |               float up
+       376 |               float forward
+       368 |             union u_vec2 xy
+       368 |               struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       368 |                 float x
+       372 |                 float y
+       368 |               struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       368 |                 float u
+       372 |                 float v
+       368 |               struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       368 |                 float sin
+       372 |                 float cos
+       384 |         union u_vec3 scale
+       384 |           t_v4sf v
+       384 |           float[4] data
+       384 |           struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       384 |             float x
+       388 |             float y
+       392 |             float z
+       384 |           struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       384 |             float r
+       388 |             float g
+       392 |             float b
+       384 |           struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       384 |             float right
+       388 |             float up
+       392 |             float forward
+       384 |           union u_vec2 xy
+       384 |             struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       384 |               float x
+       388 |               float y
+       384 |             struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       384 |               float u
+       388 |               float v
+       384 |             struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       384 |               float sin
+       388 |               float cos
+       400 |       union u_vec3 pivot
+       400 |         t_v4sf v
+       400 |         float[4] data
+       400 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       400 |           float x
+       404 |           float y
+       408 |           float z
+       400 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       400 |           float r
+       404 |           float g
+       408 |           float b
+       400 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       400 |           float right
+       404 |           float up
+       408 |           float forward
+       400 |         union u_vec2 xy
+       400 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       400 |             float x
+       404 |             float y
+       400 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       400 |             float u
+       404 |             float v
+       400 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       400 |             float sin
+       404 |             float cos
+       416 |       union u_vec3 up
+       416 |         t_v4sf v
+       416 |         float[4] data
+       416 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       416 |           float x
+       420 |           float y
+       424 |           float z
+       416 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       416 |           float r
+       420 |           float g
+       424 |           float b
+       416 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       416 |           float right
+       420 |           float up
+       424 |           float forward
+       416 |         union u_vec2 xy
+       416 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       416 |             float x
+       420 |             float y
+       416 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       416 |             float u
+       420 |             float v
+       416 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       416 |             float sin
+       420 |             float cos
+       432 |       union u_vec3 right
+       432 |         t_v4sf v
+       432 |         float[4] data
+       432 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       432 |           float x
+       436 |           float y
+       440 |           float z
+       432 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       432 |           float r
+       436 |           float g
+       440 |           float b
+       432 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       432 |           float right
+       436 |           float up
+       440 |           float forward
+       432 |         union u_vec2 xy
+       432 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       432 |             float x
+       436 |             float y
+       432 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       432 |             float u
+       436 |             float v
+       432 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       432 |             float sin
+       436 |             float cos
+       448 |       union u_vec3 forward
+       448 |         t_v4sf v
+       448 |         float[4] data
+       448 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       448 |           float x
+       452 |           float y
+       456 |           float z
+       448 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       448 |           float r
+       452 |           float g
+       456 |           float b
+       448 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       448 |           float right
+       452 |           float up
+       456 |           float forward
+       448 |         union u_vec2 xy
+       448 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       448 |             float x
+       452 |             float y
+       448 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       448 |             float u
+       452 |             float v
+       448 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       448 |             float sin
+       452 |             float cos
+       464 |       union u_vec3 defocus_disk_u
+       464 |         t_v4sf v
+       464 |         float[4] data
+       464 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       464 |           float x
+       468 |           float y
+       472 |           float z
+       464 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       464 |           float r
+       468 |           float g
+       472 |           float b
+       464 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       464 |           float right
+       468 |           float up
+       472 |           float forward
+       464 |         union u_vec2 xy
+       464 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       464 |             float x
+       468 |             float y
+       464 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       464 |             float u
+       468 |             float v
+       464 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       464 |             float sin
+       468 |             float cos
+       480 |       union u_vec3 defocus_disk_v
+       480 |         t_v4sf v
+       480 |         float[4] data
+       480 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       480 |           float x
+       484 |           float y
+       488 |           float z
+       480 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       480 |           float r
+       484 |           float g
+       488 |           float b
+       480 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       480 |           float right
+       484 |           float up
+       488 |           float forward
+       480 |         union u_vec2 xy
+       480 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       480 |             float x
+       484 |             float y
+       480 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       480 |             float u
+       484 |             float v
+       480 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       480 |             float sin
+       484 |             float cos
+       496 |       union u_vec3 init_pos
+       496 |         t_v4sf v
+       496 |         float[4] data
+       496 |         struct u_vec3::(anonymous at inc/lib_math.h:138:2) 
+       496 |           float x
+       500 |           float y
+       504 |           float z
+       496 |         struct u_vec3::(anonymous at inc/lib_math.h:144:2) 
+       496 |           float r
+       500 |           float g
+       504 |           float b
+       496 |         struct u_vec3::(anonymous at inc/lib_math.h:150:2) 
+       496 |           float right
+       500 |           float up
+       504 |           float forward
+       496 |         union u_vec2 xy
+       496 |           struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       496 |             float x
+       500 |             float y
+       496 |           struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       496 |             float u
+       500 |             float v
+       496 |           struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       496 |             float sin
+       500 |             float cos
+       512 |       union u_vec2 skydome_uv_offset
+       512 |         struct u_vec2::(anonymous at inc/lib_math.h:117:2) 
+       512 |           float x
+       516 |           float y
+       512 |         struct u_vec2::(anonymous at inc/lib_math.h:122:2) 
+       512 |           float u
+       516 |           float v
+       512 |         struct u_vec2::(anonymous at inc/lib_math.h:127:2) 
+       512 |           float sin
+       516 |           float cos
+       520 |       float init_pitch
+       524 |       float init_yaw
+       528 |       float init_focal_len_mm
+       532 |       float init_focus_dist
+       536 |       float aspect
+       540 |       float focal_len_mm
+       544 |       float f_stop
+       548 |       float pitch
+       552 |       float yaw
+       556 |       float focus_dist
+       560 |       float distance
+       564 |       float exposure
+       568 |       float shutter_speed
+       572 |       float iso
+       576 |       t_cam_state state
+       592 |     struct s_vec2i tiles
+       592 |       int32_t x
+       596 |       int32_t y
+       600 |     uint32_t width
+       604 |     uint32_t height
+       608 |     uint32_t pixels
+       612 |     t_render_mode mode
+       616 |     uint32_t render_samples
+       620 |     uint32_t render_bounces
+       624 |     uint32_t frame
+       628 |     uint8_t ray_bounces
+       629 |     _Atomic(_Bool) render_cancel
+       640 |   struct s_renderer::(anonymous at inc/defines.h:475:2) 
+       640 |     pthread_t * threads
+       648 |     uint32_t new_width
+       652 |     uint32_t new_height
+       656 |     int32_t threads_amount
+       660 |     int32_t threads_init
+       664 |     uint32_t render_time
+       668 |     uint32_t blit_time
+       672 |     _Bool init_mutex
+       673 |     _Bool init_cond
+           | [sizeof=704, align=64]
+
+*** Dumping AST Record Layout
+         0 | struct timeval
+         0 |   __time_t tv_sec
+         8 |   __suseconds_t tv_usec
+           | [sizeof=16, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct mlx
+         0 |   void * window
+         8 |   void * context
+        16 |   int32_t width
+        20 |   int32_t height
+        24 |   double delta_time
+           | [sizeof=32, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct mlx_image
+         0 |   const uint32_t width
+         4 |   const uint32_t height
+         8 |   uint8_t * pixels
+        16 |   mlx_instance_t * instances
+        24 |   size_t count
+        32 |   _Bool enabled
+        40 |   void * context
+           | [sizeof=48, align=8]
