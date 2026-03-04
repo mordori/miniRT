@@ -1,6 +1,8 @@
 # Render settings
 render	128	32
 
+# sky		stars.png
+
 # Emissive light material
 mat	0	255,255,255	0.0	0.0	1.0	0.0	300.0	255,250,240	2
 
@@ -8,13 +10,24 @@ mat	0	255,255,255	0.0	0.0	1.0	0.0	300.0	255,250,240	2
 mat	1	180,180,180	0.0	1.0	1.5	0.0	0.0	0,0,0	0	_	_	_	checker	2.0	0,0,0
 
 # Grid / Wireframe pattern (Neon Green + Black)
-mat	2	0,0,0	0.0	0.5	1.5	0.0	0.0	0,0,0	0	_	_	_	grid	3.0	0,255,0
+mat	2	0,0,0	0.0	0.5	1.5	0.0	0.0	0,0,0	0		_	_	_	grid	3.0	0,255,0
 
 # Brick Wall pattern (Red Bricks + Gray Mortar)
 mat	3	255,255,255	0.0	0.9	1.5	0.0	0.0	0,0,0	0	_	_	_	brick	4.0	0,0,0
 
 # Seamless Spiral (Yellow + Purple)
 mat	4	255,200,0	0.0	0.6	1.5	0.0	0.0	0,0,0	0	_	_	_	spiral	4.0	100,0,150
+
+# Perlin marble (white + dark veins, with bump)
+mat	5	255,255,255	0.0	0.5	1.5	0.0	0.0	0,0,0	0	_	_	0.0	marble	2.0	0,0,0
+
+# Perlin wood grain (light + dark brown, with bump)
+mat	6	200,150,80	0.0	0.7	1.5	0.0	0.0	0,0,0	0	_	_	0.2	wood	3.0	90,50,20
+
+# Perlin turbulence (green + brown, with bump)
+mat	7	80,200,80	0.0	0.9	1.5	0.0	0.0	0,0,0	0	_	_	_	turb	4.0	120,80,30
+
+
 
 # -------------- Scene Setup ----------------
 
@@ -33,7 +46,7 @@ L	5,10,-2	1.0	255,250,240	0.5	0
 pl	0,-1.5,0	0,1,0	1
 
 # Grid Sphere (center)
-sp	0,0.5,-3	3	2
+sp	0,0.5,-3	3	5
 
 # Brick Cylinder (far left)
 cy	-7,0.5,0	0,1,0	2.0	4.0	3

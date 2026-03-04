@@ -16,6 +16,7 @@ t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 	return (c);
 }
 
+// bottleneck is powf()
 // static inline t_vec3	linear_to_srgb(t_vec3 c)
 // {
 // 	t_vec3		res;

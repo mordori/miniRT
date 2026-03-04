@@ -165,7 +165,9 @@ enum e_pattern
 	PAT_SPIRAL,
 	PAT_GRID,
 	PAT_BRICK,
-	PAT_MARBLE
+	PAT_MARBLE,
+	PAT_WOOD,
+	PAT_TURBULENCE
 };
 
 enum e_entity
