@@ -1,7 +1,6 @@
 # Solar System Scene
 # Proportional Scale System:
 # - Earth Radius = 1.0 unit. All planet sizes are exactly to scale relative to Earth.
-# - Distances: Compacted. Not proportional. Planets are placed much closer together so they can all be seen at once.
 
 render	256		64
 
@@ -10,9 +9,9 @@ A		0.05	255,255,255
 
 # Cameras
 # Cinematic view near Earth looking roughly towards Jupiter and Outer Planets
-C		140,20,-150			0,0,1			100				0.1
-# Overview from afar (uncomment to see the whole system layout)
-# C		150, 80, -250		0, -0.2, 1			80				0.0
+C		140,20,-150			0,0,1			100				0.1		16
+
+# C		150,80,-250		0,0,1			80				0.1		16.0
 
 # Central Light Point matching the Sun
 L		150,300,0				1.0			255,250,240		109.0		0
@@ -63,7 +62,7 @@ sp		140,0,0			1.9				2
 # Earth: Compacted distance. Radius 1.0 -> Diameter 2.0
 sp		150,0,0			2.0				3
 
-# Moon: Compacted distance + close to Earth. Radius 0.27 -> Diameter 0.54
+# Moon: Compacted distance. Radius 0.27 -> Diameter 0.54
 sp		153,0,0			0.54			4
 
 # Mars: Compacted distance. Radius 0.53 -> Diameter 1.06
