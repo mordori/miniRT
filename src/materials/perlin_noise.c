@@ -49,7 +49,7 @@ static inline float	fade(float t)
 */
 static float	grad(int hash, float x, float y, float z)
 {
-	int	h;
+	int		h;
 	float	u;
 	float	v;
 

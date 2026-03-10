@@ -1,13 +1,6 @@
 #include "materials.h"
 #include <math.h>
 
-static inline float	safe_scale(float scale)
-{
-	if (scale < 0.001f)
-		return (1.0f);
-	return (scale);
-}
-
 /*
 ** Turbulence: sum of absolute values of noise at decreasing scales.
 ** Each octave doubles the frequency and halves the amplitude,
@@ -40,32 +33,6 @@ float	turbulence(t_vec3 p)
 }
 
 /*
-** Compute procedural bump offset from noise via finite differences.
-** Evaluates the noise gradient by sampling at slightly displaced
-** positions along each axis, producing a surface perturbation vector.
-**
-** The bump_strength parameter controls the intensity of the effect.
-** An epsilon of 0.01 provides good visual quality without aliasing.
-**
-** @param p         - Point in scaled world space
-** @param strength  - Bump intensity multiplier
-** @return          - 3D bump offset vector (perturbation direction)
-*/
-t_vec3	compute_bump_offset(t_vec3 p, float strength)
-{
-	float	eps;
-	float	center;
-	t_vec3	offset;
-
-	eps = 0.01f;
-	center = turbulence(p);
-	offset.x = (turbulence(vec3(p.x + eps, p.y, p.z)) - center) / eps;
-	offset.y = (turbulence(vec3(p.x, p.y + eps, p.z)) - center) / eps;
-	offset.z = (turbulence(vec3(p.x, p.y, p.z + eps)) - center) / eps;
-	return (vec3_scale(offset, strength));
-}
-
-/*
 ** Perlin marble pattern.
 ** Uses the classic technique from Shirley's "Ray Tracing: The Next Week":
 ** color = sin(scale * z + 10 * turbulence(point))
@@ -84,7 +51,7 @@ t_vec3	pattern_perlin_marble(t_hit *hit, const t_material *mat)
 	t_vec3	p;
 	float	t;
 
-	scale = safe_scale(mat->pattern_scale);
+	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
 	t = 0.5f * (1.0f + sinf(p.z + 10.0f * turbulence(p)));
@@ -114,7 +81,7 @@ t_vec3	pattern_perlin_wood(t_hit *hit, const t_material *mat)
 	float	grain;
 	float	dist;
 
-	scale = safe_scale(mat->pattern_scale);
+	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
 	dist = sqrtf(p.x * p.x + p.z * p.z);
@@ -142,7 +109,7 @@ t_vec3	pattern_perlin_turb(t_hit *hit, const t_material *mat)
 	t_vec3	p;
 	float	t;
 
-	scale = safe_scale(mat->pattern_scale);
+	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
 	t = turbulence(p);

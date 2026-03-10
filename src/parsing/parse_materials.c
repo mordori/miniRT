@@ -9,7 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc);
+static t_error	parse_mat_fields(t_context *ctx, t_parser *p,
+					char **tkns, int tc);
 static t_error	parse_mat_values(char **tkns, t_material *mat);
 
 /**
@@ -43,28 +44,7 @@ t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
 	return (E_OK);
 }
 
-/**
- * Resolve material token to both a material struct and a material ID.
- * For mat ID tokens, returns the existing ID.
- * For inline color tokens, registers a new material and returns its ID.
- */
-t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
-		uint32_t *out_id)
-{
-	t_material	mat;
-	uint32_t	id;
-	t_error		err;
-
-	err = parse_material_token(p, token, &mat);
-	if (err != E_OK)
-		return (err);
-	if (parse_uint((char *)token, &id))
-		*out_id = id;
-	else
-		*out_id = new_material(ctx, &mat);
-	return (E_OK);
-}
-
+// Shallow copy — registry owns pixel data, materials borrow it
 static t_error	parse_mat_texture(t_context *ctx, char **tkn,
 		t_material *mat, int token_count)
 {
@@ -118,29 +98,28 @@ static t_error	parse_mat_values(char **tkns, t_material *mat)
 	return (E_OK);
 }
 
-static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc)
+static t_error	parse_mat_fields(t_context *ctx, t_parser *p,
+					char **tkns, int tc)
 {
 	t_mat_entry	*entry;
 	t_material	*mat;
 	t_error		err;
 
-	entry = &p->materials[p->mat_count++];
+	entry = &p->materials[p->mat_count];
 	mat = &entry->material;
 	err = parse_mat_values(tkns, mat);
 	if (err != E_OK)
 		return (err);
-	if (tc >= 13)
-	{
-		if (!bump_strength(mat, tkns))
-			return (E_INVALID_NUM);
-		if (tc > 13)
-			err = parse_mat_pattern(mat, tkns, tc);
-		else if (tc > 10)
-			err = parse_mat_texture(ctx, tkns, mat, tc);
-	}
+	if (tc > 12 && !bump_strength(mat, tkns))
+		return (E_INVALID_NUM);
+	if (tc > 10 && tc < 14)
+		err = parse_mat_texture(ctx, tkns, mat, tc);
+	else if (tc >= 14)
+		err = parse_mat_pattern(mat, tkns, tc);
 	if (err != E_OK)
 		return (err);
 	entry->defined = true;
+	p->mat_count++;
 	new_material(ctx, mat);
 	return (E_OK);
 }
@@ -148,8 +127,8 @@ static t_error parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc
 /**
  * Parse material definition line:
  *   mat <id> <color> <metallic> <roughness> <ior> <transmission>
- *       <emission_strength> <emission_color> <flags> [texture_name] [normal_map] [bump_strength]
- *		 [pattern_type] [pattern_scale] [pattern_color]
+ *       <emission_strength> <emission_color> <flags> [texture_name] [normal_map]
+ *		 [bump_strength] [pattern_type] [pattern_scale] [pattern_color]
  */
 t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 {
@@ -174,6 +153,6 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	mat->albedo = color;
 	mat->base_color = BASE_COLOR;
 	mat->pattern_scale = 1.0f;
-	mat->bump_strength = 0.0f;
+	mat->bump_strength = 1.0f;
 	return (parse_mat_fields(ctx, p, tokens, tc));
 }

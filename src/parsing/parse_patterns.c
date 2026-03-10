@@ -11,15 +11,16 @@ bool	bump_strength(t_material *mat, char **tkns)
 	return (true);
 }
 
-t_error parse_mat_pattern(t_material *mat, char **tkns, int tc)
+t_error	parse_mat_pattern(t_material *mat, char **tkns, int tc)
 {
-	if  (tc < 16)
+	if (tc < 16)
 		return (E_ARGS);
 	if (!parse_pattern_token(tkns[13], &mat->pattern))
 		return (E_INVALID_NUM);
 	if (mat->pattern == PAT_NONE)
 		return (E_OK);
-	if (!parse_float(tkns[14], &mat->pattern_scale))
+	if (!parse_float(tkns[14], &mat->pattern_scale)
+		|| !validate_range(mat->pattern_scale, 0.0f, 100.0f))
 		return (E_INVALID_NUM);
 	if (!parse_color(tkns[15], &mat->albedo2))
 		return (E_INVALID_NUM);

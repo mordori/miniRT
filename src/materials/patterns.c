@@ -1,40 +1,6 @@
 #include "lib_math.h"
 #include "materials.h"
 
-// static t_vec3 pattern_checkerboard2(t_hit *hit, t_material *mat);
-static t_vec3   pattern_checkerboard(const t_hit *hit, const t_material *mat);
-static t_vec3   pattern_gradient(const t_hit *hit, const t_material *mat);
-static t_vec3   pattern_stripe(const t_hit *hit, const t_material *mat);
-static t_vec3   pattern_spiral(const t_hit *hit, const t_material *mat);
-static t_vec3   pattern_grid(const t_hit *hit, const t_material *mat);
-static t_vec3   pattern_brick(const t_hit *hit, const t_material *mat);
-
-t_vec3	eval_pattern(t_material *mat, t_hit *hit)
-{
-	if (mat->pattern == PAT_NONE)
-		return (mat->albedo);
-	if (mat->pattern == PAT_CHECKERBOARD)
-		return (pattern_checkerboard(hit, mat));
-	if (mat->pattern == PAT_GRADIENT)
-		return (pattern_gradient(hit, mat));
-	if (mat->pattern == PAT_STRIPES)
-        return (pattern_stripe(hit, mat));
-	if (mat->pattern == PAT_SPIRAL)
-        return (pattern_spiral(hit, mat));
-	if (mat->pattern == PAT_GRID)
-        return (pattern_grid(hit, mat));
-	if (mat->pattern == PAT_BRICK)
-		return (pattern_brick(hit, mat));
-	if (mat->pattern == PAT_MARBLE)
-		return (pattern_perlin_marble(hit, mat));
-	if (mat->pattern == PAT_WOOD)
-		return (pattern_perlin_wood(hit, mat));
-	if (mat->pattern == PAT_TURBULENCE)
-		return (pattern_perlin_turb(hit, mat));
-    return (mat->albedo);
-}
-
-//(Note: While this handles translation/moving perfectly, fully supporting rotation and scaling would require dividing by the object's scale and multiplying by the inverse of its rotation matrix instead of a simple subtraction, but subtraction handles xyz placement perfectly!)
 /*
 ** 3D Checkerboard pattern.
 ** Divides world space into cubes using floor(), then alternates colors
@@ -47,21 +13,18 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - albedo or albedo2 depending on checker position
 */
-static t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
+t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
 	t_vec3	p;
 
 	scale = mat->pattern_scale;
-	if (scale < 0.001f)
-		scale = 1.0f;
-	p = vec3_sub(hit->point, hit->obj->transform.pos);
+	p = get_local_coords(hit);
 	if (((int)floorf(p.x * scale + 0.5f) + (int)floorf(p.y * scale + 0.5f)
 			+ (int)floorf(p.z * scale + 0.5f)) & 1)
 		return (mat->albedo2);
 	return (mat->albedo);
 }
-
 
 /*
 ** Gradient pattern using UV v-coordinate.
@@ -75,16 +38,14 @@ static t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - Linearly interpolated color based on hit->uv.v
 */
-static t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
+t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
 	float	t;
 	float	y;
 
 	scale = mat->pattern_scale;
-	if (scale < 0.001f)
-		scale = 1.0f;
-	y = hit->point.y - hit->obj->transform.pos.y;
+	y = get_local_coords(hit).y;
 	t = 0.5f * (sinf(y * scale) + 1.0f);
 	return (vec3_lerp(mat->albedo, mat->albedo2, t));
 }
@@ -98,16 +59,14 @@ static t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - albedo or albedo2 in alternating bands
 */
-static t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
+t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
 	float	value;
 	float	y;
 
 	scale = mat->pattern_scale;
-	if (scale < 0.001f)
-		scale = 1.0f;
-	y = hit->point.y - hit->obj->transform.pos.y;
+	y = get_local_coords(hit).y;
 	value = sinf(y * scale);
 	if (value < 0.0f)
 		return (mat->albedo2);
@@ -128,7 +87,7 @@ static t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - albedo or albedo2 in spiraling bands
 */
-static t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
+t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
 	float	angle;
@@ -136,9 +95,7 @@ static t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 	t_vec3	p;
 
 	scale = mat->pattern_scale;
-	if (scale < 0.001f)
-		scale = 1.0f;
-	p = vec3_sub(hit->point, hit->obj->transform.pos);
+	p = get_local_coords(hit);
 	angle = atan2f(p.x, p.z);
 	value = sinf(p.y * scale + angle);
 	if (value < 0.0f)
@@ -151,49 +108,19 @@ static t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 ** Renders a neon-style wireframe grid by checking if the local point
 ** fractional coordinate is very close to 0.0. Good for debugging.
 */
-static t_vec3	pattern_grid(const t_hit *hit, const t_material *mat)
+t_vec3	pattern_grid(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
 	t_vec3	p;
 	float	line_width;
 
 	scale = mat->pattern_scale;
-	if (scale < 0.001f)
-		scale = 1.0f;
-	p = vec3_scale(vec3_sub(hit->point, hit->obj->transform.pos), scale);
+	p = vec3_scale(get_local_coords(hit), scale);
 	p.x = p.x - floorf(p.x);
 	p.y = p.y - floorf(p.y);
 	p.z = p.z - floorf(p.z);
 	line_width = 0.05f;
 	if (p.x < line_width || p.y < line_width || p.z < line_width)
-		return (mat->albedo2);
-	return (mat->albedo);
-}
-
-/*
-** Brick wall pattern.
-** Staggers alternate rows by 0.5 in X and Z.
-*/
-static t_vec3   pattern_brick(const t_hit *hit, const t_material *mat)
-{
-	float	scale;
-	t_vec3	p;
-	int		y_int;
-
-	scale = mat->pattern_scale;
-	if (scale < 0.001f)
-		scale = 1.0f;
-	p = vec3_scale(vec3_sub(hit->point, hit->obj->transform.pos), scale);
-	y_int = (int)floorf(p.y);
-	if (y_int % 2 != 0)
-	{
-		p.x += 0.5f;
-		p.z += 0.5f;
-	}
-	p.x = p.x - floorf(p.x);
-	p.y = p.y - floorf(p.y);
-	p.z = p.z - floorf(p.z);
-	if (p.x < 0.05f || p.y < 0.05f || p.z < 0.05f)
 		return (mat->albedo2);
 	return (mat->albedo);
 }

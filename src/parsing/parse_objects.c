@@ -1,7 +1,7 @@
-#include "parsing.h"
-#include "objects.h"
 #include "libft_str.h"
 #include "libft_vector.h"
+#include "objects.h"
+#include "parsing.h"
 #include "utils.h"
 #include <stdlib.h>
 
@@ -66,8 +66,8 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 		return (E_INVALID_NUM);
 	if (!validate_normalized(cyl.axis))
 		return (E_RANGE);
-	if (!parse_float(tkns[3], &cyl.radius)
-		|| !parse_float(tkns[4], &cyl.height))
+	if (!parse_float(tkns[3], &cyl.radius) || !parse_float(tkns[4],
+			&cyl.height))
 		return (E_INVALID_NUM);
 	cyl.radius *= 0.5f;
 	if (cyl.radius <= 0.0f || cyl.height <= 0.0f)
@@ -95,8 +95,8 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 		return (E_INVALID_NUM);
 	if (!validate_normalized(cone.axis))
 		return (E_RANGE);
-	if (!parse_float(tkns[3], &angle_deg)
-		|| !parse_float(tkns[4], &cone.height))
+	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4],
+			&cone.height))
 		return (E_INVALID_NUM);
 	if (angle_deg <= 0.0f || angle_deg >= 90.0f || cone.height <= 0.0f)
 		return (E_RANGE);
@@ -109,11 +109,12 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 }
 
 // qu <q> <u> <v> <color|mat_id>
-t_error			parse_quad(t_context *ctx, t_parser *p, char **tokens)
+t_error	parse_quad(t_context *ctx, t_parser *p, char **tokens)
 {
 	uint32_t	tc;
 	uint32_t	mat_id;
 	t_quad		quad;
+	t_error		err;
 
 	tc = count_tokens(tokens);
 	if (tc != 5)
@@ -125,8 +126,9 @@ t_error			parse_quad(t_context *ctx, t_parser *p, char **tokens)
 		return (E_INVALID_NUM);
 	if (!parse_vec3(tokens[3], &quad.v))
 		return (E_INVALID_NUM);
-	if (resolve_material(ctx, p, tokens[4], &mat_id) != E_OK)
-		return (E_MATERIAL);
+	err = resolve_material(ctx, p, tokens[4], &mat_id);
+	if (err != E_OK)
+		return (err);
 	p->has_quad = true;
 	return (init_quad(ctx, &quad, mat_id));
 }

@@ -58,7 +58,7 @@ static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
 /**
  * Sample a texture at given UV coordinates using bilinear filtering.
  * Blends 4 neighboring pixels weighted by distance for smooth results.
- * Uses POT bitwise ops: shift replaces multiply for stride (width << 2 == width * 4).
+ * Uses POT bitwise ops: shift replaces multiply for stride 
  *
  * Algorithm:
  *   1. Find 4 surrounding pixels (x0,y0), (x1,y0), (x0,y1), (x1,y1)
@@ -70,23 +70,21 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 {
 	uint32_t	coords[4];
 	float		weights[2];
-	uint32_t	row[2];
-	uint32_t	col[2];
 	t_vec3		top;
 	t_vec3		bottom;
 
 	compute_bilinear_coords(tex, uv, coords, weights);
-	row[0] = coords[1] * (tex->width << 2);
-	row[1] = coords[3] * (tex->width << 2);
-	col[0] = coords[0] << 2;
-	col[1] = coords[2] << 2;
+	coords[1] *= (tex->width << 2);
+	coords[3] *= (tex->width << 2);
+	coords[0] <<= 2;
+	coords[2] <<= 2;
 	top = vlerp(
-			get_texel(tex->pixels, row[0] + col[0]),
-			get_texel(tex->pixels, row[0] + col[1]),
+			get_texel(tex->pixels, coords[1] + coords[0]),
+			get_texel(tex->pixels, coords[1] + coords[2]),
 			weights[0]);
 	bottom = vlerp(
-			get_texel(tex->pixels, row[1] + col[0]),
-			get_texel(tex->pixels, row[1] + col[1]),
+			get_texel(tex->pixels, coords[3] + coords[0]),
+			get_texel(tex->pixels, coords[3] + coords[2]),
 			weights[0]);
 	return (vlerp(top, bottom, weights[1]));
 }
