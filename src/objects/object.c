@@ -51,6 +51,6 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 	else
 		return (false);
 	if (result)
-		hit->obj = obj;
+		hit->obj = (t_object *)obj;
 	return (result);
 }
