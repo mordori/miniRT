@@ -1,5 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   perlin_tools.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 19:51:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:52:06 by wshoweky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "materials.h"
 #include <math.h>
+
+static inline float	object_seed(const t_object *obj)
+{
+	float	n;
+
+	n = tanf(obj->transform.pos.x * 12.9898f
+			+ obj->transform.pos.y * 78.233f
+			+ obj->transform.pos.z * 37.719f) * 43758.5453f;
+	return ((n - floorf(n)) * M_TAU);
+}
 
 /*
 ** Turbulence: sum of absolute values of noise at decreasing scales.
@@ -50,11 +72,14 @@ t_vec3	pattern_perlin_marble(t_hit *hit, const t_material *mat)
 	float	scale;
 	t_vec3	p;
 	float	t;
+	float	seed;
 
 	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
-	t = 0.5f * (1.0f + sinf(p.z + 10.0f * turbulence(p)));
+	seed = object_seed(hit->obj);
+	p = vec3_add(p, (t_vec3){seed, seed, seed});
+	t = 0.7f * (1.0f + sinf(p.z + 10.0f * turbulence(p)));
 	return (vec3_lerp(mat->albedo, mat->albedo2, t));
 }
 
