@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quad.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 19:53:47 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:54:27 by wshoweky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "objects.h"
 #include "utils.h"
 
@@ -9,7 +21,7 @@
 **
 ** Precomputed: normal, w (parametric coord helper), d (plane const), area.
 */
-t_error init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id)
+t_error	init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id)
 {
 	t_object	obj;
 	t_vec3		n_cross;
