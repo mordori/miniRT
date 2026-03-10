@@ -21,9 +21,12 @@ t_vec3	get_point(const t_ray *ray, float t)
 	return (vec3_add(ray->origin, vec3_scale(ray->dir, t)));
 }
 
-void	init_hit(t_path *path)
+t_hit	new_hit(uint32_t bounce)
 {
-	path->hit = (t_hit){0};
-	path->hit.t = M_INF;
-	path->hit.is_primary = (path->bounce == 0);
+	t_hit	hit;
+
+	hit = (t_hit){0};
+	hit.t = M_INF;
+	hit.is_primary = (bounce == 0);
+	return (hit);
 }

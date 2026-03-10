@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "rendering.h"
 #include "camera.h"
+#include "editing.h"
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
@@ -72,12 +73,19 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
 {
 	t_context	*ctx;
+	t_renderer	*r;
 
 	ctx = (t_context *)param;
-	(void)ctx;
-	(void)button;
-	(void)action;
+	r = &ctx->renderer;
 	(void)mods;
+
+	pthread_mutex_lock(&r->mutex);
+	if (r->mode == SOLID)
+	{
+		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
+			select_object(ctx);
+	}
+	pthread_mutex_unlock(&r->mutex);
 }
 
 void	cursor_hook(double xpos, double ypos, void* param)

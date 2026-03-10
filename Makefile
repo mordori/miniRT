@@ -67,7 +67,7 @@ SRCS		:=$(addprefix $(DIR_SRC), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
 				camera.c controls.c movement.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
-				)
+				select.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input.c mouse.c keys.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \

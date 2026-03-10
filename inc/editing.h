@@ -3,4 +3,6 @@
 
 # include "defines.h"
 
+void	select_object(t_context *ctx);
+
 #endif

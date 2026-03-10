@@ -522,7 +522,7 @@ struct __attribute__((aligned(64))) s_context
 	t_scene			scene;
 	t_texture		tex_bn;
 	t_editor		editor;
-	t_object		*selected_obj;
+	t_object	*selected_obj;
 	mlx_t			*mlx;
 	t_image			*img;
 	char			*file;
