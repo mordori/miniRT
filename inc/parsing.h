@@ -89,7 +89,7 @@ t_error			dispatch_pass(t_context *ctx, t_parser *p, char **tokens,
 					int pass);
 bool			bump_strength(t_material *mat, char **tkns);
 bool			parse_pattern_token(const char *tkn, t_pattern *out);
-t_error 		parse_mat_pattern(t_material *mat, char **tkns, int tc);
+t_error			parse_mat_pattern(t_material *mat, char **tkns, int tc);
 
 t_error			try_render_settings(t_context *ctx, char **tokens);
 t_error			parse_texture_def(t_context *ctx, char **tokens);

@@ -4,7 +4,7 @@
 #include "parsing.h"
 #include "utils.h"
 
-static int	read_lines(t_context *ctx, int fd, char **lines);
+static void	read_lines(t_context *ctx, int fd, char **lines);
 
 bool	parse_scene(t_context *ctx, int fd)
 {
@@ -26,7 +26,7 @@ bool	parse_scene(t_context *ctx, int fd)
 	return (true);
 }
 
-static int	read_lines(t_context *ctx, int fd, char **lines)
+static void	read_lines(t_context *ctx, int fd, char **lines)
 {
 	char	*line;
 	int		count;
@@ -39,12 +39,11 @@ static int	read_lines(t_context *ctx, int fd, char **lines)
 			free(line);
 			lines[count] = NULL;
 			try_free_all(lines);
-			fatal_error(ctx, "Too many lines in scene", __FILE__, count);
+			fatal_error(ctx, "Too many lines in scene", ctx->file, count);
 		}
 		lines[count++] = line;
 	}
 	lines[count] = NULL;
-	return (count);
 }
 
 t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
@@ -74,32 +73,32 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 void	validate_scene(t_context *ctx, t_parser *p)
 {
 	if (!p->has_ambient)
-		fatal_error(ctx, "Missing ambient light (A)", __FILE__, p->line_num);
+		fatal_error(ctx, "Missing ambient light (A)", ctx->file, p->line_num);
 	if (!p->has_light)
-		fatal_error(ctx, "Missing light source (L)", __FILE__, p->line_num);
+		fatal_error(ctx, "Missing light source (L)", ctx->file, p->line_num);
 	if (!p->has_camera)
-		fatal_error(ctx, "Missing camera (C)", __FILE__, p->line_num);
+		fatal_error(ctx, "Missing camera (C)", ctx->file, p->line_num);
 	if (!p->has_plane && !p->has_sphere && !p->has_cylinder
 		&& !p->has_cone && !p->has_quad)
-		fatal_error(ctx, "No objects defined in scene", __FILE__, p->line_num);
+		fatal_error(ctx, "No objects defined in scene", ctx->file, p->line_num);
 }
 
 void	print_error(t_context *ctx, t_error err, int line_num)
 {
-	static char	*msgs[] = {
-	[E_UNKNOWN_ID] = "Unknown element identifier",
-	[E_ARGS] = "Invalid argument count for element",
-	[E_INVALID_NUM] = "Invalid number format",
-	[E_RANGE] = "Value out of valid range",
-	[E_DUPLICATE] = "Duplicate unique element (A, L, or C)",
-	[E_MALLOC] = "Memory allocation failed",
-	[E_MISSING_OBJ] = "Missing object in scene",
-	[E_TEXTURE] = "Failed to load texture",
-	[E_MATERIAL] = "Invalid material reference",
-	[E_EMISSIVE] = "Emissive material on object / "
-		"non-emissive material on light",
-	[E_TOO_MANY] = "Too many textures or materials"};
+	static char	*msgs[13];
 
+	msgs[E_UNKNOWN_ID] = "Unknown element identifier";
+	msgs[E_ARGS] = "Invalid argument count for element";
+	msgs[E_INVALID_NUM] = "Invalid number format";
+	msgs[E_RANGE] = "Value out of valid range";
+	msgs[E_DUPLICATE] = "Duplicate unique element (A, L, or C)";
+	msgs[E_MALLOC] = "Memory allocation failed";
+	msgs[E_MISSING_OBJ] = "Missing object in scene";
+	msgs[E_TEXTURE] = "Failed to load texture";
+	msgs[E_MATERIAL] = "Invalid material reference";
+	msgs[E_EMISSIVE] = "Emissive material on object / "
+		"non-emissive material on light";
+	msgs[E_TOO_MANY] = "Too many textures or materials";
 	if (err > E_OK && err <= E_TOO_MANY)
 		fatal_error(ctx, msgs[err], ctx->file, line_num);
 }

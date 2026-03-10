@@ -4,7 +4,7 @@ CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
 CC			:=clang
-WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -Wshadow \
+WFLAGS		:=-Wall -Wextra -Werror -Wpedantic -Wunreachable-code -Wshadow \
 			 -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wswitch-enum -Wundef
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
@@ -73,12 +73,12 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				ambient.c point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
-				material.c patterns.c textures.c perlin_tools.c perlin_noise.c)
+				material.c patterns.c textures.c perlin_tools.c perlin_noise.c patterns_tools.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c quad.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse.c parse_elements.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c try_parse.c \
-				 parse_patterns.c)
+				parse.c parse_elements.c parse_light.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c parse_pass.c \
+				 parse_patterns.c parse_validate.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				editing/tracer.c editing/lighting.c \
 				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c sampling.c )

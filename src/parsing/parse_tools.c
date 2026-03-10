@@ -33,14 +33,14 @@ bool	parse_float(char *str, float *out)
 
 bool	parse_uint(char *str, uint32_t *out)
 {
-	long	value;
-	int		i;
+	unsigned long	value;
+	int				i;
 
 	if (!str || !out)
 		return (false);
 	while (ft_isspace(*str))
 		str++;
-	if (*str == '\0')
+	if (*str == '\0' || ft_strlen(str) > 10)
 		return (false);
 	i = 0;
 	while (str[i] && ft_isdigit(str[i]))
@@ -49,8 +49,10 @@ bool	parse_uint(char *str, uint32_t *out)
 		i++;
 	if (str[i] != '\0' || i == 0)
 		return (false);
-	value = ft_atoi(str);
-	if (value < 0)
+	if (i == 10 && ft_strncmp(str, "4294967295", 10) > 0)
+		return (false);
+	value = strtoul(str, NULL, 10);
+	if (value > UINT32_MAX)
 		return (false);
 	*out = (uint32_t)value;
 	return (true);
@@ -90,7 +92,6 @@ bool	parse_color(char *str, t_vec3 *color)
 	return (ret);
 }
 
-// Parse a vec3 from a string in the format "x,y,z"
 bool	parse_vec3(char *str, t_vec3 *vec)
 {
 	char	**tokens;

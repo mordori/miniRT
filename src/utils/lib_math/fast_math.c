@@ -50,18 +50,20 @@ float	fast_acosf(float x)
 
 /**
  * Fast sRGB gamma approximation: powf(x, 1/2.2) ≈ x^0.4545
- * Uses least-squares polynomial in sqrt(x) and x^0.25.
- * Fitted at x={0.01, 0.5, 1.0} with constraint f(1)=1.
- * Max error: ~1.7% in midtones, <1% in highlights.
+ * Uses 4-term polynomial in x^0.25, x^0.5, x^0.75, and x.
+ * Computed using s * q for a "free" x^0.75 term.
+ * Max error: ~0.3%.
  */
 float	fast_srgb(float x)
 {
 	float	s;
 	float	q;
+	float	sq;
 
 	if (x <= 0.0f)
 		return (0.0f);
 	s = sqrtf(x);
 	q = sqrtf(s);
-	return (1.03011f * s + 0.04832f * q - 0.07843f * x);
+	sq = s * q;
+	return (0.04400f * q + 1.17400f * s - 0.28500f * sq + 0.06700f * x);
 }
