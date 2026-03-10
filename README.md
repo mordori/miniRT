@@ -37,13 +37,13 @@
 - Modern PBR pipeline with microfacet BSDF
 - Custom scene description format
 - Bilinear texture filtering
-- Plane, sphere, cylinder, and cone primitives
+- Plane, sphere, cylinder, cone, and quad primitives
+- Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly controller
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
-- Procedural patterns
 - Normal maps
 - Trackball controller for Edit Mode
 - Quaternions and proper transforms
@@ -53,9 +53,8 @@
 - Support for MacOS and Apple Silicon
 - Image based lighting
 - EV100 exposure triangle
-- Additional post-processing modules
+- Agx tonemapping
 - Denoising solution
-- Quads and boxes
 - Loading .ojb meshes
 - Improve the BVH
 - Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
@@ -198,6 +197,7 @@ Path tracing
 - The Ray Tracer Challenge by Jamis Buck
 
 PBR
+- https://imadrahmoune.com/pbr/
 - https://google.github.io/filament/main/filament.html
 - https://blog.selfshadow.com/
 - https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
@@ -206,6 +206,10 @@ PBR
 VNDF
 - https://arxiv.org/pdf/2306.05044
 - https://www.youtube.com/watch?v=u7TafvTVmbo
+
+Camera
+- https://digitaldesign.aalto.fi/digital-design-workflows/raster/digital-photography/
+- https://ciechanow.ski/cameras-and-lenses/
 
 Math
 - https://immersivemath.com/ila/index.html

@@ -63,7 +63,7 @@ bool	hit_bvh(uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_n
 			continue ;
 		if (node->obj)
 		{
-			temp.t = hit->t;
+			temp = *hit;
 			if (!(node->obj->flags & OBJ_HIDDEN_SCENE) && !(hit->is_primary && (node->obj->flags & OBJ_HIDDEN_CAM)) && hit_object(node->obj, ray, &temp))
 			{
 				res = true;

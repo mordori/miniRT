@@ -10,6 +10,7 @@ uint32_t	new_material(t_context *ctx, t_material *mat)
 	if (!new_mat)
 		fatal_error(ctx, errors(ERR_MATADD), __FILE__, __LINE__);
 	mat->ior = fmaxf(mat->ior, 1.0f);
+	mat->f0_dielectric = vec3_n(reflectance(mat->ior));
 	*new_mat = *mat;
 	vector_try_add(ctx, &ctx->scene.assets.materials, new_mat);
 	return (ctx->scene.assets.materials.total - 1);
@@ -32,7 +33,6 @@ static t_vec3	apply_normal_map(const t_material *mat, t_vec3 n, t_path *path)
 void	set_material_data(t_path *path)
 {
 	t_vec3		albedo;
-	t_vec3		f0_dielectric;
 	float		rough_bump;
 
 	path->n = path->hit.normal;
@@ -46,9 +46,8 @@ void	set_material_data(t_path *path)
 		rough_bump = 0.05f * (float)path->bounce;
 		path->alpha = fmaxf(path->alpha, rough_bump * rough_bump);
 	}
-	f0_dielectric = vec3_n(reflectance(path->mat->ior));
 	albedo = get_surface_color(path->mat, &path->hit);
-	path->f0 = vec3_lerp(f0_dielectric, albedo, path->mat->metallic);
+	path->f0 = vec3_lerp(path->mat->f0_dielectric, albedo, path->mat->metallic);
 }
 
 void	set_shader_data(t_path *path)

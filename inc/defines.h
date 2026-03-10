@@ -242,6 +242,7 @@ struct __attribute__((aligned(16))) s_material
 	t_vec3			albedo;
 	t_vec3			albedo2;
 	t_vec3			emission;
+	t_vec3			f0_dielectric;
 	float			metallic;
 	float			roughness;
 	float			ior;
