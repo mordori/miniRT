@@ -69,5 +69,7 @@ void		printf_init(t_context *ctx);
 void		save_render(t_context *ctx, uint8_t *pixels, uint32_t n);
 char		*timestamp(char *buf);
 float		static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
+uint32_t	color_wave(uint32_t c1, uint32_t c2, float speed);
+uint32_t	engine_time(void);
 
 #endif

@@ -8,7 +8,6 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	r->tiles_total = r->tiles.x * r->tiles.y;
 	r->tile_index = 0;
 	r->cam = *cam;
-	r->mode = RENDERED;
 	r->ray_bounces = r->render_bounces;
 	r->frame = 1;
 	r->render_time = time_now();
@@ -42,6 +41,8 @@ void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
 {
 	if (r->mode == RENDERED)
 		r->mode = PREVIEW;
+	if (r->mode == SOLID)
+		memset(ctx->selection_mask, 0, sizeof(float) * ctx->renderer.pixels);
 	r->cam = ctx->scene.cam;
 	r->ray_bounces = PREVIEW_BOUNCES;
 	r->frame = 1;

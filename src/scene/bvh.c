@@ -3,9 +3,9 @@
 #include "utils.h"
 
 static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n, t_bvh_node *tree, uint32_t *nodes);
-static inline void	branch_idx(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
+static inline void		branch_idx(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
 
-void	init_bvh(t_context *ctx)
+bool	init_bvh(t_context *ctx)
 {
 	t_scene		*scene;
 	t_object	**objs;
@@ -14,24 +14,30 @@ void	init_bvh(t_context *ctx)
 
 	scene = &ctx->scene;
 	n = scene->geo.objs.total;
-	if (n == 0)
-		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	objs = (t_object **)scene->geo.objs.items;
+	free(scene->geo.bvh_nodes);
+	scene->geo.bvh_nodes = NULL;
+	if (n == 0)
+	{
+		scene->geo.bvh_root_idx = 0;
+		return (true);
+	}
 	scene->geo.bvh_nodes = malloc(sizeof(t_bvh_node) * ((2 * n) - 1));
 	if (!scene->geo.bvh_nodes)
-		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-	nodes = 0;
+		return (false);
+	nodes = 1;
 	scene->geo.bvh_root_idx = build_bvh(ctx, (const t_object **)objs, n, scene->geo.bvh_nodes, &nodes);
+	return (true);
 }
 
 static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n, t_bvh_node *tree, uint32_t *nodes)
 {
 	t_bvh_node	*node;
-	uint32_t	idx;
+	int32_t		idx;
 	size_t		half_n;
 
 	idx = (*nodes)++;
-	node = &tree[idx];
+	node = &tree[idx - 1];
 	*node = (t_bvh_node){0};
 	if (n == 1)
 	{
@@ -54,11 +60,13 @@ bool	hit_bvh(uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_n
 	t_hit		temp;
 	bool		res;
 
+	if (!root_idx)
+		return (false);
 	res = false;
 	stack[i++] = root_idx;
 	while (i > 0)
 	{
-		node = &tree[stack[--i]];
+		node = &tree[stack[--i] - 1];
 		if (!hit_aabb(&node->aabb, ray, hit->t, 0))
 			continue ;
 		if (node->obj)
@@ -83,11 +91,13 @@ bool	hit_bvh_shadow(uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node 
 	t_bvh_node	*node;
 	t_hit		temp;
 
+	if (!root_idx)
+		return (false);
 	i = 0;
 	stack[i++] = root_idx;
 	while (i > 0)
 	{
-		node = &tree[stack[--i]];
+		node = &tree[stack[--i] - 1];
 		if (!hit_aabb(&node->aabb, ray, dist, 0))
 			continue ;
 		if (node->obj)

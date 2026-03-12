@@ -34,3 +34,15 @@ void	limit_polling_rate(t_renderer *r)
 	wait_until(last_frame_time + 17);
 	last_frame_time = time_now();
 }
+
+uint32_t	color_wave(uint32_t c1, uint32_t c2, float speed)
+{
+	float		time;
+	float		wave;
+	float		t;
+
+	time = engine_time() / 1000.0f;
+	wave = sinf(time * speed);
+	t = (wave + 1.0f) * 0.5f;
+	return (vec3_to_uint32(lerp_color(c1, c2, t)));
+}

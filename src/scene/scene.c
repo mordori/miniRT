@@ -28,14 +28,15 @@ void	init_scene(t_context *ctx)
 	ctx->bn_stride = (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
 	close(ctx->fd);
 	ctx->fd = ERROR;
-	init_bvh(ctx);
+	if (!init_bvh(ctx))
+		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 }
 
 void	clean_scene(t_context *ctx)
 {
 	int	i;
 
-	free (ctx->scene.geo.bvh_nodes);
+	free(ctx->scene.geo.bvh_nodes);
 	vector_free(&ctx->scene.geo.objs, &ctx->scene.geo.planes, &ctx->scene.env.lights, &ctx->scene.assets.materials, NULL);
 	free_texture(&ctx->scene.env.skydome);
 	i = 0;
