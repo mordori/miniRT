@@ -58,7 +58,7 @@ static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
 /**
  * Sample a texture at given UV coordinates using bilinear filtering.
  * Blends 4 neighboring pixels weighted by distance for smooth results.
- * Uses POT bitwise ops: shift replaces multiply for stride 
+ * Uses POT bitwise ops: shift replaces multiply for stride
  *
  * Algorithm:
  *   1. Find 4 surrounding pixels (x0,y0), (x1,y0), (x0,y1), (x1,y1)
@@ -96,7 +96,7 @@ t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
 t_vec3	get_surface_color(const t_material *mat, const t_hit *hit)
 {
 	if (mat->base_color == BASE_TEXTURE)
-		return (vec3_mul(mat->albedo, sample_texture(&mat->texture, hit->uv)));
+		return (sample_texture(&mat->texture, hit->uv));
 	if (mat->base_color == BASE_PATTERN)
 		return (eval_pattern((t_material *)mat, (t_hit *)hit));
 	return (mat->albedo);

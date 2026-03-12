@@ -2,17 +2,24 @@
 render	32		8
 
 # Ambient Light
-A		0.5	255,255,255
+A		0.2	255,255,255
 
 # Cameras
-C		140,20,-150			0,0,1			100			0.2		16.0
+# Cinematic view near Earth looking roughly towards Jupiter and Outer Planets
+C		140,20,-150			0,0,1			100				1.0		16
 
-# Light Points
-L		150,300,0				1.0			255,250,240		109.0		0
-L		150,-300,0				1.0			255,250,240		109.0		0
+# C		150,80,-250		0,0,1			80				0.1		16.0
+
+# Central Light Point matching the Sun
+L		150,300,-70			1.0			255,255,255		10.0		0
+L		150,-300,-50		1.0			255,255,255		10.0		0
+L		0,0,-350			1.0			255,255,255		10.0		0
+L		450,0,50			1.0			255,255,255		10.0		11
+L		100,0,250			1.0			255,255,255		10.0		11
+L		-300,0,-50			1.0			255,255,255		10.0		11
 
 # Background
-sky		solar/2k_stars_milky_way.png
+sky		stars.png
 
 # Textures
 tex		sun_alb			solar/2k_sun.png
@@ -31,7 +38,7 @@ tex		neptune_alb		solar/2k_neptune.png
 #rgb(160, 200, 210)
 
 # Light
-mat		0		255,255,255		0.0			0.0			1.0		0.0				50000.0				255,250,230			2		_			_
+mat		0		255,255,255		0.0			0.0			1.0		0.0				1000.0				255,255,255			2		_			_
 
 # Planets
 mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		mercury_alb		_			_

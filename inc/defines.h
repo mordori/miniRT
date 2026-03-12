@@ -219,7 +219,7 @@ struct __attribute__((aligned(16))) s_hit
 {
 	float			t;
 	bool			is_primary;
-	const t_object	*obj;
+	t_object		*obj;
 	t_vec3			point;
 	t_vec3			normal;
 	t_vec3			tangent;
