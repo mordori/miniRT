@@ -181,6 +181,8 @@ static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 {
 	t_vec3	apex_to_hit;
 	t_vec3	axis_component;
+	t_vec3	tang;
+	t_vec3	btan;
 	float	projection;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
@@ -188,10 +190,33 @@ static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 	projection = vec3_dot(apex_to_hit, cone->axis);
 	axis_component = vec3_scale(cone->axis, projection * (1.0f + cone->tan_sq));
 	hit->normal = vec3_normalize(vec3_sub(apex_to_hit, axis_component));
+	onb(cone->axis, &tang, &btan);
+	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan),
+			vec3_dot(hit->normal, tang)) * M_1_2PI + 0.5f;
+	hit->uv.v = projection * cone->inv_height;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
-	hit->uv.u = atan2f(hit->normal.x, hit->normal.z) * M_1_2PI + 0.5f;
-	hit->uv.v = projection * cone->inv_height;
+}
+
+/*
+** Compute UV coordinates for the cone base cap hit.
+** Projects the hit offset onto an ONB derived from the cone axis,
+** giving correct UV for any axis orientation.
+**
+** @param cone       - The cone containing geometry data
+** @param to_hit     - Vector from base center to hit point
+** @param base_r     - Radius of the base disk (for normalization)
+** @param hit        - Hit record to write UV into
+*/
+static void	compute_cone_cap_uv(const t_cone *cone, t_vec3 to_hit,
+		float base_r, t_hit *hit)
+{
+	t_vec3	tang;
+	t_vec3	btan;
+
+	onb(cone->axis, &tang, &btan);
+	hit->uv.u = vec3_dot(to_hit, tang) / base_r * 0.5f + 0.5f;
+	hit->uv.v = vec3_dot(to_hit, btan) / base_r * 0.5f + 0.5f;
 }
 
 /*
@@ -235,8 +260,7 @@ static bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit)
 	hit->normal = vec3_scale(cone->axis, -1.0f);
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
-	hit->uv.u = (to_hit.x / base_radius) * 0.5f + 0.5f;
-	hit->uv.v = (to_hit.z / base_radius) * 0.5f + 0.5f;
+	compute_cone_cap_uv(cone, to_hit, base_radius, hit);
 	return (true);
 }
 

@@ -2,14 +2,14 @@
 # Proportional Scale System:
 # - Earth Radius = 1.0 unit. All planet sizes are exactly to scale relative to Earth.
 
-render	256		64
+render	32		8
 
 # Ambient Light
 A		0.05	255,255,255
 
 # Cameras
 # Cinematic view near Earth looking roughly towards Jupiter and Outer Planets
-C		140,20,-150			0,0,1			100				0.1		16
+C		140,20,-150			0,0,1			100
 
 # C		150,80,-250		0,0,1			80				0.1		16.0
 

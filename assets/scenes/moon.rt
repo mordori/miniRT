@@ -1,6 +1,6 @@
 # Moon Scene - Textures and Materials Demo
 # Render settings (samples, bounces) - use _ for default
-render	128		32
+render	32		8
 
 # Ambient
 A		0.7		220,220,230
