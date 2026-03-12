@@ -36,7 +36,7 @@ t_vec3		sample_disk(t_vec2 uv);
 t_vec3		sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
 void		sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv);
 
-bool	trace_ray_editing(const t_context *ctx, t_path *path);
+bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel);
 void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light, float rough);
 void	ambient_lighting(t_path *path, const t_light *light);
 // void	add_directional_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);

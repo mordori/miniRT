@@ -18,6 +18,21 @@ uint32_t	time_now(void)
 	return (time);
 }
 
+uint32_t	engine_time(void)
+{
+	static struct timeval	start;
+	struct timeval			now;
+	uint32_t				time;
+
+	if (start.tv_sec == 0)
+		gettimeofday(&start, NULL);
+	gettimeofday(&now, NULL);
+	time = (now.tv_sec - start.tv_sec) * 1000;
+	time += now.tv_usec / 1000;
+	time -= start.tv_usec / 1000;
+	return (time);
+}
+
 void	wait_until(uint32_t end)
 {
 	uint32_t	now;
