@@ -28,7 +28,7 @@
 # define SENS_ORBIT				0.0009f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				0.5f
+# define SENS_MOVE				1.5f
 
 # define SENSOR_HEIGHT_MM		24.0f
 # define SENSOR_HALF_HEIGHT_MM	12.0f
@@ -219,7 +219,7 @@ struct __attribute__((aligned(16))) s_hit
 {
 	float			t;
 	bool			is_primary;
-	const t_object	*obj;
+	t_object		*obj;
 	t_vec3			point;
 	t_vec3			normal;
 	t_vec3			tangent;

@@ -16,23 +16,13 @@ t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 	return (c);
 }
 
-// bottleneck is powf()
-// static inline t_vec3	linear_to_srgb(t_vec3 c)
-// {
-// 	t_vec3		res;
-
-// 	res.r = powf(c.r, M_1_2P2F);
-// 	res.g = powf(c.g, M_1_2P2F);
-// 	res.b = powf(c.b, M_1_2P2F);
-// 	return (res);
-// }
 static inline t_vec3	linear_to_srgb(t_vec3 c)
 {
 	t_vec3		res;
 
-	res.r = fast_srgb(c.r);
-	res.g = fast_srgb(c.g);
-	res.b = fast_srgb(c.b);
+	res.r = powf(c.r, M_1_2P2F);
+	res.g = powf(c.g, M_1_2P2F);
+	res.b = powf(c.b, M_1_2P2F);
 	return (res);
 }
 

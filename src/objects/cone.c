@@ -190,7 +190,7 @@ static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 	hit->normal = vec3_normalize(vec3_sub(apex_to_hit, axis_component));
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
-	hit->uv.u = atan2f(hit->normal.x, hit->normal.z) * M_1_2PI + 0.5f;
+	hit->uv.u = fast_atan2f(hit->normal.x, hit->normal.z) * M_1_2PI + 0.5f;
 	hit->uv.v = projection * cone->inv_height;
 }
 

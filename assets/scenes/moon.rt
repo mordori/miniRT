@@ -6,7 +6,7 @@ render	128		32
 A		0.7		220,220,230
 
 # Skydome
-# sky		stars.png
+sky		stars.png
 
 # Camera
 C		0,0,15		0,0,-1		60		1.0		9

@@ -108,7 +108,7 @@ t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 
 	scale = mat->pattern_scale;
 	p = get_local_coords(hit);
-	angle = atan2f(p.x, p.z);
+	angle = fast_atan2f(p.x, p.z);
 	value = sinf(p.y * scale + angle);
 	if (value < 0.0f)
 		return (mat->albedo2);

@@ -5,20 +5,24 @@
 render	256		64
 
 # Ambient Light
-A		0.05	255,255,255
+A		0.2	255,255,255
 
 # Cameras
 # Cinematic view near Earth looking roughly towards Jupiter and Outer Planets
-C		140,20,-150			0,0,1			100				0.1		16
+C		140,20,-150			0,0,1			100				1.0		16
 
 # C		150,80,-250		0,0,1			80				0.1		16.0
 
 # Central Light Point matching the Sun
-L		150,300,0				1.0			255,250,240		109.0		0
-L		150,-300,0				1.0			255,250,240		109.0		0
+L		150,300,-70			1.0			255,255,255		10.0		0
+L		150,-300,-50		1.0			255,255,255		10.0		0
+L		0,0,-350			1.0			255,255,255		10.0		0
+L		450,0,50			1.0			255,255,255		10.0		11
+L		100,0,250			1.0			255,255,255		10.0		11
+L		-300,0,-50			1.0			255,255,255		10.0		11
 
 # Background
-sky		solar/2k_stars_milky_way.png
+sky		stars.png
 
 # Textures
 tex		sun_alb			solar/2k_sun.png
@@ -35,19 +39,21 @@ tex		neptune_alb		solar/2k_neptune.png
 # Materials
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[normal_map]	[bump_str]
 # Light
-mat		0		255,255,255		0.0			0.0			1.0		0.0				50000.0				255,250,230			2		_			_
+mat		0		255,255,255		0.0			0.0			1.0		0.0				1000.0				255,255,255			2		_			_
 
 # Planets
-mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		mercury_alb		_			_
-mat		2		255,255,255		0.0			0.80		1.45	0.0				0.0					0,0,0				0		venus_alb		_			_
-mat		3		255,255,255		0.0			0.70		1.45	0.0				0.0					0,0,0				0		earth_alb		_			_
-mat		4		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		moon_alb		_			_
-mat		5		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		mars_alb		_			_
-mat		6		255,255,255		0.0			0.50		1.45	0.0				0.0					0,0,0				0		jupiter_alb		_			_
-mat		7		255,255,255		0.0			0.50		1.45	0.0				0.0					0,0,0				0		saturn_alb		_			_
-mat		8		255,255,255		0.0			0.40		1.45	0.0				0.0					0,0,0				0		uranus_alb		_			_
-mat		9		255,255,255		0.0			0.40		1.45	0.0				0.0					0,0,0				0		neptune_alb		_			_
-mat		10		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		sun_alb			_			_
+mat		1		0,100,255		0.0			1.0			1.45	0.0				0.0					0,0,0				12		mercury_alb		_			_
+mat		2		255,10,255		0.0			1.0			1.45	0.0				0.0					0,0,0				12		venus_alb		_			_
+mat		3		10,150,255		0.0			1.0			1.45	0.0				0.0					0,0,0				12		earth_alb		_			_
+mat		4		128,128,128		0.0			1.0			1.45	0.0				0.0					0,0,0				12		moon_alb		_			_
+mat		5		255,100,10		0.0			1.0			1.45	0.0				0.0					0,0,0				12		mars_alb		_			_
+mat		6		200,200,40		0.0			1.0			1.45	0.0				0.0					0,0,0				12		jupiter_alb		_			_
+mat		7		255,255,10		0.0			1.0			1.45	0.0				0.0					0,0,0				12		saturn_alb		_			_
+mat		8		200,255,0		0.0			1.0			1.45	0.0				0.0					0,0,0				12		uranus_alb		_			_
+mat		9		0,0,255			0.0			1.0			1.45	0.0				0.0					0,0,0				12		neptune_alb		_			_
+mat		10		255,50,0		0.0			1.0			1.45	0.0				0.0					0,0,0				12		sun_alb			_			_
+
+mat		11		255,255,255		0.0			0.0			1.0		0.0				500.0				255,255,255			0		_			_
 
 # Geometry Objects
 # Sun: True relative size (Radius 109 -> Diameter 218)

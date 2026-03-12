@@ -5,7 +5,7 @@
 
 static inline void	process_frame(t_context *ctx, t_renderer *r);
 static inline void	copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
-static inline void	copy_frame_buffer_preview(const t_context *ctx, const t_renderer *r, t_vec3 *buf, uint32_t *pixels);
+static inline void	copy_frame_buffer_preview(const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
 
 void	frame_loop(void *param)
 {
@@ -57,7 +57,7 @@ void	blit(const t_context *ctx, const t_renderer *r)
 	if (r->mode == RENDERED)
 		copy_frame_buffer(ctx, buf, pixels, &pixel);
 	else
-		copy_frame_buffer_preview(ctx, r, buf, pixels);
+		copy_frame_buffer_preview(ctx, r->width, buf, pixels);
 }
 
 static inline void	copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel)
@@ -81,9 +81,8 @@ static inline void	copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t
 	}
 }
 
-static inline void	copy_frame_buffer_preview(const t_context *ctx, const t_renderer *r, t_vec3 *buf, uint32_t *pixels)
+static inline void	copy_frame_buffer_preview(const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels)
 {
-	uint32_t			color;
 	uint32_t			i;
 	uint32_t			mask;
 	const float			*m = ctx->selection_mask;
@@ -97,16 +96,16 @@ static inline void	copy_frame_buffer_preview(const t_context *ctx, const t_rende
 		if (m[i] > 0.0f)
 		{
 			mask = 0u - ((
-(i % r->width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i] - 0.1f) ||
-((i + 1) % r->width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i] - 0.1f) ||
-(i >= r->width && m[i - r->width] < 0.0f && fabsf(m[i - r->width])> m[i] - 0.1f) ||
-(i + r->width < limit && m[i + r->width] < 0.0f && fabsf(m[i + r->width]) > m[i] - 0.1f)
+(i % width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i]) ||
+((i + 1) % width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i]) ||
+(i >= width && m[i - width] < 0.0f && fabsf(m[i - width])> m[i]) ||
+(i + width < limit && m[i + width] < 0.0f && fabsf(m[i + width]) > m[i])
 ));
 		}
 		else
 			mask = 0u;
-		color = vec3_to_uint32(post_process_preview(ctx, buf[i]));
-		pixels[i++] = (edge_color & mask) | (color & ~mask);
+		pixels[i] = (edge_color & mask) | (vec3_to_uint32(post_process_preview(ctx, buf[i])) & ~mask);
+		++i;
 	}
 }
 
