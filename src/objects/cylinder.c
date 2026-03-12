@@ -164,6 +164,8 @@ static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 {
 	t_vec3	hit_vec;
 	t_vec3	axis_point;
+	t_vec3	tang;
+	t_vec3	btan;
 	float	projection;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
@@ -171,8 +173,31 @@ static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 	projection = vec3_dot(hit_vec, cyl->axis);
 	axis_point = vec3_add(cyl->center, vec3_scale(cyl->axis, projection));
 	hit->normal = vec3_normalize(vec3_sub(hit->point, axis_point));
+	onb(cyl->axis, &tang, &btan);
+	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan),
+			vec3_dot(hit->normal, tang)) * M_1_2PI + 0.5f;
+	hit->uv.v = (projection / cyl->height) + 0.5f;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
+}
+
+/*
+** Compute UV coordinates for a circular end cap hit.
+** Projects the hit offset onto an ONB derived from the cylinder axis,
+** mapping the disk to [0,1]×[0,1] UV space consistently for both caps.
+**
+** @param cyl       - The cylinder containing geometry data
+** @param to_hit    - Vector from cap center to hit point
+** @param hit       - Hit record to write UV into
+*/
+static void	compute_cap_uv(const t_cylinder *cyl, t_vec3 to_hit, t_hit *hit)
+{
+	t_vec3	tang;
+	t_vec3	btan;
+
+	onb(cyl->axis, &tang, &btan);
+	hit->uv.u = vec3_dot(to_hit, tang) / cyl->radius * 0.5f + 0.5f;
+	hit->uv.v = vec3_dot(to_hit, btan) / cyl->radius * 0.5f + 0.5f;
 }
 
 /*
@@ -211,6 +236,7 @@ static bool	hit_cap(const t_cylinder *cyl, const t_ray *ray,
 		hit->normal = vec3_scale(cyl->axis, -1.0f);
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
+	compute_cap_uv(cyl, to_hit, hit);
 	return (true);
 }
 
@@ -228,24 +254,16 @@ bool	hit_cylinder(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {
 	const t_cylinder	*cyl;
 	float				half_height;
-	t_hit				temp_hit;
 	bool				found;
 
 	cyl = &shape->cylinder;
 	if (cyl->radius < G_EPSILON || cyl->height < G_EPSILON)
 		return (false);
 	half_height = cyl->height * 0.5f;
-	found = false;
-	temp_hit = *hit;
-	if (hit_body(cyl, ray, &temp_hit))
-	{
-		compute_body_normal(cyl, ray, &temp_hit);
-		*hit = temp_hit;
-		found = true;
-	}
-	if (hit_cap(cyl, ray, half_height, &temp_hit) && temp_hit.t < hit->t)
-		return (*hit = temp_hit, true);
-	if (hit_cap(cyl, ray, -half_height, &temp_hit) && temp_hit.t < hit->t)
-		return (*hit = temp_hit, true);
+	found = hit_body(cyl, ray, hit);
+	if (found)
+		compute_body_normal(cyl, ray, hit);
+	found |= hit_cap(cyl, ray, half_height, hit);
+	found |= hit_cap(cyl, ray, -half_height, hit);
 	return (found);
 }

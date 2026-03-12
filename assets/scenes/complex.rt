@@ -1,7 +1,7 @@
 # Complex Scene - Multiple materials and lighting
 
 # Render settings (samples, bounces) - use _ for default
-render	128		32
+render	32		8
 
 # Ambient
 A		0.15			64,64,80
