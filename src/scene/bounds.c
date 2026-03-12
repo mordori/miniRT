@@ -13,17 +13,34 @@ t_aabb	sphere_bounds(const t_object *obj)
 	return (aabb);
 }
 
-// TODO: rotation
+/*
+** Compute AABB for an arbitrarily oriented cylinder.
+**
+** For a cylinder with normalized axis A, radius r, height h, the
+** half-extent along world axis i is:
+**   r * sqrt(1 - A_i^2)  +  (h/2) * |A_i|
+** The first term is the max radial projection (sin of angle to world axis),
+** the second is the axial projection along that world axis.
+*/
 t_aabb	cylinder_bounds(const t_object *obj)
 {
 	t_aabb		aabb;
-	t_cylinder	cylinder;
+	t_cylinder	cyl;
 	t_vec3		half;
+	t_vec3		a2;
 
-	cylinder = obj->shape.cylinder;
-	half = (t_vec3){{cylinder.radius, cylinder.height / 2.0f, cylinder.radius}};
-	aabb.min = vec3_sub(obj->transform.pos, half);
-	aabb.max = vec3_add(obj->transform.pos, half);
+	cyl = obj->shape.cylinder;
+	a2.x = cyl.axis.x * cyl.axis.x;
+	a2.y = cyl.axis.y * cyl.axis.y;
+	a2.z = cyl.axis.z * cyl.axis.z;
+	half.x = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.x))
+		+ (cyl.height * 0.5f) * fabsf(cyl.axis.x);
+	half.y = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.y))
+		+ (cyl.height * 0.5f) * fabsf(cyl.axis.y);
+	half.z = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z))
+		+ (cyl.height * 0.5f) * fabsf(cyl.axis.z);
+	aabb.min = vec3_sub(cyl.center, half);
+	aabb.max = vec3_add(cyl.center, half);
 	return (aabb);
 }
 
@@ -32,13 +49,19 @@ t_aabb	cone_bounds(const t_object *obj)
 	t_aabb		aabb;
 	t_cone		cone;
 	t_vec3		base_center;
-	t_vec3		r;
+	t_vec3		radial;
+	t_vec3		a2;
 
 	cone = obj->shape.cone;
 	base_center = vec3_add(cone.apex, vec3_scale(cone.axis, cone.height));
-	r = vec3_n(cone.base_radius);
-	aabb.min.v = _mm_min_ps(cone.apex.v, vec3_sub(base_center, r).v);
-	aabb.max.v = _mm_max_ps(cone.apex.v, vec3_add(base_center, r).v);
+	a2.x = cone.axis.x * cone.axis.x;
+	a2.y = cone.axis.y * cone.axis.y;
+	a2.z = cone.axis.z * cone.axis.z;
+	radial.x = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.x));
+	radial.y = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.y));
+	radial.z = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z));
+	aabb.min.v = _mm_min_ps(cone.apex.v, vec3_sub(base_center, radial).v);
+	aabb.max.v = _mm_max_ps(cone.apex.v, vec3_add(base_center, radial).v);
 	return (aabb);
 }
 

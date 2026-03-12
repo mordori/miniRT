@@ -100,18 +100,18 @@ static float	perlin_lerp(const int *h, t_vec3 f, t_vec3 uvw)
 	float	y1;
 	float	y2;
 
-	x1 = ft_lerp(grad(perm(h[0]), f.x, f.y, f.z),
+	x1 = ft_lerp_fast(grad(perm(h[0]), f.x, f.y, f.z),
 			grad(perm(h[2]), f.x - 1.0f, f.y, f.z), uvw.x);
-	x2 = ft_lerp(grad(perm(h[1]), f.x, f.y - 1.0f, f.z),
+	x2 = ft_lerp_fast(grad(perm(h[1]), f.x, f.y - 1.0f, f.z),
 			grad(perm(h[3]), f.x - 1.0f, f.y - 1.0f, f.z), uvw.x);
-	y1 = ft_lerp(x1, x2, uvw.y);
-	x1 = ft_lerp(grad(perm(h[0] + 1), f.x, f.y, f.z - 1.0f),
+	y1 = ft_lerp_fast(x1, x2, uvw.y);
+	x1 = ft_lerp_fast(grad(perm(h[0] + 1), f.x, f.y, f.z - 1.0f),
 			grad(perm(h[2] + 1), f.x - 1.0f, f.y, f.z - 1.0f), uvw.x);
-	x2 = ft_lerp(grad(perm(h[1] + 1), f.x, f.y - 1.0f, f.z - 1.0f),
+	x2 = ft_lerp_fast(grad(perm(h[1] + 1), f.x, f.y - 1.0f, f.z - 1.0f),
 			grad(perm(h[3] + 1), f.x - 1.0f, f.y - 1.0f, f.z - 1.0f),
 			uvw.x);
-	y2 = ft_lerp(x1, x2, uvw.y);
-	return (ft_lerp(y1, y2, uvw.z));
+	y2 = ft_lerp_fast(x1, x2, uvw.y);
+	return (ft_lerp_fast(y1, y2, uvw.z));
 }
 
 /*

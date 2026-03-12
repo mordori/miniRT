@@ -13,27 +13,30 @@
 #include "materials.h"
 #include <math.h>
 
-static inline float	object_seed(const t_object *obj)
+/*
+** Per-object noise offset. Hashes the world position with the canonical
+** GLSL sin/fract trick: sinf maps the dot product to [-1, 1], then the
+** large multiplier (43758.5453, tuned for that range) scrambles the
+** mantissa bits into a uniform [0, 2pi) scalar.
+** Golden-ratio multiples {s, s*phi, s*(phi+1)} give three independent
+** per-axis offsets so each object samples a distinct noise region.
+*/
+static inline t_vec3	object_seed(const t_object *obj)
 {
-	float	n;
+	float	s;
 
-	n = tanf(obj->transform.pos.x * 12.9898f
+	s = sinf(obj->transform.pos.x * 12.9898f
 			+ obj->transform.pos.y * 78.233f
 			+ obj->transform.pos.z * 37.719f) * 43758.5453f;
-	return ((n - floorf(n)) * M_TAU);
+	s = (s - floorf(s)) * M_TAU;
+	return ((t_vec3){s, s * 1.6180339f, s * 2.6180339f});
 }
 
 /*
-** Turbulence: sum of absolute values of noise at decreasing scales.
-** Each octave doubles the frequency and halves the amplitude,
-** creating a fractal pattern with detail at multiple scales.
-**
-** Used by marble, wood, and turbulence patterns.
-**
-** depth=7 octaves provides a good balance of detail and performance.
-**
-** @param p     - Point in world space to evaluate
-** @return      - Turbulence value (always positive), typically [0, ~1]
+** 1/f fractal noise: 7 octaves, each doubling frequency and halving
+** amplitude. fabsf() folds smooth zero-crossings into sharp cusps,
+** creating the jagged ridges used for marble veins and rock.
+** Output is always positive, typically [0, ~2] when octaves align.
 */
 float	turbulence(t_vec3 p)
 {
@@ -55,49 +58,33 @@ float	turbulence(t_vec3 p)
 }
 
 /*
-** Perlin marble pattern.
-** Uses the classic technique from Shirley's "Ray Tracing: The Next Week":
-** color = sin(scale * z + 10 * turbulence(point))
-**
-** The sin() creates the base veining structure, while turbulence adds
-** natural-looking distortion to the veins, making them twist and fold
-** like real marble.
-**
-** @param hit  - Hit record (point is used, bump_offset is written)
-** @param mat  - Material with two albedo colors and scale/bump settings
-** @return     - Blended color based on marble vein pattern
+** Marble veins: sin(p.z + 10 * turbulence(p)) blended over two colors.
+** p.z alone gives flat parallel bands; the x10 turbulence distortion
+** kinks and folds them into irregular veins via its sharp fabsf cusps.
+** object_seed() shifts all three noise axes with golden-ratio offsets
+** so each object samples a distinct region of the noise field.
 */
 t_vec3	pattern_perlin_marble(t_hit *hit, const t_material *mat)
 {
 	float	scale;
 	t_vec3	p;
 	float	t;
-	float	seed;
 
 	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
-	seed = object_seed(hit->obj);
-	p = vec3_add(p, (t_vec3){seed, seed, seed});
+	p = vec3_add(p, object_seed(hit->obj));
 	t = 0.7f * (1.0f + sinf(p.z + 10.0f * turbulence(p)));
 	return (vec3_lerp(mat->albedo, mat->albedo2, t));
 }
 
 /*
-** Perlin wood grain pattern.
-** Computes concentric cylindrical rings (distance from Y-axis)
-** and adds Perlin noise to distort them, simulating natural wood grain
-** where rings aren't perfectly circular.
-**
-** The pattern uses:
-**   dist = sqrt(x^2 + z^2) — distance from vertical axis
-**   grain = sin(scale * dist + noise * distortion)
-** Small noise multiplied by a distortion factor creates subtle
-** irregularities in the ring spacing.
-**
-** @param hit  - Hit record (point is used, bump_offset is written)
-** @param mat  - Material with two albedo colors and scale/bump settings
-** @return     - Blended color based on wood grain pattern
+** Wood grain: concentric cylindrical rings (dist from Y-axis) gently
+** distorted by smooth perlin_noise. Raw perlin_noise is used instead
+** of turbulence because wood rings undulate smoothly — turbulence's
+** fabsf cusps would make them look cracked rather than organic.
+** object_seed() offsets the ring centre, as if cut from a different
+** part of the trunk.
 */
 t_vec3	pattern_perlin_wood(t_hit *hit, const t_material *mat)
 {
@@ -109,6 +96,7 @@ t_vec3	pattern_perlin_wood(t_hit *hit, const t_material *mat)
 	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
+	p = vec3_add(p, object_seed(hit->obj));
 	dist = sqrtf(p.x * p.x + p.z * p.z);
 	grain = sinf(scale * dist + 4.0f * perlin_noise(p.x, p.y, p.z));
 	grain = 0.5f * (grain + 1.0f);
@@ -116,17 +104,10 @@ t_vec3	pattern_perlin_wood(t_hit *hit, const t_material *mat)
 }
 
 /*
-** Perlin turbulence pattern.
-** Uses raw turbulence (sum of |noise| octaves) directly to blend
-** between two colors. Creates a chaotic, organic appearance good
-** for rock, clouds, or alien surfaces.
-**
-** The turbulence value is clamped to [0, 1] since it can occasionally
-** exceed 1.0 when multiple octaves align.
-**
-** @param hit  - Hit record (point is used, bump_offset is written)
-** @param mat  - Material with two albedo colors and scale/bump settings
-** @return     - Blended color based on turbulence value
+** Raw turbulence blend: maps turbulence output directly to two colors.
+** No sin() wrapper — the fractal noise drives the blend, giving chaotic
+** organic shapes suited for rock, clouds, or alien surfaces.
+** Clamped to [0, 1] since multiple aligned octaves can exceed 1.0.
 */
 t_vec3	pattern_perlin_turb(t_hit *hit, const t_material *mat)
 {
@@ -137,6 +118,7 @@ t_vec3	pattern_perlin_turb(t_hit *hit, const t_material *mat)
 	scale = mat->pattern_scale;
 	p = vec3_sub(hit->point, hit->obj->transform.pos);
 	p = vec3_scale(p, scale);
+	p = vec3_add(p, object_seed(hit->obj));
 	t = turbulence(p);
 	t = clampf01(t);
 	return (vec3_lerp(mat->albedo, mat->albedo2, t));

@@ -74,27 +74,44 @@ static t_error	parse_camera_fields(char **tokens, t_vec3 *pos, t_vec3 *orient,
 	return (E_OK);
 }
 
+static t_error	more_fields(char **tokens, t_camera *cam, int tc)
+{
+	if (tc >= 5)
+	{
+		if (!parse_float(tokens[4], &cam->exposure))
+			return (E_INVALID_NUM);
+		if (!validate_range(cam->exposure, 0.1f, 10.0f))
+			return (E_RANGE);
+	}
+	if (tc == 6)
+	{
+		if (!parse_float(tokens[5], &cam->focus_dist))
+			return (E_INVALID_NUM);
+	}
+	return (E_OK);
+}
+
 t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 {
 	t_vec3	position;
 	t_vec3	orientation;
 	float	fov;
 	t_error	err;
+	int		tc;
 
-	if (count_tokens(tokens) != 6)
+	tc = count_tokens(tokens);
+	ctx->scene.cam.exposure = 0.3f;
+	ctx->scene.cam.focus_dist = 10.0f;
+	if (tc > 6 || tc < 4)
 		return (E_ARGS);
 	if (p->has_camera)
 		return (E_DUPLICATE);
 	err = parse_camera_fields(tokens, &position, &orientation, &fov);
 	if (err != E_OK)
 		return (err);
-	ctx->scene.cam.exposure = 0.0f;
-	if (!parse_float(tokens[4], &ctx->scene.cam.exposure))
-		return (E_INVALID_NUM);
-	if (!validate_range(ctx->scene.cam.exposure, 0.01f, 10.0f))
-		return (E_RANGE);
-	if (!parse_float(tokens[5], &ctx->scene.cam.focus_dist))
-		return (E_INVALID_NUM);
+	err = more_fields(tokens, &ctx->scene.cam, tc);
+	if (err != E_OK)
+		return (err);
 	init_camera(ctx, position, orientation, fov);
 	p->has_camera = true;
 	return (E_OK);

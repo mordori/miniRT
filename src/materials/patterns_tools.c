@@ -49,7 +49,8 @@ t_vec3	get_local_coords(const t_hit *hit)
 		p.z = 0.0f;
 		return (p);
 	}
-	return (vec3_sub(hit->point, hit->obj->transform.pos));
+	p = vec3_sub(hit->point, hit->obj->transform.pos);
+	return (vec3_bias(p, vec3_negate(hit->normal)));
 }
 
 t_vec3	pattern_brick(const t_hit *hit, const t_material *mat)

@@ -1,5 +1,5 @@
 # Render settings
-render	128	32
+render	64	16
 
 # sky		stars.png
 
@@ -19,7 +19,7 @@ mat	3	255,255,255	0.0	0.9	1.5	0.0	0.0	0,0,0	0	_	_	_	brick	4.0	0,0,0
 mat	4	255,200,0	0.0	0.6	1.5	0.0	0.0	0,0,0	0	_	_	_	spiral	4.0	100,0,150
 
 # Perlin marble (white + dark veins, with bump)
-mat	5	255,255,255	0.0	0.5	1.5	0.0	0.0	0,0,0	0	_	_	0.0	marble	2.0	0,0,0
+mat	5	255,255,255	0.0	0.5	1.5	0.0	0.0	0,0,0	0	_	_	0.0	marble	0.2	0,0,0
 
 # Perlin wood grain (light + dark brown, with bump)
 mat	6	200,150,80	0.0	0.7	1.5	0.0	0.0	0,0,0	0	_	_	0.2	wood	3.0	90,50,20

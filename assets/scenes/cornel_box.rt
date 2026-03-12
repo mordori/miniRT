@@ -1,5 +1,5 @@
 #Rendering Settings
-render		64		16
+render		64		8
 
 #Ambient
 A	0.0		255,255,255
