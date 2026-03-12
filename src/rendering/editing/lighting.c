@@ -40,7 +40,7 @@ static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path,
 		return (vec3_n(0.0f));
 	shadow_ray = new_ray(hit_biased, path->l);
 	dummy_hit.t = M_INF;
-	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
+	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && ((int)hit_object(ctx->selected_obj, &shadow_ray, &dummy_hit) || hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
 		return (vec3_n(0.0f));
 	return (add_light(path, light, dist_sq));
 }
