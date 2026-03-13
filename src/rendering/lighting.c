@@ -42,12 +42,12 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	t_hc = sqrtf(fmaxf(0.0f, light->radius_sq - ca_dist_sq));
 	dist = t_ca - t_hc;
 	shadow_ray = new_ray(hit_biased, path->l);
-	dummy_hit.t = M_INF;
+	dummy_hit.t = dist - B_EPSILON;
 	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
 		return (vec3_n(0.0f));
 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
 	radiance = vec3_mul(light->emission, bsdf(path));
-	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) *  weight);
+	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) * weight);
 	return (radiance);
 }
 

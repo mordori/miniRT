@@ -92,7 +92,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	else
 		mat_id = default_emissive_mat(ctx, &light);
 	if (light.radius <= 0.0f)
-		light.radius = 0.5f;
+		light.radius = 0.01f;
 	init_point_light(ctx, &light, mat_id);
 	p->has_light = true;
 	return (E_OK);
