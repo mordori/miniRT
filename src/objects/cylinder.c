@@ -15,12 +15,12 @@
 #include <math.h>
 
 /*
-** Initialize a cylinder object and add it to the scene.
+** Initializes a cylinder object and adds it to the scene.
 **
-** @param ctx     - The application context containing scene data
-** @param cyl     - Cylinder geometry (center, axis, radius, height)
-** @param mat_id  - Index of the material in the scene materials array
-** @return        - E_OK on success, error code on failure
+** @param ctx    The application context.
+** @param cyl    The cylinder geometry.
+** @param mat_id The material ID.
+** @return       E_OK on success, error code otherwise.
 */
 t_error	init_cylinder(t_context *ctx, t_cylinder *cyl, int32_t mat_id)
 {
@@ -35,24 +35,14 @@ t_error	init_cylinder(t_context *ctx, t_cylinder *cyl, int32_t mat_id)
 }
 
 /*
-** Solve the quadratic equation for ray-cylinder body intersection.
-** For an infinite cylinder along axis, we project the ray onto the
-** plane perpendicular to the axis and solve for circle intersection.
+** Computes the quadratic equation roots for ray-cylinder body intersection.
+** Projects the ray onto the plane perpendicular to the axis.
 **
-** Equation: |P - C - ((P-C)·A)A|² = r²
-** Where P = ray_origin + t * ray_dir, C = center, A = axis, r = radius
-**
-** This gives us: a*t² + 2*b*t + c = 0
-** where:
-**   a = |D_perp|²         (D_perp = D - (D·A)A)
-**   b = D_perp · OC_perp  (OC_perp = OC - (OC·A)A)
-**   c = |OC_perp|² - r²   (OC = ray_origin - center)
-**
-** @param cyl      - The cylinder to test against
-** @param ray      - The incoming ray
-** @param oc       - Vector from cylinder center to ray origin
-** @param t_vals   - Output array for the two intersection t values
-** @return         - true if intersections exist, false otherwise
+** @param cyl    The cylinder to test.
+** @param ray    The incoming ray.
+** @param oc     Vector from center to ray origin.
+** @param t_vals Output intersection hit distances.
+** @return       true if an intersection point is found.
 */
 static bool	solve_body_quadratic(const t_cylinder *cyl, const t_ray *ray,
 				const t_vec3 oc, float t_vals[2])
@@ -81,14 +71,13 @@ static bool	solve_body_quadratic(const t_cylinder *cyl, const t_ray *ray,
 }
 
 /*
-** Calculate projection of hit point onto the cylinder axis.
-** Used to verify that the hit point falls within the finite height.
+** Calculates the projection of a hit point along the cylinder's axis.
 **
-** @param cyl      - The cylinder containing axis information
-** @param oc       - Vector from cylinder center to ray origin
-** @param ray_dir  - Direction of the ray
-** @param t        - Distance along ray to the hit point
-** @return         - Signed distance from center along axis
+** @param cyl     The cylinder.
+** @param oc      Vector from center to ray origin.
+** @param ray_dir The ray direction.
+** @param t       Distance to hit.
+** @return        Signed distance from the center along the axis.
 */
 static float	get_axis_projection(const t_cylinder *cyl, const t_vec3 oc,
 					const t_vec3 ray_dir, float t)
@@ -100,15 +89,14 @@ static float	get_axis_projection(const t_cylinder *cyl, const t_vec3 oc,
 }
 
 /*
-** Test a single t value for valid body intersection.
-** Checks if t is positive and within the cylinder's height bounds.
+** Validates if a ray-cylinder intersection lies within its height bounds.
 **
-** @param cyl      - The cylinder to test against
-** @param oc       - Vector from cylinder center to ray origin
-** @param ray      - The incoming ray
-** @param params   - [0]: half_height, [1]: current closest t
-** @param t        - The t value to test
-** @return         - true if valid intersection, false otherwise
+** @param cyl    The cylinder being checked.
+** @param oc     Vector from center to ray origin.
+** @param ray    The incoming ray.
+** @param params [0]: half_height, [1]: closest hit distance.
+** @param t      Distance to evaluate.
+** @return       true if valid intersection within height.
 */
 static bool	test_body_hit(const t_cylinder *cyl, const t_vec3 oc,
 				const t_ray *ray, float params[2], float t)
@@ -125,13 +113,12 @@ static bool	test_body_hit(const t_cylinder *cyl, const t_vec3 oc,
 }
 
 /*
-** Test ray intersection with the curved body of the cylinder.
-** Solves the quadratic equation and validates both potential hits.
+** Tests for an intersection between a ray and the cylinder's curved body.
 **
-** @param cyl       - The cylinder to test against
-** @param ray       - The incoming ray
-** @param hit       - Hit record to update if intersection found
-** @return          - true if ray hits the cylinder body, false otherwise
+** @param cyl The cylinder to test against.
+** @param ray The incoming ray.
+** @param hit Record to store hit information.
+** @return    true if the ray hits the body.
 */
 static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 {
@@ -152,12 +139,11 @@ static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 }
 
 /*
-** Calculate the normal vector for a hit on the cylinder body.
-** Normal points radially outward from the cylinder axis.
+** Calculates the outward normal and UV coordinates for a body hit.
 **
-** @param cyl       - The cylinder containing geometry data
-** @param ray       - The ray that hit the cylinder
-** @param hit       - Hit record to populate with normal
+** @param cyl The cylinder that was hit.
+** @param ray The ray that caused the intersection.
+** @param hit The hit record to populate.
 */
 static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 				t_hit *hit)
@@ -182,13 +168,11 @@ static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 }
 
 /*
-** Compute UV coordinates for a circular end cap hit.
-** Projects the hit offset onto an ONB derived from the cylinder axis,
-** mapping the disk to [0,1]×[0,1] UV space consistently for both caps.
+** Computes planar 2D UV mapping coordinates for the circular end caps.
 **
-** @param cyl       - The cylinder containing geometry data
-** @param to_hit    - Vector from cap center to hit point
-** @param hit       - Hit record to write UV into
+** @param cyl    The cylinder.
+** @param to_hit Vector from cap center to hit.
+** @param hit    The hit record to store UV data.
 */
 static void	compute_cap_uv(const t_cylinder *cyl, t_vec3 to_hit, t_hit *hit)
 {
@@ -201,54 +185,50 @@ static void	compute_cap_uv(const t_cylinder *cyl, t_vec3 to_hit, t_hit *hit)
 }
 
 /*
-** Test ray intersection with a circular end cap of the cylinder.
-** Projects ray-plane intersection onto cap, validates it's within radius.
+** Tests intersection with a circular flat end cap of the cylinder.
 **
-** @param cyl       - The cylinder containing cap geometry
-** @param ray       - The incoming ray
-** @param offset    - Distance from center to cap along axis (±half_height)
-** @param hit       - Hit record to update if intersection found
-** @return          - true if ray hits the cap, false otherwise
+** @param cyl The cylinder to test.
+** @param ray The incoming ray.
+** @param o   Distance from center to the cap.
+** @param hit The output hit record.
+** @return    true if the ray hits the bounded cap.
 */
-static bool	hit_cap(const t_cylinder *cyl, const t_ray *ray,
-				float offset, t_hit *hit)
+static bool	hit_cap(const t_cylinder *cyl, const t_ray *ray, float o, t_hit *hit)
 {
-	t_vec3	cap_center;
+	t_vec3	c_pos;
+	t_vec3	pt;
 	float	denom;
 	float	t;
-	t_vec3	to_hit;
 
-	cap_center = vec3_add(cyl->center, vec3_scale(cyl->axis, offset));
 	denom = vec3_dot(ray->dir, cyl->axis);
 	if (fabsf(denom) < G_EPSILON)
 		return (false);
-	t = vec3_dot(vec3_sub(cap_center, ray->origin), cyl->axis) / denom;
+	c_pos = vec3_add(cyl->center, vec3_scale(cyl->axis, o));
+	t = vec3_dot(vec3_sub(c_pos, ray->origin), cyl->axis) / denom;
 	if (t < G_EPSILON || t >= hit->t)
 		return (false);
-	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	to_hit = vec3_sub(hit->point, cap_center);
-	if (vec3_dot(to_hit, to_hit) > cyl->radius * cyl->radius)
+	pt = vec3_add(ray->origin, vec3_scale(ray->dir, t));
+	c_pos = vec3_sub(pt, c_pos);
+	if (vec3_dot(c_pos, c_pos) > cyl->radius * cyl->radius)
 		return (false);
 	hit->t = t;
-	if (offset > 0.0f)
-		hit->normal = cyl->axis;
-	else
+	hit->point = pt;
+	hit->normal = cyl->axis;
+	if (o <= 0.0f)
 		hit->normal = vec3_scale(cyl->axis, -1.0f);
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
-	compute_cap_uv(cyl, to_hit, hit);
+	compute_cap_uv(cyl, c_pos, hit);
 	return (true);
 }
 
 /*
-** Main cylinder intersection test.
-** Tests ray against both the curved body and the two circular caps.
-** Returns the closest valid intersection.
+** Evaluates a ray intersection with the entire cylinder (body + caps).
 **
-** @param shape     - Union containing the cylinder geometry
-** @param ray       - The incoming ray to test
-** @param hit       - Hit record to populate with intersection data
-** @return          - true if ray hits cylinder, false otherwise
+** @param shape Union holding the cylinder's geometry.
+** @param ray   The incoming ray.
+** @param hit   Output record storing hit data.
+** @return      true if the cylinder was hit.
 */
 bool	hit_cylinder(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {

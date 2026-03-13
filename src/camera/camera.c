@@ -22,7 +22,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	fov = degrees_to_rad(fov);
 	fov = clampf(fov, degrees_to_rad(0.1f), degrees_to_rad(179.9f));
 	cam->focal_len_mm = SENSOR_HALF_HEIGHT_MM / tanf(fov * 0.5f);
-	cam->focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 14.0f, 800.0f);
+	cam->focal_len_mm = clampf(cam->focal_len_mm, 14.0f, 800.0f);
 	cam->focus_dist = clampf(cam->focus_dist, 0.1f, 1000.0f);
 	cam->f_stop = 5.6f;
 	cam->shutter_speed = 1.0f / 100.0f;

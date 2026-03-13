@@ -89,10 +89,10 @@ bool	hit_quad(const t_shape *shape, const t_ray *ray, t_hit *hit)
 
 	quad = &shape->quad;
 	denom = vec3_dot(quad->normal, ray->dir);
-	if (fabsf(denom) < 1e-6f)
+	if (fabsf(denom) < G_EPSILON)
 		return (false);
 	t = (quad->d - vec3_dot(quad->normal, ray->origin)) / denom;
-	if (t < 1e-3f || t >= hit->t)
+	if (t < G_EPSILON || t >= hit->t)
 		return (false);
 	return (quad_hit_record(quad, ray, hit, t));
 }
