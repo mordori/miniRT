@@ -51,6 +51,8 @@ bool	sample_bsdf(t_path *path)
 	if (path->ndotl <= LEN_SQ_EPSILON)
 		return (false);
 	path->pdf = bsdf_pdf(path);
+	if (path->pdf <= G_EPSILON)
+		return (false);
 	weight = vec3_scale(bsdf(path), path->ndotl / path->pdf);
 	weight = vec3_clamp_mag(weight, CLAMP_INDIRECT);
 	path->throughput = vec3_mul(path->throughput, weight);

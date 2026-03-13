@@ -45,10 +45,10 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 		return (false);
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
 	hit->normal = vec3_div(vec3_sub(hit->point, sphere.center), sphere.radius);
-	if (vec3_dot(vec3_negate(ray->dir), hit->normal) < G_EPSILON)
-		return (false);
-	// if (vec3_dot(ray->dir, hit->normal) > 0.0f)
-	// 	hit->normal = vec3_scale(hit->normal, -1.0f);
+	// if (vec3_dot(vec3_negate(ray->dir), hit->normal) < G_EPSILON)
+	// 	return (false);
+	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
+		hit->normal = vec3_scale(hit->normal, -1.0f);
 	hit->uv = spherical_uv(hit->normal);
 	hit->t = t;
 	return (true);

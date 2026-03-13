@@ -28,7 +28,7 @@
 # define SENS_ORBIT				0.0009f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				0.5f
+# define SENS_MOVE				1.5f
 
 # define SENSOR_HEIGHT_MM		24.0f
 # define SENSOR_HALF_HEIGHT_MM	12.0f
@@ -514,7 +514,6 @@ struct __attribute__((aligned(16))) s_bvh_node
 	uint32_t		right_idx;
 	int				axis;
 };
-
 struct __attribute__((aligned(64))) s_context
 {
 	t_renderer		renderer;
