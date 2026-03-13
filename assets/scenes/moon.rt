@@ -6,10 +6,10 @@ render	32		8
 A		0.7		220,220,230
 
 # Skydome
-# sky		stars.png
+sky		stars.png
 
 # Camera
-C		0,0,15		0,0,-1		60		1.0		9
+C		0,2,15		0,0,-1		80		1.0		10
 
 # Light
 #		pos						intensity	color			radius		mat_id
