@@ -75,7 +75,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c perlin_tools.c perlin_noise.c patterns_tools.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
-				object.c cylinder.c plane.c sphere.c cone.c quad.c)
+				object.c cylinder.c cylinder_tools.c plane.c sphere.c cone.c cone_tools.c quad.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_light.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c parse_pass.c \
 				 parse_patterns.c parse_validate.c)
