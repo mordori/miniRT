@@ -96,10 +96,10 @@ static inline void	copy_frame_buffer_preview(const t_context *ctx, const uint32_
 		if (m[i] > 0.0f)
 		{
 			mask = 0u - ((
-(i % width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i]) ||
-((i + 1) % width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i]) ||
-(i >= width && m[i - width] < 0.0f && fabsf(m[i - width])> m[i]) ||
-(i + width < limit && m[i + width] < 0.0f && fabsf(m[i + width]) > m[i])
+(i % width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i] - 0.05f) ||
+((i + 1) % width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i] - 0.05f) ||
+(i >= width && m[i - width] < 0.0f && fabsf(m[i - width])> m[i] - 0.05f) ||
+(i + width < limit && m[i + width] < 0.0f && fabsf(m[i + width]) > m[i] - 0.05f)
 ));
 		}
 		else

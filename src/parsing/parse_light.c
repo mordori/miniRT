@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_light.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:45:40 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:45:44 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 19:44:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	if (err != E_OK)
 		return (err);
 	if (light.radius <= 0.0f)
-		light.radius = 0.5f;
+		light.radius = 0.01f;
 	err = init_point_light(ctx, &light, mat_id);
 	if (err == E_OK)
 		p->has_light = true;
