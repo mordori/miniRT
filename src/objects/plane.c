@@ -62,10 +62,10 @@ bool	hit_plane(const t_shape *shape, const t_ray *ray, t_hit *hit)
 
 	plane = shape->plane;
 	denom = vec3_dot(plane.normal, ray->dir);
-	if (fabsf(denom) < 1e-6f)
+	if (fabsf(denom) < G_EPSILON)
 		return (false);
 	t = (plane.d - vec3_dot(ray->origin, plane.normal)) / denom;
-	if (t < 1e-3f || t >= hit->t)
+	if (t < G_EPSILON || t >= hit->t)
 		return (false);
 	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));

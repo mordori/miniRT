@@ -31,23 +31,14 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 }
 
 /*
-** Compute quadratic coefficients for ray-cone intersection.
+** Computes coefficients for the ray-cone quadratic equation.
+** Uses the implicit cone equation: (V·A)² - cos²θ(V·V) = 0.
+** Note: 'a' can be negative, which affects root ordering later.
 **
-** Implicit cone equation: (V·A)² - cos²θ × (V·V) = 0
-** where V = P - apex, A = axis, θ = half-angle.
-**
-** Substituting P = O + t×D and expanding gives: a×t² + 2b×t + c = 0
-**   a = (D·A)² - cos²θ × (D·D)
-**   b = (D·A)(OC·A) - cos²θ × (D·OC)       [half_b]
-**   c = (OC·A)² - cos²θ × (OC·OC)
-**
-** NOTE: Unlike cylinders where a = |D_perp|² ≥ 0, for cones `a` can be
-** negative. This affects root ordering in the quadratic solver.
-**
-** @param cone    - The cone to test against
-** @param ray     - The incoming ray
-** @param oc      - Vector from apex to ray origin (O - apex)
-** @param coef    - Output array [a, half_b, c]
+** @param cone The cone to intersect.
+** @param ray  The incoming ray.
+** @param oc   Vector from apex to ray origin.
+** @param coef Output array [a, half_b, c].
 */
 static void	compute_coefficients(const t_cone *cone, const t_ray *ray,
 				const t_vec3 oc, float coef[3])
@@ -67,19 +58,14 @@ static void	compute_coefficients(const t_cone *cone, const t_ray *ray,
 }
 
 /*
-** Solve the quadratic equation for ray-cone intersection.
-** Returns the two t values (entry/exit) for the infinite double cone.
+** Solves the quadratic equation for hitting the infinite double cone.
+** Swaps roots if `a` is negative to ensure t_vals[0] is the closest hit.
 **
-** When a < 0, the standard formula (-b ± √disc) / a reverses root
-** ordering because dividing by a negative flips the inequality.
-** We swap t_vals to guarantee t_vals[0] ≤ t_vals[1] (near before far).
-** Without this, hit_cone_body would return the back face → transparent.
-**
-** @param cone    - The cone to test against
-** @param ray     - The incoming ray
-** @param oc      - Vector from apex to ray origin
-** @param t_vals  - Output: t_vals[0] = near hit, t_vals[1] = far hit
-** @return        - true if intersections exist, false otherwise
+** @param cone   The cone to intersect.
+** @param ray    The incoming ray.
+** @param oc     Vector from apex to ray origin.
+** @param t_vals Output array for hit distances [near, far].
+** @return       true if an intersection point is found.
 */
 static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray,
 				const t_vec3 oc, float t_vals[2])
@@ -109,14 +95,13 @@ static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray,
 }
 
 /*
-** Check if a cone body hit is valid (within height bounds and on correct side).
-** The hit must be below the apex (positive projection) and within height.
+** Validates whether an intersection point is within the cone's bounds.
 **
-** @param cone    - The cone containing geometry
-** @param ray     - The incoming ray
-** @param t       - The t value to test
-** @param t_max   - Current closest hit distance
-** @return        - true if valid intersection, false otherwise
+** @param cone  The cone being checked.
+** @param ray   The incoming ray.
+** @param t     The distance to the intersection point.
+** @param t_max The maximum valid hit distance.
+** @return      true if the point lies on the valid part of the cone.
 */
 static bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
 				float t_max)
@@ -135,12 +120,12 @@ static bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
 }
 
 /*
-** Test ray intersection with the curved body surface of the cone.
+** Tests for an intersection between a ray and the curved surface of a cone.
 **
-** @param cone    - The cone to test against
-** @param ray     - The incoming ray
-** @param hit     - Hit record to update if intersection found
-** @return        - true if ray hits the cone body, false otherwise
+** @param cone The cone to test against.
+** @param ray  The incoming ray.
+** @param hit  Record to store hit information.
+** @return     true if the ray hits the cone's body.
 */
 static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
@@ -158,23 +143,11 @@ static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 }
 
 /*
-** Calculate the outward normal for a hit on the cone body.
+** Calculates the outward normal and UV coordinates for a cone body hit.
 **
-** Formula: N = normalize(V - A × (V·A) × (1 + tan²θ))
-**        = normalize(V - A × (V·A) × sec²θ)
-** where V = hit_point - apex, A = axis.
-**
-** The factor sec²θ = 1 + tan²θ scales the axis projection to tilt
-** the normal perpendicular to the cone surface. This is the gradient
-** of the implicit equation (V·A)² - cos²θ(V·V) = 0, negated to
-** point outward.
-**
-** Normal is flipped if dot(ray_dir, normal) > 0 to face the ray.
-** UV: u from atan2 around the axis, v from height [0..1].
-**
-** @param cone    - The cone containing geometry data
-** @param ray     - The ray that hit the cone
-** @param hit     - Hit record to populate with point, normal, and UV
+** @param cone The cone that was hit.
+** @param ray  The ray that caused the intersection.
+** @param hit  The hit record to populate.
 */
 static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 			t_hit *hit)
@@ -199,14 +172,12 @@ static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 }
 
 /*
-** Compute UV coordinates for the cone base cap hit.
-** Projects the hit offset onto an ONB derived from the cone axis,
-** giving correct UV for any axis orientation.
+** Computes planar 2D UV mapping coordinates for the circular base cap.
 **
-** @param cone       - The cone containing geometry data
-** @param to_hit     - Vector from base center to hit point
-** @param base_r     - Radius of the base disk (for normalization)
-** @param hit        - Hit record to write UV into
+** @param cone   The cone.
+** @param to_hit Vector from the base center to the hit point.
+** @param base_r The radius of the base circle.
+** @param hit    The hit record to store UV data.
 */
 static void	compute_cone_cap_uv(const t_cone *cone, t_vec3 to_hit,
 		float base_r, t_hit *hit)
@@ -220,59 +191,50 @@ static void	compute_cone_cap_uv(const t_cone *cone, t_vec3 to_hit,
 }
 
 /*
-** Test ray intersection with the circular base cap of the cone.
-** The base disk is at: base_center = apex + height × axis.
-** base_radius = height × tan(half_angle).
+** Tests intersection with the cone's circular flat base cap.
+** First intersects the infinite base plane, then bounds it by radius.
 **
-** Method: intersect ray with the base plane, then check if the
-** hit point falls within the base circle radius.
-**
-** NOTE: Shadow rays from the cone body can hit this cap from inside,
-** causing self-shadowing. This is handled by the skip parameter in
-** hit_bvh_shadow(), not here.
-**
-** @param cone    - The cone containing cap geometry
-** @param ray     - The incoming ray
-** @param hit     - Hit record to update if intersection found
-** @return        - true if ray hits the base cap, false otherwise
+** @param cone The cone to test against.
+** @param ray  The incoming ray.
+** @param hit  The output hit record.
+** @return     true if the ray hits the bounded base cap.
 */
 static bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
-	t_vec3	base_center;
+	t_vec3	base_c;
+	t_vec3	to_hit;
+	t_vec3	point;
 	float	denom;
 	float	t;
-	t_vec3	to_hit;
-	float	base_radius;
 
-	base_center = vec3_add(cone->apex, vec3_scale(cone->axis, cone->height));
-	base_radius = cone->base_radius;
 	denom = vec3_dot(ray->dir, cone->axis);
 	if (fabsf(denom) < G_EPSILON)
 		return (false);
-	t = vec3_dot(vec3_sub(base_center, ray->origin), cone->axis) / denom;
+	base_c = vec3_add(cone->apex, vec3_scale(cone->axis, cone->height));
+	t = vec3_dot(vec3_sub(base_c, ray->origin), cone->axis) / denom;
 	if (t < G_EPSILON || t >= hit->t)
 		return (false);
-	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	to_hit = vec3_sub(hit->point, base_center);
-	if (vec3_dot(to_hit, to_hit) > base_radius * base_radius)
+	point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
+	to_hit = vec3_sub(point, base_c);
+	if (vec3_dot(to_hit, to_hit) > cone->base_radius * cone->base_radius)
 		return (false);
+	hit->point = point;
 	hit->t = t;
 	hit->normal = vec3_scale(cone->axis, -1.0f);
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
-	compute_cone_cap_uv(cone, to_hit, base_radius, hit);
+	compute_cone_cap_uv(cone, to_hit, cone->base_radius, hit);
 	return (true);
 }
 
 /*
-** Main cone intersection test.
-** Tests ray against both the curved body and the circular base cap.
-** Returns the closest valid intersection.
+** Evaluates a ray intersection with the entire cone (body + base cap).
+** Returns the nearest valid intersection.
 **
-** @param shape   - Union containing the cone geometry
-** @param ray     - The incoming ray to test
-** @param hit     - Hit record to populate with intersection data
-** @return        - true if ray hits cone, false otherwise
+** @param shape Union holding the cone's geometry.
+** @param ray   The incoming ray.
+** @param hit   Output record storing hit data.
+** @return      true if the cone was hit.
 */
 bool	hit_cone(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {
