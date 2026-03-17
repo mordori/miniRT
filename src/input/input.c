@@ -9,11 +9,13 @@ void	process_input(t_context *ctx, bool *update)
 	bool		dirty;
 
 	dirty = false;
-	if (control_camera(ctx) || edit(ctx))
+	if (config_camera(ctx))
+		dirty = true;
+	if (control_camera(ctx))
+		dirty = true;
+	if (edit(ctx))
 		dirty = true;
 	if (camera_movement(ctx))
-		dirty = true;
-	if (config_camera(ctx))
 		dirty = true;
 	if (rotate_skydome(ctx))
 		dirty = true;

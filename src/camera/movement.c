@@ -3,12 +3,15 @@
 static inline t_vec3	get_key_input(mlx_t *mlx);
 static inline t_vec3	compute_move_vec(t_camera *cam, t_vec3 input, float dt);
 static inline void		clamp_camera(t_camera *cam);
+
 bool	camera_movement(t_context *ctx)
 {
 	t_camera	*cam;
 	t_vec3		input;
 	t_vec3		move;
 
+	if (ctx->renderer.mode == SOLID)
+		return (false);
 	cam = &ctx->scene.cam;
 	input = get_key_input(ctx->mlx);
 	if (input.x == 0.0f && input.y == 0.0f && input.z == 0.0f)
