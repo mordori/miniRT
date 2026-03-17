@@ -25,26 +25,28 @@ t_error	init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id)
 {
 	t_object	obj;
 	t_vec3		n_cross;
-	t_vec3		w_temp;
 	float		n_len_sq;
 
 	n_cross = vec3_cross(quad->u, quad->v);
 	n_len_sq = vec3_dot(n_cross, n_cross);
 	if (n_len_sq < G_EPSILON)
 		return (E_RANGE);
-	quad->area = sqrtf(n_len_sq);
-	quad->normal = vec3_scale(n_cross, 1.0f / quad->area);
-	quad->w = vec3_scale(n_cross, 1.0f / n_len_sq);
-	quad->d = vec3_dot(quad->normal, quad->q);
-	w_temp = vec3_scale(n_cross, 1.0f / n_len_sq);
-	quad->vec_alpha = vec3_cross(quad->v, w_temp);
-	quad->vec_beta = vec3_cross(w_temp, quad->u);
+
 	obj = (t_object){0};
 	obj.type = OBJ_QUAD;
-	obj.shape.quad = *quad;
 	obj.material_id = mat_id;
 	obj.transform.pos = vec3_add(quad->q, vec3_scale(
 				vec3_add(quad->u, quad->v), 0.5f));
+
+	quad->d = 0.0f;
+	quad->q = vec3_scale(vec3_add(quad->u, quad->v), -0.5f);
+
+	quad->area = sqrtf(n_len_sq);
+	quad->normal = vec3_scale(n_cross, 1.0f / quad->area);
+	quad->w = vec3_scale(n_cross, 1.0f / n_len_sq);
+	quad->vec_alpha = vec3_cross(quad->v, quad->w);
+	quad->vec_beta = vec3_cross(quad->w, quad->u);
+	obj.shape.quad = *quad;
 	return (add_object(ctx, &obj));
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bounds.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 13:24:56 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/19 13:25:05 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:01:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,22 @@
 t_aabb	sphere_bounds(const t_object *obj)
 {
 	t_aabb		aabb;
-	t_sphere	sphere;
-	t_vec3		r;
 
-	sphere = obj->shape.sphere;
-	r = vec3_n(sphere.radius);
-	aabb.min = vec3_sub(sphere.center, r);
-	aabb.max = vec3_add(sphere.center, r);
+	aabb.min = vec3_n(-obj->shape.sphere.radius);
+	aabb.max = vec3_n(obj->shape.sphere.radius);
+	aabb = aabb_object_to_world(aabb, &obj->transform.object_to_world);
 	return (aabb);
 }
 
+/*
+** Compute AABB for an arbitrarily oriented cylinder.
+**
+** For a cylinder with normalized axis A, radius r, height h, the
+** half-extent along world axis i is:
+**   r * sqrt(1 - A_i^2)  +  (h/2) * |A_i|
+** The first term is the max radial projection (sin of angle to world axis),
+** the second is the axial projection along that world axis.
+*/
 t_aabb	cylinder_bounds(const t_object *obj)
 {
 	t_aabb		aabb;
@@ -42,8 +48,9 @@ t_aabb	cylinder_bounds(const t_object *obj)
 		+ (cyl.height * 0.5f) * fabsf(cyl.axis.y);
 	half.z = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z))
 		+ (cyl.height * 0.5f) * fabsf(cyl.axis.z);
-	aabb.min = vec3_sub(cyl.center, half);
-	aabb.max = vec3_add(cyl.center, half);
+	aabb.min = vec3_negate(half);
+	aabb.max = half;
+	aabb = aabb_object_to_world(aabb, &obj->transform.object_to_world);
 	return (aabb);
 }
 
@@ -54,17 +61,20 @@ t_aabb	cone_bounds(const t_object *obj)
 	t_vec3		base_center;
 	t_vec3		radial;
 	t_vec3		a2;
+	t_vec3		zero;
 
+	zero = vec3_n(0.0f);
 	cone = obj->shape.cone;
-	base_center = vec3_add(cone.apex, vec3_scale(cone.axis, cone.height));
+	base_center = vec3_scale(cone.axis, cone.height);
 	a2.x = cone.axis.x * cone.axis.x;
 	a2.y = cone.axis.y * cone.axis.y;
 	a2.z = cone.axis.z * cone.axis.z;
 	radial.x = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.x));
 	radial.y = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.y));
 	radial.z = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z));
-	aabb.min.v = _mm_min_ps(cone.apex.v, vec3_sub(base_center, radial).v);
-	aabb.max.v = _mm_max_ps(cone.apex.v, vec3_add(base_center, radial).v);
+	aabb.min.v = _mm_min_ps(zero.v, vec3_sub(base_center, radial).v);
+	aabb.max.v = _mm_max_ps(zero.v, vec3_add(base_center, radial).v);
+	aabb = aabb_object_to_world(aabb, &obj->transform.object_to_world);
 	return (aabb);
 }
 
@@ -86,5 +96,6 @@ t_aabb	quad_bounds(const t_object *obj)
 			_mm_max_ps(p2.v, p3.v));
 	aabb.min = vec3_sub(aabb.min, vec3_n(B_EPSILON));
 	aabb.max = vec3_add(aabb.max, vec3_n(B_EPSILON));
+	aabb = aabb_object_to_world(aabb, &obj->transform.object_to_world);
 	return (aabb);
 }

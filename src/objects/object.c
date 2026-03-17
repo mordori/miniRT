@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   object.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:28 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:53:29 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 19:54:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ t_error	add_object(t_context *ctx, t_object *obj)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		return (E_MALLOC);
+	obj->transform.rot.data[3] = 1.0f;
+	obj->transform.scale = vec3_n(1.0f);
+	update_transform(&obj->transform);
 	*new_obj = *obj;
 	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)
 	[obj->material_id];
@@ -36,21 +39,26 @@ t_error	add_object(t_context *ctx, t_object *obj)
 
 bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 {
-	bool	result;
+	bool		result;
+	t_ray		r;
 
 	if (!obj)
 		return (false);
+	r = ray_world_to_object(ray, &obj->transform.world_to_object);
 	if (obj->type == OBJ_SPHERE)
-		result = hit_sphere(&obj->shape, ray, hit);
+		result = hit_sphere(&obj->shape, &r, hit);
 	else if (obj->type == OBJ_CYLINDER)
-		result = hit_cylinder(&obj->shape, ray, hit);
+		result = hit_cylinder(&obj->shape, &r, hit);
 	else if (obj->type == OBJ_CONE)
-		result = hit_cone(&obj->shape, ray, hit);
+		result = hit_cone(&obj->shape, &r, hit);
 	else if (obj->type == OBJ_QUAD)
-		result = hit_quad(&obj->shape, ray, hit);
+		result = hit_quad(&obj->shape, &r, hit);
 	else
 		return (false);
 	if (result)
+	{
 		hit->obj = (t_object *)obj;
+		hit_object_to_world(hit, &obj->transform);
+	}
 	return (result);
 }

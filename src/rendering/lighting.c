@@ -4,20 +4,20 @@
 #include "utils.h"
 #include "scene.h"
 
-static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
+static inline t_vec3	evaluate_light(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
 static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *pdf);
 
-void	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
+t_vec3	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
 	t_vec3		radiance;
 
-	radiance = direct_lighting(ctx, path, light, pixel);
-	// if (path->bounce > 0)
+	radiance = evaluate_light(ctx, path, light, pixel);
+	if (path->bounce > 0)
 		radiance = vec3_clamp_mag(radiance, light->max_radiance);
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
+	return(vec3_mul(path->throughput, radiance));
 }
 
-static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
+static inline t_vec3	evaluate_light(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
 	t_ray		shadow_ray;
 	t_vec3		radiance;
@@ -31,7 +31,7 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	t_hit		dummy_hit;
 
 	random_uv(ctx, path, pixel, BN_CO_U + (light->idx * 2u));
-	hit_biased = vec3_bias(path->hit.point, path->n);
+	hit_biased = vec3_bias(path->hit.point, path->hit.normal);
 	hit_to_light_center = vec3_sub(light->pos, hit_biased);
 	path->l = sample_light(hit_to_light_center, light->radius_sq, path->uv, &path->pdf);
 	set_shader_data(path);
@@ -50,32 +50,6 @@ static inline t_vec3	direct_lighting(const t_context *ctx, t_path *path, const t
 	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) * weight);
 	return (radiance);
 }
-
-// void	add_directional_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
-// {
-// 	t_ray		shadow_ray;
-// 	t_vec3		radiance;
-// 	t_vec3		hit_biased;
-// 	float		weight;
-// 	t_hit		dummy_hit;
-
-// 	random_uv(ctx, path, pixel, BN_CO_U + (light->idx * 2u));
-// 	hit_biased = vec3_bias(path->hit.point, path->n);
-// 	path->l = sample_cone(light->pos, light->cos_theta_max, path->uv);
-// 	set_shader_data(path);
-// 	if (path->ndotl <= G_EPSILON)
-// 		return ;
-// 	shadow_ray = new_ray(hit_biased, path->l);
-// 	dummy_hit.t = M_INF;
-// 	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, M_INF) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
-// 		return ;
-// 	path->pdf = 1.0f / fmaxf((M_TAU * (1.0f - light->cos_theta_max)), G_EPSILON);
-// 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
-// 	radiance = vec3_mul(light->emission, bsdf(path));
-// 	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) *  weight);
-// 	radiance = vec3_clamp_mag(radiance, light->max_radiance);
-// 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
-// }
 
 float	light_pdf(t_vec3 l, float radius_sq)
 {

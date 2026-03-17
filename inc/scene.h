@@ -16,5 +16,6 @@ t_aabb	cylinder_bounds(const t_object *obj);
 t_aabb	cone_bounds(const t_object *obj);
 t_aabb	quad_bounds(const t_object *obj);
 t_aabb	get_object_bounds(const t_object *obj);
+t_aabb	aabb_object_to_world(t_aabb aabb, const t_mat4 *object_to_world);
 
 #endif

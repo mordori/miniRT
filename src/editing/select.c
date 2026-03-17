@@ -21,24 +21,24 @@ void	select_object(t_context *ctx)
 	if (
 (int)hit_bvh(ctx->scene.geo.bvh_root_idx, &ray, &hit, 0, ctx->scene.geo.bvh_nodes))
 	{
-		if ((int)hit_object(ctx->selected_obj, &ray, &hit))
+		if ((int)hit_object(ctx->editor.selected_obj, &ray, &hit))
 			return ;
-		if (ctx->selected_obj)
-			vector_try_add(ctx, &ctx->scene.geo.objs, ctx->selected_obj);
+		if (ctx->editor.selected_obj)
+			vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 		vector_remove(&ctx->scene.geo.objs, hit.obj);
-		ctx->selected_obj = hit.obj;
+		ctx->editor.selected_obj = hit.obj;
 		if (!init_bvh(ctx))
 		{
 			pthread_mutex_unlock(&r->mutex);
 			fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 		}
 	}
-	else if (!(int)hit_object(ctx->selected_obj, &ray, &hit))
+	else if (!(int)hit_object(ctx->editor.selected_obj, &ray, &hit))
 	{
-		if (!ctx->selected_obj)
+		if (!ctx->editor.selected_obj)
 			return ;
-		vector_try_add(ctx, &ctx->scene.geo.objs, ctx->selected_obj);
-		ctx->selected_obj = NULL;
+		vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
+		ctx->editor.selected_obj = NULL;
 		if (!init_bvh(ctx))
 		{
 			pthread_mutex_unlock(&r->mutex);

@@ -10,6 +10,7 @@ t_error		new_material(t_context *ctx, t_material *mat, uint32_t *out_id)
 	if (!new_mat)
 		return (E_MALLOC);
 	mat->ior = fmaxf(mat->ior, 1.0f);
+	mat->roughness = fmaxf(mat->roughness, 0.045f);
 	mat->f0_dielectric = vec3_n(reflectance(mat->ior));
 	*new_mat = *mat;
 	if (!vector_add(&ctx->scene.assets.materials, new_mat))
@@ -46,7 +47,7 @@ void	set_material_data(t_path *path)
 	if (path->mat->normal_map.pixels)
 		path->n = apply_normal_map(path->mat, path->n, path);
 	path->ndotv = clampf(vec3_dot(path->n, path->v), G_EPSILON, 1.0f);
-	path->alpha = fmaxf(path->mat->roughness * path->mat->roughness, 0.001f);
+	path->alpha = path->mat->roughness * path->mat->roughness;
 	if (path->bounce > 0)
 	{
 		rough_bump = 0.05f * (float)path->bounce;

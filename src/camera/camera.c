@@ -83,8 +83,8 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	// cam->exposure = 1.0f / (powf(2.0f, ev100) * 1.2f);
 	cam->pitch = clampf(cam->pitch, -limit, limit);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
-	if (ctx->selected_obj)
-		cam->pivot = ctx->selected_obj->transform.pos;
+	if (ctx->editor.selected_obj)
+		cam->pivot = ctx->editor.selected_obj->transform.pos;
 	else
 		cam->pivot = (t_vec3){0};
 	sincosf(cam->pitch, &pitch.sin, &pitch.cos);

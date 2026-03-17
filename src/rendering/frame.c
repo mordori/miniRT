@@ -85,7 +85,7 @@ static inline void	copy_frame_buffer_preview(const t_context *ctx, const uint32_
 {
 	uint32_t			i;
 	uint32_t			mask;
-	const float			*m = ctx->selection_mask;
+	const float			*m = ctx->editor.selection_mask;
 	const uint32_t		limit = ctx->renderer.pixels;
 	uint32_t			edge_color;
 

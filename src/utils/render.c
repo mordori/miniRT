@@ -1,13 +1,24 @@
 #include "utils.h"
+#include "rendering.h"
 
-void	make_dir(t_context *ctx, const char *path)
+static inline void	save_render(t_context *ctx, uint8_t *pixels, uint32_t n);
+static inline void	make_dir(t_context *ctx, const char *path);
+
+void	screenshot(t_context *ctx)
 {
-	if (mkdir(path, 0777) == ERROR)
-		if (errno != EEXIST)
-			fatal_error(ctx, errors(ERR_DIR), __FILE__, __LINE__);
+	t_renderer		*r;
+
+	r = &ctx->renderer;
+	pthread_mutex_lock(&r->mutex);
+	while (r->threads_running)
+		pthread_cond_wait(&r->cond, &r->mutex);
+	blit(ctx, r);
+	r->blit_time = time_now();
+	pthread_mutex_unlock(&r->mutex);
+	save_render(ctx, ctx->img->pixels, ctx->renderer.pixels);
 }
 
-void	save_render(t_context *ctx, uint8_t *pixels, uint32_t n)
+static inline void	save_render(t_context *ctx, uint8_t *pixels, uint32_t n)
 {
 	char			path[PATH_MAX];
 	char			buf[32];
@@ -37,4 +48,11 @@ void	save_render(t_context *ctx, uint8_t *pixels, uint32_t n)
 	write(fd, buf_rgb, n * 3);
 	free(buf_rgb);
 	close(fd);
+}
+
+static inline void	make_dir(t_context *ctx, const char *path)
+{
+	if (mkdir(path, 0777) == ERROR)
+		if (errno != EEXIST)
+			fatal_error(ctx, errors(ERR_DIR), __FILE__, __LINE__);
 }

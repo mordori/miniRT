@@ -10,5 +10,6 @@ bool	control_camera(t_context *ctx);
 bool	camera_movement(t_context *ctx);
 t_vec3	sample_defocus_disk(const t_context *ctx, t_pixel *pixel);
 void	reset_camera(t_context *ctx);
+bool	config_camera(t_context *ctx);
 
 #endif

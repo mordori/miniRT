@@ -49,13 +49,13 @@ static inline float	d_ggx(float ndoth, float a)
 	return (a2 / den);
 }
 
-static inline float	v_smith_ggx(float ndotv, float ndotl, float alpha)
+static inline float	v_smith_ggx(float ndotv, float ndotl, float a)
 {
 	float		a2;
 	float		ggx_v;
 	float		ggx_l;
 
-	a2 = alpha * alpha;
+	a2 = a * a;
 	ggx_v = ndotl * sqrtf((ndotv * ndotv) * (1.0f - a2) + a2);
 	ggx_l = ndotv * sqrtf((ndotl * ndotl) * (1.0f - a2) + a2);
 	return (0.5f / fmaxf((ggx_v + ggx_l), G_EPSILON));
