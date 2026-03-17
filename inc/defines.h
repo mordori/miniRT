@@ -105,7 +105,7 @@ enum e_cam_state
 	CAM_ZOOM,
 	CAM_PAN,
 	CAM_ORBIT,
-	CAM_MOVE
+	CAM_LOOK
 };
 
 enum e_base_color
@@ -168,6 +168,17 @@ enum e_edit_mode
 	EDIT_SCALE
 };
 
+enum e_axis_constraints
+{
+	AXIS_DEFAULT,
+	AXIS_X,
+	AXIS_XY,
+	AXIS_XZ,
+	AXIS_Y,
+	AXIS_YZ,
+	AXIS_Z
+};
+
 typedef enum e_obj_type				t_obj_type;
 typedef enum e_light_type			t_light_type;
 typedef enum e_cam_state			t_cam_state;
@@ -178,6 +189,7 @@ typedef enum e_err_code				t_err_code;
 typedef enum e_render_mode			t_render_mode;
 typedef enum e_bn_channel			t_bn_channel;
 typedef enum e_edit_mode			t_edit_mode;
+typedef enum e_axis_constraints		t_axis_constraints;
 
 typedef struct s_context			t_context;
 typedef struct s_bvh_node			t_bvh_node;
@@ -205,6 +217,7 @@ typedef struct s_tex_entry			t_tex_entry;
 typedef struct s_geo				t_geo;
 typedef struct s_env				t_env;
 typedef struct s_assets				t_assets;
+typedef struct s_mouse				t_mouse;
 
 typedef union u_shape				t_shape;
 
@@ -497,9 +510,10 @@ struct __attribute__((aligned(64))) s_renderer
 
 struct __attribute__((aligned(16))) s_editor
 {
-	float			*selection_mask;
-	t_object		*selected_obj;
-	t_edit_mode		mode;
+	float				*selection_mask;
+	t_object			*selected_obj;
+	t_axis_constraints	constraints;
+	t_edit_mode			mode;
 };
 
 struct __attribute__((aligned(16))) s_pixel
@@ -528,12 +542,22 @@ struct __attribute__((aligned(16))) s_bvh_node
 	uint32_t		right_idx;
 	int				axis;
 };
+
+struct s_mouse
+{
+	t_vec2i			pos;
+	t_vec2i			pos_prev;
+	t_vec2i			pos_orig;
+	t_vec2i			pos_logical;
+};
+
 struct __attribute__((aligned(64))) s_context
 {
 	t_renderer		renderer;
 	t_scene			scene;
 	t_texture		tex_bn;
 	t_editor		editor;
+	t_mouse			mouse;
 	mlx_t			*mlx;
 	t_image			*img;
 	char			*file;

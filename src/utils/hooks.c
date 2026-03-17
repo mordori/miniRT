@@ -11,9 +11,10 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 
 	ctx = (t_context *)param;
 	dirty = false;
-	config_editor(ctx, keydata);
 	if (config_renderer(ctx, keydata))
 		dirty = true;
+	if (ctx->renderer.mode == SOLID)
+		config_editor(ctx, keydata);
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
@@ -42,7 +43,7 @@ void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	{
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);
-		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
+		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE && r->cam.state == CAM_DEFAULT)
 		{
 			if (ctx->editor.mode == EDIT_DEFAULT)
 				select_object(ctx);
