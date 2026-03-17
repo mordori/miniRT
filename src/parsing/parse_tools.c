@@ -46,24 +46,21 @@ bool	parse_float(char *str, float *out)
 bool	parse_uint(char *str, uint32_t *out)
 {
 	unsigned long	value;
-	int				i;
+	char			*endptr;
 
 	if (!str || !out)
 		return (false);
 	while (ft_isspace(*str))
 		str++;
-	if (*str == '\0' || ft_strlen(str) > 10)
+	if (*str == '\0' || *str == '-')
 		return (false);
-	i = 0;
-	while (str[i] && ft_isdigit(str[i]))
-		i++;
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	if (str[i] != '\0' || i == 0)
+	value = strtoul(str, &endptr, 10);
+	if (endptr == str)
 		return (false);
-	if (i == 10 && ft_strncmp(str, "4294967295", 10) > 0)
+	while (ft_isspace(*endptr))
+		endptr++;
+	if (*endptr != '\0')
 		return (false);
-	value = strtoul(str, NULL, 10);
 	if (value > UINT32_MAX)
 		return (false);
 	*out = (uint32_t)value;

@@ -20,7 +20,7 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
+		return (E_MALLOC);
 	*obj = (t_object){0};
 	obj->type = OBJ_PLANE;
 	obj->transform.pos = point;
@@ -30,7 +30,11 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 	obj->material_id = mat_id;
 	obj->mat = ((t_material **)ctx->scene.assets.materials.items)[mat_id];
 	obj->flags = obj->mat->flags;
-	vector_try_add(ctx, &ctx->scene.geo.planes, obj);
+	if (!vector_add(&ctx->scene.geo.planes, obj))
+	{
+		free(obj);
+		return (E_MALLOC);
+	}
 	return (E_OK);
 }
 
