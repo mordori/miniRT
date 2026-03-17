@@ -2,17 +2,23 @@
 #include "rendering.h"
 #include "utils.h"
 
-uint32_t	new_material(t_context *ctx, t_material *mat)
+t_error		new_material(t_context *ctx, t_material *mat, uint32_t *out_id)
 {
 	t_material		*new_mat;
 
 	new_mat = malloc(sizeof(*new_mat));
 	if (!new_mat)
-		fatal_error(ctx, errors(ERR_MATADD), __FILE__, __LINE__);
+		return (E_MALLOC);
 	mat->ior = fmaxf(mat->ior, 1.0f);
 	*new_mat = *mat;
-	vector_try_add(ctx, &ctx->scene.assets.materials, new_mat);
-	return (ctx->scene.assets.materials.total - 1);
+	if (!vector_add(&ctx->scene.assets.materials, new_mat))
+	{
+		free(new_mat);
+		return (E_MALLOC);
+	}
+	if (out_id)
+		*out_id = ctx->scene.assets.materials.total - 1;
+	return (E_OK);
 }
 
 static t_vec3	apply_normal_map(const t_material *mat, t_vec3 n, t_path *path)

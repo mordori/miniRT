@@ -3,17 +3,18 @@
 #include "objects.h"
 #include "materials.h"
 
-static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj);
+static inline t_error	init_dir_light(t_context *ctx, t_light *light, t_object *obj);
 
-void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
+t_error	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 {
 	t_light			*l;
 	t_object		obj;
 	t_material		*mat;
+	t_error			err;
 
 	l = malloc(sizeof(*l));
 	if (!l)
-		fatal_error(ctx, errors(ERR_POINTLADD), __FILE__, __LINE__);
+		return (E_MALLOC);
 	*l = *light;
 	mat = ((t_material **)ctx->scene.assets.materials.items)[mat_id];
 	l->emission = mat->emission;
@@ -29,24 +30,34 @@ void	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 	obj.shape.sphere.radius_sq = l->radius_sq;
 	obj.material_id = mat_id;
 	if (vec3_length(obj.transform.pos) > 500.0f)
+		return (init_dir_light(ctx, l, &obj));
+	err = add_object(ctx, &obj);
+	if (err != E_OK)
 	{
-		init_dir_light(ctx, l, &obj);
-		return ;
+		free(l);
+		return (err);
 	}
-	add_object(ctx, &obj);
 	l->obj = (t_object *)vector_getlast(&ctx->scene.geo.objs);
 	l->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
-	vector_try_add(ctx, &ctx->scene.env.lights, l);
+	if (!vector_add(&ctx->scene.env.lights, l))
+	{
+		free(l);
+		return (E_MALLOC);
+	}
 	l->idx = ctx->scene.env.lights.total;
+	return (E_OK);
 }
 
-static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
+static inline t_error	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 {
 	t_object 	*new_obj;
 
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
-		fatal_error(ctx, errors(ERR_OBJADD), __FILE__, __LINE__);
+	{
+		free(light);
+		return (E_MALLOC);
+	}
 	*new_obj = *obj;
 	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
 	light->obj = new_obj;
@@ -60,4 +71,5 @@ static inline void	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 	ctx->scene.cam.directional_light = *light;
 	ctx->scene.env.has_dir_light = true;
 	free(light);
+	return (E_OK);
 }

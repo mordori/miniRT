@@ -74,7 +74,7 @@ static t_error	parse_camera_fields(char **tokens, t_vec3 *pos, t_vec3 *orient,
 	return (E_OK);
 }
 
-static t_error	more_fields(char **tokens, t_camera *cam, int tc)
+static t_error	more_camera_fields(char **tokens, t_camera *cam, int tc)
 {
 	if (tc >= 5)
 	{
@@ -109,7 +109,7 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	err = parse_camera_fields(tokens, &position, &orientation, &fov);
 	if (err != E_OK)
 		return (err);
-	err = more_fields(tokens, &ctx->scene.cam, tc);
+	err = more_camera_fields(tokens, &ctx->scene.cam, tc);
 	if (err != E_OK)
 		return (err);
 	init_camera(ctx, position, orientation, fov);

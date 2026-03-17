@@ -19,7 +19,7 @@
 # define RENDER_SAMPLES			256
 # define PREVIEW_BOUNCES		2
 # define SOLID_BOUNCES			1
-# define RENDER_BOUNCES			64
+# define RENDER_BOUNCES			16
 # define DEPTH_ENABLE_RR		3
 
 # define MAX_NAME_LEN			64

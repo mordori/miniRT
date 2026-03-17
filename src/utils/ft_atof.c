@@ -12,6 +12,7 @@
 
 #include "libft_str.h"
 #include "libft_utils.h"
+#include <float.h>
 
 static float	skip_whitespace_and_sign(const char **str)
 {
@@ -32,28 +33,43 @@ static float	skip_whitespace_and_sign(const char **str)
 static float	parse_integer_part(const char **str)
 {
 	float	result;
+	float	digit;
 
 	result = 0.0f;
 	while (ft_isdigit(**str))
-		result = result * 10.0f + (*(*str)++ - 48);
+	{
+		digit = *(*str)++ - '0';
+		if (result > (FLT_MAX - digit) / 10.0f)
+		{
+			while (ft_isdigit(**str))
+				(*str)++;
+			return (FLT_MAX);
+		}
+		result = result * 10.0f + digit;
+	}
 	return (result);
 }
 
 static float	parse_fraction(const char **str)
 {
 	float	fraction;
-	int		divisor;
+	float	weight;
+	int		count;
 
 	fraction = 0.0f;
-	divisor = 1;
+	weight = 0.1f;
+	count = 0;
 	(*str)++;
 	while (ft_isdigit(**str))
 	{
-		fraction = fraction * 10.0f + (**str - 48);
-		divisor *= 10;
+		count++;
+		if (count > 9)
+			break ;
+		fraction += (**str - '0') * weight;
+		weight *= 0.1f;
 		(*str)++;
 	}
-	return (fraction / divisor);
+	return (fraction);
 }
 
 static void	set_end_pointer(const char *start, const char *current,

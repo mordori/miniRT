@@ -30,8 +30,8 @@ static t_error	parse_light_core(char **tokens, t_light *light, int tc)
 		return (E_INVALID_NUM);
 	if (tc >= 5 && !parse_float(tokens[4], &light->radius))
 		return (E_INVALID_NUM);
-	if (tc >= 5 && (light->radius <= 0.0f))
-		return (E_INVALID_NUM);
+	if (tc >= 5 && !validate_range(light->radius, 0.01f, 1000000.0f))
+		return (E_RANGE);
 	light->type = LIGHT_POINT;
 	light->pos = position;
 	light->intensity = ratio;
@@ -39,7 +39,7 @@ static t_error	parse_light_core(char **tokens, t_light *light, int tc)
 	return (E_OK);
 }
 
-static uint32_t	default_emissive_mat(t_context *ctx, t_light *light)
+static t_error	default_emissive_mat(t_context *ctx, t_light *light, uint32_t *out_id)
 {
 	t_material	mat;
 
@@ -47,7 +47,7 @@ static uint32_t	default_emissive_mat(t_context *ctx, t_light *light)
 	mat.albedo = light->color;
 	mat.emission = vec3_scale(light->color, light->intensity);
 	mat.is_emissive = true;
-	return (new_material(ctx, &mat));
+	return (new_material(ctx, &mat, out_id));
 }
 
 static t_error	parse_light_mat(t_parser *p, char **tokens, uint32_t *mat_id)
@@ -72,28 +72,25 @@ static t_error	parse_light_mat(t_parser *p, char **tokens, uint32_t *mat_id)
 t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
 	t_light		light;
-	int			token_count;
+	int			tc;
 	uint32_t	mat_id;
 	t_error		err;
 
-	token_count = count_tokens(tokens);
-	if (token_count < 4 || token_count > 6)
+	tc = count_tokens(tokens);
+	if (tc < 4 || tc > 6)
 		return (E_ARGS);
 	light = (t_light){0};
-	err = parse_light_core(tokens, &light, token_count);
+	err = parse_light_core(tokens, &light, tc);
+	if (err == E_OK && tc == 6)
+		err = parse_light_mat(p, tokens, &mat_id);
+	else if (err == E_OK)
+		err = default_emissive_mat(ctx, &light, &mat_id);
 	if (err != E_OK)
 		return (err);
-	if (token_count == 6)
-	{
-		err = parse_light_mat(p, tokens, &mat_id);
-		if (err != E_OK)
-			return (err);
-	}
-	else
-		mat_id = default_emissive_mat(ctx, &light);
 	if (light.radius <= 0.0f)
-		light.radius = 0.5f;
-	init_point_light(ctx, &light, mat_id);
-	p->has_light = true;
-	return (E_OK);
+		light.radius = 0.1f;
+	err = init_point_light(ctx, &light, mat_id);
+	if (err == E_OK)
+		p->has_light = true;
+	return (err);
 }

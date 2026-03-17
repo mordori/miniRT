@@ -79,8 +79,6 @@ t_error			identify_element(t_context *ctx, t_parser *p, char **tokens);
 
 /* Material and texture parsing */
 t_error			parse_material_def(t_context *ctx, t_parser *p, char **tokens);
-t_error			parse_material_token(t_parser *p, const char *token,
-					t_material *out);
 t_error			resolve_material(t_context *ctx, t_parser *p, const char *token,
 					uint32_t *out_id);
 t_material		*get_material_by_id(t_parser *p, uint32_t id);
@@ -96,6 +94,6 @@ t_error			parse_texture_def(t_context *ctx, char **tokens);
 t_error			load_texture_file(const char *filename, t_texture *out);
 t_texture		*find_texture_by_name(t_scene *scene, const char *name);
 bool			is_placeholder(const char *str);
-void			print_error(t_context *ctx, t_error err, int line_num);
+void			p_error(t_context *ctx, t_error err, int line_num);
 
 #endif

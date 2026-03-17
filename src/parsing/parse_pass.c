@@ -34,11 +34,11 @@ void	try_pass(t_context *ctx, t_parser *p,
 			continue ;
 		tokens = try_split(line);
 		if (!tokens)
-			print_error(ctx, E_MALLOC, p->line_num);
+			p_error(ctx, E_MALLOC, p->line_num);
 		err = dispatch_pass(ctx, p, tokens, pass);
 		ft_free_split(tokens);
 		if (err != E_OK && err != E_EMPTY)
-			print_error(ctx, err, p->line_num);
+			p_error(ctx, err, p->line_num);
 	}
 }
 

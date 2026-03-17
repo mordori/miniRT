@@ -26,33 +26,35 @@ static t_error	parse_mat_fields(t_context *ctx, t_parser *p,
 static t_error	parse_mat_values(char **tkns, t_material *mat);
 
 /**
- * Parse material from either inline color or material ID reference.
- * Color format: "R,G,B" (0-255)
- * Material ID: integer index
+ * Resolve material from either inline color or material ID reference.
+ * Color format: "R,G,B" (0-255) -> creates new material, returns its ID.
+ * Material ID: integer index -> uses existing material ID.
  */
-t_error	parse_material_token(t_parser *p, const char *token, t_material *out)
+t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
+		uint32_t *out_id)
 {
 	uint32_t	id;
 	t_vec3		color;
-	t_material	*mat;
+	t_material	mat;
+	t_material	*ref_mat;
 
 	if (is_color_token(token))
 	{
 		if (!parse_color((char *)token, &color))
 			return (E_INVALID_NUM);
-		*out = (t_material){0};
-		out->albedo = color;
-		out->base_color = BASE_COLOR;
-		return (E_OK);
+		mat = (t_material){0};
+		mat.albedo = color;
+		mat.base_color = BASE_COLOR;
+		return (new_material(ctx, &mat, out_id));
 	}
 	if (!parse_uint((char *)token, &id))
 		return (E_INVALID_NUM);
-	mat = get_material_by_id(p, id);
-	if (!mat)
+	ref_mat = get_material_by_id(p, id);
+	if (!ref_mat)
 		return (E_MATERIAL);
-	if (mat->is_emissive)
+	if (ref_mat->is_emissive)
 		return (E_EMISSIVE);
-	*out = *mat;
+	*out_id = id;
 	return (E_OK);
 }
 
@@ -132,8 +134,7 @@ static t_error	parse_mat_fields(t_context *ctx, t_parser *p,
 		return (err);
 	entry->defined = true;
 	p->mat_count++;
-	new_material(ctx, mat);
-	return (E_OK);
+	return (new_material(ctx, mat, NULL));
 }
 
 /**

@@ -45,7 +45,7 @@ static inline bool	vector_resize(t_vector *vec, size_t size)
  */
 bool	vector_add(t_vector *vec, void *new)
 {
-	if (!vec || !vec->size)
+	if (!vec || !vec->size || !new)
 		return (false);
 	if (vec->total == vec->size)
 		if (!vector_resize(vec, vec->size * 2))
