@@ -28,7 +28,7 @@
 # define SENS_ORBIT				0.0009f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				1.5f
+# define SENS_MOVE				0.5f
 
 # define SENSOR_HEIGHT_MM		24.0f
 # define SENSOR_HALF_HEIGHT_MM	12.0f
@@ -160,6 +160,14 @@ enum e_bn_channel
 	BN_CO_U
 };
 
+enum e_edit_mode
+{
+	EDIT_DEFAULT,
+	EDIT_TRANSLATE,
+	EDIT_ROTATE,
+	EDIT_SCALE
+};
+
 typedef enum e_obj_type				t_obj_type;
 typedef enum e_light_type			t_light_type;
 typedef enum e_cam_state			t_cam_state;
@@ -169,6 +177,7 @@ typedef enum e_entity				t_entity;
 typedef enum e_err_code				t_err_code;
 typedef enum e_render_mode			t_render_mode;
 typedef enum e_bn_channel			t_bn_channel;
+typedef enum e_edit_mode			t_edit_mode;
 
 typedef struct s_context			t_context;
 typedef struct s_bvh_node			t_bvh_node;
@@ -203,9 +212,11 @@ typedef mlx_image_t					t_image;
 
 struct __attribute__((aligned(16))) s_transform
 {
-	t_vec3	pos;
-	t_vec4	rot;
-	t_vec3	scale;
+	t_mat4			world_to_object;
+	t_mat4			object_to_world;
+	t_vec3			pos;
+	t_vec3			rot;
+	t_vec3			scale;
 };
 
 struct __attribute__((aligned(16))) s_ray
@@ -219,6 +230,7 @@ struct __attribute__((aligned(16))) s_hit
 {
 	float			t;
 	bool			is_primary;
+	bool			front_face;
 	t_object		*obj;
 	t_vec3			point;
 	t_vec3			normal;
@@ -264,7 +276,6 @@ struct __attribute__((aligned(16))) s_plane
 
 struct __attribute__((aligned(16))) s_sphere
 {
-	t_vec3			center;
 	float			radius;
 	float			radius_sq;
 };
@@ -486,7 +497,9 @@ struct __attribute__((aligned(64))) s_renderer
 
 struct __attribute__((aligned(16))) s_editor
 {
-	t_object		selection;
+	float			*selection_mask;
+	t_object		*selected_obj;
+	t_edit_mode		mode;
 };
 
 struct __attribute__((aligned(16))) s_pixel
@@ -521,8 +534,6 @@ struct __attribute__((aligned(64))) s_context
 	t_scene			scene;
 	t_texture		tex_bn;
 	t_editor		editor;
-	float			*selection_mask;
-	t_object		*selected_obj;
 	mlx_t			*mlx;
 	t_image			*img;
 	char			*file;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:54:39 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:54:43 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 19:55:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,10 @@ t_error	init_sphere(t_context *ctx, t_vec3 center, float diameter,
 	radius = diameter * 0.5f;
 	obj = (t_object){0};
 	obj.type = OBJ_SPHERE;
+	obj.material_id = mat_id;
 	obj.transform.pos = center;
-	obj.shape.sphere.center = center;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
-	obj.material_id = mat_id;
 	return (add_object(ctx, &obj));
 }
 
@@ -38,6 +37,7 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {
 	t_sphere	sphere;
 	float		t;
+	t_vec3		normal_outward;
 
 	sphere = shape->sphere;
 	if (sphere.radius < M_EPSILON)
@@ -46,10 +46,19 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	if (t >= hit->t)
 		return (false);
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	hit->normal = vec3_div(vec3_sub(hit->point, sphere.center), sphere.radius);
-	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
-		hit->normal = vec3_scale(hit->normal, -1.0f);
-	hit->uv = spherical_uv(hit->normal);
+	normal_outward = vec3_normalize(hit->point);
+	hit->point = vec3_scale(normal_outward, sphere.radius);
+	if (vec3_dot(ray->dir, normal_outward) > 0.0f)
+	{
+		hit->normal = vec3_negate(normal_outward);
+		hit->front_face = false;
+	}
+	else
+	{
+		hit->normal = normal_outward;
+		hit->front_face = true;
+	}
+	hit->uv = spherical_uv(normal_outward);
 	hit->t = t;
 	return (true);
 }
@@ -57,22 +66,22 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray,
 			float t_max)
 {
-	t_vec3		oc;
+	float		a;
 	float		half_b;
 	float		d;
 	float		sqrt_d;
 	float		root;
 
-	oc = vec3_sub(ray->origin, sphere->center);
-	half_b = vec3_dot(ray->dir, oc);
-	d = half_b * half_b - (vec3_dot(oc, oc) - sphere->radius_sq);
+	a = vec3_dot(ray->dir, ray->dir);
+	half_b = vec3_dot(ray->dir, ray->origin);
+	d = half_b * half_b - a * (vec3_dot(ray->origin, ray->origin) - sphere->radius_sq);
 	if (d < 0)
 		return (M_INF);
 	sqrt_d = sqrtf(d);
-	root = -half_b - sqrt_d;
+	root = (-half_b - sqrt_d) / a;
 	if (root <= G_EPSILON || root >= t_max)
 	{
-		root = -half_b + sqrt_d;
+		root = (-half_b + sqrt_d) / a;
 		if (root <= G_EPSILON || root >= t_max)
 			return (M_INF);
 	}

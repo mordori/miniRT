@@ -2,19 +2,20 @@
 #include "camera.h"
 #include "utils.h"
 #include "rendering.h"
+#include "editing.h"
 
 void	process_input(t_context *ctx, bool *update)
 {
 	bool		dirty;
 
 	dirty = false;
-	if (control_camera(ctx))
+	if (control_camera(ctx) || edit(ctx))
 		dirty = true;
 	if (camera_movement(ctx))
 		dirty = true;
-	if (rotate_skydome(ctx))
+	if (config_camera(ctx))
 		dirty = true;
-	if (is_key_down(ctx))
+	if (rotate_skydome(ctx))
 		dirty = true;
 	if (dirty)
 	{

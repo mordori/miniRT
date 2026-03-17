@@ -48,13 +48,13 @@ static inline void	resize_selection_mask(t_context *ctx, t_renderer *r)
 {
 	size_t		size;
 
-	free(ctx->selection_mask);
+	free(ctx->editor.selection_mask);
 	size = sizeof(float) * r->pixels;
-	ctx->selection_mask = malloc(size);
-	if (!ctx->selection_mask)
+	ctx->editor.selection_mask = malloc(size);
+	if (!ctx->editor.selection_mask)
 	{
 		pthread_mutex_unlock(&r->mutex);
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
 	}
-	memset(ctx->selection_mask, 0, size);
+	memset(ctx->editor.selection_mask, 0, size);
 }

@@ -199,9 +199,8 @@ Path tracing
 PBR
 - https://imadrahmoune.com/pbr/
 - https://google.github.io/filament/main/filament.html
-- https://blog.selfshadow.com/
+- https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
 - https://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
-- https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
 VNDF
 - https://arxiv.org/pdf/2306.05044

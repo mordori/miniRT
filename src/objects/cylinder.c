@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:17 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/13 17:54:59 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 19:54:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ t_error	init_cylinder(t_context *ctx, t_cylinder *cyl, int32_t mat_id)
 
 	obj = (t_object){0};
 	obj.type = OBJ_CYLINDER;
+	obj.material_id = mat_id;
 	obj.transform.pos = cyl->center;
 	obj.shape.cylinder = *cyl;
-	obj.material_id = mat_id;
 	return (add_object(ctx, &obj));
 }
 
@@ -44,18 +44,16 @@ t_error	init_cylinder(t_context *ctx, t_cylinder *cyl, int32_t mat_id)
 */
 static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 {
-	t_vec3	oc;
 	float	t_vals[2];
 	float	params[2];
 
-	oc = vec3_sub(ray->origin, cyl->center);
-	if (!solve_body_quadratic(cyl, ray, oc, t_vals))
+	if (!solve_body_quadratic(cyl, ray, ray->origin, t_vals))
 		return (false);
 	params[0] = cyl->height * 0.5f;
 	params[1] = hit->t;
-	if (test_body_hit((t_cylinder *)cyl, (t_ray *)ray, params, t_vals[0]))
+	if (test_body_hit(cyl, ray->origin, ray, params, t_vals[0]))
 		return (hit->t = params[1], true);
-	if (test_body_hit((t_cylinder *)cyl, (t_ray *)ray, params, t_vals[1]))
+	if (test_body_hit(cyl, ray->origin, ray, params, t_vals[1]))
 		return (hit->t = params[1], true);
 	return (false);
 }
@@ -70,16 +68,14 @@ static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 				t_hit *hit)
 {
-	t_vec3	hit_vec;
 	t_vec3	axis_point;
 	t_vec3	tang;
 	t_vec3	btan;
 	float	projection;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	hit_vec = vec3_sub(hit->point, cyl->center);
-	projection = vec3_dot(hit_vec, cyl->axis);
-	axis_point = vec3_add(cyl->center, vec3_scale(cyl->axis, projection));
+	projection = vec3_dot(hit->point, cyl->axis);
+	axis_point = vec3_scale(cyl->axis, projection);
 	hit->normal = vec3_normalize(vec3_sub(hit->point, axis_point));
 	onb(cyl->axis, &tang, &btan);
 	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan),

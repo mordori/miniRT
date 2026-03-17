@@ -1,7 +1,6 @@
-#include "input.h"
+#include "camera.h"
 
-
-bool	is_key_down(t_context *ctx)
+bool	config_camera(t_context *ctx)
 {
 	bool		dirty;
 	float		mul;

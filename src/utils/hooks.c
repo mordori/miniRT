@@ -8,83 +8,25 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 {
 	t_context		*ctx;
 	bool			dirty;
-	t_renderer		*r;
 
 	ctx = (t_context *)param;
-	r = &ctx->renderer;
 	dirty = false;
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
-		mlx_close_window(ctx->mlx);
-	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_RELEASE)
-	{
+	config_editor(ctx, keydata);
+	if (config_renderer(ctx, keydata))
 		dirty = true;
-		if (ctx->renderer.mode != SOLID)
-			ctx->renderer.mode = SOLID;
-		else
-		{
-			ctx->renderer.mode = RENDERED;
-			if (ctx->selected_obj)
-			{
-				pthread_mutex_lock(&r->mutex);
-				while (r->threads_running)
-					pthread_cond_wait(&r->cond, &r->mutex);
-				vector_try_add(ctx, &ctx->scene.geo.objs, ctx->selected_obj);
-				ctx->selected_obj = NULL;
-				if (!init_bvh(ctx))
-				{
-					pthread_mutex_unlock(&r->mutex);
-					fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-				}
-				memset(ctx->selection_mask, 0, sizeof(float) * r->pixels);
-				pthread_mutex_unlock(&r->mutex);
-			}
-		}
-	}
-	if (keydata.key == MLX_KEY_O && keydata.action == MLX_RELEASE)
-	{
-		ctx->renderer.render_samples >>= 1u;
-		if (ctx->renderer.render_samples < 2u)
-			ctx->renderer.render_samples = 2u;
-	}
-	if (keydata.key == MLX_KEY_P && keydata.action == MLX_RELEASE)
-	{
-		ctx->renderer.render_samples <<= 1u;
-		if (ctx->renderer.render_samples > 8192u)
-			ctx->renderer.render_samples = 8192u;
-	}
-	if (keydata.key == MLX_KEY_U && keydata.action == MLX_RELEASE)
-	{
-		dirty = true;
-		ctx->renderer.render_bounces >>= 1u;
-		if (ctx->renderer.render_bounces < 2u)
-			ctx->renderer.render_bounces = 2u;
-	}
-	if (keydata.key == MLX_KEY_I && keydata.action == MLX_RELEASE)
-	{
-		dirty = true;
-		ctx->renderer.render_bounces <<= 1u;
-		if (ctx->renderer.render_bounces > 128u)
-			ctx->renderer.render_bounces = 128u;
-	}
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
-	{
-		pthread_mutex_lock(&r->mutex);
-		while (r->threads_running)
-			pthread_cond_wait(&r->cond, &r->mutex);
-		blit(ctx, r);
-		r->blit_time = time_now();
-		pthread_mutex_unlock(&r->mutex);
-		save_render(ctx, ctx->img->pixels, ctx->renderer.pixels);
-	}
-	if (keydata.key == KEY_RESET && keydata.action == MLX_RELEASE)
+		screenshot(ctx);
+	if (keydata.key == MLX_KEY_R && keydata.action == MLX_RELEASE)
 	{
 		dirty = true;
 		reset_camera(ctx);
 	}
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
+	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
+		mlx_close_window(ctx->mlx);
 }
 
 void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
@@ -95,14 +37,20 @@ void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
 	(void)mods;
-
 	pthread_mutex_lock(&r->mutex);
 	if (r->mode == SOLID)
 	{
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);
 		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
-			select_object(ctx);
+		{
+			if (ctx->editor.mode == EDIT_DEFAULT)
+				select_object(ctx);
+			else
+				apply_edit(ctx);
+		}
+		else if (ctx->editor.mode != EDIT_DEFAULT && button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
+			cancel_edit(ctx);
 	}
 	pthread_mutex_unlock(&r->mutex);
 }

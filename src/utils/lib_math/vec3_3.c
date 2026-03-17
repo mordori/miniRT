@@ -39,13 +39,13 @@ t_vec3	vec3_unit_random(uint32_t *seed)
 	}
 }
 
-t_vec3	vec3_min(t_vec3 vec, float min)
+t_vec3	vec3_min(t_vec3 a, float min)
 {
 	t_vec3		res;
 	t_v4sf		limit;
 
 	limit = v4sf(min, min, min, M_INF);
-	res.v = _mm_min_ps(vec.v, limit);
+	res.v = _mm_min_ps(a.v, limit);
 	return (res);
 }
 

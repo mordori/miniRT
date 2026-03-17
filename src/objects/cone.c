@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:52:56 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 19:39:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 19:51:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 	cone->tan_sq = tanf(cone->angle) * tanf(cone->angle);
 	cone->base_radius = cone->height * tanf(cone->angle);
 	cone->inv_height = 1.0f / cone->height;
-	obj = (t_object){0};
-	obj.type = OBJ_CONE;
-	obj.shape.cone = *cone;
-	obj.material_id = mat_id;
-	obj.transform.pos = cone->apex;
-	return (add_object(ctx, &obj));
+    obj = (t_object){0};
+    obj.type = OBJ_CONE;
+    obj.material_id = mat_id;
+    obj.transform.pos = cone->apex;
+	cone->apex = vec3_n(0.0f);
+    obj.shape.cone = *cone;
+    return (add_object(ctx, &obj));
 }
 
 /*
@@ -76,11 +77,9 @@ static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray,
 */
 static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
-	t_vec3	oc;
 	float	t_vals[2];
 
-	oc = vec3_sub(ray->origin, cone->apex);
-	if (!solve_cone_quadratic(cone, ray, oc, t_vals))
+	if (!solve_cone_quadratic(cone, ray, ray->origin, t_vals))
 		return (false);
 	if (is_valid_body_hit(cone, ray, t_vals[0], hit->t))
 		return (hit->t = t_vals[0], true);
@@ -99,15 +98,13 @@ static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 		t_hit *hit)
 {
-	t_vec3	apex_to_hit;
 	t_vec3	axis_component;
 	t_vec3	tang;
 	t_vec3	btan;
 	float	projection;
 
-	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	apex_to_hit = vec3_sub(hit->point, cone->apex);
-	projection = vec3_dot(apex_to_hit, cone->axis);
+	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));;
+	projection = vec3_dot(hit->point, cone->axis);
 	axis_component = vec3_scale(cone->axis, projection * (1.0f + cone->tan_sq));
 	hit->normal = vec3_normalize(vec3_sub(apex_to_hit, axis_component));
 	onb(cone->axis, &tang, &btan);

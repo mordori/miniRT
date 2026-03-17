@@ -1,5 +1,4 @@
 #include "scene.h"
-#include "libft_list.h"
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b);
 
@@ -24,7 +23,7 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n)
 
 t_aabb	get_object_bounds(const t_object *obj)
 {
-	t_aabb res;
+	t_aabb	 res;
 
 	res = (t_aabb){0};
 	if (obj->type == OBJ_SPHERE)
@@ -36,6 +35,34 @@ t_aabb	get_object_bounds(const t_object *obj)
 	else if (obj->type == OBJ_QUAD)
 		res = quad_bounds(obj);
 	return(res);
+}
+
+t_aabb	aabb_object_to_world(t_aabb aabb, const t_mat4 *object_to_world)
+{
+	t_aabb		res;
+	t_vec3		corners[8];
+	t_vec4		p;
+	uint32_t	i;
+
+	corners[0] = vec3(aabb.min.x, aabb.min.y, aabb.min.z);
+	corners[1] = vec3(aabb.max.x, aabb.min.y, aabb.min.z);
+	corners[2] = vec3(aabb.min.x, aabb.max.y, aabb.min.z);
+	corners[3] = vec3(aabb.max.x, aabb.max.y, aabb.min.z);
+	corners[4] = vec3(aabb.min.x, aabb.min.y, aabb.max.z);
+	corners[5] = vec3(aabb.max.x, aabb.min.y, aabb.max.z);
+	corners[6] = vec3(aabb.min.x, aabb.max.y, aabb.max.z);
+	corners[7] = vec3(aabb.max.x, aabb.max.y, aabb.max.z);
+	res.min = vec3_n(M_INF);
+	res.max = vec3_n(-M_INF);
+	i = 0;
+	while (i < 8)
+	{
+		p = mat4_mul_vec4(object_to_world, vec4_3(corners[i], 1.0f));
+		res.min.v = _mm_min_ps(res.min.v, p.v);
+		res.max.v = _mm_max_ps(res.max.v, p.v);
+		++i;
+	}
+	return (res);
 }
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)

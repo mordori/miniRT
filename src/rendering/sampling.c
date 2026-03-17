@@ -59,7 +59,8 @@ void	sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv)
 	t_vec3		b;
 
 	onb(path->n, &t, &b);
-	wi_std = vec3(vec3_dot(path->v, t), vec3_dot(path->v, b), vec3_dot(path->v, path->n));
+	wi_std = vec3(vec3_dot(path->v, t), vec3_dot(path->v, b), path->ndotv);
+	wi_std.z = fmaxf(wi_std.z, G_EPSILON);
 	wi_std = vec3_normalize(vec3(wi_std.x * alpha, wi_std.y * alpha, wi_std.z));
 	wm_std = sample_vndf_hemisphere(wi_std, uv);
 	wm = vec3_normalize(vec3(wm_std.x * alpha, wm_std.y * alpha, wm_std.z));
@@ -73,6 +74,7 @@ static inline t_vec3	sample_vndf_hemisphere(t_vec3 wi, t_vec2 uv)
 	float		sin_theta;
 	float		cos_theta;
 
+	uv.v = fminf(uv.v, 0.9999f);
 	cos_theta = (1.0f - uv.v) * (1.0f + wi.z) - wi.z;
 	sin_theta = sqrtf(fmaxf(0.0f, (1.0f - cos_theta * cos_theta)));
 	c = spherical_to_cartesian(uv.u, sin_theta, cos_theta);

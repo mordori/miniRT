@@ -46,7 +46,6 @@ bool	rotate_skydome(t_context *ctx)
 			light->pos.y = initial_pos.y;
 			light->pos.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos;
 			light->obj->transform.pos = light->pos;
-			light->obj->shape.sphere.center = light->pos;
 		}
 		return (true);
 	}

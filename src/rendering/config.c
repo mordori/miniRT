@@ -1,0 +1,87 @@
+#include "rendering.h"
+#include "utils.h"
+#include "scene.h"
+
+static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata);
+static inline void	set_samples(t_context *ctx, mlx_key_data_t keydata);
+static inline bool	set_bounces(t_context *ctx, mlx_key_data_t keydata);
+
+bool	config_renderer(t_context *ctx, mlx_key_data_t keydata)
+{
+	bool		dirty;
+
+	dirty = false;
+	if (set_render_mode(ctx, &ctx->renderer, keydata))
+		dirty = true;
+	if (set_bounces(ctx, keydata))
+		dirty = true;
+	set_samples(ctx, keydata);
+	return (dirty);
+}
+
+static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
+{
+	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_RELEASE)
+	{
+		pthread_mutex_lock(&r->mutex);
+		while (r->threads_running)
+			pthread_cond_wait(&r->cond, &r->mutex);
+		if (r->mode != SOLID)
+			r->mode = SOLID;
+		else
+		{
+			r->mode = RENDERED;
+			if (ctx->editor.selected_obj)
+			{
+				vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
+				ctx->editor.selected_obj = NULL;
+				if (!init_bvh(ctx))
+				{
+					pthread_mutex_unlock(&r->mutex);
+					fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+				}
+				memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
+			}
+		}
+		pthread_mutex_unlock(&r->mutex);
+		return (true);
+	}
+	return (false);
+}
+
+static inline void	set_samples(t_context *ctx, mlx_key_data_t keydata)
+{
+	if (keydata.key == MLX_KEY_O && keydata.action == MLX_RELEASE)
+	{
+		ctx->renderer.render_samples >>= 1u;
+		if (ctx->renderer.render_samples < 2u)
+			ctx->renderer.render_samples = 2u;
+	}
+	if (keydata.key == MLX_KEY_P && keydata.action == MLX_RELEASE)
+	{
+		ctx->renderer.render_samples <<= 1u;
+		if (ctx->renderer.render_samples > 8192u)
+			ctx->renderer.render_samples = 8192u;
+	}
+}
+
+static inline bool	set_bounces(t_context *ctx, mlx_key_data_t keydata)
+{
+	if (keydata.key == MLX_KEY_U && keydata.action == MLX_RELEASE)
+	{
+		ctx->renderer.render_bounces >>= 1u;
+		if (ctx->renderer.render_bounces < 2u)
+			ctx->renderer.render_bounces = 2u;
+		else
+			return (true);
+	}
+	if (keydata.key == MLX_KEY_I && keydata.action == MLX_RELEASE)
+	{
+		ctx->renderer.render_bounces <<= 1u;
+		if (ctx->renderer.render_bounces > 128u)
+			ctx->renderer.render_bounces = 128u;
+		else
+			return (true);
+	}
+	return (false);
+}
