@@ -19,7 +19,7 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
 		screenshot(ctx);
-	if (keydata.key == MLX_KEY_R && keydata.action == MLX_RELEASE)
+	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_RELEASE)
 	{
 		dirty = true;
 		reset_camera(ctx);

@@ -12,6 +12,11 @@
 
 #include "lib_math.h"
 
+float	vec3_dist(t_vec3 a, t_vec3 b)
+{
+	return (sqrtf(vec3_dist_sq(a, b)));
+}
+
 float	vec3_dist_sq(t_vec3 a, t_vec3 b)
 {
 	t_vec3		diff;
@@ -28,25 +33,4 @@ bool	vec3_is_nan_inf(t_vec3 vec)
 	v_s.v = (t_v4ui)vec.v;
 	v_s.v &= e_bits;
 	return (v_s.s[0] == e_bits | v_s.s[1] == e_bits | v_s.s[2] == e_bits);
-}
-
-t_vec3	vec3_right(void)
-{
-	static const t_vec3	right = {{1.0f, 0.0f, 0.0f}};
-
-	return (right);
-}
-
-t_vec3	vec3_up(void)
-{
-	static const t_vec3	up = {{0.0f, 1.0f, 0.0f}};
-
-	return (up);
-}
-
-t_vec3	vec3_forward(void)
-{
-	static const t_vec3	forward = {{0.0f, 0.0f, 1.0f}};
-
-	return (forward);
 }
