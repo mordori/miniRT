@@ -12,11 +12,13 @@ void	frame_loop(void *param)
 	t_context		*ctx;
 	t_renderer		*r;
 	static bool		update;
+	bool			is_interacting;
 
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
-	process_input(ctx, &update);
 	pthread_mutex_lock(&r->mutex);
+	process_input(ctx, &update);
+	is_interacting = (ctx->scene.cam.state != CAM_DEFAULT || ctx->editor.mode != EDIT_DEFAULT);
 	if (atomic_load(&r->render_cancel) || r->resize_pending)
 		cancel_render(r);
 	else if (r->frame_complete && !r->resize_pending)
@@ -28,7 +30,7 @@ void	frame_loop(void *param)
 			resize_window(ctx);
 		return ;
 	}
-	else if (!r->threads_running && (update || r->mode == SOLID))
+	else if (!r->threads_running && (update || r->mode == SOLID || is_interacting))
 		set_mode_preview(ctx, r, &update);
 	else if (!r->threads_running && r->frame < r->render_samples + 1)
 		set_mode_rendered(r);

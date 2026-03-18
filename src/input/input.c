@@ -7,18 +7,26 @@
 void	process_input(t_context *ctx, bool *update)
 {
 	bool		dirty;
+	t_vec2i		delta;
 
+	if (ctx->renderer.mode != RENDERED)
+	{
+		while (ctx->renderer.threads_running)
+			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
+	}
 	dirty = false;
+	delta = get_mouse_delta(ctx);
 	if (config_camera(ctx))
 		dirty = true;
-	if (control_camera(ctx))
+	if (control_camera(ctx, delta))
 		dirty = true;
-	if (edit(ctx))
+	if (edit_object(ctx, delta))
 		dirty = true;
 	if (camera_movement(ctx))
 		dirty = true;
 	if (rotate_skydome(ctx))
 		dirty = true;
+	ctx->mouse.pos_prev = ctx->mouse.pos;
 	if (dirty)
 	{
 		*update = true;

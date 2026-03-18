@@ -31,6 +31,7 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 		else
 		{
 			r->mode = RENDERED;
+			ctx->editor.mode = EDIT_DEFAULT;
 			if (ctx->editor.selected_obj)
 			{
 				vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
