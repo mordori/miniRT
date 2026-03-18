@@ -30,7 +30,9 @@ static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 1.0f}};
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_EDIT				0.0008f
+# define SENS_TRANSLATE			0.0003f
+# define SENS_ROTATE			0.001f
+# define SENS_SCALE				0.0008f
 # define SENS_ORBIT				0.0150f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
@@ -509,6 +511,7 @@ struct __attribute__((aligned(16))) s_editor
 	t_edit_mode			mode;
 	t_vec3				axis_primary;
 	t_vec3				axis_secondary;
+	bool				has_constraints;
 };
 
 struct __attribute__((aligned(16))) s_pixel

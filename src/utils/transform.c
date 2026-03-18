@@ -7,7 +7,7 @@ void	update_transform(t_transform *t)
 	t_mat4		scale;
 
 	translation = mat4_translate(t->pos);
-	rotation = mat4_identity();
+	rotation = mat4_rot(t->rot);
 	scale = mat4_scale(t->scale);
 	t->object_to_world = mat4_mul(&translation, &rotation);
 	t->object_to_world = mat4_mul(&t->object_to_world, &scale);
