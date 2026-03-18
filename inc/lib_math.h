@@ -275,6 +275,9 @@ t_vec3		vec3_bias(t_vec3 vec, t_vec3 n);
 uint32_t	vec3_to_uint32(t_vec3 vec);
 float		vec3_dist_sq(t_vec3 a, t_vec3 b);
 bool		vec3_is_nan_inf(t_vec3 vec);
+t_vec3		vec3_right(void);
+t_vec3		vec3_up(void);
+t_vec3		vec3_forward(void);
 
 // vec4
 // -----------------------------------------------------------------

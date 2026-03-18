@@ -6,10 +6,8 @@ static inline void	begin_cam_action(t_context *ctx, t_cam_state state);
 static inline void	end_cam_action(t_context *ctx);
 static inline bool	is_cam_action_active(const t_context *ctx);
 
-bool	control_camera(t_context *ctx)
+bool	control_camera(t_context *ctx, t_vec2i delta)
 {
-	t_vec2i		delta;
-
 	if (ctx->editor.mode != EDIT_DEFAULT || !set_cam_state(ctx))
 		return (false);
 	if (!is_cam_action_active(ctx))
@@ -17,10 +15,8 @@ bool	control_camera(t_context *ctx)
 		end_cam_action(ctx);
 		return (true);
 	}
-	delta = get_mouse_delta(ctx);
 	apply_cam_action(ctx, delta);
-	ctx->mouse.pos_prev = ctx->mouse.pos;
-	return (delta.x != 0 || delta.y != 0);
+	return ((delta.x != 0 || delta.y != 0));
 }
 
 static inline bool	set_cam_state(t_context *ctx)

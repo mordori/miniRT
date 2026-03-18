@@ -35,9 +35,9 @@ void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	t_context	*ctx;
 	t_renderer	*r;
 
+	(void)mods;
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
-	(void)mods;
 	pthread_mutex_lock(&r->mutex);
 	if (r->mode == SOLID)
 	{
@@ -48,10 +48,10 @@ void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 			if (ctx->editor.mode == EDIT_DEFAULT)
 				select_object(ctx);
 			else
-				apply_edit(ctx);
+				apply_edit_action(ctx);
 		}
-		else if (ctx->editor.mode != EDIT_DEFAULT && button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
-			cancel_edit(ctx);
+		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_RELEASE && ctx->editor.mode != EDIT_DEFAULT)
+			cancel_edit_action(ctx);
 	}
 	pthread_mutex_unlock(&r->mutex);
 }

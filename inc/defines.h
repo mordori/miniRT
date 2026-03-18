@@ -12,6 +12,11 @@
 
 # include "lib_math.h"
 
+static const t_vec3	g_zero = {{0.0f, 0.0f, 0.0f, 1.0f}};
+static const t_vec3	g_right = {{1.0f, 0.0f, 0.0f, 1.0f}};
+static const t_vec3	g_up = {{0.0f, 1.0f, 0.0f, 1.0f}};
+static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 1.0f}};
+
 # define WIDTH					1920
 # define HEIGHT					1080
 # define THREADS_DFL			4
@@ -25,10 +30,11 @@
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_ORBIT				0.0009f
+# define SENS_EDIT				0.0008f
+# define SENS_ORBIT				0.0150f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
-# define SENS_MOVE				0.5f
+# define SENS_MOVE				0.8f
 
 # define SENSOR_HEIGHT_MM		24.0f
 # define SENSOR_HALF_HEIGHT_MM	12.0f
@@ -102,10 +108,10 @@ enum e_light_type
 enum e_cam_state
 {
 	CAM_DEFAULT,
-	CAM_ZOOM,
-	CAM_PAN,
+	CAM_LOOK,
 	CAM_ORBIT,
-	CAM_LOOK
+	CAM_ZOOM,
+	CAM_PAN
 };
 
 enum e_base_color
@@ -168,17 +174,6 @@ enum e_edit_mode
 	EDIT_SCALE
 };
 
-enum e_axis_constraints
-{
-	AXIS_DEFAULT,
-	AXIS_X,
-	AXIS_XY,
-	AXIS_XZ,
-	AXIS_Y,
-	AXIS_YZ,
-	AXIS_Z
-};
-
 typedef enum e_obj_type				t_obj_type;
 typedef enum e_light_type			t_light_type;
 typedef enum e_cam_state			t_cam_state;
@@ -189,7 +184,6 @@ typedef enum e_err_code				t_err_code;
 typedef enum e_render_mode			t_render_mode;
 typedef enum e_bn_channel			t_bn_channel;
 typedef enum e_edit_mode			t_edit_mode;
-typedef enum e_axis_constraints		t_axis_constraints;
 
 typedef struct s_context			t_context;
 typedef struct s_bvh_node			t_bvh_node;
@@ -512,8 +506,9 @@ struct __attribute__((aligned(16))) s_editor
 {
 	float				*selection_mask;
 	t_object			*selected_obj;
-	t_axis_constraints	constraints;
 	t_edit_mode			mode;
+	t_vec3				axis_primary;
+	t_vec3				axis_secondary;
 };
 
 struct __attribute__((aligned(16))) s_pixel
