@@ -67,9 +67,9 @@ SRCS		:=$(addprefix $(DIR_SRC), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
 				camera.c controls.c movement.c config.c controls_router.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
-				select.c edit.c constraints.c translate.c rotate.c scale.c)
+				select.c edit_object.c constraints.c translate.c rotate.c scale.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
-				input.c mouse.c)
+				input_router.c mouse.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				ambient.c point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \

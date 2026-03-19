@@ -148,6 +148,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>LMB</kbd>                                                 | Rotate                                        |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
 | <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
+| <kbd>R</kbd>                                                   | Reset Camera                                  |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -163,17 +164,17 @@ As the project is still under construction, we recommend to run the program with
 
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Editing          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>LMB</kbd>                                                 | Select Object                                 |
-| <kbd>W</kbd>                                                   | Move                                          |
-| <kbd>E</kbd>                                                   | Rotate                                        |
-| <kbd>R</kbd>                                                   | Scale                                         |
+| <kbd>LMB</kbd>                                                 | Select Object / Apply Edit                    |
+| <kbd>RMB</kbd>                                                 | Cancel Edit                                   |
+| <kbd>G</kbd>                                                   | Move                                          |
+| <kbd>R</kbd>                                                   | Rotate                                        |
+| <kbd>S</kbd>                                                   | Scale                                         |
 | <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>                     | Axis Constraint                               |
 | <kbd>SHIFT</kbd> + <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>  | Plane Constraint                              |
 
 ### General
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>R</kbd>                                                   | Reset Camera                                  |
 | <kbd>,</kbd> / <kbd>.</kbd>                                    | Rotate Skydome                                |
 | <kbd>↓</kbd> / <kbd>↑</kbd>                                    | Focus Distance                                |
 | <kbd>←</kbd> / <kbd>→</kbd>                                    | Aperture                                      |

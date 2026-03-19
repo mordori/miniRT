@@ -140,12 +140,14 @@ union __attribute__((aligned(16))) u_vec3
 		float	x;
 		float	y;
 		float	z;
+		float	w;
 	};
 	struct
 	{
 		float	r;
 		float	g;
 		float	b;
+		float	a;
 	};
 	struct
 	{
