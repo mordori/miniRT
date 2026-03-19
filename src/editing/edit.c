@@ -21,8 +21,6 @@ void	config_editor(t_context *ctx, mlx_key_data_t keydata)
 			ctx->editor.mode = EDIT_ROTATE;
 		if (keydata.key == MLX_KEY_S)
 			ctx->editor.mode = EDIT_SCALE;
-		ctx->editor.axis_primary = ctx->scene.cam.right;
-		ctx->editor.axis_secondary = ctx->scene.cam.up;
 		begin_edit_action(ctx);
 	}
 	if (ctx->editor.mode != EDIT_DEFAULT)
@@ -50,6 +48,9 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta)
 	bool		is_single_constraint;
 	t_mat4		*m;
 	t_vec3		axis_local;
+	t_vec2		obj_screen_pos;
+	t_vec2		dir_mouse_to_obj_screen;
+	float		dist_mouse_to_obj_screen;
 
 	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300)
 	{
@@ -69,22 +70,40 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta)
 ctx->editor.axis_secondary.x == 0.0f && \
 ctx->editor.axis_secondary.y == 0.0f && \
 ctx->editor.axis_secondary.z == 0.0f);
-			if (is_single_constraint)
+			if (ctx->editor.mode == EDIT_SCALE)
 			{
-				right_align = vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
-				up_align = vec3_dot(ctx->scene.cam.up, ctx->editor.axis_primary);
-				if (fabsf(right_align) < 0.1f && fabsf(up_align) < 0.1f)
-					magnitude = (float)(delta.x - delta.y) * speed;
+				obj_screen_pos = world_to_screen(ctx, ctx->editor.selected_obj->transform.pos);
+				dir_mouse_to_obj_screen.x = (float)ctx->mouse.pos_orig.x - obj_screen_pos.x;
+				dir_mouse_to_obj_screen.y = (float)ctx->mouse.pos_orig.y - obj_screen_pos.y;
+				dist_mouse_to_obj_screen = sqrtf(dir_mouse_to_obj_screen.x * dir_mouse_to_obj_screen.x + dir_mouse_to_obj_screen.y * dir_mouse_to_obj_screen.y);
+				if (dist_mouse_to_obj_screen > 1.0f)
+				{
+					dir_mouse_to_obj_screen.x /= dist_mouse_to_obj_screen;
+					dir_mouse_to_obj_screen.y /= dist_mouse_to_obj_screen;
+					magnitude = ((float)delta.x * dir_mouse_to_obj_screen.x + (float)delta.y * dir_mouse_to_obj_screen.y) * speed;
+				}
 				else
-					magnitude = ((float)delta.x * right_align - (float)delta.y * up_align) * speed;
-				axis_delta = vec3_scale(ctx->editor.axis_primary, magnitude);
+					magnitude = (float)(delta.x - delta.y) * speed;
 			}
 			else
 			{
-				magnitude = (float)(delta.x - delta.y) * speed;
-				axis_delta = vec3_add(\
-vec3_scale(ctx->editor.axis_primary, delta.x * speed), \
-vec3_scale(ctx->editor.axis_secondary, -delta.y * speed));
+				if (is_single_constraint)
+				{
+					right_align = vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
+					up_align = vec3_dot(ctx->scene.cam.up, ctx->editor.axis_primary);
+					if (fabsf(right_align) < 0.1f && fabsf(up_align) < 0.1f)
+						magnitude = (float)(delta.x - delta.y) * speed;
+					else
+						magnitude = ((float)delta.x * right_align - (float)delta.y * up_align) * speed;
+					axis_delta = vec3_scale(ctx->editor.axis_primary, magnitude);
+				}
+				else
+				{
+					magnitude = (float)(delta.x - delta.y) * speed;
+					axis_delta = vec3_add(\
+	vec3_scale(ctx->editor.axis_primary, delta.x * speed), \
+	vec3_scale(ctx->editor.axis_secondary, -delta.y * speed));
+				}
 			}
 			if (ctx->editor.mode == EDIT_TRANSLATE)
 				obj_translate(ctx, axis_delta);
@@ -132,6 +151,8 @@ static inline void	begin_edit_action(t_context *ctx)
 	mlx_get_mouse_pos(ctx->mlx, &ctx->mouse.pos_orig.x, &ctx->mouse.pos_orig.y);
 	ctx->mouse.pos = ctx->mouse.pos_orig;
 	ctx->mouse.pos_prev = ctx->mouse.pos_orig;
+	ctx->editor.axis_primary = ctx->scene.cam.right;
+	ctx->editor.axis_secondary = ctx->scene.cam.up;
 }
 
 static inline void	end_edit_action(t_context *ctx)

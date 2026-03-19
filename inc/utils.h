@@ -74,5 +74,6 @@ uint32_t	engine_time(void);
 void		update_transform(t_transform *t);
 t_ray		ray_world_to_object(const t_ray *ray, const t_mat4 *world_to_object);
 void		hit_object_to_world(t_hit *hit, const t_transform *t);
+t_vec2		world_to_screen(t_context *ctx, t_vec3 pos);
 
 #endif

@@ -31,7 +31,7 @@ static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 1.0f}};
 # define MAX_TEXTURES			64
 
 # define SENS_TRANSLATE			0.0007f
-# define SENS_ROTATE			0.001f
+# define SENS_ROTATE			0.002f
 # define SENS_SCALE				0.0007f
 # define SENS_LOOK				0.0006f
 # define SENS_ORBIT				0.0006f
