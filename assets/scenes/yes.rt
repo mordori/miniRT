@@ -1,0 +1,72 @@
+# Rendering Settings
+render		64			16
+
+# Ambient Light
+A			0.15		20,20,20
+
+# Skydome Background
+sky			sky.png
+
+# Loaded Textures
+tex			e_alb		earth_daymap.png
+tex			e_nrm		earth_normal.png
+
+# Camera (pos, dir, fov, exposure, focus_dist)
+C			0,3,-12		0,0,1	70			0.2			12.0
+
+# ----------------- MATERIALS -----------------
+# mat	ID	Albedo		Met		Rou		IOR		Tra		EmStr	EmColor		Flg		Tex		Norm	Bump	Pattern		Scale	Alb2
+#rgb(0, 0, 0)
+
+# Lights / Emissives
+mat		0	255,255,255	0.0		0.0		1.0		0.0		800.0	255,240,220	0		_		_		_		_			_		_
+mat		1	255,255,255	0.0		0.0		1.0		0.0		200.0	255,50,200	0		_		_		_		_			_		_
+mat		2	255,255,255	0.0		0.0		1.0		0.0		400.0	50,200,255	0		_		_		_		_			_		_
+
+mat		3	120,80,40	0.0		0.9		1.5		0.0		0.0		0,0,0		0		_		_		0.2		wood		1.5		60,30,15
+mat		4	240,240,240	0.0		0.2		1.5		0.0		0.0		0,0,0		0		_		_		0.05	marble		0.4		30,30,30
+mat		5	200,200,200	0.0		0.8		1.0		0.0		0.0		0,0,0		0		_		_		_		checker		3.0		20,20,20
+
+mat		6	255,255,255	0.0		0.6		1.5		0.0		0.0		0,0,0		0		e_alb
+
+mat		7	255,80,80	0.0		0.5		1.0		0.0		0.0		0,0,0		0		_		_		_		spiral		6.0		80,80,255
+mat		8	220,220,220	0.0		0.95	1.0		0.0		0.0		0,0,0		0		_		_		0.1		brick		5.0		50,50,50
+mat		9	255,255,255	1.0		0.0		1.5		1.0		0.0		0,0,0		0		_		_		_		_			_		_
+mat		10	50,255,100	0.0		0.8		1.0		0.0		0.0		0,0,0		0		_		_		0.15	turb		3.0		10,50,20
+mat		11	255,120,0	0.0		0.4		1.0		0.0		0.0		0,0,0		0		_		_		_		stripes		12.0	0,100,255
+mat		12	180,180,180	1.0		0.3		1.5		0.0		0.0		0,0,0		0		_		_		_		grid		5.0		40,40,40
+mat		13	255,215,0	1.0		0.15	1.5		0.0		0.0		0,0,0		0		_		_		_		_			_		_
+mat		14	255,0,0		0.0		0.4		1.0		0.0		0.0		0,0,0		0		_		_		_		gradient	1.0		0,0,255
+
+
+# ----------------- LIGHTS -----------------
+L			-5,10,-5	1.0		255,255,255	2.0		0
+
+
+# ----------------- CENTERPIECE -----------------
+# Main Glass Sphere on a Marble Pedestal
+cy			0,1.0,0		0,1,0	1.5			2.0		4
+sp			0,3.5,0		1.5		9
+
+# ----------------- LEFT DISPLAY -----------------
+# Textured Earth wrapped around a sphere on a Wooden Pedestal
+cy			-4,0.75,2	0,1,0	1.0			1.5		3
+sp			-4,2.5,2	1.0		6
+
+# ----------------- RIGHT DISPLAY -----------------
+# Golden Cone on a Wooden Pedestal
+cy			4,0.75,2	0,1,0	1.0			1.5		3
+co			4,1.5,2		0,1,0	25			2.0		13
+
+# ----------------- DYNAMIC FLOATING OBJECTS -----------------
+# Metallic Grid cylinder floating diagonally
+cy			-5,6,6		0.8,0.6,0.0	0.7		2.5		12
+
+# Floating Quad with a Spiral pattern
+qu			-8,3,8		5,0,-1	0,5,1.5		7
+
+# Turbulent Sphere hovering
+sp			5.5,5.5,6	1.2		10
+
+# Striped Cone diving downwards
+co			4,7,3		0.0,-0.8,-0.6	30	2.0		11

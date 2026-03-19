@@ -39,7 +39,8 @@ static t_error	parse_light_core(char **tokens, t_light *light, int tc)
 	return (E_OK);
 }
 
-static t_error	default_emissive_mat(t_context *ctx, t_light *light, uint32_t *out_id)
+static t_error	default_emissive_mat(t_context *ctx, t_light *light,
+			uint32_t *out_id)
 {
 	t_material	mat;
 
