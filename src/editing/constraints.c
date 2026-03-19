@@ -57,25 +57,19 @@ static inline void	x_constraint(t_context *ctx)
 {
 	ctx->editor.axis_primary = g_right;
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
-	{
 		planar_basis(ctx, g_right);
-	}
 }
 
 static inline void	y_constraint(t_context *ctx)
 {
 	ctx->editor.axis_primary = g_up;
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
-	{
 		planar_basis(ctx, g_up);
-	}
 }
 
 static inline void	z_constraint(t_context *ctx)
 {
 	ctx->editor.axis_primary = g_forward;
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
-	{
 		planar_basis(ctx, g_forward);
-	}
 }
