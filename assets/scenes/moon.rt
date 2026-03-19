@@ -1,5 +1,4 @@
-# Moon Scene - Textures and Materials Demo
-# Render settings (samples, bounces) - use _ for default
+# Render settings (samples, bounces)
 render	32		8
 
 # Ambient
@@ -15,15 +14,15 @@ C		0,2,15		0,0,-1		80		1.0		10
 #		pos						intensity	color			radius		mat_id
 L		705000,485000,520000	1.0			255,255,255		30000.0		0
 
-# Material
-# new format:
-# mat	id		albedo			metallic	roughness	ior		transmission	emission_str		emission_color		flags	[texture]	[bump_map]	[bump_str]	[pattern]	[pat_scale]	[albedo2]
+# ----------------- MATERIALS -----------------
+# mat	ID		Albedo			Met			Rou			IOR		Tra				EmStr				EmColor				Flg		Tex				Norm	Bump	Pattern		Scale	Alb2
+#rgb(0, 0, 0)
 
 # Emissive
 mat		0		255,255,255		0.0			0.0			1.0		1.0				1000.0				255,255,255			0
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		earth_albedo	_		1.0
-mat		2		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		moon_albedo		_		1.0
+mat		1		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		e_alb			_		1.0
+mat		2		255,255,255		0.0			0.95		1.45	0.0				0.0					0,0,0				0		m_alb			_		1.0
 
 
 # Sphere
@@ -32,7 +31,7 @@ sp			-5.5,2,2			1.0				2
 
 
 # Textures
-tex		earth_albedo	earth_daymap.png
-tex		earth_normal	earth_normal.png
-tex		moon_albedo		moon_color.png
-tex		moon_normal		moon_normal.png
+tex		e_alb		earth_daymap.png
+tex		e_nrm		earth_normal.png
+tex		m_alb		moon_color.png
+tex		m_nrm		moon_normal.png

@@ -1,25 +1,34 @@
-# Material 1: The Light
-mat		0		255,255,255		0.0			0.0			1.0		1.0				1000.0				255,255,255			0
-# Material 0: The Brick Heart
-mat	1	255,0,0	0.0	0.7	1.5	0.0	0.0	0,0,0	0	_	_	_	none	3.0	150,150,150
+# Render settings
+render	16		8
 
-
+# Sky dome
 sky sky.png
 
+# Ambient
 A	0.4	255,255,255
 
-C	0,4,10	0,0,-1	70
+# Camera
+C	0,4,10	0,0,-1	70	0.7 10
 
 # Light
 #		pos						intensity	color			radius		mat_id
 L		705000,485000,520000	1.0			255,255,255		30000.0		0
 
+# ----------------- MATERIALS -----------------
+# mat	ID	Albedo		Met		Rou		IOR		Tra		EmStr	EmColor		Flg		Tex		Norm	Bump	Pattern		Scale	Alb2
+#rgb(255, 0, 0)
+
+# Light
+mat		0	255,255,255	0.0		0.0		1.0		1.0		1000.0	255,255,255	0
+# The Brick Heart
+mat		1	255,0,0		0.0		0.7		1.5		0.0		0.0		0,0,0		0		_		_		_		brick		2.5		150,150,150
+
+
 # Left half is drifting away...
 sp	-1.5,4.3,1.0	2	1
+
 # Right half
 sp	1.0,4.0,1.0		2	1
+
 # Bottom part
 co	0.0,1.0,0.5	0,1,0	35	3.0 1
-
-# Render settings
-render	16		8
