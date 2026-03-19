@@ -82,9 +82,9 @@ void	printf_init(t_context *ctx)
 	printf("|         Key         |        Editing         |\n");
 	printf("|---------------------|------------------------|\n");
 	printf("| LMB                 | Select Object          |\n");
-	printf("| W                   | Move                   |\n");
-	printf("| E                   | Rotate                 |\n");
-	printf("| R                   | Scale                  |\n");
+	printf("| G                   | Move                   |\n");
+	printf("| R                   | Rotate                 |\n");
+	printf("| S                   | Scale                  |\n");
 	printf("| X / Y / Z           | Axis Constraint        |\n");
 	printf("| SHIFT + X / Y / Z   | Plane Constraint       |\n");
 	printf("|---------------------|------------------------|\n");

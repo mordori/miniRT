@@ -13,6 +13,8 @@ void	config_editor(t_context *ctx, mlx_key_data_t keydata)
 		return ;
 	if (keydata.key == MLX_KEY_G || keydata.key == MLX_KEY_R || keydata.key == MLX_KEY_S)
 	{
+		if (ctx->editor.mode == EDIT_DEFAULT)
+			ctx->editor.orig_transform = ctx->editor.selected_obj->transform;
 		if (keydata.key == MLX_KEY_G)
 			ctx->editor.mode = EDIT_TRANSLATE;
 		if (keydata.key == MLX_KEY_R)
@@ -42,11 +44,12 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta)
 	t_vec3		axis_delta;
 	float		speed;
 	float		dist;
-	float		scale_avg;
 	float		magnitude;
 	float		right_align;
 	float		up_align;
 	bool		is_single_constraint;
+	t_mat4		*m;
+	t_vec3		axis_local;
 
 	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300)
 	{
@@ -56,50 +59,68 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta)
 			{
 				dist = vec3_dist(ctx->scene.cam.transform.pos, ctx->editor.selected_obj->transform.pos);
 				dist = fmaxf(dist, 1.0f);
-				speed = ctx->mlx->delta_time * 60.0f * SENS_TRANSLATE * dist * (50.0f / ctx->scene.cam.focal_len_mm);
+				speed = ctx->mlx->delta_time * 60.0f * SENS_TRANSLATE * dist * (14.0f / ctx->scene.cam.focal_len_mm);
 			}
 			else if (ctx->editor.mode == EDIT_ROTATE)
 				speed = ctx->mlx->delta_time * 60.0f * SENS_ROTATE;
 			else
-			{
-				scale_avg = (\
-ctx->editor.selected_obj->transform.scale.x + \
-ctx->editor.selected_obj->transform.scale.y + \
-ctx->editor.selected_obj->transform.scale.z) * 0.3333f;
-				speed = ctx->mlx->delta_time * 60.0f * SENS_SCALE * (scale_avg + 0.1f);
-			}
+				speed = ctx->mlx->delta_time * 60.0f * SENS_SCALE;
 			is_single_constraint = (ctx->editor.has_constraints && \
 ctx->editor.axis_secondary.x == 0.0f && \
 ctx->editor.axis_secondary.y == 0.0f && \
 ctx->editor.axis_secondary.z == 0.0f);
-			if (ctx->editor.mode == EDIT_TRANSLATE)
+			if (is_single_constraint)
 			{
-				if (is_single_constraint)
-				{
-					right_align = vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
-					up_align = vec3_dot(ctx->scene.cam.up, ctx->editor.axis_primary);
-					if (fabsf(right_align) < 0.1f && fabsf(up_align) < 0.1f)
-						magnitude = (float)(delta.x - delta.y) * speed;
-					else
-						magnitude = ((float)delta.x * right_align - (float)delta.y * up_align) * speed;
-					axis_delta = vec3_scale(ctx->editor.axis_primary, magnitude);
-				}
+				right_align = vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
+				up_align = vec3_dot(ctx->scene.cam.up, ctx->editor.axis_primary);
+				if (fabsf(right_align) < 0.1f && fabsf(up_align) < 0.1f)
+					magnitude = (float)(delta.x - delta.y) * speed;
 				else
-				{
-					axis_delta = vec3_add(\
+					magnitude = ((float)delta.x * right_align - (float)delta.y * up_align) * speed;
+				axis_delta = vec3_scale(ctx->editor.axis_primary, magnitude);
+			}
+			else
+			{
+				magnitude = (float)(delta.x - delta.y) * speed;
+				axis_delta = vec3_add(\
 vec3_scale(ctx->editor.axis_primary, delta.x * speed), \
 vec3_scale(ctx->editor.axis_secondary, -delta.y * speed));
-				}
-				obj_translate(ctx, axis_delta);
 			}
-			// else if (ctx->editor.mode == EDIT_ROTATE)
-			// 	obj_rotate(ctx, axis_delta);
-			// else if (ctx->editor.mode == EDIT_SCALE)
-			// {
-			// 	if (!ctx->editor.has_constraints)
-			// 		axis_delta = vec3_n((float)(delta.x - delta.y) * speed);
-			// 	obj_scale(ctx, axis_delta);
-			// }
+			if (ctx->editor.mode == EDIT_TRANSLATE)
+				obj_translate(ctx, axis_delta);
+			else if (ctx->editor.mode == EDIT_ROTATE)
+			{
+				if (!ctx->editor.has_constraints)
+					axis_delta = ctx->scene.cam.forward;
+				else if ( is_single_constraint)
+					axis_delta = ctx->editor.axis_primary;
+				else
+				{
+					if (ctx->editor.axis_primary.z == 0.0f && ctx->editor.axis_secondary.z == 0.0f)
+						axis_delta = g_forward;
+					else if (ctx->editor.axis_primary.y == 0.0f && ctx->editor.axis_secondary.y == 0.0f)
+						axis_delta = g_up;
+					else
+						axis_delta = g_right;
+				}
+				obj_rotate(ctx, vec3_scale(axis_delta, magnitude));
+			}
+			else if (ctx->editor.mode == EDIT_SCALE)
+			{
+				if (!ctx->editor.has_constraints)
+					axis_delta = vec3_n(expf(magnitude));
+				else
+				{
+					m = &ctx->editor.selected_obj->transform.object_to_world;
+					axis_local.x = vec3_dot(ctx->editor.axis_primary, vec3(m->m[0][0], m->m[1][0], m->m[2][0]));
+					axis_local.y = vec3_dot(ctx->editor.axis_primary, vec3(m->m[0][1], m->m[1][1], m->m[2][1]));
+					axis_local.z = vec3_dot(ctx->editor.axis_primary, vec3(m->m[0][2], m->m[1][2], m->m[2][2]));
+					axis_delta.x = expf(fabsf(axis_local.x) * magnitude);
+					axis_delta.y = expf(fabsf(axis_local.y) * magnitude);
+					axis_delta.z = expf(fabsf(axis_local.z) * magnitude);
+				}
+				obj_scale(ctx, axis_delta);
+			}
 			update_transform(&ctx->editor.selected_obj->transform);
 		}
 	}
@@ -129,5 +150,7 @@ void	apply_edit_action(t_context *ctx)
 
 void	cancel_edit_action(t_context *ctx)
 {
+	ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
+	update_transform(&ctx->editor.selected_obj->transform);
 	end_edit_action(ctx);
 }

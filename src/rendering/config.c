@@ -1,6 +1,7 @@
 #include "rendering.h"
 #include "utils.h"
 #include "scene.h"
+#include "editing.h"
 
 static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata);
 static inline void	set_samples(t_context *ctx, mlx_key_data_t keydata);
@@ -31,9 +32,10 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 		else
 		{
 			r->mode = RENDERED;
-			ctx->editor.mode = EDIT_DEFAULT;
 			if (ctx->editor.selected_obj)
 			{
+				if (ctx->editor.mode != EDIT_DEFAULT)
+					cancel_edit_action(ctx);
 				vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 				ctx->editor.selected_obj = NULL;
 				if (!init_bvh(ctx))
@@ -43,6 +45,7 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 				}
 				memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
 			}
+			ctx->editor.mode = EDIT_DEFAULT;
 		}
 		pthread_mutex_unlock(&r->mutex);
 		return (true);

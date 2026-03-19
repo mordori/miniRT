@@ -31,7 +31,7 @@ static inline void	cam_look(t_context *ctx, t_vec2i delta)
 {
 	float		speed;
 
-	speed = ctx->mlx->delta_time * 60.0f * SENS_ORBIT / ctx->renderer.cam.focal_len_mm;
+	speed = ctx->mlx->delta_time * 60.0f * SENS_LOOK * (14.0f / ctx->scene.cam.focal_len_mm);
 	ctx->scene.cam.yaw += (float)delta.x * speed;
 	ctx->scene.cam.pitch -= (float)delta.y * speed;
 }
