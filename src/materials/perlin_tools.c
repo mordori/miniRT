@@ -33,7 +33,7 @@ static inline t_vec3	object_seed(const t_object *obj)
 }
 
 /*
-** 1/f fractal noise: 7 octaves, each doubling frequency and halving
+** 1/f fractal noise: 8 octaves, each doubling frequency and halving
 ** amplitude. fabsf() folds smooth zero-crossings into sharp cusps,
 ** creating the jagged ridges used for marble veins and rock.
 ** Output is always positive, typically [0, ~2] when octaves align.
@@ -47,7 +47,7 @@ float	turbulence(t_vec3 p)
 	accum = 0.0f;
 	weight = 1.0f;
 	i = 0;
-	while (i < 7)
+	while (i < 8)
 	{
 		accum += fabsf(perlin_noise(p.x, p.y, p.z)) * weight;
 		weight *= 0.5f;

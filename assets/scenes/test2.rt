@@ -6,7 +6,8 @@ render			256			64
 #		intensity		color
 A		0.4				0,0,255		255,0,0
 
-# Material
+# ----------------- MATERIALS -----------------
+#rgb(0, 0, 0)
 # mat	id		albedo			metallic	roughness	ior		transmission	emission_strength	emission_color		flags
 mat		0		170,170,170		0.0			0.95		1.45	1.0				0.0					255,255,255			0			_
 mat		1		230,230,230		0.0			0.0			1.5		1.0				0.0					255,255,255			0			_
