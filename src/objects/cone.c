@@ -10,24 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "objects.h"
 #include "materials.h"
-
+#include "objects.h"
 
 t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 {
-    t_object    obj;
+	t_object	obj;
 
 	cone->cos_sq = cosf(cone->angle) * cosf(cone->angle);
 	cone->tan_sq = tanf(cone->angle) * tanf(cone->angle);
 	cone->base_radius = cone->height * tanf(cone->angle);
 	cone->inv_height = 1.0f / cone->height;
-    obj = (t_object){0};
-    obj.type = OBJ_CONE;
-    obj.shape.cone = *cone;
-    obj.material_id = mat_id;
-    obj.transform.pos = cone->apex;
-    return (add_object(ctx, &obj));
+	obj = (t_object){0};
+	obj.type = OBJ_CONE;
+	obj.shape.cone = *cone;
+	obj.material_id = mat_id;
+	obj.transform.pos = cone->apex;
+	return (add_object(ctx, &obj));
 }
 
 /*
@@ -41,7 +40,7 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 ** @return       true if an intersection point is found.
 */
 static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray,
-				const t_vec3 oc, float t_vals[2])
+		const t_vec3 oc, float t_vals[2])
 {
 	float	coef[3];
 	float	discriminant;
@@ -98,7 +97,7 @@ static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 ** @param hit  The hit record to populate.
 */
 static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
-			t_hit *hit)
+		t_hit *hit)
 {
 	t_vec3	apex_to_hit;
 	t_vec3	axis_component;
@@ -112,8 +111,8 @@ static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 	axis_component = vec3_scale(cone->axis, projection * (1.0f + cone->tan_sq));
 	hit->normal = vec3_normalize(vec3_sub(apex_to_hit, axis_component));
 	onb(cone->axis, &tang, &btan);
-	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan),
-			vec3_dot(hit->normal, tang)) * M_1_2PI + 0.5f;
+	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan), vec3_dot(hit->normal,
+				tang)) * M_1_2PI + 0.5f;
 	hit->uv.v = projection * cone->inv_height;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
