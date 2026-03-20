@@ -84,6 +84,37 @@ bool	hit_bvh(uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_n
 	return (res);
 }
 
+bool	hit_bvh_editing(uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_node *tree)
+{
+	uint32_t	stack[64];
+	t_bvh_node	*node;
+	t_hit		temp;
+	bool		res;
+
+	if (!root_idx)
+		return (false);
+	res = false;
+	stack[i++] = root_idx;
+	while (i > 0)
+	{
+		node = &tree[stack[--i] - 1];
+		if (!hit_aabb(&node->aabb, ray, hit->t, 0))
+			continue ;
+		if (node->obj)
+		{
+			temp = *hit;
+			if (!(node->obj->flags & OBJ_HIDDEN_SCENE) && hit_object(node->obj, ray, &temp))
+			{
+				res = true;
+				*hit = temp;
+			}
+			continue ;
+		}
+		branch_idx(ray, node, stack, &i);
+	}
+	return (res);
+}
+
 bool	hit_bvh_shadow(uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node *tree)
 {
 	uint32_t	stack[64];

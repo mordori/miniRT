@@ -16,7 +16,7 @@ bool	control_camera(t_context *ctx, t_vec2i delta)
 		return (true);
 	}
 	apply_cam_action(ctx, delta);
-	return ((delta.x != 0 || delta.y != 0));
+	return (true);
 }
 
 static inline bool	set_cam_state(t_context *ctx)
@@ -36,7 +36,9 @@ static inline bool	set_cam_state(t_context *ctx)
 	}
 	else if (ctx->renderer.mode != SOLID)
 	{
-		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
+		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
+			begin_cam_action(ctx, CAM_TURN);
+		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			begin_cam_action(ctx, CAM_LOOK);
 		else
 			return (false);
@@ -75,6 +77,8 @@ static inline bool	is_cam_action_active(const t_context *ctx)
 	else if (cam->state == CAM_ZOOM && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 		is_held = true;
 	else if (cam->state == CAM_PAN && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
+		is_held = true;
+	else if (cam->state == CAM_TURN && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 		is_held = true;
 	else if (cam->state == CAM_LOOK && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 		is_held = true;

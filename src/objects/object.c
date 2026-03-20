@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:28 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 19:54:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:05:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_error	add_object(t_context *ctx, t_object *obj)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		return (E_MALLOC);
-	obj->transform.rot.data[3] = 1.0f;
+	obj->transform.rot.w = 1.0f;
 	obj->transform.scale = vec3_n(1.0f);
 	update_transform(&obj->transform);
 	*new_obj = *obj;

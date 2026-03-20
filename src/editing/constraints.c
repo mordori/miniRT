@@ -3,6 +3,7 @@
 static inline void	x_constraint(t_context *ctx);
 static inline void	y_constraint(t_context *ctx);
 static inline void	z_constraint(t_context *ctx);
+static inline t_vec3	get_contraint_axis(t_context *ctx, t_vec3 global_axis, uint32_t col);
 
 void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata)
 {
@@ -53,23 +54,38 @@ static inline void	planar_basis(t_context *ctx, t_vec3 normal)
 	ctx->editor.axis_secondary = plane_y;
 }
 
+static inline t_vec3	get_contraint_axis(t_context *ctx, t_vec3 global_axis, uint32_t col)
+{
+	t_mat4		*m;
+	t_vec3		axis;
+
+	if (ctx->editor.mode == EDIT_SCALE)
+	{
+		m = &ctx->editor.selected_obj->transform.object_to_world;
+		axis = vec3(m->m[0][col], m->m[1][col], m->m[2][col]);
+		axis = vec3_normalize(axis);
+		return (axis);
+	}
+	return (global_axis);
+}
+
 static inline void	x_constraint(t_context *ctx)
 {
-	ctx->editor.axis_primary = g_right;
+	ctx->editor.axis_primary = get_contraint_axis(ctx, g_right, 0);
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
 		planar_basis(ctx, g_right);
 }
 
 static inline void	y_constraint(t_context *ctx)
 {
-	ctx->editor.axis_primary = g_up;
+	ctx->editor.axis_primary = get_contraint_axis(ctx, g_up, 1);
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
 		planar_basis(ctx, g_up);
 }
 
 static inline void	z_constraint(t_context *ctx)
 {
-	ctx->editor.axis_primary = g_forward;
+	ctx->editor.axis_primary = get_contraint_axis(ctx, g_forward, 2);
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
 		planar_basis(ctx, g_forward);
 }
