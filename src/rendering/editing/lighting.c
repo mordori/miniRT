@@ -5,7 +5,7 @@
 #include "scene.h"
 
 static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path, const t_light *light);
-static inline t_vec3	add_light(const t_path *path, const t_light *light, float dist);
+static inline t_vec3	add_light(const t_context *ctx, const t_path *path, const t_light *light, float dist);
 
 void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light)
 {
@@ -27,7 +27,7 @@ static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path,
 
 	path->n = path->hit.normal;
 	hit_biased = vec3_bias(path->hit.point, path->n);
-	l = vec3_sub(light->pos, hit_biased);
+	l = vec3_sub(light->obj->transform.pos, hit_biased);
 	dist_sq = vec3_dot(l, l);
 	if (dist_sq < LEN_SQ_EPSILON)
 		return (vec3_n(0.0f));
@@ -38,9 +38,9 @@ static inline t_vec3	direct_lighting_editing(const t_context *ctx, t_path *path,
 		return (vec3_n(0.0f));
 	shadow_ray = new_ray(hit_biased, path->l);
 	dummy_hit.t = dist - light->radius - B_EPSILON;
-	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && ((int)hit_object(ctx->editor.selected_obj, &shadow_ray, &dummy_hit) || hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
+	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && ((hit_object(ctx->editor.selected_obj, &shadow_ray, &dummy_hit) && !(ctx->editor.selected_obj->flags & OBJ_NO_CAST_SHADOW)) || hit_shadow(&ctx->scene, &shadow_ray, dist - light->radius - B_EPSILON) || hit_planes(ctx, &shadow_ray, &dummy_hit))))
 		return (vec3_n(0.0f));
-	return (add_light(path, light, dist_sq));
+	return (add_light(ctx, path, light, dist_sq));
 }
 
 void	ambient_lighting(t_path *path, const t_light *light)
@@ -52,12 +52,17 @@ void	ambient_lighting(t_path *path, const t_light *light)
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, res));
 }
 
-static inline t_vec3	add_light(const t_path *path, const t_light *light, float dist_sq)
+static inline t_vec3	add_light(const t_context *ctx, const t_path *path, const t_light *light, float dist_sq)
 {
 	t_vec3		res;
 	float		attenuation;
+	float		factor_radius;
 
-	attenuation = light->intensity * path->ndotl / fmax(dist_sq, G_EPSILON);
+
+	factor_radius = 1.0f;
+	if (light->obj != ctx->renderer.cam.directional_light.obj)
+		factor_radius = fmaxf(light->radius_sq, 1.0f) * light->radius;
+	attenuation = light->intensity * factor_radius * path->ndotl / fmax(dist_sq, G_EPSILON);
 	res = vec3_mul(path->mat->albedo, light->color);
 	res = vec3_scale(res, attenuation * M_1_PI);
 	return (res);

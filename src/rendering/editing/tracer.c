@@ -15,7 +15,7 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel)
 
 	if ((int)hit_object(ctx->editor.selected_obj, &path->ray, &path->hit) | \
 (int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
-(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
+(int)hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
 (int)hit_planes(ctx, &path->ray, &path->hit))
 	{
 		mask = &ctx->editor.selection_mask[pixel->y * ctx->renderer.width + pixel->x];

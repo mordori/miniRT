@@ -31,7 +31,6 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 			r->mode = SOLID;
 		else
 		{
-			r->mode = RENDERED;
 			if (ctx->editor.selected_obj)
 			{
 				if (ctx->editor.mode != EDIT_DEFAULT)
@@ -46,6 +45,7 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 				memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
 			}
 			ctx->editor.mode = EDIT_DEFAULT;
+			r->mode = RENDERED;
 		}
 		pthread_mutex_unlock(&r->mutex);
 		return (true);

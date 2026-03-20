@@ -53,8 +53,8 @@ static inline t_vec3	compute_move_vec(t_camera *cam, t_vec3 input, float dt)
 	t_vec3	move_z;
 	t_vec3	vec;
 
-	move_x = cam->right;
-	move_z = cam->forward;
+	move_x = cam->control_right;
+	move_z = cam->control_forward;
 	vec = (t_vec3){{0.0f, input.y, 0.0f}};
 	vec = vec3_add(vec, vec3_scale(move_x, input.x));
 	vec = vec3_add(vec, vec3_scale(move_z, input.z));

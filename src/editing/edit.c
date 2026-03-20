@@ -47,7 +47,12 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta)
 	float		up_align;
 	bool		is_single_constraint;
 	t_mat4		*m;
-	t_vec3		axis_local;
+	t_vec3		local_x;
+	t_vec3		local_y;
+	t_vec3		local_z;
+	t_vec2		w_x;
+	t_vec2		w_y;
+	t_vec2		w_z;
 	t_vec2		obj_screen_pos;
 	t_vec2		dir_mouse_to_obj_screen;
 	float		dist_mouse_to_obj_screen;
@@ -131,16 +136,35 @@ ctx->editor.axis_secondary.z == 0.0f);
 				else
 				{
 					m = &ctx->editor.selected_obj->transform.object_to_world;
-					axis_local.x = vec3_dot(ctx->editor.axis_primary, vec3(m->m[0][0], m->m[1][0], m->m[2][0]));
-					axis_local.y = vec3_dot(ctx->editor.axis_primary, vec3(m->m[0][1], m->m[1][1], m->m[2][1]));
-					axis_local.z = vec3_dot(ctx->editor.axis_primary, vec3(m->m[0][2], m->m[1][2], m->m[2][2]));
-					axis_delta.x = expf(fabsf(axis_local.x) * magnitude);
-					axis_delta.y = expf(fabsf(axis_local.y) * magnitude);
-					axis_delta.z = expf(fabsf(axis_local.z) * magnitude);
+					local_x = vec3_normalize(vec3(m->m[0][0], m->m[1][0], m->m[2][0]));
+					local_y = vec3_normalize(vec3(m->m[0][1], m->m[1][1], m->m[2][1]));
+					local_z = vec3_normalize(vec3(m->m[0][2], m->m[1][2], m->m[2][2]));
+
+					w_x.u = vec3_dot(ctx->editor.axis_primary, local_x);
+					w_x.v = vec3_dot(ctx->editor.axis_secondary, local_x);
+					axis_delta.x = expf(sqrtf(w_x.u * w_x.u + w_x.v * w_x.v) * magnitude);
+
+					w_y.u = vec3_dot(ctx->editor.axis_primary, local_y);
+					w_y.v = vec3_dot(ctx->editor.axis_secondary, local_y);
+					axis_delta.y = expf(sqrtf(w_y.u * w_y.u + w_y.v * w_y.v) * magnitude);
+
+					w_z.u = vec3_dot(ctx->editor.axis_primary, local_z);
+					w_z.v = vec3_dot(ctx->editor.axis_secondary, local_z);
+					axis_delta.z = expf(sqrtf(w_z.u * w_z.u + w_z.v * w_z.v) * magnitude);
 				}
 				obj_scale(ctx, axis_delta);
 			}
 			update_transform(&ctx->editor.selected_obj->transform);
+			uint32_t i = 0;
+			t_light	*light;
+			float	max_scale;
+			while (i < ctx->scene.env.lights.total)
+			{
+				light = ((t_light **)ctx->scene.env.lights.items)[i++];
+				max_scale = fminf(fminf(light->obj->transform.scale.x, light->obj->transform.scale.y), light->obj->transform.scale.z);
+				light->radius = light->obj->shape.sphere.radius * max_scale;
+				light->radius_sq = light->radius * light->radius;
+			}
 		}
 	}
 }

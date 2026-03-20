@@ -20,7 +20,10 @@ void	resize_window(t_context *ctx)
 	update_camera(ctx, &ctx->scene.cam);
 	r->resize_pending = false;
 	if (r->frame == 0)
+	{
+		reset_camera(ctx);
 		blit(ctx, &ctx->renderer);
+	}
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
 	start_render(r, &ctx->scene.cam);

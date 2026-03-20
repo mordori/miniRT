@@ -33,7 +33,7 @@ static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 1.0f}};
 # define SENS_TRANSLATE			0.0007f
 # define SENS_ROTATE			0.002f
 # define SENS_SCALE				0.0007f
-# define SENS_LOOK				0.0006f
+# define SENS_LOOK				0.0008f
 # define SENS_ORBIT				0.0006f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0006f
@@ -111,6 +111,7 @@ enum e_light_type
 enum e_cam_state
 {
 	CAM_DEFAULT,
+	CAM_TURN,
 	CAM_LOOK,
 	CAM_ORBIT,
 	CAM_ZOOM,
@@ -231,10 +232,10 @@ struct __attribute__((aligned(16))) s_transform
 
 struct __attribute__((aligned(16))) s_ray
 {
-	t_vec3		origin;
-	t_vec3		dir;
-	t_vec3		dir_recip;
-	t_v4ui		signs;
+	t_vec3			origin;
+	t_vec3			dir;
+	t_vec3			dir_recip;
+	t_v4ui			signs;
 };
 struct __attribute__((aligned(16))) s_hit
 {
@@ -312,15 +313,15 @@ struct __attribute__((aligned(16))) s_cone
 
 struct __attribute__((aligned(16)))	s_quad
 {
-	t_vec3	vec_alpha;
-	t_vec3	vec_beta;
-	t_vec3	q;
-	t_vec3	u;
-	t_vec3	v;
-	t_vec3	normal;
-	t_vec3	w;
-	float	d;
-	float	area;
+	t_vec3			vec_alpha;
+	t_vec3			vec_beta;
+	t_vec3			q;
+	t_vec3			u;
+	t_vec3			v;
+	t_vec3			normal;
+	t_vec3			w;
+	float			d;
+	float			area;
 };
 
 union __attribute__((aligned(16))) u_shape
@@ -377,6 +378,8 @@ struct __attribute__((aligned(16))) s_camera
 	t_vec3			up;
 	t_vec3			right;
 	t_vec3			forward;
+	t_vec3			control_right;
+	t_vec3			control_forward;
 	t_vec3			defocus_disk_u;
 	t_vec3			defocus_disk_v;
 	t_vec3			init_pos;

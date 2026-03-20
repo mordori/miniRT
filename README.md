@@ -145,7 +145,8 @@ As the project is still under construction, we recommend to run the program with
 ### Render Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>LMB</kbd>                                                 | Rotate                                        |
+| <kbd>LMB</kbd>                                                 | Look                                          |
+| <kbd>RMB</kbd>                                                 | Turn                                          |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
 | <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
 | <kbd>R</kbd>                                                   | Reset Camera                                  |
@@ -181,7 +182,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>K</kbd> / <kbd>L</kbd>                                    | Focal Length                                  |
 | <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
 | <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
-| <kbd>H</kbd>                                                   | Toggle Settings                               |
+| <kbd>H</kbd>                                                   | Toggle UI                                     |
 | <kbd>Y</kbd>                                                   | Save render                                   |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 

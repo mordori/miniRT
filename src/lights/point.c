@@ -21,7 +21,6 @@ t_error	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 	l->max_radiance = MAX_RADIANCE;
 	obj = (t_object){0};
 	obj.type = OBJ_SPHERE;
-	// l->intensity = 20.0f;
 	l->radius_sq = l->radius * l->radius;
 	l->intensity = l->intensity * vec3_length(l->emission) * l->radius;
 	obj.transform.pos = l->pos;
@@ -57,6 +56,9 @@ static inline t_error	init_dir_light(t_context *ctx, t_light *light, t_object *o
 		free(light);
 		return (E_MALLOC);
 	}
+	obj->transform.rot.w = 1.0f;
+	obj->transform.scale = vec3_n(1.0f);
+	update_transform(&obj->transform);
 	*new_obj = *obj;
 	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
 	light->obj = new_obj;
@@ -64,9 +66,6 @@ static inline t_error	init_dir_light(t_context *ctx, t_light *light, t_object *o
 	light->max_radiance = 2.0f;
 	light->obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 	light->idx = 0;
-	// light->angle = 0.53f;
-	// light->pos = vec3_normalize(light->pos);
-	// light->cos_theta_max = cosf(light->angle * (M_PI / 180.0f) * 0.5f);
 	ctx->scene.cam.directional_light = *light;
 	ctx->scene.env.has_dir_light = true;
 	free(light);

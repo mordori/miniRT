@@ -48,6 +48,8 @@ void	reset_camera(t_context *ctx)
 	cam->shutter_speed = 1.0f / 100.0f;
 	cam->iso = 100.0f;
 	update_camera(ctx, cam);
+	cam->control_forward = cam->forward;
+	cam->control_right = cam->right;
 	ctx->renderer.cam = *cam;
 }
 

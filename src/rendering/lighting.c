@@ -9,11 +9,17 @@ static inline t_vec3	sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float *p
 
 t_vec3	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
-	t_vec3		radiance;
+	t_vec3			radiance;
+	const float		orig_roughness = path->mat->roughness;
+	const float		orig_alpha = path->alpha;
 
+	path->mat->roughness = fmaxf(path->mat->roughness, 0.15f);
+	path->alpha = path->mat->roughness * path->mat->roughness;
 	radiance = evaluate_light(ctx, path, light, pixel);
 	if (path->bounce > 0)
 		radiance = vec3_clamp_mag(radiance, light->max_radiance);
+	path->mat->roughness = orig_roughness;
+	path->alpha = orig_alpha;
 	return(vec3_mul(path->throughput, radiance));
 }
 
@@ -32,7 +38,7 @@ static inline t_vec3	evaluate_light(const t_context *ctx, t_path *path, const t_
 
 	random_uv(ctx, path, pixel, BN_CO_U + (light->idx * 2u));
 	hit_biased = vec3_bias(path->hit.point, path->hit.normal);
-	hit_to_light_center = vec3_sub(light->pos, hit_biased);
+	hit_to_light_center = vec3_sub(light->obj->transform.pos, hit_biased);
 	path->l = sample_light(hit_to_light_center, light->radius_sq, path->uv, &path->pdf);
 	set_shader_data(path);
 	if (path->ndotl <= G_EPSILON)
@@ -43,7 +49,7 @@ static inline t_vec3	evaluate_light(const t_context *ctx, t_path *path, const t_
 	dist = t_ca - t_hc;
 	shadow_ray = new_ray(hit_biased, path->l);
 	dummy_hit.t = dist - B_EPSILON;
-	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON) || (int)hit_planes(ctx, &shadow_ray, &dummy_hit))))
+	if ((!(path->mat->flags & MAT_NO_REC_SHADOW) && (hit_shadow(&ctx->scene, &shadow_ray, dist - B_EPSILON) || hit_planes(ctx, &shadow_ray, &dummy_hit))))
 		return (vec3_n(0.0f));
 	weight = power_heuristic(path->pdf, bsdf_pdf(path));
 	radiance = vec3_mul(light->emission, bsdf(path));
