@@ -28,7 +28,6 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel)
 		if (path->mat->is_emissive)
 		{
 			light_emission = vec3_mul(path->throughput, path->mat->emission);
-			light_emission = vec3_clamp_mag(light_emission, 2.0f);
 			path->color = vec3_add(path->color, light_emission);
 			return (false);
 		}

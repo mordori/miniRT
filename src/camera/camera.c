@@ -15,7 +15,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->state = CAM_DEFAULT;
 	cam->transform.pos = position;
 	cam->target.pos = vec3_add(position, orientation);
-	cam->pivot = (t_vec3){0};
+	memset(&cam->pivot, 0, sizeof(t_vec3));
 	cam->yaw = atan2f(orientation.x, orientation.z);
 	cam->pitch = asinf(orientation.y);
 	cam->distance = 1.0f;
@@ -88,7 +88,7 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	if (ctx->editor.selected_obj)
 		cam->pivot = ctx->editor.selected_obj->transform.pos;
 	else
-		cam->pivot = (t_vec3){0};
+		cam->pivot = vec3_n(0.0f);
 	sincosf(cam->pitch, &pitch.sin, &pitch.cos);
 	sincosf(cam->yaw, &yaw.sin, &yaw.cos);
 	dir.x = pitch.cos * yaw.sin;

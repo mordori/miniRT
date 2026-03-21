@@ -19,7 +19,7 @@ void	select_object(t_context *ctx)
 	ray = new_ray(r->cam.transform.pos, dir);
 	hit = new_hit(0);
 	if (
-(int)hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &ray, &hit, 0, ctx->scene.geo.bvh_nodes))
+hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &ray, &hit, 0, ctx->scene.geo.bvh_nodes))
 	{
 		if (hit_object(ctx->editor.selected_obj, &ray, &hit) || hit.obj == ctx->scene.env.dir_light.obj)
 			return ;

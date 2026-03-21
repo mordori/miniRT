@@ -1,4 +1,5 @@
 #include "scene.h"
+#include <string.h>
 
 static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b);
 
@@ -25,7 +26,7 @@ t_aabb	get_object_bounds(const t_object *obj)
 {
 	t_aabb	 res;
 
-	res = (t_aabb){0};
+	memset(&res, 0, sizeof(t_aabb));
 	if (obj->type == OBJ_SPHERE)
 		res = sphere_bounds(obj);
 	else if (obj->type == OBJ_CYLINDER)

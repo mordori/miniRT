@@ -7,7 +7,9 @@ static inline t_vec3	get_contraint_axis(t_context *ctx, t_vec3 global_axis, uint
 
 void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata)
 {
-	ctx->editor.has_constraints = false;
+	ctx->editor.axis_primary = ctx->scene.cam.right;
+	ctx->editor.axis_secondary = ctx->scene.cam.up;
+	ctx->editor.constraints = AXIS_DEFAULT;
 	if (keydata.key != MLX_KEY_X && keydata.key != MLX_KEY_Y && keydata.key != MLX_KEY_Z)
 		return ;
 	ctx->editor.axis_secondary = g_zero;
@@ -17,7 +19,6 @@ void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata)
 		y_constraint(ctx);
 	else if (keydata.key == MLX_KEY_Z)
 		z_constraint(ctx);
-	ctx->editor.has_constraints = true;
 }
 
 static inline void	planar_basis(t_context *ctx, t_vec3 normal)
@@ -71,21 +72,33 @@ static inline t_vec3	get_contraint_axis(t_context *ctx, t_vec3 global_axis, uint
 
 static inline void	x_constraint(t_context *ctx)
 {
+	ctx->editor.constraints = AXIS_X;
 	ctx->editor.axis_primary = get_contraint_axis(ctx, g_right, 0);
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
+	{
+		ctx->editor.constraints = AXIS_YZ;
 		planar_basis(ctx, g_right);
+	}
 }
 
 static inline void	y_constraint(t_context *ctx)
 {
+	ctx->editor.constraints = AXIS_Y;
 	ctx->editor.axis_primary = get_contraint_axis(ctx, g_up, 1);
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
+	{
+		ctx->editor.constraints = AXIS_XZ;
 		planar_basis(ctx, g_up);
+	}
 }
 
 static inline void	z_constraint(t_context *ctx)
 {
+	ctx->editor.constraints = AXIS_Z;
 	ctx->editor.axis_primary = get_contraint_axis(ctx, g_forward, 2);
 	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_SHIFT))
+	{
+		ctx->editor.constraints = AXIS_XY;
 		planar_basis(ctx, g_forward);
+	}
 }

@@ -60,7 +60,7 @@ static inline t_vec3	add_light(const t_context *ctx, const t_path *path, const t
 
 
 	factor_radius = 1.0f;
-	if (light->obj != ctx->renderer.cam.directional_light.obj)
+	if (light != &ctx->renderer.cam.directional_light)
 		factor_radius = fmaxf(light->radius_sq, 1.0f) * light->radius;
 	attenuation = light->intensity * factor_radius * path->ndotl / fmax(dist_sq, G_EPSILON);
 	res = vec3_mul(path->mat->albedo, light->color);

@@ -2,6 +2,7 @@
 # define PARSING_H
 
 # include "defines.h"
+# include <string.h>
 
 # define MAX_MATERIALS 64
 # define MAX_LINES 100000

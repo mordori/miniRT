@@ -178,6 +178,17 @@ enum e_edit_mode
 	EDIT_SCALE
 };
 
+enum e_axis
+{
+	AXIS_DEFAULT,
+	AXIS_X,
+	AXIS_Y,
+	AXIS_Z,
+	AXIS_XY,
+	AXIS_XZ,
+	AXIS_YZ,
+};
+
 typedef enum e_obj_type				t_obj_type;
 typedef enum e_light_type			t_light_type;
 typedef enum e_cam_state			t_cam_state;
@@ -188,6 +199,7 @@ typedef enum e_err_code				t_err_code;
 typedef enum e_render_mode			t_render_mode;
 typedef enum e_bn_channel			t_bn_channel;
 typedef enum e_edit_mode			t_edit_mode;
+typedef enum e_axis					t_axis;
 
 typedef struct s_context			t_context;
 typedef struct s_bvh_node			t_bvh_node;
@@ -516,7 +528,7 @@ struct __attribute__((aligned(16))) s_editor
 	t_vec3			axis_primary;
 	t_vec3			axis_secondary;
 	t_transform		orig_transform;
-	bool			has_constraints;
+	t_axis			constraints;
 };
 
 struct __attribute__((aligned(16))) s_pixel
