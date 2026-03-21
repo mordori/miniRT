@@ -38,7 +38,7 @@ static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n
 
 	idx = (*nodes)++;
 	node = &tree[idx - 1];
-	*node = (t_bvh_node){0};
+	memset(node, 0, sizeof(t_bvh_node));
 	if (n == 1)
 	{
 		node->obj = (t_object *)objs[0];

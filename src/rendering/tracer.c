@@ -22,7 +22,7 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 	t_vec3				focus_point;
 	float				dist;
 
-	path = (t_path){0};
+	memset(&path, 0, sizeof(t_path));
 	pixel_loc = vec3_add(vec3_scale(vp->d_u, pixel->u), vec3_scale(vp->d_v, pixel->v));
 	pixel_loc = vec3_add(vp->pixel_00_loc, pixel_loc);
 	pixel_dir = vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos));

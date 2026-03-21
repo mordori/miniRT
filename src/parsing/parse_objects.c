@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "parsing.h"
 #include "libft_str.h"
 #include "libft_vector.h"
 #include "objects.h"
-#include "parsing.h"
 #include "utils.h"
 #include <stdlib.h>
 
@@ -131,7 +131,7 @@ t_error	parse_quad(t_context *ctx, t_parser *p, char **tokens)
 	tc = count_tokens(tokens);
 	if (tc != 5)
 		return (E_ARGS);
-	quad = (t_quad){0};
+	memset(&quad, 0, sizeof(t_quad));
 	if (!parse_vec3(tokens[1], &quad.q))
 		return (E_INVALID_NUM);
 	if (!parse_vec3(tokens[2], &quad.u))

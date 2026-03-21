@@ -9,6 +9,8 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta);
 
 void	config_editor(t_context *ctx, mlx_key_data_t keydata)
 {
+	const t_axis	prev_constraints = ctx->editor.constraints;
+
 	if (!ctx->editor.selected_obj || keydata.action != MLX_RELEASE)
 		return ;
 	if (keydata.key == MLX_KEY_G || keydata.key == MLX_KEY_R || keydata.key == MLX_KEY_S)
@@ -25,6 +27,11 @@ void	config_editor(t_context *ctx, mlx_key_data_t keydata)
 	}
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		set_axis_constraints(ctx, keydata);
+	if (ctx->editor.constraints != prev_constraints)
+	{
+		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
+		update_transform(&ctx->editor.selected_obj->transform);
+	}
 }
 
 bool	edit_object(t_context *ctx, t_vec2i delta)
@@ -71,7 +78,7 @@ static inline void	edit_action(t_context *ctx, t_vec2i delta)
 				speed = ctx->mlx->delta_time * 60.0f * SENS_ROTATE;
 			else
 				speed = ctx->mlx->delta_time * 60.0f * SENS_SCALE;
-			is_single_constraint = (ctx->editor.has_constraints && \
+			is_single_constraint = (ctx->editor.constraints != AXIS_DEFAULT && \
 ctx->editor.axis_secondary.x == 0.0f && \
 ctx->editor.axis_secondary.y == 0.0f && \
 ctx->editor.axis_secondary.z == 0.0f);
@@ -114,9 +121,9 @@ ctx->editor.axis_secondary.z == 0.0f);
 				obj_translate(ctx, axis_delta);
 			else if (ctx->editor.mode == EDIT_ROTATE)
 			{
-				if (!ctx->editor.has_constraints)
+				if (ctx->editor.constraints == AXIS_DEFAULT)
 					axis_delta = ctx->scene.cam.forward;
-				else if ( is_single_constraint)
+				else if (is_single_constraint)
 					axis_delta = ctx->editor.axis_primary;
 				else
 				{
@@ -131,7 +138,7 @@ ctx->editor.axis_secondary.z == 0.0f);
 			}
 			else if (ctx->editor.mode == EDIT_SCALE)
 			{
-				if (!ctx->editor.has_constraints)
+				if (ctx->editor.constraints == AXIS_DEFAULT)
 					axis_delta = vec3_n(expf(magnitude));
 				else
 				{
@@ -175,13 +182,12 @@ static inline void	begin_edit_action(t_context *ctx)
 	mlx_get_mouse_pos(ctx->mlx, &ctx->mouse.pos_orig.x, &ctx->mouse.pos_orig.y);
 	ctx->mouse.pos = ctx->mouse.pos_orig;
 	ctx->mouse.pos_prev = ctx->mouse.pos_orig;
-	ctx->editor.axis_primary = ctx->scene.cam.right;
-	ctx->editor.axis_secondary = ctx->scene.cam.up;
 }
 
 static inline void	end_edit_action(t_context *ctx)
 {
 	ctx->editor.mode = EDIT_DEFAULT;
+	ctx->editor.constraints = AXIS_DEFAULT;
 	mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
 	mlx_set_mouse_pos(ctx->mlx, ctx->mouse.pos_orig.x, ctx->mouse.pos_orig.y);
 	ctx->mouse.pos = ctx->mouse.pos_orig;

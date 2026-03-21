@@ -10,7 +10,7 @@
 
 void	init_scene(t_context *ctx)
 {
-	ctx->scene = (t_scene){0};
+	memset(&ctx->scene, 0, sizeof(t_scene));
 	vector_try_init(ctx, &ctx->scene.geo.objs, false, free);
 	vector_try_init(ctx, &ctx->scene.geo.planes, false, free);
 	vector_try_init(ctx, &ctx->scene.env.lights, false, free);
@@ -20,10 +20,6 @@ void	init_scene(t_context *ctx)
 	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
 	if (!ctx->tex_bn.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
-	// ctx->scene.cam.directional_light.emission = vec3_scale(ctx->scene.cam.directional_light.emission, powf(ctx->scene.env.amb_light.intensity, 4.0f));
-	// if (ctx->scene.cam.directional_light.obj && ctx->scene.cam.directional_light.obj->mat)
-	// 	ctx->scene.cam.directional_light.obj->mat->emission = ctx->scene.cam.directional_light.emission;
-	// ctx->scene.env.amb_light.intensity *= 40000.0f;
 	printf_init(ctx);
 	ctx->bn_stride = (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
 	close(ctx->fd);
