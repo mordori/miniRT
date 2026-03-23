@@ -28,7 +28,7 @@ tex		neptune_alb		solar/2k_neptune.png
 
 # ----------------- MATERIALS -----------------
 # mat	ID		Albedo			Met			Rou			IOR		Tra				EmStr				EmColor				Flg		Tex				Norm		Bump	Pattern		Scale	Alb2
-#rgb(0, 0, 0)
+#rgb(160, 200, 210)
 
 # Light
 mat		0		255,255,255		0.0			0.0			1.0		0.0				50000.0				255,250,230			2		_			_
@@ -75,6 +75,9 @@ sp		240,0,0			18.8			7
 
 # Uranus: Compacted distance. Radius 4.0 -> Diameter 8.0
 sp		270,0,0			8.0				8
+# Uranus's rings
+cy		270,0,0			0,1,0	16.0		0.05	160,200,210
+
 
 # Neptune: Compacted distance. Radius 3.8 -> Diameter 7.6
 sp		290,0,0			7.6				9
