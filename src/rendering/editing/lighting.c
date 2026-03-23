@@ -47,7 +47,7 @@ void	ambient_lighting(t_path *path, const t_light *light)
 {
 	t_vec3		res;
 
-	res = vec3_mul(light->color, path->mat->albedo);
+	res = vec3_mul(light->color, get_surface_color(path->mat, &path->hit));
 	res = vec3_scale(res, light->intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, res));
 }
@@ -63,7 +63,7 @@ static inline t_vec3	add_light(const t_context *ctx, const t_path *path, const t
 	if (light != &ctx->renderer.cam.directional_light)
 		factor_radius = fmaxf(light->radius_sq, 1.0f) * light->radius;
 	attenuation = light->intensity * factor_radius * path->ndotl / fmax(dist_sq, G_EPSILON);
-	res = vec3_mul(path->mat->albedo, light->color);
+	res = vec3_mul(get_surface_color(path->mat, &path->hit), light->color);
 	res = vec3_scale(res, attenuation * M_1_PI);
 	return (res);
 }

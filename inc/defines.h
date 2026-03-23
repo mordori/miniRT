@@ -12,10 +12,10 @@
 
 # include "lib_math.h"
 
-static const t_vec3	g_zero = {{0.0f, 0.0f, 0.0f, 1.0f}};
-static const t_vec3	g_right = {{1.0f, 0.0f, 0.0f, 1.0f}};
-static const t_vec3	g_up = {{0.0f, 1.0f, 0.0f, 1.0f}};
-static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 1.0f}};
+static const t_vec3	g_zero = {{0.0f, 0.0f, 0.0f, 0.0f}};
+static const t_vec3	g_right = {{1.0f, 0.0f, 0.0f, 0.0f}};
+static const t_vec3	g_up = {{0.0f, 1.0f, 0.0f, 0.0f}};
+static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 0.0f}};
 
 # define WIDTH					1920
 # define HEIGHT					1080
