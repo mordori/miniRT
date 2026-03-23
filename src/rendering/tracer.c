@@ -6,40 +6,39 @@
 #include "materials.h"
 #include "camera.h"
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
-static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
+static inline bool	trace_ray(\
+const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
+static inline void	nee(\
+const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode);
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel);
-static inline bool	russian_roulette(t_path *path, t_pixel *pixel);
+static inline bool	eval_emissive(\
+const t_context *ctx, t_path *path, t_render_mode mode);
 
-t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint8_t bounces)
+t_vec3	trace_path(\
+const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint8_t bounces)
 {
 	const t_renderer	*r = &ctx->renderer;
-	const t_viewport	*vp = &r->cam.viewport;
 	t_path				path;
 	t_vec3				pixel_loc;
 	t_vec3				pixel_dir;
 	t_vec3				ray_orig;
-	t_vec3				focus_point;
-	float				dist;
 
 	memset(&path, 0, sizeof(t_path));
-	pixel_loc = vec3_add(vec3_scale(vp->d_u, pixel->u), vec3_scale(vp->d_v, pixel->v));
-	pixel_loc = vec3_add(vp->pixel_00_loc, pixel_loc);
+	pixel_loc = vec3_add(vec3_scale(r->cam.viewport.d_u, pixel->u), \
+vec3_scale(r->cam.viewport.d_v, pixel->v));
+	pixel_loc = vec3_add(r->cam.viewport.pixel_00_loc, pixel_loc);
 	pixel_dir = vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos));
-	dist = r->cam.focus_dist / vec3_dot(pixel_dir, r->cam.forward);
-	focus_point = vec3_add(r->cam.transform.pos, vec3_scale(pixel_dir, dist));
 	ray_orig = sample_defocus_disk(ctx, pixel);
-	path.ray = new_ray(ray_orig, vec3_normalize(vec3_sub(focus_point, ray_orig)));
+	path.ray = new_ray(ray_orig, vec3_normalize(vec3_sub(vec3_add(\
+r->cam.transform.pos, vec3_scale(pixel_dir, \
+(r->cam.focus_dist / vec3_dot(pixel_dir, r->cam.forward)))), ray_orig)));
 	path.throughput = (t_vec3){{1.0f, 1.0f, 1.0f}};
 	while (path.bounce < bounces)
 	{
 		path.hit = new_hit(path.bounce);
-		if (mode == SOLID)
-		{
-			if (!trace_ray_editing(ctx, &path, pixel))
-				break ;
-		}
-		else if (!trace_ray(ctx, &path, pixel, mode))
+		if (mode == SOLID && !trace_ray_editing(ctx, &path, pixel))
+			break ;
+		else if (mode != SOLID && !trace_ray(ctx, &path, pixel, mode))
 			break ;
 	}
 	if (vec3_is_nan_inf(path.color))
@@ -47,48 +46,66 @@ t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint
 	return (path.color);
 }
 
-static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
+static inline bool	eval_emissive(\
+const t_context *ctx, t_path *path, t_render_mode mode)
 {
-	t_vec3		bg_color;
 	float		weight;
 	float		pdf;
 	t_vec3		light_emission;
 
+	if (path->mat->is_emissive)
+	{
+		if (path->bounce == 0)
+			light_emission = path->mat->emission;
+		else
+		{
+			pdf = light_pdf(vec3_sub(\
+path->ray.origin, path->hit.obj->transform.pos), \
+path->hit.obj->shape.sphere.radius_sq);
+			if (mode == PREVIEW && ctx->scene.env.lights.total > 0)
+				pdf /= (float)ctx->scene.env.lights.total;
+			weight = power_heuristic(path->pdf, pdf);
+			light_emission = vec3_mul(path->throughput, \
+vec3_scale(path->mat->emission, weight));
+			light_emission = vec3_clamp_mag(light_emission, MAX_RADIANCE);
+		}
+		path->color = vec3_add(path->color, light_emission);
+		return (true);
+	}
+	return (false);
+}
+
+static inline bool	trace_ray(\
+const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
+{
+	t_vec3		bg_color;
+
 	if (\
-(int)hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
-(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, ctx->scene.geo.bvh_nodes) | \
+(int)hit_object(\
+ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
+(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, \
+ctx->scene.geo.bvh_nodes) | \
 (int)hit_planes(ctx, &path->ray, &path->hit))
 	{
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);
-		if (path->mat->is_emissive)
-		{
-			if (path->bounce == 0)
-				light_emission = path->mat->emission;
-			else
-			{
-				pdf = light_pdf(vec3_sub(path->ray.origin, path->hit.obj->transform.pos), path->hit.obj->shape.sphere.radius_sq);
-				if (mode == PREVIEW && ctx->scene.env.lights.total > 0)
-					pdf /= (float)ctx->scene.env.lights.total;
-				weight = power_heuristic(path->pdf, pdf);
-				light_emission = vec3_mul(path->throughput, vec3_scale(path->mat->emission, weight));
-				light_emission = vec3_clamp_mag(light_emission, MAX_RADIANCE);
-			}
-			path->color = vec3_add(path->color, light_emission);
+		if (eval_emissive(ctx, path, mode))
 			return (false);
-		}
 		if (ctx->scene.env.has_dir_light)
-			path->color = vec3_add(path->color, add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel));
+			path->color = vec3_add(path->color, \
+add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel));
 		if (ctx->scene.env.lights.total > 0)
 			nee(ctx, path, pixel, mode);
 		return (scatter(ctx, path, pixel));
 	}
-	bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	bg_color = background_color(\
+&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
 
-static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
+static inline void	nee(\
+const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
 {
 	const t_light	*light;
 	size_t			i;
@@ -101,21 +118,22 @@ static inline void	nee(const t_context *ctx, t_path *path, t_pixel *pixel, t_ren
 		if (path->bounce == 0)
 			li_rand = blue_noise(&ctx->tex_bn, pixel, li_dim);
 		else
-			li_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), static_blue_noise(&ctx->tex_bn, pixel, li_dim));
+			li_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), \
+static_blue_noise(&ctx->tex_bn, pixel, li_dim));
 		i = (uint32_t)(li_rand * ctx->scene.env.lights.total);
 		if (i >= ctx->scene.env.lights.total)
 			i = ctx->scene.env.lights.total - 1;
 		light = ((t_light **)ctx->scene.env.lights.items)[i];
-		path->color = vec3_add(path->color,  vec3_scale(add_lighting(ctx, path, light, pixel), (float)ctx->scene.env.lights.total));
+		path->color = vec3_add(path->color, vec3_scale(\
+add_lighting(ctx, path, light, pixel), (float)ctx->scene.env.lights.total));
+		return ;
 	}
-	else
+	i = 0;
+	while (i < ctx->scene.env.lights.total)
 	{
-		i = 0;
-		while (i < ctx->scene.env.lights.total)
-		{
-			light = ((t_light **)ctx->scene.env.lights.items)[i++];
-			path->color = vec3_add(path->color, add_lighting(ctx, path, light, pixel));
-		}
+		light = ((t_light **)ctx->scene.env.lights.items)[i++];
+		path->color = \
+vec3_add(path->color, add_lighting(ctx, path, light, pixel));
 	}
 }
 
@@ -135,27 +153,12 @@ static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 	if (path->bounce == 0)
 		spec_rand = blue_noise(&ctx->tex_bn, pixel, spec_dim);
 	else
-		spec_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), static_blue_noise(&ctx->tex_bn, pixel, spec_dim));
+		spec_rand = r1_sequence(pixel->frame + (path->bounce * FP_PRIME), \
+static_blue_noise(&ctx->tex_bn, pixel, spec_dim));
 	path->sample_spec = spec_rand <= path->p_spec && spec_rand >= 0.0f;
 	random_uv(ctx, path, pixel, BN_SC_U);
 	if (!sample_bsdf(path))
 		return (false);
 	path->ray = new_ray(vec3_bias(path->hit.point, path->hit.normal), path->l);
 	return (russian_roulette(path, pixel));
-}
-
-static inline bool	russian_roulette(t_path *path, t_pixel *pixel)
-{
-	float		p;
-
-	if (path->bounce >= DEPTH_ENABLE_RR)
-	{
-		p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
-		p = clampf(p, 0.05f, 0.95f);
-		if (randomf01(pixel->seed) > p)
-			return (false);
-		path->throughput = vec3_scale(path->throughput, 1.0f / p);
-	}
-	++path->bounce;
-	return (true);
 }

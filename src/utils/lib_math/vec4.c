@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 14:46:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/12 05:28:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:21:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_vec4	vec4_sub(t_vec4 a, t_vec4 b)
 	return (res);
 }
 
-t_vec4	vec4_scale(t_vec4 vec,  float s)
+t_vec4	vec4_scale(t_vec4 vec, float s)
 {
 	t_vec4		res;
 	t_v4sf		factor;

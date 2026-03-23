@@ -1,5 +1,5 @@
-#ifndef MINIRT_LIGHTS_H
-# define MINIRT_LIGHTS_H
+#ifndef LIGHTS_H
+# define LIGHTS_H
 
 # include "defines.h"
 # include "parsing.h"

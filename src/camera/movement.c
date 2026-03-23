@@ -2,7 +2,7 @@
 
 static inline t_vec3	get_key_input(mlx_t *mlx);
 static inline t_vec3	compute_move_vec(t_camera *cam, t_vec3 input, float dt);
-static inline void		clamp_camera(t_camera *cam);
+static inline void	clamp_camera(t_camera *cam);
 
 bool	camera_movement(t_context *ctx)
 {
@@ -25,8 +25,8 @@ bool	camera_movement(t_context *ctx)
 
 static inline void	clamp_camera(t_camera *cam)
 {
-	t_vec3	limit;
-	t_vec3	negative_limit;
+	t_vec3		limit;
+	t_vec3		negative_limit;
 
 	limit = (t_vec3){{CAMERA_LIMIT, CAMERA_LIMIT, CAMERA_LIMIT}};
 	negative_limit = (t_vec3){{-CAMERA_LIMIT, -CAMERA_LIMIT, -CAMERA_LIMIT}};
@@ -36,7 +36,7 @@ static inline void	clamp_camera(t_camera *cam)
 
 static inline t_vec3	get_key_input(mlx_t *mlx)
 {
-	t_vec3	input;
+	t_vec3		input;
 
 	input.x = (float)mlx_is_key_down(mlx, KEY_RIGHT)
 		- (float)mlx_is_key_down(mlx, KEY_LEFT);
@@ -49,9 +49,9 @@ static inline t_vec3	get_key_input(mlx_t *mlx)
 
 static inline t_vec3	compute_move_vec(t_camera *cam, t_vec3 input, float dt)
 {
-	t_vec3	move_x;
-	t_vec3	move_z;
-	t_vec3	vec;
+	t_vec3		move_x;
+	t_vec3		move_z;
+	t_vec3		vec;
 
 	move_x = cam->control_right;
 	move_z = cam->control_forward;

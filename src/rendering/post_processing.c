@@ -42,20 +42,18 @@ static inline t_vec3	rrt_and_odt_fit(t_vec3 vec)
 // ACES workflow by Stephen Hill
 static inline t_vec3	tonemap_aces(t_vec3 color)
 {
-	static const t_mat4	aces_input =
-	{{{
-		{0.59719f, 0.35458f, 0.04823f},
-		{0.07600f, 0.90834f, 0.01566f},
-		{0.02840f, 0.13383f, 0.83777f},
-		{0.0f, 0.0f, 0.0f}
-	}}};
-	static const t_mat4	aces_output =
-	{{{
-		{1.60475f, -0.53108f, -0.07367f},
-		{-0.10208f, 1.10813f, -0.00605f},
-		{-0.00327f, -0.07276f, 1.07602f},
-		{0.0f, 0.0f, 0.0f}
-	}}};
+	static const t_mat4	aces_input = \
+{{{
+	{0.59719f, 0.35458f, 0.04823f},
+	{0.07600f, 0.90834f, 0.01566f},
+	{0.02840f, 0.13383f, 0.83777f},
+	{0.0f, 0.0f, 0.0f}}}};
+	static const t_mat4	aces_output = \
+{{{
+	{1.60475f, -0.53108f, -0.07367f},
+	{-0.10208f, 1.10813f, -0.00605f},
+	{-0.00327f, -0.07276f, 1.07602f},
+	{0.0f, 0.0f, 0.0f}}}};
 
 	color = mat4_mul_vec3(&aces_input, color);
 	color = rrt_and_odt_fit(color);

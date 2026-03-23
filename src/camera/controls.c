@@ -3,9 +3,9 @@
 
 static inline void	cam_look(t_context *ctx, t_vec2i delta);
 static inline void	cam_turn(t_context *ctx, t_vec2i delta);
-// static inline void	cam_orbit(t_context *ctx, t_vec2i delta);
-// static inline void	cam_zoom(t_context *ctx, t_vec2i delta);
-// static inline void	cam_pan(t_context *ctx, t_vec2i delta);
+static inline void	cam_orbit(t_context *ctx, t_vec2i delta);
+static inline void	cam_zoom(t_context *ctx, t_vec2i delta);
+static inline void	cam_pan(t_context *ctx, t_vec2i delta);
 
 void	apply_cam_action(t_context *ctx, t_vec2i delta)
 {
@@ -19,11 +19,11 @@ void	apply_cam_action(t_context *ctx, t_vec2i delta)
 		else if (cam->state == CAM_LOOK)
 			cam_look(ctx, delta);
 		else if (cam->state == CAM_ORBIT)
-			cam_look(ctx, delta);
-		// else if (cam->state == CAM_ZOOM)
-		// 	cam_zoom(ctx, delta);
-		// else if (cam->state == CAM_PAN)
-		// 	cam_pan(ctx, delta);
+			cam_orbit(ctx, delta);
+		else if (cam->state == CAM_ZOOM)
+			cam_zoom(ctx, delta);
+		else if (cam->state == CAM_PAN)
+			cam_pan(ctx, delta);
 	}
 }
 
@@ -44,17 +44,20 @@ static inline void	cam_turn(t_context *ctx, t_vec2i delta)
 	ctx->scene.cam.control_right = ctx->scene.cam.right;
 }
 
-// static inline void	cam_orbit(t_context *ctx, t_vec2i delta)
-// {
+static inline void	cam_orbit(t_context *ctx, t_vec2i delta)
+{
+	(void)ctx;
+	(void)delta;
+}
 
-// }
+static inline void	cam_zoom(t_context *ctx, t_vec2i delta)
+{
+	(void)ctx;
+	(void)delta;
+}
 
-// static inline void	cam_zoom(t_context *ctx, t_vec2i delta)
-// {
-
-// }
-
-// static inline void	cam_pan(t_context *ctx, t_vec2i delta)
-// {
-
-// }
+static inline void	cam_pan(t_context *ctx, t_vec2i delta)
+{
+	(void)ctx;
+	(void)delta;
+}

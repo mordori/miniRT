@@ -68,12 +68,21 @@ t_hit		new_hit(uint32_t bounce);
 void		printf_init(t_context *ctx);
 void		screenshot(t_context *ctx);
 char		*timestamp(char *buf);
-float		static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
+float		static_blue_noise(\
+const t_texture *tex, const t_pixel *pixel, uint32_t dim);
 uint32_t	color_wave(uint32_t c1, uint32_t c2, float speed);
 uint32_t	engine_time(void);
 void		update_transform(t_transform *t);
-t_ray		ray_world_to_object(const t_ray *ray, const t_mat4 *world_to_object);
+t_ray		ray_world_to_object(\
+const t_ray *ray, const t_mat4 *world_to_object);
 void		hit_object_to_world(t_hit *hit, const t_transform *t);
 t_vec2		world_to_screen(t_context *ctx, t_vec3 pos);
+void		eval_hit_normal(const t_ray *ray, t_hit *hit, t_vec3 n);
+void		copy_frame_buffer(\
+const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
+void		copy_frame_buffer_preview(\
+const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
+bool		get_thread_status(t_renderer *r, uint32_t *tile_id);
+bool		russian_roulette(t_path *path, t_pixel *pixel);
 
 #endif

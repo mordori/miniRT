@@ -3,9 +3,11 @@
 #include "scene.h"
 #include "editing.h"
 
-static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata);
+static inline bool	set_render_mode(\
+t_context *ctx, t_renderer *r, mlx_key_data_t keydata);
 static inline void	set_samples(t_context *ctx, mlx_key_data_t keydata);
 static inline bool	set_bounces(t_context *ctx, mlx_key_data_t keydata);
+static inline void	reset_editor(t_context *ctx, t_renderer *r);
 
 bool	config_renderer(t_context *ctx, mlx_key_data_t keydata)
 {
@@ -20,7 +22,8 @@ bool	config_renderer(t_context *ctx, mlx_key_data_t keydata)
 	return (dirty);
 }
 
-static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
+static inline bool	set_render_mode(\
+t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
 {
 	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_RELEASE)
 	{
@@ -32,18 +35,7 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 		else
 		{
 			if (ctx->editor.selected_obj)
-			{
-				if (ctx->editor.mode != EDIT_DEFAULT)
-					cancel_edit_action(ctx);
-				vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
-				ctx->editor.selected_obj = NULL;
-				if (!init_bvh(ctx))
-				{
-					pthread_mutex_unlock(&r->mutex);
-					fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-				}
-				memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
-			}
+				reset_editor(ctx, r);
 			ctx->editor.mode = EDIT_DEFAULT;
 			r->mode = RENDERED;
 		}
@@ -51,6 +43,20 @@ static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t
 		return (true);
 	}
 	return (false);
+}
+
+static inline void	reset_editor(t_context *ctx, t_renderer *r)
+{
+	if (ctx->editor.mode != EDIT_DEFAULT)
+		cancel_edit_action(ctx);
+	vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
+	ctx->editor.selected_obj = NULL;
+	if (!init_bvh(ctx))
+	{
+		pthread_mutex_unlock(&r->mutex);
+		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+	}
+	memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
 }
 
 static inline void	set_samples(t_context *ctx, mlx_key_data_t keydata)

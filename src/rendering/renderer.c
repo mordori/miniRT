@@ -2,8 +2,10 @@
 #include "utils.h"
 
 static inline void	*render_routine(void *arg);
-static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id);
+static inline void	render_tile(\
+const t_context *ctx, t_vec3 *buf, uint32_t tile_id);
 static inline void	render_pixel(const t_context *ctx, t_pixel *pixel);
+static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel);
 
 bool	init_renderer(t_context *ctx)
 {
@@ -22,7 +24,8 @@ bool	init_renderer(t_context *ctx)
 	r->active = true;
 	while (r->threads_init < r->threads_amount)
 	{
-		if (pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
+		if (\
+pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
 		{
 			pthread_mutex_lock(&r->mutex);
 			r->active = false;
@@ -36,29 +39,26 @@ bool	init_renderer(t_context *ctx)
 
 static inline void	*render_routine(void *arg)
 {
-	t_context		*ctx;
+	const t_context	*ctx = (const t_context *)arg;
 	t_renderer		*r;
 	uint32_t		tile_id;
 
-	ctx = (t_context *)arg;
-	r = &ctx->renderer;
+	r = &((t_context *)ctx)->renderer;
 	pthread_mutex_lock(&r->mutex);
 	while (true)
 	{
-		while (r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
+		while (\
+r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
 			pthread_cond_wait(&r->cond, &r->mutex);
-		if (!r->active)
-		{
-			pthread_mutex_unlock(&r->mutex);
+		if (!get_thread_status(r, &tile_id))
 			break ;
-		}
-		tile_id = r->tile_index++;
-		++r->threads_running;
 		pthread_mutex_unlock(&r->mutex);
 		render_tile(ctx, r->buffer, tile_id);
 		pthread_mutex_lock(&r->mutex);
 		--r->threads_running;
-		if (r->threads_running == 0 && (r->resize_pending || r->tile_index >= r->tiles_total))
+		if (\
+r->threads_running == 0 && \
+(r->resize_pending || r->tile_index >= r->tiles_total))
 		{
 			r->frame_complete = true;
 			pthread_cond_broadcast(&r->cond);
@@ -67,7 +67,8 @@ static inline void	*render_routine(void *arg)
 	return (NULL);
 }
 
-static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
+static inline void	render_tile(\
+const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
 {
 	t_pixel			pixel;
 	t_uint2			start;
@@ -95,19 +96,31 @@ static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_
 	}
 }
 
-static inline void render_pixel(const t_context *ctx, t_pixel *pixel)
+static inline void	render_pixel(const t_context *ctx, t_pixel *pixel)
 {
-	const t_renderer	*r;
+	const t_renderer	*r = &ctx->renderer;
 	uint32_t			seed;
 	t_vec3				color;
-	t_vec2				aa;
 
-	r = &ctx->renderer;
-	seed = hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
+	seed = \
+hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
 	if (seed == 0)
 		seed = 1;
 	pixel->seed = &seed;
 	pixel->frame = r->frame;
+	sample_pixel(ctx, pixel);
+	color = trace_path(ctx, pixel, r->mode, r->ray_bounces);
+	if (r->frame == 1)
+		*pixel->color = color;
+	else
+		*pixel->color = vec3_add(*pixel->color, color);
+}
+
+static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel)
+{
+	const t_renderer	*r = &ctx->renderer;
+	t_vec2				aa;
+
 	if (r->mode == RENDERED)
 	{
 		aa = r2_sequence(r->frame, vec2(\
@@ -121,9 +134,4 @@ static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
 		pixel->u = (float)pixel->x + 0.5f;
 		pixel->v = (float)pixel->y + 0.5f;
 	}
-	color = trace_path(ctx, pixel, r->mode, r->ray_bounces);
-	if (r->frame == 1)
-		*pixel->color = color;
-	else
-		*pixel->color = vec3_add(*pixel->color, color);
 }

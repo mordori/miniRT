@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:42:36 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/12/07 00:21:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:18:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*ft_itoa(int n, const char *base)
 
 void	int_to_str(int n, char *str)
 {
-	size_t	i;
+	size_t		i;
 	long long	num;
 
 	num = n;

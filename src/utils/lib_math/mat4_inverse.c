@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 00:16:36 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/06 04:28:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:21:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,11 @@ float	mat3_det(const t_mat3 *src)
 {
 	float		res;
 
-	res = src->m[0][0] * (src->m[1][1] * src->m[2][2] - src->m[2][1] * src->m[1][2]);
-	res -= src->m[0][1] * (src->m[1][0] * src->m[2][2] - src->m[2][0] * src->m[1][2]);
-	res += src->m[0][2] * (src->m[1][0] * src->m[2][1] - src->m[2][0] * src->m[1][1]);
+	res = \
+src->m[0][0] * (src->m[1][1] * src->m[2][2] - src->m[2][1] * src->m[1][2]);
+	res -= \
+src->m[0][1] * (src->m[1][0] * src->m[2][2] - src->m[2][0] * src->m[1][2]);
+	res += \
+src->m[0][2] * (src->m[1][0] * src->m[2][1] - src->m[2][0] * src->m[1][1]);
 	return (res);
 }

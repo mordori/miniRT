@@ -2,7 +2,8 @@
 #include "rendering.h"
 #include "utils.h"
 
-static inline void	update_viewport(t_camera *cam, float img_width, float img_height);
+static inline void	update_viewport(\
+t_camera *cam, t_viewport *vp, float img_width, float img_height);
 
 void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 		float fov)
@@ -79,10 +80,7 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	t_vec3				dir;
 	t_vec2				pitch;
 	t_vec2				yaw;
-	// float				ev100;
 
-	// ev100 = log2f(cam->f_stop * cam->f_stop / cam->shutter_speed * 100.0f / cam->iso);
-	// cam->exposure = 1.0f / (powf(2.0f, ev100) * 1.2f);
 	cam->pitch = clampf(cam->pitch, -limit, limit);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
 	if (ctx->editor.selected_obj)
@@ -97,17 +95,18 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	cam->forward = vec3_normalize(dir);
 	cam->right = vec3_normalize(vec3_cross(world_up, cam->forward));
 	cam->up = vec3_normalize(vec3_cross(cam->forward, cam->right));
-	update_viewport(cam, (float)ctx->img->width, (float)ctx->img->height);
+	update_viewport(\
+cam, &cam->viewport, (float)ctx->img->width, (float)ctx->img->height);
 }
 
-static inline void	update_viewport(t_camera *cam, float img_width, float img_height)
+static inline void	update_viewport(\
+t_camera *cam, t_viewport *vp, float img_width, float img_height)
 {
-	t_viewport		*vp;
-	t_vec3			u;
-	t_vec3			v;
-	t_vec3			vp_center;
-	t_vec3			vp_up_left;
-	float			defocus_r;
+	t_vec3		u;
+	t_vec3		v;
+	t_vec3		vp_center;
+	t_vec3		vp_up_left;
+	float		defocus_r;
 
 	vp = (t_viewport *)&cam->viewport;
 	vp->height = SENSOR_HEIGHT_MM / cam->focal_len_mm;

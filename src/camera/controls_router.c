@@ -23,7 +23,8 @@ static inline bool	set_cam_state(t_context *ctx)
 {
 	if (ctx->scene.cam.state != CAM_DEFAULT)
 		return (true);
-	if (ctx->renderer.mode == SOLID && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
+	if (ctx->renderer.mode == SOLID && \
+mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 	{
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			begin_cam_action(ctx, CAM_ORBIT);
@@ -72,15 +73,20 @@ static inline bool	is_cam_action_active(const t_context *ctx)
 	bool			is_held;
 
 	is_held = false;
-	if (cam->state == CAM_ORBIT && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
+	if (cam->state == CAM_ORBIT && \
+mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 		is_held = true;
-	else if (cam->state == CAM_ZOOM && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
+	else if (cam->state == CAM_ZOOM && \
+mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 		is_held = true;
-	else if (cam->state == CAM_PAN && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
+	else if (cam->state == CAM_PAN && \
+mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
 		is_held = true;
-	else if (cam->state == CAM_TURN && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
+	else if (cam->state == CAM_TURN && \
+mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 		is_held = true;
-	else if (cam->state == CAM_LOOK && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
+	else if (cam->state == CAM_LOOK && \
+mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 		is_held = true;
 	return (is_held);
 }

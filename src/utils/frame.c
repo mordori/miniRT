@@ -1,4 +1,58 @@
 #include "utils.h"
+#include "rendering.h"
+
+void	copy_frame_buffer(\
+const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel)
+{
+	const uint32_t		limit = ctx->renderer.pixels;
+	const uint32_t		width = ctx->renderer.width;
+	t_vec3				color;
+	uint32_t			i;
+
+	i = 0;
+	while (i < limit)
+	{
+		color = vec3_scale(buf[i], pixel->scale);
+		color = post_process(ctx, pixel, color);
+		pixels[i++] = vec3_to_uint32(color);
+		if (pixel->x++ == width)
+		{
+			pixel->x = 0;
+			pixel->y++;
+		}
+	}
+}
+
+void	copy_frame_buffer_preview(\
+const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels)
+{
+	const float			*m = ctx->editor.selection_mask;
+	const uint32_t		limit = ctx->renderer.pixels;
+	uint32_t			i;
+	uint32_t			mask;
+	uint32_t			edge_color;
+
+	edge_color = color_wave(0xFF007BFF, 0xFFFFFFFF, 10.0f);
+	i = 0;
+	while (i < limit)
+	{
+		if (m[i] > 0.0f)
+		{
+			mask = 0u - ((\
+(i % width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i] - 0.05f) || \
+((i + 1) % width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i] - 0.05f) || \
+(i >= width && m[i - width] < 0.0f && fabsf(m[i - width]) > m[i] - 0.05f) || \
+(i + width < limit && m[i + width] < 0.0f && \
+fabsf(m[i + width]) > m[i] - 0.05f)));
+		}
+		else
+			mask = 0u;
+		pixels[i] = \
+(edge_color & mask) | \
+(vec3_to_uint32(post_process_preview(ctx, buf[i])) & ~mask);
+		++i;
+	}
+}
 
 void	print_render_status(t_context *ctx, t_renderer *r)
 {
@@ -29,7 +83,7 @@ void	limit_polling_rate(t_renderer *r)
 {
 	static uint32_t		last_frame_time;
 
-	if (r->frame < r->render_samples)
+	if (r->frame < r->render_samples || r->mode != RENDERED)
 		return ;
 	wait_until(last_frame_time + 17);
 	last_frame_time = time_now();

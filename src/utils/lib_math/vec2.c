@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:30:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/15 21:27:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:23:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,21 @@ t_vec2	vec2_n(float n)
 
 t_vec2	vec2_add(t_vec2 a, t_vec2 b)
 {
-	return ((t_vec2){{
-		a.x + b.x,
-		a.y + b.y
-	}});
+	return ((t_vec2){{\
+a.x + b.x, \
+a.y + b.y}});
 }
 
 t_vec2	vec2_sub(t_vec2 a, t_vec2 b)
 {
-	return ((t_vec2){{
-		a.x - b.x,
-		a.y - b.y
-	}});
+	return ((t_vec2){{\
+a.x - b.x, \
+a.y - b.y}});
 }
 
 t_vec2	vec2_scale(t_vec2 vec, float s)
 {
-	return ((t_vec2){{
-		vec.x * s,
-		vec.y * s
-	}});
+	return ((t_vec2){{\
+vec.x * s, \
+vec.y * s}});
 }
