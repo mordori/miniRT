@@ -31,7 +31,7 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	pthread_mutex_unlock(&r->mutex);
 	if (config_renderer(ctx, keydata))
 		dirty = true;
-	if (keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
+	if (r->mode != SOLID && keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
 		screenshot(ctx);
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);

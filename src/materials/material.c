@@ -31,9 +31,7 @@ static t_vec3	apply_normal_map(const t_material *mat, t_vec3 n, t_path *path)
 	sampled = vec3_sub(vec3_scale(sampled, 2.0f), vec3_n(1.0f));
 	sampled.x *= mat->bump_strength;
 	sampled.y *= mat->bump_strength;
-	sampled = vec3_normalize(sampled);
-	n = vec3_normalize(mul_tbn(sampled, n, path->hit.tangent,
-				path->hit.bitangent)); // Broken, until we have the proper transforms ready.
+	n = vec3_normalize(mul_tbn(sampled, n, path->hit.tangent, path->hit.bitangent));
 	return (n);
 }
 

@@ -38,6 +38,7 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	t_sphere	sphere;
 	float		t;
 	t_vec3		normal_outward;
+	float		len_sq;
 
 	sphere = shape->sphere;
 	if (sphere.radius < M_EPSILON)
@@ -59,6 +60,13 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 		hit->front_face = true;
 	}
 	hit->uv = spherical_uv(normal_outward);
+	hit->tangent = vec3(-normal_outward.z, 0.0f, normal_outward.x);
+	len_sq = vec3_dot(hit->tangent, hit->tangent);
+	if (len_sq < G_EPSILON)
+		hit->tangent = g_right;
+	else
+		hit->tangent = vec3_scale(hit->tangent, 1.0f / sqrtf(len_sq));
+	hit->bitangent = vec3_cross(hit->normal, hit->tangent);
 	hit->t = t;
 	return (true);
 }
