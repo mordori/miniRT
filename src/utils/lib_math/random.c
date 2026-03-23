@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 20:46:16 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/21 11:29:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:27:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ uint32_t	hash_lowerbias32(uint32_t seed)
 	seed ^= seed >> 16;
 	seed *= 0xa812d533;
 	seed ^= seed >> 15;
-	seed *= 0xb278e4ad;
+	seed *= 2994267309u;
 	seed ^= seed >> 17;
 	return (seed);
 }

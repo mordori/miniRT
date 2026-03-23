@@ -1,5 +1,5 @@
-#ifndef MINIRT_INPUT_H
-# define MINIRT_INPUT_H
+#ifndef INPUT_H
+# define INPUT_H
 
 # include "defines.h"
 

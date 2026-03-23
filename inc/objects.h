@@ -1,5 +1,5 @@
-#ifndef MINIRT_OBJECTS_H
-# define MINIRT_OBJECTS_H
+#ifndef OBJECTS_H
+# define OBJECTS_H
 
 # include "defines.h"
 # include "parsing.h"
@@ -26,10 +26,12 @@ void	compute_cap_uv(const t_cylinder *cyl, t_vec3 to_hit, t_hit *hit);
 
 
 /* Object initialization */
-t_error			init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id);
-t_error			init_sphere(t_context *ctx, t_vec3 center, float diameter, uint32_t mat_id);
-t_error			init_cylinder(t_context *ctx, t_cylinder *cy, int32_t mat_id);
-t_error			init_cone(t_context *ctx, t_cone *cone, int32_t mat_id);
-t_error			init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id);
+t_error	init_plane(\
+t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id);
+t_error	init_sphere(\
+t_context *ctx, t_vec3 center, float diameter, uint32_t mat_id);
+t_error	init_cylinder(t_context *ctx, t_cylinder *cy, int32_t mat_id);
+t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id);
+t_error	init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id);
 
 #endif

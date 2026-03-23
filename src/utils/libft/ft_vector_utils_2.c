@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 00:22:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/12 01:03:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:19:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ bool	vector_remove(t_vector *vec, void *item)
 	while (i < vec->total)
 	{
 		if (vec->items[i] == item)
-			break;
+			break ;
 		++i;
 	}
 	if (i == vec->total)

@@ -12,11 +12,6 @@
 
 # include "lib_math.h"
 
-static const t_vec3	g_zero = {{0.0f, 0.0f, 0.0f, 0.0f}};
-static const t_vec3	g_right = {{1.0f, 0.0f, 0.0f, 0.0f}};
-static const t_vec3	g_up = {{0.0f, 1.0f, 0.0f, 0.0f}};
-static const t_vec3	g_forward = {{0.0f, 0.0f, 1.0f, 0.0f}};
-
 # define WIDTH					1920
 # define HEIGHT					1080
 # define THREADS_DFL			4
@@ -189,49 +184,54 @@ enum e_axis
 	AXIS_YZ,
 };
 
-typedef enum e_obj_type				t_obj_type;
-typedef enum e_light_type			t_light_type;
-typedef enum e_cam_state			t_cam_state;
-typedef enum e_base_color			t_base_color;
-typedef enum e_pattern				t_pattern;
-typedef enum e_entity				t_entity;
-typedef enum e_err_code				t_err_code;
-typedef enum e_render_mode			t_render_mode;
-typedef enum e_bn_channel			t_bn_channel;
-typedef enum e_edit_mode			t_edit_mode;
-typedef enum e_axis					t_axis;
+static const t_vec3				g_zero = {{0.0f, 0.0f, 0.0f, 0.0f}};
+static const t_vec3				g_right = {{1.0f, 0.0f, 0.0f, 0.0f}};
+static const t_vec3				g_up = {{0.0f, 1.0f, 0.0f, 0.0f}};
+static const t_vec3				g_forward = {{0.0f, 0.0f, 1.0f, 0.0f}};
 
-typedef struct s_context			t_context;
-typedef struct s_bvh_node			t_bvh_node;
-typedef struct s_aabb				t_aabb;
-typedef struct s_object				t_object;
-typedef struct s_hit				t_hit;
-typedef struct s_plane				t_plane;
-typedef struct s_sphere				t_sphere;
-typedef struct s_cylinder			t_cylinder;
-typedef struct s_cone				t_cone;
-typedef struct s_quad				t_quad;
-typedef struct s_light				t_light;
-typedef struct s_scene				t_scene;
-typedef struct s_camera				t_camera;
-typedef struct s_texture			t_texture;
-typedef struct s_material			t_material;
-typedef struct s_renderer			t_renderer;
-typedef struct s_editor				t_editor;
-typedef struct s_viewport			t_viewport;
-typedef struct s_path				t_path;
-typedef struct s_pixel				t_pixel;
-typedef struct s_ray				t_ray;
-typedef struct s_transform			t_transform;
-typedef struct s_tex_entry			t_tex_entry;
-typedef struct s_geo				t_geo;
-typedef struct s_env				t_env;
-typedef struct s_assets				t_assets;
-typedef struct s_mouse				t_mouse;
+typedef enum e_obj_type			t_obj_type;
+typedef enum e_light_type		t_light_type;
+typedef enum e_cam_state		t_cam_state;
+typedef enum e_base_color		t_base_color;
+typedef enum e_pattern			t_pattern;
+typedef enum e_entity			t_entity;
+typedef enum e_err_code			t_err_code;
+typedef enum e_render_mode		t_render_mode;
+typedef enum e_bn_channel		t_bn_channel;
+typedef enum e_edit_mode		t_edit_mode;
+typedef enum e_axis				t_axis;
 
-typedef union u_shape				t_shape;
+typedef struct s_context		t_context;
+typedef struct s_bvh_node		t_bvh_node;
+typedef struct s_aabb			t_aabb;
+typedef struct s_object			t_object;
+typedef struct s_hit			t_hit;
+typedef struct s_plane			t_plane;
+typedef struct s_sphere			t_sphere;
+typedef struct s_cylinder		t_cylinder;
+typedef struct s_cone			t_cone;
+typedef struct s_quad			t_quad;
+typedef struct s_light			t_light;
+typedef struct s_scene			t_scene;
+typedef struct s_camera			t_camera;
+typedef struct s_texture		t_texture;
+typedef struct s_material		t_material;
+typedef struct s_renderer		t_renderer;
+typedef struct s_editor			t_editor;
+typedef struct s_viewport		t_viewport;
+typedef struct s_path			t_path;
+typedef struct s_pixel			t_pixel;
+typedef struct s_ray			t_ray;
+typedef struct s_transform		t_transform;
+typedef struct s_tex_entry		t_tex_entry;
+typedef struct s_geo			t_geo;
+typedef struct s_env			t_env;
+typedef struct s_assets			t_assets;
+typedef struct s_mouse			t_mouse;
 
-typedef mlx_image_t					t_image;
+typedef union u_shape			t_shape;
+
+typedef mlx_image_t				t_image;
 
 struct __attribute__((aligned(16))) s_transform
 {

@@ -4,6 +4,8 @@
 #include "rendering.h"
 #include "editing.h"
 
+static inline void	flag_update(t_context *ctx, bool *update);
+
 void	process_input(t_context *ctx, bool *update)
 {
 	bool		dirty;
@@ -28,10 +30,13 @@ void	process_input(t_context *ctx, bool *update)
 		dirty = true;
 	ctx->mouse.pos_prev = ctx->mouse.pos;
 	if (dirty)
-	{
-		*update = true;
-		update_camera(ctx, &ctx->scene.cam);
-		if (ctx->renderer.mode == RENDERED)
-			atomic_store(&ctx->renderer.render_cancel, true);
-	}
+		flag_update(ctx, update);
+}
+
+static inline void	flag_update(t_context *ctx, bool *update)
+{
+	*update = true;
+	update_camera(ctx, &ctx->scene.cam);
+	if (ctx->renderer.mode == RENDERED)
+		atomic_store(&ctx->renderer.render_cancel, true);
 }

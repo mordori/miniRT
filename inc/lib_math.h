@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/12 03:30:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/23 20:08:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,15 @@ typedef union u_vec4		t_float4;
 typedef union u_color		t_color;
 typedef union u_vec4		t_quaternion;
 
-typedef __attribute__((vector_size(16))) float		t_v4sf;
-typedef __attribute__((vector_size(16))) int32_t	t_v4si;
-typedef __attribute__((vector_size(16))) uint32_t	t_v4ui;
+typedef \
+__attribute__((vector_size(16))) \
+float						t_v4sf;
+typedef \
+__attribute__((vector_size(16))) \
+int32_t						t_v4si;
+typedef \
+__attribute__((vector_size(16))) \
+uint32_t					t_v4ui;
 
 struct __attribute__((aligned(16))) s_mat2
 {
@@ -317,7 +323,8 @@ uint32_t	rgba_to_abgr(uint32_t rgba);
 // Coordinate systems
 // -----------------------------------------------------------------
 t_vec3		spherical_to_cartesian(float u, float sin_theta, float cos_theta);
-t_vec3		spherical_to_world(t_vec3 n, float u, float sin_theta, float cos_theta);
+t_vec3		spherical_to_world(\
+t_vec3 n, float u, float sin_theta, float cos_theta);
 t_vec3		tangent_to_world(t_vec3 vec, t_vec3 n);
 void		onb(t_vec3 n, t_vec3 *b1, t_vec3 *b2);
 t_vec3		mul_tbn(t_vec3 vec, t_vec3 n, t_vec3 t, t_vec3 b);

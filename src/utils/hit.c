@@ -22,3 +22,17 @@ void	hit_object_to_world(t_hit *hit, const t_transform *t)
 	n = vec4_3(hit->normal, 0.0f);
 	hit->normal = vec3_normalize(mat4_mul_vec4(&m_inv_t, n).xyz);
 }
+
+void	eval_hit_normal(const t_ray *ray, t_hit *hit, t_vec3 n)
+{
+	if (vec3_dot(ray->dir, n) > 0.0f)
+	{
+		hit->normal = vec3_negate(n);
+		hit->front_face = false;
+	}
+	else
+	{
+		hit->normal = n;
+		hit->front_face = true;
+	}
+}
