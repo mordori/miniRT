@@ -118,7 +118,7 @@ ctx->editor.axis_secondary.z == 0.0f);
 				}
 			}
 			if (ctx->editor.mode == EDIT_TRANSLATE)
-				obj_translate(ctx, axis_delta);
+				obj_translate(ctx->editor.selected_obj, axis_delta);
 			else if (ctx->editor.mode == EDIT_ROTATE)
 			{
 				if (ctx->editor.constraints == AXIS_DEFAULT)
@@ -134,7 +134,7 @@ ctx->editor.axis_secondary.z == 0.0f);
 					else
 						axis_delta = g_right;
 				}
-				obj_rotate(ctx, vec3_scale(axis_delta, magnitude));
+				obj_rotate(ctx->editor.selected_obj, axis_delta, magnitude);
 			}
 			else if (ctx->editor.mode == EDIT_SCALE)
 			{
@@ -159,7 +159,7 @@ ctx->editor.axis_secondary.z == 0.0f);
 					w_z.v = vec3_dot(ctx->editor.axis_secondary, local_z);
 					axis_delta.z = expf(sqrtf(w_z.u * w_z.u + w_z.v * w_z.v) * magnitude);
 				}
-				obj_scale(ctx, axis_delta);
+				obj_scale(ctx->editor.selected_obj, axis_delta);
 			}
 			update_transform(&ctx->editor.selected_obj->transform);
 			uint32_t i = 0;

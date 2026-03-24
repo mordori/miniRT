@@ -238,7 +238,7 @@ struct __attribute__((aligned(16))) s_transform
 	t_mat4			world_to_object;
 	t_mat4			object_to_world;
 	t_vec3			pos;
-	t_vec3			rot;
+	t_quat			rot;
 	t_vec3			scale;
 };
 

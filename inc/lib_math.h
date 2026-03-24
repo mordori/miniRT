@@ -63,7 +63,7 @@ typedef union u_vec4		t_vec4;
 typedef union u_vec3		t_float3;
 typedef union u_vec4		t_float4;
 typedef union u_color		t_color;
-typedef union u_vec4		t_quaternion;
+typedef union u_vec4		t_quat;
 
 typedef \
 __attribute__((vector_size(16))) \
@@ -160,6 +160,12 @@ union __attribute__((aligned(16))) u_vec3
 		float	right;
 		float	up;
 		float	forward;
+	};
+	struct
+	{
+		float	angle;
+		float	sin;
+		float	cos;
 	};
 	t_vec2	xy;
 };
@@ -293,6 +299,7 @@ t_vec4		vec4_n(float n);
 t_vec4		vec4_add(t_vec4 a, t_vec4 b);
 t_vec4		vec4_sub(t_vec4 a, t_vec4 b);
 t_vec4		vec4_scale(t_vec4 vec, float s);
+float		vec4_dot(t_vec4 a, t_vec4 b);
 
 // v4sf, v4si
 // -----------------------------------------------------------------
@@ -328,5 +335,13 @@ t_vec3 n, float u, float sin_theta, float cos_theta);
 t_vec3		tangent_to_world(t_vec3 vec, t_vec3 n);
 void		onb(t_vec3 n, t_vec3 *b1, t_vec3 *b2);
 t_vec3		mul_tbn(t_vec3 vec, t_vec3 n, t_vec3 t, t_vec3 b);
+
+// Quaternions
+// -----------------------------------------------------------------
+t_quat		quat_from_euler(t_vec3 euler);
+t_quat		quat_from_euler_angle(t_vec3 axis, float angle);
+t_quat		quat_normalize(t_quat q);
+t_mat4		quat_to_mat4(t_quat q);
+t_quat		quat_mul(t_quat a, t_quat b);
 
 #endif
