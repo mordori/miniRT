@@ -65,9 +65,9 @@ endif
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
-				camera.c controls.c movement.c config.c controls_router.c)
+				camera.c controls.c movement.c config.c controls_router.c actions.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
-				select.c edit.c constraints.c translate.c rotate.c scale.c)
+				select.c edit.c constraints.c translate.c rotate.c scale.c actions.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input_router.c mouse.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
@@ -87,7 +87,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
 				settings.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c random.c window.c frame.c render.c hit.c transform.c projection.c threads.c \
+				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c random.c window.c frame.c render.c hit.c transform.c projection.c threads.c constraints.c instructions.c \
 				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c ft_strtod.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \

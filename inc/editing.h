@@ -8,9 +8,16 @@ bool	edit_object(t_context *ctx, t_vec2i delta);
 void	config_editor(t_context *ctx, mlx_key_data_t keydata);
 void	apply_edit_action(t_context *ctx);
 void	cancel_edit_action(t_context *ctx);
-void	obj_translate(t_object *obj, t_vec3 axis_delta);
-void	obj_rotate(t_object *obj, t_vec3 axis, float angle);
-void	obj_scale(t_object *obj, t_vec3 axis_delta);
+void	begin_edit_action(t_context *ctx);
+void	end_edit_action(t_context *ctx);
+void	edit_action(t_context *ctx, t_vec2i delta);
+void	obj_translate(\
+t_context *ctx, float magnitude, t_vec2i delta, float speed);
+void	obj_rotate(t_context *ctx, float angle);
+void	obj_scale(t_context *ctx, float magnitude);
 void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata);
+float	eval_scale_magnitude(t_context *ctx, t_vec2i delta, float speed);
+float	eval_speed(t_context *ctx);
+float	eval_magnitude(t_context *ctx, t_vec2i delta, float speed);
 
 #endif

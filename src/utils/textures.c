@@ -1,16 +1,17 @@
 #include "utils.h"
 
-static inline void	srgb_to_linear(float *lut);
+static inline void	lut_srgb_to_linear(void);
 static inline void	tex_data_to_linear(t_texture *texture);
-static inline void	tex_srgb_to_linear(t_texture *texture, float *lut);
+static inline void	tex_srgb_to_linear(t_texture *texture);
+
+static float	g_lut[256];
 
 t_texture	load_texture(char *file, bool is_srgb)
 {
 	t_texture		texture;
 	size_t			size;
-	static float	lut[256];
 
-	srgb_to_linear(lut);
+	lut_srgb_to_linear();
 	printf("Loading texture:    %s\n", file);
 	texture = (t_texture){0};
 	texture.tex = mlx_load_png(file);
@@ -31,7 +32,7 @@ t_texture	load_texture(char *file, bool is_srgb)
 	texture.width = texture.tex->width;
 	texture.height = texture.tex->height;
 	if (is_srgb)
-		tex_srgb_to_linear(&texture, lut);
+		tex_srgb_to_linear(&texture);
 	else
 		tex_data_to_linear(&texture);
 	mlx_delete_texture(texture.tex);
@@ -57,7 +58,7 @@ static inline void	tex_data_to_linear(t_texture *texture)
 	}
 }
 
-static inline void	tex_srgb_to_linear(t_texture *texture, float *lut)
+static inline void	tex_srgb_to_linear(t_texture *texture)
 {
 	float		*dst;
 	float		*end;
@@ -68,14 +69,14 @@ static inline void	tex_srgb_to_linear(t_texture *texture, float *lut)
 	end = dst + (texture->width * texture->height * 4);
 	while (dst < end)
 	{
-		*dst++ = lut[*src++];
-		*dst++ = lut[*src++];
-		*dst++ = lut[*src++];
+		*dst++ = g_lut[*src++];
+		*dst++ = g_lut[*src++];
+		*dst++ = g_lut[*src++];
 		*dst++ = ((float)(*src++) * M_1_255F);
 	}
 }
 
-static inline void	srgb_to_linear(float *lut)
+static inline void	lut_srgb_to_linear(void)
 {
 	static bool		init_lut;
 	int				i;
@@ -85,7 +86,7 @@ static inline void	srgb_to_linear(float *lut)
 		i = 0;
 		while (i < 256)
 		{
-			lut[i] = powf((float)i * M_1_255F, 2.2f);
+			g_lut[i] = powf((float)i * M_1_255F, 2.2f);
 			++i;
 		}
 		init_lut = true;

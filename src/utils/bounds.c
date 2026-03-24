@@ -1,6 +1,6 @@
 #include "utils.h"
 
-int cmp_bounds_x(const void *a, const void *b)
+int	cmp_bounds_x(const void *a, const void *b)
 {
 	t_object	*obj_1;
 	t_object	*obj_2;
@@ -14,7 +14,7 @@ int cmp_bounds_x(const void *a, const void *b)
 	return (-mask_1 + mask_2);
 }
 
-int cmp_bounds_y(const void *a, const void *b)
+int	cmp_bounds_y(const void *a, const void *b)
 {
 	t_object	*obj_1;
 	t_object	*obj_2;
@@ -28,7 +28,7 @@ int cmp_bounds_y(const void *a, const void *b)
 	return (-mask_1 + mask_2);
 }
 
-int cmp_bounds_z(const void *a, const void *b)
+int	cmp_bounds_z(const void *a, const void *b)
 {
 	t_object	*obj_1;
 	t_object	*obj_2;

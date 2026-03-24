@@ -58,7 +58,7 @@ t_object *obj, t_light *l, uint32_t mat_id)
 static inline t_error	init_dir_light(\
 t_context *ctx, t_light *light, t_object *obj)
 {
-	t_object		*new_obj;
+	t_object	*new_obj;
 
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
@@ -81,4 +81,20 @@ t_context *ctx, t_light *light, t_object *obj)
 	ctx->scene.env.has_dir_light = true;
 	free(light);
 	return (E_OK);
+}
+
+void	update_lights_radii(t_context *ctx)
+{
+	t_light		*light;
+	uint32_t	i;
+	float		max_scale;
+
+	i = 0;
+	while (i < ctx->scene.env.lights.total)
+	{
+		light = ((t_light **)ctx->scene.env.lights.items)[i++];
+		max_scale = fminf(fminf(light->obj->transform.scale.x, light->obj->transform.scale.y), light->obj->transform.scale.z);
+		light->radius = light->obj->shape.sphere.radius * max_scale;
+		light->radius_sq = light->radius * light->radius;
+	}
 }
