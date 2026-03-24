@@ -93,7 +93,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \
 				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \
 				vec2.c vec4_2.c vec2i.c vec2i_2.c math_2.c math_3.c \
-				vec3_3.c color.c v4sf.c v4si.c coords.c \
+				vec3_3.c color.c v4sf.c v4si.c coords.c quaternion.c \
 				mat4_transforms_2.c random.c vec3_4.c vec3_5.c vec3_6.c \
 				fast_math.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \

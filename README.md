@@ -36,18 +36,17 @@
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
 - Modern PBR pipeline with microfacet BSDF
 - Custom scene description format
-- Bilinear texture filtering
+- Bilinear texture filtering and normal mapping
 - Plane, sphere, cylinder, cone, and quad primitives
 - Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly controller
+- Edit mode with simplified rendering and trackball controller
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
-- Normal maps
-- Trackball controller for Edit Mode
-- Quaternions and proper transforms
-- Object editing
+- Clean up after project validation
+- Scene saving
 
 #### Future Work
 - Support for MacOS and Apple Silicon
@@ -216,6 +215,7 @@ Math
 - https://www.3blue1brown.com/
 - https://betterexplained.com/
 - https://www.wikipedia.org/
+- Multimedia Maths by Bieke Masselis and Ivo De Pauw
 
 Disk
 - https://psgraphics.blogspot.com/2011/01/improved-code-for-concentric-map.html
