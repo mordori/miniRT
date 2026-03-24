@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "utils.h"
 #include "parsing.h"
 #include "materials.h"
 
@@ -27,4 +28,10 @@ bool	validate_normalized(t_vec3 vec)
 bool	validate_range(float value, float min, float max)
 {
 	return (value >= min && value <= max);
+}
+
+void	validate_scene(t_context *ctx, t_parser *p)
+{
+	if (!p->has_camera)
+		fatal_error(ctx, "Missing camera (C)", ctx->file, p->line_num);
 }
