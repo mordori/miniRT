@@ -2,19 +2,19 @@
 render	16		8
 
 # Ambient
-A		0.2				255,255,255
+A		0.5				255,255,255
 
 # Skydome
 sky		sky.png
 
 # Texture
-tex		e_alb	earth_daymap.png
+tex		e_alb		earth_daymap.png
 tex		m_alb		moon_color.png
 tex		m_nrm		moon_normal.png
 
 
-# Camera (position, look direction, FOV, exposure)
-C		0,0.01,0.0		0,0,1		80			0.5		3.3
+# Camera (position, look direction, FOV, exposure, focus distance)
+C		0,0.01,0.0		0,0,1		80			0.5		10
 
 # Light
 #		pos						intensity	color			radius		mat_id

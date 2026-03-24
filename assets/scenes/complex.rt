@@ -2,7 +2,7 @@
 render	32		8
 
 # Ambient
-A		0.15			64,64,80
+A		0.5			64,64,80
 
 # Skydome
 sky		sky.png

@@ -105,8 +105,9 @@ static t_error	parse_mat_values(char **tkns, t_material *mat)
 	if (!validate_range(mat->metallic, 0.0f, 1.0f)
 		|| !validate_range(mat->roughness, 0.0f, 1.0f)
 		|| !validate_range(mat->ior, 1.0f, 3.0f)
-		|| !validate_range(mat->transmission, 0.0f, 1.0f))
-		return (E_INVALID_NUM);
+		|| !validate_range(mat->transmission, 0.0f, 1.0f)
+		|| !validate_range(em_str, 0.0f, 1000000.0f))
+		return (E_RANGE);
 	mat->emission = vec3_scale(em_col, em_str);
 	mat->is_emissive = (em_str > 0.0f);
 	return (E_OK);
