@@ -28,7 +28,6 @@ void	process_input(t_context *ctx, bool *update)
 		dirty = true;
 	if (rotate_skydome(ctx))
 		dirty = true;
-	ctx->mouse.pos_prev = ctx->mouse.pos;
 	if (dirty)
 		flag_update(ctx, update);
 }

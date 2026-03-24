@@ -528,7 +528,8 @@ struct __attribute__((aligned(16))) s_editor
 	t_vec3			axis_primary;
 	t_vec3			axis_secondary;
 	t_transform		orig_transform;
-	t_axis			constraints;
+	t_axis			constraint_axis;
+	uint32_t		constraints;
 };
 
 struct __attribute__((aligned(16))) s_pixel

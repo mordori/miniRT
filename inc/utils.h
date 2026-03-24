@@ -76,7 +76,8 @@ void		update_transform(t_transform *t);
 t_ray		ray_world_to_object(\
 const t_ray *ray, const t_mat4 *world_to_object);
 void		hit_object_to_world(t_hit *hit, const t_transform *t);
-t_vec2		world_to_screen(t_context *ctx, t_vec3 pos);
+t_vec2		world_to_screen(\
+t_context *ctx, const t_camera *cam, const t_viewport *vp, t_vec3 pos);
 void		eval_hit_normal(const t_ray *ray, t_hit *hit, t_vec3 n);
 void		copy_frame_buffer(\
 const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
@@ -84,5 +85,6 @@ void		copy_frame_buffer_preview(\
 const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
 bool		get_thread_status(t_renderer *r, uint32_t *tile_id);
 bool		russian_roulette(t_path *path, t_pixel *pixel);
+void		planar_basis(t_context *ctx, t_vec3 n);
 
 #endif
