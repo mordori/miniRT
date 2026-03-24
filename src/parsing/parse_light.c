@@ -46,7 +46,7 @@ static t_error	default_emissive_mat(t_context *ctx, t_light *light,
 
 	mat = (t_material){0};
 	mat.albedo = light->color;
-	mat.emission = vec3_scale(light->color, light->intensity);
+	mat.emission = vec3_scale(light->color, 50 * light->intensity);
 	mat.is_emissive = true;
 	return (new_material(ctx, &mat, out_id));
 }
@@ -60,8 +60,6 @@ static t_error	parse_light_mat(t_parser *p, char **tokens, uint32_t *mat_id)
 	mat = get_material_by_id(p, *mat_id);
 	if (!mat)
 		return (E_MATERIAL);
-	if (!mat->is_emissive)
-		return (E_EMISSIVE);
 	return (E_OK);
 }
 
@@ -89,7 +87,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	if (err != E_OK)
 		return (err);
 	if (light.radius <= 0.0f)
-		light.radius = 0.1f;
+		light.radius = 0.5f;
 	err = init_point_light(ctx, &light, mat_id);
 	if (err == E_OK)
 		p->has_light = true;

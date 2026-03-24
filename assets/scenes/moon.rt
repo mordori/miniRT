@@ -8,7 +8,7 @@ A		0.7		220,220,230
 sky		stars.png
 
 # Camera
-C		0,2,15		0,0,-1		80		1.0		10
+C		0,2,15		0,0,-1		70		1.0		10
 
 # Light
 #		pos						intensity	color			radius		mat_id

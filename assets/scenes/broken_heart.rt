@@ -5,10 +5,10 @@ render	16		8
 sky sky.png
 
 # Ambient
-A	0.4	255,255,255
+A	0.7	255,255,255
 
 # Camera
-C	0,4,10	0,0,-1	70	0.7 10
+C	0,4,10	0,0,-1	70	1.0 10
 
 # Light
 #		pos						intensity	color			radius		mat_id
@@ -22,7 +22,6 @@ L		705000,485000,520000	1.0			255,255,255		30000.0		0
 mat		0	255,255,255	0.0		0.0		1.0		1.0		1000.0	255,255,255	0
 # The Brick Heart
 mat		1	255,0,0		0.0		0.7		1.5		0.0		0.0		0,0,0		0		_		_		_		brick		2.5		150,150,150
-
 
 # Left half is drifting away...
 sp	-1.5,4.3,1.0	2	1

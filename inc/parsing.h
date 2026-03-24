@@ -4,7 +4,7 @@
 # include "defines.h"
 
 # define MAX_MATERIALS 64
-# define MAX_LINES 1024
+# define MAX_LINES 2048
 # define TEXTURE_PATH "assets/textures/"
 
 typedef enum e_error

@@ -34,10 +34,15 @@ static float	parse_integer_part(const char **str)
 {
 	float	result;
 	float	digit;
+	int		count;
 
 	result = 0.0f;
+	count = 0;
 	while (ft_isdigit(**str))
 	{
+		count++;
+		if (count > 10) 
+			break;
 		digit = *(*str)++ - '0';
 		if (result > (FLT_MAX - digit) / 10.0f)
 		{
@@ -63,7 +68,7 @@ static float	parse_fraction(const char **str)
 	while (ft_isdigit(**str))
 	{
 		count++;
-		if (count > 9)
+		if (count > 10)
 			break ;
 		fraction += (**str - '0') * weight;
 		weight *= 0.1f;

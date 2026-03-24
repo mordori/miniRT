@@ -1,21 +1,21 @@
-# Rendering Settings
+# Rendering Settings (samples, bounces)
 render		32			16
 
 # Ambient Light (intensity, color, optional_color2)
-A			1.0			255,255,255
+A			0.5			255,255,255		255,255,255
 
 # Camera (pos, dir, fov, exposure, focus_dist)
-C			0,2,-10		0,0,1	70
+C			0,1,-8		0,0,1	70		0.4			12.0
 
 # ----------------- MATERIALS -----------------
 # mat ID  Albedo       Met  Rou  IOR  Tra  EmStr EmColor     Flg Tex  Nor  Bmp  Pat  Sca  Alb2
 #rgb(241, 11, 184)
 
 # 0: Light
-mat   0   255,255,255  0.0  0.0  1.0  0.0  50.0 255,255,255  0   _    _    _    _    _    _
+mat   0   255,255,255  0.0  0.0  1.0  0.0  50.0 255,255,255  2   _    _    _    _    _    _
 
 # 1: Floor (White Matte)
-mat   1   220,220,220  0.0  1.0  1.0  0.0  0.0   0,0,0       0   _    _    _    _    _    _
+mat   1   220,220,220  0.0  0.0  1.0  0.0  0.0   0,0,0       0   _    _    _    _    _    _
 
 # 2: Sphere
 mat   2   55,250,10    0.0  0.6  1.0  0.0  0.0   0,0,0       0   _    _    _    _    _    _
@@ -32,7 +32,7 @@ mat   5   240,10,180   0.0  0.6  1.0  0.0  0.0   0,0,0       0   _    _    _    
 
 # ----------------- LIGHTS -----------------
 # (pos, intensity, color, radius, mat_id)
-L     -5,10,-5    1.0   255,255,255   1.0   0
+L     0,1,-7    1.0   255,255,255   1.0   0
 
 # ----------------- OBJECTS -----------------
 

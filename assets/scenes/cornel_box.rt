@@ -11,7 +11,7 @@ C	0,5,-10 	0,0,1	70	1.0		12
 L	0,10,0 1.0 255,255,255 0.7 0
 
 #Skydome
-sky stars.png
+# sky stars.png
 
 # ----------------- MATERIALS -----------------
 #	ID	Albedo			Met			Rou			IOR		Tra			EmStr		EmColor			Flg			Tex				Norm		Bump				Pattern		Scale			Alb2
