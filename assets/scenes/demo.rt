@@ -1,11 +1,11 @@
 # Rendering Settings
 render		32			16
 
-# Ambient Light
-A			0.2			255,255,255
+# Ambient Light (intensity, color, optional_color2)
+A			1.0			255,255,255
 
 # Camera (pos, dir, fov, exposure, focus_dist)
-C			0,2,-10		0,0,1	70			0.5			10.0
+C			0,2,-10		0,0,1	70
 
 # ----------------- MATERIALS -----------------
 # mat ID  Albedo       Met  Rou  IOR  Tra  EmStr EmColor     Flg Tex  Nor  Bmp  Pat  Sca  Alb2
@@ -31,23 +31,24 @@ mat   5   240,10,180   0.0  0.6  1.0  0.0  0.0   0,0,0       0   _    _    _    
 
 
 # ----------------- LIGHTS -----------------
+# (pos, intensity, color, radius, mat_id)
 L     -5,10,-5    1.0   255,255,255   1.0   0
 
 # ----------------- OBJECTS -----------------
 
-# Plane
+# Plane (point pos, normal, color/mat_id)
 pl    0,0,0       0,1,0    1
 
-# Cone
+# Cone (apex, axis, half_angle, height, color/mat_id)
 co    -4.5,2.0,0.0          0,-1,0   30     2.0    2
 
-# Sphere
+# Sphere (center, diameter, color/mat_id)
 sp    -1.5,1.0,0.0         2.0    3
 
-# Crossing Cylinders
+# Cylinders (center, axis, diameter, height, color/mat_id)
 cy    1.5,1.0,0.0          0.6,-0.8,0       0.4    2.5    4
 
 cy    1.5,1.0,0.0          0.6,0.8,0        0.4    2.5    4
 
-# Quad
+# Quad (anchor corner, u vector, v vector, color/mat_id)
 qu    3.5,0.0,0.0          2.0,0,0  0,2.0,0       5

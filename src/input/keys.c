@@ -31,7 +31,7 @@ bool	is_key_down(t_context *ctx)
 			ctx->scene.cam.focal_len_mm *= div;
 		else
 			ctx->scene.cam.focal_len_mm *= mul;
-		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 14.0f, 800.0f);
+		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 0.1f, 800.0f);
 		dirty = true;
 	}
 	if (\

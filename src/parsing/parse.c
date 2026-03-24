@@ -82,19 +82,6 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 	return (E_UNKNOWN_ID);
 }
 
-void	validate_scene(t_context *ctx, t_parser *p)
-{
-	if (!p->has_camera)
-		fatal_error(ctx, "Missing camera (C)", ctx->file, p->line_num);
-	if (!p->has_ambient)
-		fatal_error(ctx, "Missing ambient light (A)", ctx->file, p->line_num);
-	if (!p->has_light)
-		fatal_error(ctx, "Missing light source (L)", ctx->file, p->line_num);
-	if (!p->has_plane && !p->has_sphere && !p->has_cylinder
-		&& !p->has_cone && !p->has_quad)
-		fatal_error(ctx, "No objects defined in scene", ctx->file, p->line_num);
-}
-
 void	p_error(t_context *ctx, t_error err, int line_num)
 {
 	static char	*msgs[13];

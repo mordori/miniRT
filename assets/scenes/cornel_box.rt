@@ -15,7 +15,7 @@ sky stars.png
 
 # ----------------- MATERIALS -----------------
 #	ID	Albedo			Met			Rou			IOR		Tra			EmStr		EmColor			Flg			Tex				Norm		Bump				Pattern		Scale			Alb2
-#rgb(13, 130, 13)
+#rgb(10, 10, 150)
 
 mat	0	255,255,255		0.0			0.0			1.0		0.0			35.0			255,255,255		2
 

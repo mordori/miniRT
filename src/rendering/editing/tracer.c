@@ -49,7 +49,7 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path)
 	if (path->bounce > 0)
 		return (false);
 	bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
-	// bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
+	bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }

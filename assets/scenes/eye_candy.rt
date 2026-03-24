@@ -5,7 +5,7 @@ render		128			32
 A			0.3			255,30,140
 
 # Camera (pos, dir, fov, exposure, focus_dist)
-C			0,3.5,-8	0,0,1	60			0.2			8.0
+C			0,3.5,-8	0,0,1	90			0.2			8.0
 
 # ----------------- MATERIALS -----------------
 # mat ID  Albedo       Met  Rou  IOR  Tra  EmStr EmColor     Flg Tex  Nor  Bmp  Pat      Sca   Alb2

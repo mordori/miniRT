@@ -91,7 +91,7 @@ static inline bool	trace_ray(const t_context *ctx, t_path *path, t_pixel *pixel,
 		return (scatter(ctx, path, pixel));
 	}
 	bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
-	// bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
+	bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	// if (ctx->scene.env.has_dir_light)
 	// {
 	// 	float alignment = vec3_dot(path->ray.dir, ctx->scene.env.dir_light.pos);
