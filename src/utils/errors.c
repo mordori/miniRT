@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 19:20:51 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 19:22:04 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 #include "libft_io.h"
 #include "libft_utils.h"
@@ -30,8 +42,8 @@ void	fatal_error(t_context *ctx, char *msg, char *file, int line)
 
 char	*errors(t_err_code code)
 {
-	static char	*e[] =
-	{
+	static char	*e[] = \
+{\
 "invalid number of arguments", \
 "mlx init failed", \
 "mlx img failed", \

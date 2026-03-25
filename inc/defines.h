@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   defines.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:45:20 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:46:45 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef DEFINES_H
 # define DEFINES_H
 
@@ -228,10 +240,26 @@ typedef struct s_geo			t_geo;
 typedef struct s_env			t_env;
 typedef struct s_assets			t_assets;
 typedef struct s_mouse			t_mouse;
+typedef struct s_bvh_element	t_bvh_element;
 
 typedef union u_shape			t_shape;
+typedef union u_ui				t_ui;
 
 typedef mlx_image_t				t_image;
+
+union u_ui
+{
+	struct
+	{
+		float	*lastf;
+		float	currentf;
+	};
+	struct
+	{
+		int32_t	*last;
+		int32_t	current;
+	};
+};
 
 struct __attribute__((aligned(16))) s_transform
 {
@@ -260,6 +288,15 @@ struct __attribute__((aligned(16))) s_hit
 	t_vec3			tangent;
 	t_vec3			bitangent;
 	t_vec2			uv;
+};
+
+struct s_bvh_element
+{
+	uint32_t		stack[64];
+	t_bvh_node		*node;
+	t_hit			temp;
+	bool			res;
+	int32_t			i;
 };
 
 struct __attribute__((aligned(16))) s_texture

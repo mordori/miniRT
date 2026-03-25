@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:46:09 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:46:12 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef UTILS_H
 # define UTILS_H
 
@@ -86,5 +98,11 @@ const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
 bool		get_thread_status(t_renderer *r, uint32_t *tile_id);
 bool		russian_roulette(t_path *path, t_pixel *pixel);
 void		planar_basis(t_context *ctx, t_vec3 n);
+void		lut_srgb_to_linear(void);
+void		set_text_color(mlx_image_t *img, uint32_t color);
+t_ui		ui_val(int32_t *last, int32_t current);
+t_ui		ui_valf(float *lastf, float currentf);
+void		branch_idx(\
+const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
 
 #endif

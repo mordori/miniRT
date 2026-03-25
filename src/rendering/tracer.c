@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tracer.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:50:16 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:50:18 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rendering.h"
 #include "scene.h"
 #include "lights.h"
@@ -83,7 +95,7 @@ const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
 	if (\
 (int)hit_object(\
 ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
-(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, 0, \
+(int)hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, \
 ctx->scene.geo.bvh_nodes) | \
 (int)hit_planes(ctx, &path->ray, &path->hit))
 	{

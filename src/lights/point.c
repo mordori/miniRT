@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   point.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:48:11 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:52:43 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lights.h"
 #include "utils.h"
 #include "objects.h"
@@ -93,7 +105,8 @@ void	update_lights_radii(t_context *ctx)
 	while (i < ctx->scene.env.lights.total)
 	{
 		light = ((t_light **)ctx->scene.env.lights.items)[i++];
-		max_scale = fminf(fminf(light->obj->transform.scale.x, light->obj->transform.scale.y), light->obj->transform.scale.z);
+		max_scale = fminf(fminf(light->obj->transform.scale.x, \
+light->obj->transform.scale.y), light->obj->transform.scale.z);
 		light->radius = light->obj->shape.sphere.radius * max_scale;
 		light->radius_sq = light->radius * light->radius;
 	}

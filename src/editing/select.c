@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   select.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:47:57 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:47:58 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "editing.h"
 #include "scene.h"
 #include "utils.h"
@@ -23,7 +35,7 @@ vec3_scale(r->cam.viewport.d_v, (float)mouse.y + 0.5f)));
 	ray = new_ray(r->cam.transform.pos, \
 vec3_normalize(vec3_sub(pixel_loc, r->cam.transform.pos)));
 	hit = new_hit(0);
-	if (hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &ray, &hit, 0, \
+	if (hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &ray, &hit, \
 ctx->scene.geo.bvh_nodes))
 		select_obj(ctx, r, &ray, &hit);
 	else if (ctx->editor.selected_obj && \

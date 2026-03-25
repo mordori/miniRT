@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   camera.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:47:25 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:47:27 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "camera.h"
 #include "rendering.h"
 #include "utils.h"
@@ -35,7 +47,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->init_focus_dist = cam->focus_dist;
 }
 
-void	reset_camera(t_context *ctx)
+bool	reset_camera(t_context *ctx)
 {
 	t_camera	*cam;
 
@@ -52,6 +64,7 @@ void	reset_camera(t_context *ctx)
 	cam->control_forward = cam->forward;
 	cam->control_right = cam->right;
 	ctx->renderer.cam = *cam;
+	return (true);
 }
 
 t_vec3	sample_defocus_disk(const t_context *ctx, t_pixel *pixel)
