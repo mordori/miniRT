@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   noise.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 19:20:20 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 19:20:22 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 
 // Samples a low discrepency sequence, where points are as evenly spaced as
@@ -19,7 +31,8 @@ float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
 	return (tex->pixels[index + (dim & 3u)]);
 }
 
-float	static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
+float	static_blue_noise(\
+const t_texture *tex, const t_pixel *pixel, uint32_t dim)
 {
 	uint32_t	tx;
 	uint32_t	ty;

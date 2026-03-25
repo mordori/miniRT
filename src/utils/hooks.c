@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hooks.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 19:20:31 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 20:18:04 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 #include "rendering.h"
 #include "camera.h"
@@ -7,39 +19,35 @@
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
 	t_context		*ctx;
-	t_renderer		*r;
 	bool			dirty;
 
 	ctx = (t_context *)param;
 	dirty = false;
-	r = &ctx->renderer;
-	pthread_mutex_lock(&r->mutex);
-	if (r->mode == SOLID)
-	{
-		while (r->threads_running)
-			pthread_cond_wait(&r->cond, &r->mutex);
-	}
+	pthread_mutex_lock(&ctx->renderer.mutex);
 	if (ctx->renderer.mode == SOLID)
+	{
+		while (ctx->renderer.threads_running)
+			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
 		config_editor(ctx, keydata);
+	}
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
 		ctx->hide_stats = !ctx->hide_stats;
-	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_RELEASE)
-	{
-		dirty = true;
-		reset_camera(ctx);
-	}
-	pthread_mutex_unlock(&r->mutex);
+	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && \
+keydata.action == MLX_RELEASE)
+		dirty = reset_camera(ctx);
+	pthread_mutex_unlock(&ctx->renderer.mutex);
 	if (config_renderer(ctx, keydata))
 		dirty = true;
-	if (r->mode != SOLID && keydata.key == MLX_KEY_Y && keydata.action == MLX_RELEASE)
+	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_Y && \
+keydata.action == MLX_RELEASE)
 		screenshot(ctx);
-	if (dirty)
-		atomic_store(&ctx->renderer.render_cancel, true);
+	atomic_store(&ctx->renderer.render_cancel, dirty);
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
 }
 
-void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
+void	mouse_hook(\
+mouse_key_t button, action_t action, modifier_key_t mods, void *param)
 {
 	t_context	*ctx;
 	t_renderer	*r;
@@ -52,20 +60,22 @@ void	mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	{
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);
-		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE && r->cam.state == CAM_DEFAULT)
+		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE && \
+r->cam.state == CAM_DEFAULT)
 		{
 			if (ctx->editor.mode == EDIT_DEFAULT)
 				select_object(ctx);
 			else
 				apply_edit_action(ctx);
 		}
-		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_RELEASE && ctx->editor.mode != EDIT_DEFAULT)
+		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_RELEASE && \
+ctx->editor.mode != EDIT_DEFAULT)
 			cancel_edit_action(ctx);
 	}
 	pthread_mutex_unlock(&r->mutex);
 }
 
-void	cursor_hook(double xpos, double ypos, void* param)
+void	cursor_hook(double xpos, double ypos, void *param)
 {
 	t_context	*ctx;
 

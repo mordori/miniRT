@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   aabb.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:09:45 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:11:50 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "scene.h"
 #include <string.h>
 
@@ -24,7 +36,7 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n)
 
 t_aabb	get_object_bounds(const t_object *obj)
 {
-	t_aabb	 res;
+	t_aabb		res;
 
 	memset(&res, 0, sizeof(t_aabb));
 	if (obj->type == OBJ_SPHERE)
@@ -35,7 +47,7 @@ t_aabb	get_object_bounds(const t_object *obj)
 		res = cone_bounds(obj);
 	else if (obj->type == OBJ_QUAD)
 		res = quad_bounds(obj);
-	return(res);
+	return (res);
 }
 
 t_aabb	aabb_object_to_world(t_aabb aabb, const t_mat4 *object_to_world)
@@ -75,7 +87,8 @@ static inline t_aabb	combine_aabb(const t_aabb *a, const t_aabb *b)
 	return (res);
 }
 
-bool	hit_aabb(const t_aabb *aabb, const t_ray *ray, float closest_t, float enter)
+bool	hit_aabb(\
+const t_aabb *aabb, const t_ray *ray, float closest_t, float enter)
 {
 	t_v4sf		t1;
 	t_v4sf		t2;

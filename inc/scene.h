@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scene.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:46:04 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:46:05 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SCENE_H
 # define SCENE_H
 
@@ -9,9 +21,9 @@ void	clean_scene(t_context *ctx);
 bool	hit_aabb(\
 const t_aabb *aabb, const t_ray *ray, float closest_t, float enter);
 bool	hit_bvh(\
-uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_node *tree);
+uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree);
 bool	hit_bvh_editing(\
-uint32_t root_idx, const t_ray *ray, t_hit *hit, int32_t i, t_bvh_node *tree);
+uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree);
 bool	hit_bvh_shadow(\
 uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node *tree);
 bool	init_bvh(t_context *ctx);

@@ -1,8 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   textures.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 19:19:50 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 20:35:20 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 
-static inline void	lut_srgb_to_linear(void);
-static inline void	tex_data_to_linear(t_texture *texture);
-static inline void	tex_srgb_to_linear(t_texture *texture);
+static inline void	tex_to_linear(t_texture *texture, bool is_srgb);
 
 static float	g_lut[256];
 
@@ -11,12 +21,11 @@ t_texture	load_texture(char *file, bool is_srgb)
 	t_texture		texture;
 	size_t			size;
 
-	lut_srgb_to_linear();
 	printf("Loading texture:    %s\n", file);
 	texture = (t_texture){0};
 	texture.tex = mlx_load_png(file);
 	if (!texture.tex)
-		return (texture);
+		return ((t_texture){0});
 	if (!ft_is_pot(texture.tex->width) || !ft_is_pot(texture.tex->height))
 	{
 		mlx_delete_texture(texture.tex);
@@ -31,16 +40,11 @@ t_texture	load_texture(char *file, bool is_srgb)
 	}
 	texture.width = texture.tex->width;
 	texture.height = texture.tex->height;
-	if (is_srgb)
-		tex_srgb_to_linear(&texture);
-	else
-		tex_data_to_linear(&texture);
-	mlx_delete_texture(texture.tex);
-	texture.tex = NULL;
+	tex_to_linear(&texture, is_srgb);
 	return (texture);
 }
 
-static inline void	tex_data_to_linear(t_texture *texture)
+static inline void	tex_to_linear(t_texture *texture, bool is_srgb)
 {
 	float		*dst;
 	float		*end;
@@ -49,34 +53,26 @@ static inline void	tex_data_to_linear(t_texture *texture)
 	dst = texture->pixels;
 	src = texture->tex->pixels;
 	end = dst + (texture->width * texture->height * 4);
-	while (dst < end)
+	if (is_srgb)
 	{
-		*dst++ = ((float)(*src++) * M_1_255F);
-		*dst++ = ((float)(*src++) * M_1_255F);
-		*dst++ = ((float)(*src++) * M_1_255F);
-		*dst++ = ((float)(*src++) * M_1_255F);
+		while (dst < end)
+		{
+			*dst++ = g_lut[*src++];
+			*dst++ = g_lut[*src++];
+			*dst++ = g_lut[*src++];
+			*dst++ = (((float)(*src++)) * M_1_255F);
+		}
 	}
+	else
+	{
+		while (dst < end)
+			*dst++ = (((float)(*src++)) * M_1_255F);
+	}
+	mlx_delete_texture(texture->tex);
+	texture->tex = NULL;
 }
 
-static inline void	tex_srgb_to_linear(t_texture *texture)
-{
-	float		*dst;
-	float		*end;
-	uint8_t		*src;
-
-	dst = texture->pixels;
-	src = texture->tex->pixels;
-	end = dst + (texture->width * texture->height * 4);
-	while (dst < end)
-	{
-		*dst++ = g_lut[*src++];
-		*dst++ = g_lut[*src++];
-		*dst++ = g_lut[*src++];
-		*dst++ = ((float)(*src++) * M_1_255F);
-	}
-}
-
-static inline void	lut_srgb_to_linear(void)
+void	lut_srgb_to_linear(void)
 {
 	static bool		init_lut;
 	int				i;

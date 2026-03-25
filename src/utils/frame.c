@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   frame.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 19:20:43 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 19:20:46 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 #include "rendering.h"
 
@@ -75,7 +87,9 @@ void	print_render_status(t_context *ctx, t_renderer *r)
 		++i;
 	}
 	bar[bar_width] = '\0';
-	snprintf(buf, sizeof(buf), "\r\033[K\033[1;33mRendering...   [%s] [%u/%u]\033[0m", bar, r->frame, r->render_samples);
+	snprintf(buf, sizeof(buf), \
+"\r\033[K\033[1;33mRendering...   [%s] [%u/%u]\033[0m", bar, r->frame, \
+r->render_samples);
 	try_write(ctx, STDOUT_FILENO, buf);
 }
 

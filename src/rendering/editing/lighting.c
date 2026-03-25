@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lighting.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 22:49:33 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/25 22:53:04 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rendering.h"
 #include "objects.h"
 #include "materials.h"
@@ -79,7 +91,6 @@ const t_context *ctx, const t_path *path, const t_light *light, float dist_sq)
 	t_vec3		res;
 	float		attenuation;
 	float		factor_radius;
-
 
 	factor_radius = 1.0f;
 	if (light != &ctx->renderer.cam.directional_light)
