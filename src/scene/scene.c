@@ -36,6 +36,8 @@ void	clean_scene(t_context *ctx)
 	int	i;
 
 	free (ctx->scene.geo.bvh_nodes);
+	if (ctx->scene.env.has_dir_light && ctx->scene.cam.directional_light.obj)
+		free(ctx->scene.cam.directional_light.obj);
 	vector_free(&ctx->scene.geo.objs, &ctx->scene.geo.planes, &ctx->scene.env.lights, &ctx->scene.assets.materials, NULL);
 	free_texture(&ctx->scene.env.skydome);
 	i = 0;
