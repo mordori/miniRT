@@ -166,6 +166,7 @@ As the project is still under construction, we recommend to run the program with
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Select Object / Apply Edit                    |
 | <kbd>RMB</kbd>                                                 | Cancel Edit                                   |
+| <kbd>Q</kbd>                                                   | Deselct Object                                |
 | <kbd>G</kbd>                                                   | Move                                          |
 | <kbd>R</kbd>                                                   | Rotate                                        |
 | <kbd>S</kbd>                                                   | Scale                                         |

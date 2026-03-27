@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:57 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:47:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 18:10:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,14 @@
 
 static inline void	select_obj(\
 t_context *ctx, t_renderer *r, t_ray *ray, t_hit *hit);
-static inline void	deselect_obj(t_context *ctx, t_renderer *r);
 
 void	select_object(t_context *ctx)
 {
-	t_ray				ray;
-	t_renderer			*r;
-	t_vec2i				mouse;
-	t_vec3				pixel_loc;
-	t_hit				hit;
+	t_ray			ray;
+	t_renderer		*r;
+	t_vec2i			mouse;
+	t_vec3			pixel_loc;
+	t_hit			hit;
 
 	r = &ctx->renderer;
 	mlx_get_mouse_pos(ctx->mlx, &mouse.x, &mouse.y);
@@ -40,12 +39,15 @@ ctx->scene.geo.bvh_nodes))
 		select_obj(ctx, r, &ray, &hit);
 	else if (ctx->editor.selected_obj && \
 !(int)hit_object(ctx->editor.selected_obj, &ray, &hit))
-		deselect_obj(ctx, r);
+		deselect_object(ctx, r);
 }
 
 static inline void	select_obj(\
 t_context *ctx, t_renderer *r, t_ray *ray, t_hit *hit)
 {
+	t_camera	*cam;
+
+	cam = &ctx->scene.cam;
 	if (hit_object(ctx->editor.selected_obj, ray, hit) || \
 hit->obj == ctx->scene.env.dir_light.obj)
 		return ;
@@ -53,7 +55,7 @@ hit->obj == ctx->scene.env.dir_light.obj)
 		vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 	vector_remove(&ctx->scene.geo.objs, hit->obj);
 	ctx->editor.selected_obj = hit->obj;
-	ctx->scene.cam.distance = fmaxf(vec3_dist(ctx->scene.cam.transform.pos, hit->obj->transform.pos), 0.01f);
+	cam->distance = fmaxf(vec3_dist(cam->transform.pos, hit->obj->transform.pos), 0.01f);
 	if (!init_bvh(ctx))
 	{
 		pthread_mutex_unlock(&r->mutex);
@@ -61,8 +63,10 @@ hit->obj == ctx->scene.env.dir_light.obj)
 	}
 }
 
-static inline void	deselect_obj(t_context *ctx, t_renderer *r)
+bool	deselect_object(t_context *ctx, t_renderer *r)
 {
+	if (!ctx->editor.selected_obj)
+		return (false);
 	vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 	ctx->editor.selected_obj = NULL;
 	if (!init_bvh(ctx))
@@ -70,4 +74,5 @@ static inline void	deselect_obj(t_context *ctx, t_renderer *r)
 		pthread_mutex_unlock(&r->mutex);
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	}
+	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:20:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 20:18:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 17:25:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,16 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 		while (ctx->renderer.threads_running)
 			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
 		config_editor(ctx, keydata);
+		if (keydata.key == MLX_KEY_F && keydata.action == MLX_RELEASE)
+			dirty = frame_camera(ctx);
+		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_RELEASE)
+			dirty = deselect_object(ctx, &ctx->renderer);
 	}
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && \
 keydata.action == MLX_RELEASE)
 		dirty = reset_camera(ctx);
-	if (ctx->renderer.mode == SOLID && keydata.key == MLX_KEY_F && \
-keydata.action == MLX_RELEASE)
-		dirty = frame_camera(ctx);
 	pthread_mutex_unlock(&ctx->renderer.mutex);
 	if (config_renderer(ctx, keydata))
 		dirty = true;

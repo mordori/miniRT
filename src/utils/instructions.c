@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:20:27 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:20:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 17:21:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static inline void	print_editing(void)
 	printf("|---------------------|----------------------------|\n");
 	printf("| LMB                 | Select Object / Apply Edit |\n");
 	printf("| RMB                 | Cancel Edit                |\n");
+	printf("| Q                   | Deselect Object            |\n");
 	printf("| G                   | Move                       |\n");
 	printf("| R                   | Rotate                     |\n");
 	printf("| S                   | Scale                      |\n");
