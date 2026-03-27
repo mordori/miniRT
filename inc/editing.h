@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:45:26 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:45:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 17:25:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata);
 float	eval_scale_magnitude(t_context *ctx, t_vec2i delta, float speed);
 float	eval_speed(t_context *ctx);
 float	eval_magnitude(t_context *ctx, t_vec2i delta, float speed);
+bool	deselect_object(t_context *ctx, t_renderer *r);
 
 #endif
