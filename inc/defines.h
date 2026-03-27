@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:45:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:46:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 22:56:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -431,6 +431,7 @@ struct __attribute__((aligned(16))) s_camera
 	t_vec3			defocus_disk_u;
 	t_vec3			defocus_disk_v;
 	t_vec3			init_pos;
+	t_vec3			target;
 	t_vec2			skydome_uv_offset;
 	float			init_focal_len_mm;
 	float			init_focus_dist;

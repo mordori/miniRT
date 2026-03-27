@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:47 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:47:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:27:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	config_editor(t_context *ctx, mlx_key_data_t keydata)
 {
-	const t_edit_mode	prev_mode = ctx->editor.mode;;
+	const t_edit_mode	prev_mode = ctx->editor.mode;
 	const t_axis		prev_constraints = ctx->editor.constraint_axis;
 
 	if (!ctx->editor.selected_obj || keydata.action != MLX_RELEASE)
@@ -35,7 +35,8 @@ keydata.key == MLX_KEY_S)
 	}
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		set_axis_constraints(ctx, keydata);
-	if (ctx->editor.constraint_axis != prev_constraints || (prev_mode != EDIT_DEFAULT && ctx->editor.mode != prev_mode))
+	if (ctx->editor.constraint_axis != prev_constraints || \
+(prev_mode != EDIT_DEFAULT && ctx->editor.mode != prev_mode))
 	{
 		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 		update_transform(&ctx->editor.selected_obj->transform);

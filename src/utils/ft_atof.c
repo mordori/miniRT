@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atof.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:49:28 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:49:31 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:23:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static float	parse_integer_part(const char **str)
 	while (ft_isdigit(**str))
 	{
 		count++;
-		if (count > 10) 
-			break;
+		if (count > 10)
+			break ;
 		digit = *(*str)++ - '0';
 		if (result > (FLT_MAX - digit) / 10.0f)
 		{

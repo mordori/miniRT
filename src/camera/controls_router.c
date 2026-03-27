@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:47:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:28:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ bool	frame_camera(t_context *ctx)
 		return (false);
 	cam = &ctx->scene.cam;
 	cam->distance = 10.0f;
-	cam->transform.pos = vec3_sub(obj->transform.pos, vec3_scale(cam->forward, cam->distance));
+	cam->transform.pos = vec3_sub(obj->transform.pos, \
+vec3_scale(cam->forward, cam->distance));
 	update_camera(ctx, cam);
 	return (true);
 }

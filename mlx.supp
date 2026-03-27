@@ -1,0 +1,54 @@
+{
+    leak _dl_open
+    Memcheck:Leak
+    ...
+    fun:_dl_open
+}
+{
+    invalid read of size dl_open_worker
+    Memcheck:Addr8
+    ...
+    fun:dl_open_worker
+}
+{
+    leak _dl_catch_exception
+    Memcheck:Leak
+    ...
+    fun:_dl_catch_exception
+}
+{
+    leak glfwInit
+    Memcheck:Leak
+    ...
+    fun:glfwInit
+}
+{
+    leak XrmGetStringDatabase
+    Memcheck:Leak
+    ...
+    fun:XrmGetStringDatabase
+}
+{
+    leak __pthread_once_slow
+    Memcheck:Leak
+    ...
+    fun:__pthread_once_slow
+}
+{
+    leak _XrmInitParseInfo
+    Memcheck:Leak
+    ...
+    fun:_XrmInitParseInfo
+}
+{
+    leak _Znwm
+    Memcheck:Leak
+    ...
+    fun:_Znwm
+}
+{
+    leak __tls_get_addr
+    Memcheck:Leak
+    ...
+    fun:__tls_get_addr
+}

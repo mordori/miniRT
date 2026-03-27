@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:48:15 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:48:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:26:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "rendering.h"
 #include "utils.h"
 
-t_error		new_material(t_context *ctx, t_material *mat, uint32_t *out_id)
+t_error	new_material(t_context *ctx, t_material *mat, uint32_t *out_id)
 {
 	t_material		*new_mat;
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:47:26 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 19:57:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:23:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "parsing.h"
 #include "materials.h"
 #include "libft_str.h"
-
 
 bool	validate_normalized(t_vec3 vec)
 {

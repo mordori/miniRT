@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 20:49:58 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 20:50:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 22:50:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ void	clean(t_context *ctx)
 	clean_scene(ctx);
 	free_texture(&ctx->tex_bn);
 	free(r->buffer);
+	free(ctx->editor.selection_mask);
+	free(ctx->editor.selected_obj);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
 	if (ctx->mlx)
