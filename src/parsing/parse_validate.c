@@ -13,6 +13,8 @@
 #include "utils.h"
 #include "parsing.h"
 #include "materials.h"
+#include "libft_str.h"
+
 
 bool	validate_normalized(t_vec3 vec)
 {
@@ -28,6 +30,11 @@ bool	validate_normalized(t_vec3 vec)
 bool	validate_range(float value, float min, float max)
 {
 	return (value >= min && value <= max);
+}
+
+bool	is_color_token(const char *str)
+{
+	return (str && ft_strchr(str, ',') != NULL);
 }
 
 void	validate_scene(t_context *ctx, t_parser *p)

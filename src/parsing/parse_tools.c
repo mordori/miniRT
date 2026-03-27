@@ -13,6 +13,7 @@
 #include "libft_io.h"
 #include "libft_str.h"
 #include "libft_utils.h"
+#include "libft_mem.h"
 #include "parsing.h"
 #include "utils.h"
 #include <math.h>
@@ -46,30 +47,41 @@ bool	parse_float(char *str, float *out)
 bool	parse_uint(char *str, uint32_t *out)
 {
 	unsigned long	value;
-	char			*endptr;
+	int				i;
 
 	if (!str || !out)
 		return (false);
 	while (ft_isspace(*str))
 		str++;
-	if (*str == '\0' || *str == '-')
+	if (*str == '\0' || ft_strlen(str) > 10)
 		return (false);
-	value = strtoul(str, &endptr, 10);
-	if (endptr == str)
+	i = 0;
+	while (str[i] && ft_isdigit(str[i]))
+		i++;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str[i] != '\0' || i == 0)
 		return (false);
-	while (ft_isspace(*endptr))
-		endptr++;
-	if (*endptr != '\0')
+	if (i == 10 && ft_strncmp(str, "4294967295", 10) > 0)
 		return (false);
+	value = strtoul(str, NULL, 10);
 	if (value > UINT32_MAX)
 		return (false);
 	*out = (uint32_t)value;
 	return (true);
 }
 
-bool	is_color_token(const char *str)
+static bool	color_normalize(t_vec3 *color)
 {
-	return (str && ft_strchr(str, ',') != NULL);
+	if (!color)
+		return (false);
+	if (color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255
+		|| color->b < 0 || color->b > 255)
+		return (false);
+	color->r = color->r / 255.0f;
+	color->g = color->g / 255.0f;
+	color->b = color->b / 255.0f;
+	return (true);
 }
 
 bool	parse_color(char *str, t_vec3 *color)
@@ -81,20 +93,14 @@ bool	parse_color(char *str, t_vec3 *color)
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (false);
+	ft_memset(color, 0, sizeof(t_vec3));
 	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2)
 	{
 		if (parse_float(tokens[0], &(color->r))
 			&& parse_float(tokens[1], &(color->g))
 			&& parse_float(tokens[2], &(color->b)))
 		{
-			if (color->r >= 0 && color->r <= 255 && color->g >= 0
-				&& color->g <= 255 && color->b >= 0 && color->b <= 255)
-			{
-				color->r = color->r / 255.0f;
-				color->g = color->g / 255.0f;
-				color->b = color->b / 255.0f;
-				ret = true;
-			}
+			ret = color_normalize(color);
 		}
 	}
 	ft_free_split(tokens);
@@ -109,7 +115,7 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 	ret = false;
 	if (!str || !vec)
 		return (ret);
-	*vec = (t_vec3){0};
+	ft_memset(vec, 0, sizeof(t_vec3));
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (ret);
