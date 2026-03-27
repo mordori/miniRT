@@ -5,11 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2026/03/27 20:12:52 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/03/27 20:25:26 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/27 20:25:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "objects.h"
 #include "materials.h"

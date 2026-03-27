@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_materials.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:45:57 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:46:00 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/27 21:12:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
 		mat = (t_material){0};
 		mat.albedo = color;
 		mat.base_color = BASE_COLOR;
+		mat.roughness = 1.0f;
+		mat.ior = 1.4f;
 		return (new_material(ctx, &mat, out_id));
 	}
 	if (!parse_uint((char *)token, &id))

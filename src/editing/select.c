@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:57 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 18:10:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:26:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ hit->obj == ctx->scene.env.dir_light.obj)
 		vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 	vector_remove(&ctx->scene.geo.objs, hit->obj);
 	ctx->editor.selected_obj = hit->obj;
-	cam->distance = fmaxf(vec3_dist(cam->transform.pos, hit->obj->transform.pos), 0.01f);
+	cam->distance = \
+fmaxf(vec3_dist(cam->transform.pos, hit->obj->transform.pos), 0.01f);
 	if (!init_bvh(ctx))
 	{
 		pthread_mutex_unlock(&r->mutex);

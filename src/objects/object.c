@@ -6,10 +6,9 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:28 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 20:15:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:25:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "materials.h"
 #include "objects.h"
@@ -17,9 +16,7 @@
 #include "utils.h"
 
 t_error	add_object(t_context *ctx, t_object *obj)
-t_error	add_object(t_context *ctx, t_object *obj)
 {
-	t_object	*new_obj;
 	t_object	*new_obj;
 
 	new_obj = malloc(sizeof(t_object));

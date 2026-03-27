@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:17 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 19:54:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 20:18:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 		return (false);
 	params[0] = cyl->height * 0.5f;
 	params[1] = hit->t;
-	if (test_body_hit(cyl, ray->origin, ray, params, t_vals[0]))
+	if (test_body_hit((t_cylinder *)cyl, (t_ray *)ray, params, t_vals[0]))
 		return (hit->t = params[1], true);
-	if (test_body_hit(cyl, ray->origin, ray, params, t_vals[1]))
+	if (test_body_hit((t_cylinder *)cyl, (t_ray *)ray, params, t_vals[1]))
 		return (hit->t = params[1], true);
 	return (false);
 }

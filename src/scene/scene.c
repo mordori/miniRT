@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:10:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:14:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 22:50:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	clean_scene(t_context *ctx)
 {
 	int	i;
 
-	free (ctx->scene.geo.bvh_nodes);
+	free(ctx->scene.geo.bvh_nodes);
 	if (ctx->scene.env.has_dir_light && ctx->scene.cam.directional_light.obj)
 		free(ctx->scene.cam.directional_light.obj);
 	vector_free(&ctx->scene.geo.objs, &ctx->scene.geo.planes, \

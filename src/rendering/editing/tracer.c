@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:49:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:15:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/27 21:03:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ ctx->scene.geo.bvh_nodes) | (int)hit_planes(ctx, &path->ray, &path->hit))
 -M_INF;
 	bg_color = \
 background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
