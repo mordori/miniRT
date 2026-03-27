@@ -53,6 +53,7 @@ hit->obj == ctx->scene.env.dir_light.obj)
 		vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 	vector_remove(&ctx->scene.geo.objs, hit->obj);
 	ctx->editor.selected_obj = hit->obj;
+	ctx->scene.cam.distance = fmaxf(vec3_dist(ctx->scene.cam.transform.pos, hit->obj->transform.pos), 0.01f);
 	if (!init_bvh(ctx))
 	{
 		pthread_mutex_unlock(&r->mutex);

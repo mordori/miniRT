@@ -28,10 +28,11 @@ void	begin_cam_action(t_context *ctx, t_cam_state state);
 void	end_cam_action(t_context *ctx);
 bool	is_cam_action_active(const t_context *ctx);
 void	apply_cam_action(t_context *ctx, t_vec2i delta);
-void	cam_look(t_context *ctx, t_vec2i delta);
-void	cam_turn(t_context *ctx, t_vec2i delta);
-void	cam_orbit(t_context *ctx, t_vec2i delta);
-void	cam_zoom(t_context *ctx, t_vec2i delta);
-void	cam_pan(t_context *ctx, t_vec2i delta);
+void	cam_look(t_context *ctx, t_vec2i delta, float speed);
+void	cam_turn(t_context *ctx, t_vec2i delta, float speed);
+void	cam_orbit(t_context *ctx, t_vec2i delta, float speed);
+void	cam_zoom(t_context *ctx, t_vec2i delta, float speed);
+void	cam_pan(t_context *ctx, t_vec2i delta, float speed);
+bool	frame_camera(t_context *ctx);
 
 #endif

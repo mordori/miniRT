@@ -43,7 +43,7 @@
 # define SENS_LOOK				0.0008f
 # define SENS_ORBIT				0.0006f
 # define SENS_ZOOM				0.0018f
-# define SENS_PAN				0.0006f
+# define SENS_PAN				0.0002f
 # define SENS_MOVE				0.8f
 
 # define SENSOR_HEIGHT_MM		24.0f
@@ -422,8 +422,7 @@ struct __attribute__((aligned(16))) s_camera
 	t_viewport		viewport;
 	t_light			directional_light;
 	t_transform		transform;
-	t_transform		target;
-	t_vec3			pivot;
+	t_quat			init_rot;
 	t_vec3			up;
 	t_vec3			right;
 	t_vec3			forward;
@@ -433,8 +432,6 @@ struct __attribute__((aligned(16))) s_camera
 	t_vec3			defocus_disk_v;
 	t_vec3			init_pos;
 	t_vec2			skydome_uv_offset;
-	float			init_pitch;
-	float			init_yaw;
 	float			init_focal_len_mm;
 	float			init_focus_dist;
 	float			aspect;

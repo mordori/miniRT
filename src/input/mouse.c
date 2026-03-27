@@ -24,6 +24,8 @@ t_vec2i	get_mouse_delta(t_context *ctx)
 		return (delta);
 	w = (int32_t)ctx->img->width;
 	h = (int32_t)ctx->img->height;
+	if (delta.x > w / 2 || delta.x < -w / 2 || delta.y > h / 2 || delta.y < -h / 2)
+		delta = vec2i_n(0);
 	if (ctx->mouse.pos.x >= w - 1)
 		ctx->mouse.pos.x = 1;
 	else if (ctx->mouse.pos.x <= 0)
