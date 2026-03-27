@@ -15,20 +15,22 @@
 void	apply_cam_action(t_context *ctx, t_vec2i delta)
 {
 	t_camera	*cam;
+	float		speed;
 
 	cam = &ctx->scene.cam;
 	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300)
 	{
+		speed = ctx->mlx->delta_time * 60.0f;
 		if (cam->state == CAM_TURN)
-			cam_turn(ctx, delta);
+			cam_turn(ctx, delta, speed);
 		else if (cam->state == CAM_LOOK)
-			cam_look(ctx, delta);
+			cam_look(ctx, delta, speed);
 		else if (cam->state == CAM_ORBIT)
-			cam_orbit(ctx, delta);
+			cam_orbit(ctx, delta, speed);
 		else if (cam->state == CAM_ZOOM)
-			cam_zoom(ctx, delta);
+			cam_zoom(ctx, delta, speed);
 		else if (cam->state == CAM_PAN)
-			cam_pan(ctx, delta);
+			cam_pan(ctx, delta, speed);
 	}
 }
 

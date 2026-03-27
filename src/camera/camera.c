@@ -27,11 +27,10 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam = &ctx->scene.cam;
 	cam->state = CAM_DEFAULT;
 	cam->transform.pos = position;
-	cam->target.pos = vec3_add(position, orientation);
-	memset(&cam->pivot, 0, sizeof(t_vec3));
 	cam->yaw = atan2f(orientation.x, orientation.z);
 	cam->pitch = asinf(orientation.y);
-	cam->distance = 1.0f;
+	cam->transform.rot = quat_from_euler(vec3(-cam->pitch, cam->yaw, 0.0f));
+	cam->distance = fmaxf(vec3_dist(cam->transform.pos, g_zero), 0.01f);
 	fov = degrees_to_rad(fov);
 	fov = clampf(fov, degrees_to_rad(0.1f), degrees_to_rad(179.9f));
 	cam->focal_len_mm = SENSOR_HALF_HEIGHT_MM / tanf(fov * 0.5f);
@@ -41,30 +40,9 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->shutter_speed = 1.0f / 100.0f;
 	cam->iso = 100.0f;
 	cam->init_pos = position;
-	cam->init_pitch = cam->pitch;
-	cam->init_yaw = cam->yaw;
+	cam->init_rot = cam->transform.rot;
 	cam->init_focal_len_mm = cam->focal_len_mm;
 	cam->init_focus_dist = cam->focus_dist;
-}
-
-bool	reset_camera(t_context *ctx)
-{
-	t_camera	*cam;
-
-	cam = &ctx->scene.cam;
-	cam->transform.pos = cam->init_pos;
-	cam->yaw = cam->init_yaw;
-	cam->pitch = cam->init_pitch;
-	cam->focal_len_mm = cam->init_focal_len_mm;
-	cam->focus_dist = cam->init_focus_dist;
-	cam->f_stop = 5.6f;
-	cam->shutter_speed = 1.0f / 100.0f;
-	cam->iso = 100.0f;
-	update_camera(ctx, cam);
-	cam->control_forward = cam->forward;
-	cam->control_right = cam->right;
-	ctx->renderer.cam = *cam;
-	return (true);
 }
 
 t_vec3	sample_defocus_disk(const t_context *ctx, t_pixel *pixel)
@@ -88,26 +66,16 @@ static_blue_noise(&ctx->tex_bn, pixel, BN_DD_V)));
 
 void	update_camera(t_context *ctx, t_camera *cam)
 {
-	static const t_vec3	world_up = {{0.0f, 1.0f, 0.0f}};
-	const float			limit = M_PI_2 - 0.001f;
-	t_vec3				dir;
-	t_vec2				pitch;
-	t_vec2				yaw;
+	t_mat4		m;
 
-	cam->pitch = clampf(cam->pitch, -limit, limit);
+	cam->transform.rot = quat_normalize(cam->transform.rot);
+	m = quat_to_mat4(cam->transform.rot);
+	cam->right = vec3_normalize(vec3(m.m[0][0], m.m[1][0], m.m[2][0]));
+	cam->up = vec3_normalize(vec3(m.m[0][1], m.m[1][1], m.m[2][1]));
+	cam->forward = vec3_normalize(vec3(m.m[0][2], m.m[1][2], m.m[2][2]));
+	cam->yaw = atan2f(cam->forward.x, cam->forward.z);
+	cam->pitch = asinf(cam->forward.y);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
-	if (ctx->editor.selected_obj)
-		cam->pivot = ctx->editor.selected_obj->transform.pos;
-	else
-		cam->pivot = vec3_n(0.0f);
-	sincosf(cam->pitch, &pitch.sin, &pitch.cos);
-	sincosf(cam->yaw, &yaw.sin, &yaw.cos);
-	dir.x = pitch.cos * yaw.sin;
-	dir.y = pitch.sin;
-	dir.z = pitch.cos * yaw.cos;
-	cam->forward = vec3_normalize(dir);
-	cam->right = vec3_normalize(vec3_cross(world_up, cam->forward));
-	cam->up = vec3_normalize(vec3_cross(cam->forward, cam->right));
 	update_viewport(\
 cam, &cam->viewport, (float)ctx->img->width, (float)ctx->img->height);
 }

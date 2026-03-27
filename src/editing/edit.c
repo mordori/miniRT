@@ -15,7 +15,8 @@
 
 void	config_editor(t_context *ctx, mlx_key_data_t keydata)
 {
-	const t_axis	prev_constraints = ctx->editor.constraint_axis;
+	const t_edit_mode	prev_mode = ctx->editor.mode;;
+	const t_axis		prev_constraints = ctx->editor.constraint_axis;
 
 	if (!ctx->editor.selected_obj || keydata.action != MLX_RELEASE)
 		return ;
@@ -34,7 +35,7 @@ keydata.key == MLX_KEY_S)
 	}
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		set_axis_constraints(ctx, keydata);
-	if (ctx->editor.constraint_axis != prev_constraints)
+	if (ctx->editor.constraint_axis != prev_constraints || (prev_mode != EDIT_DEFAULT && ctx->editor.mode != prev_mode))
 	{
 		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 		update_transform(&ctx->editor.selected_obj->transform);
@@ -43,11 +44,22 @@ keydata.key == MLX_KEY_S)
 
 bool	edit_object(t_context *ctx, t_vec2i delta)
 {
-	if (ctx->scene.cam.state != CAM_DEFAULT)
+	static t_edit_mode	prev_mode = EDIT_DEFAULT;
+	const t_edit_mode	current_mode = ctx->editor.mode;
+
+	if (ctx->scene.cam.state != CAM_DEFAULT || current_mode == EDIT_DEFAULT || \
+!ctx->editor.selected_obj)
+	{
+		prev_mode = current_mode;
 		return (false);
-	if (ctx->editor.mode == EDIT_DEFAULT || !ctx->editor.selected_obj)
-		return (false);
+	}
+	if (prev_mode == EDIT_DEFAULT && current_mode != EDIT_DEFAULT)
+	{
+		prev_mode = current_mode;
+		return (true);
+	}
 	edit_action(ctx, delta);
+	prev_mode = current_mode;
 	return (delta.x != 0 || delta.y != 0);
 }
 

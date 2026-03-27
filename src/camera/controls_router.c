@@ -17,14 +17,52 @@ static inline bool	set_cam_state(t_context *ctx);
 
 bool	control_camera(t_context *ctx, t_vec2i delta)
 {
+	const t_cam_state	prev_state = ctx->scene.cam.state;
+
 	if (ctx->editor.mode != EDIT_DEFAULT || !set_cam_state(ctx))
 		return (false);
 	if (!is_cam_action_active(ctx))
 	{
-		end_cam_action(ctx);
+		if (prev_state != CAM_DEFAULT)
+			end_cam_action(ctx);
 		return (true);
 	}
-	apply_cam_action(ctx, delta);
+	if (prev_state != CAM_DEFAULT || ctx->scene.cam.state == CAM_DEFAULT)
+		apply_cam_action(ctx, delta);
+	return (true);
+}
+
+bool	reset_camera(t_context *ctx)
+{
+	t_camera	*cam;
+
+	cam = &ctx->scene.cam;
+	cam->transform.pos = cam->init_pos;
+	cam->transform.rot = cam->init_rot;
+	cam->focal_len_mm = cam->init_focal_len_mm;
+	cam->focus_dist = cam->init_focus_dist;
+	cam->f_stop = 5.6f;
+	cam->shutter_speed = 1.0f / 100.0f;
+	cam->iso = 100.0f;
+	cam->distance = fmaxf(vec3_dist(cam->transform.pos, g_zero), 0.01f);
+	update_camera(ctx, cam);
+	cam->control_forward = cam->forward;
+	cam->control_right = cam->right;
+	ctx->renderer.cam = *cam;
+	return (true);
+}
+
+bool	frame_camera(t_context *ctx)
+{
+	t_camera		*cam;
+	const t_object	*obj = ctx->editor.selected_obj;
+
+	if (!obj)
+		return (false);
+	cam = &ctx->scene.cam;
+	cam->distance = 10.0f;
+	cam->transform.pos = vec3_sub(obj->transform.pos, vec3_scale(cam->forward, cam->distance));
+	update_camera(ctx, cam);
 	return (true);
 }
 
