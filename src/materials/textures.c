@@ -55,10 +55,12 @@ static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
 	uint32_t	mask_x;
 	uint32_t	mask_y;
 
+	uv.u = uv.u - floorf(uv.u);
+	uv.v = uv.v - floorf(uv.v);
 	mask_x = tex->width - 1;
 	mask_y = tex->height - 1;
-	px = uv.u * mask_x;
-	py = uv.v * mask_y;
+	px = uv.u * (float)tex->width;
+	py = uv.v * (float)tex->height;
 	coords[0] = (uint32_t)px & mask_x;
 	coords[1] = (uint32_t)py & mask_y;
 	coords[2] = (coords[0] + 1) & mask_x;

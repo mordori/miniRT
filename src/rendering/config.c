@@ -59,14 +59,22 @@ t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
 
 static inline void	reset_editor(t_context *ctx, t_renderer *r)
 {
+	t_object	*obj;
+
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		cancel_edit_action(ctx);
-	vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
+	obj = ctx->editor.selected_obj;
 	ctx->editor.selected_obj = NULL;
-	if (!init_bvh(ctx))
+	if (obj->type == OBJ_PLANE)
+		vector_try_add(ctx, &ctx->scene.geo.planes, obj);
+	else
 	{
-		pthread_mutex_unlock(&r->mutex);
-		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+		vector_try_add(ctx, &ctx->scene.geo.objs, obj);
+		if (!init_bvh(ctx))
+		{
+			pthread_mutex_unlock(&r->mutex);
+			fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+		}
 	}
 	memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
 }

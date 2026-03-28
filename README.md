@@ -40,7 +40,7 @@
 - Plane, sphere, cylinder, cone, and quad primitives
 - Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly and trackball controller
-- Editing mode with simplified rendering
+- Object Editing mode with simplified rendering mimicing Blender
 
 #### TODO
 - Anisotropic & clear coat BRDF

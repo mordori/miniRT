@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "materials.h"
 #include "objects.h"
+#include "materials.h"
 
 t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 {
@@ -23,10 +23,11 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 	cone->inv_height = 1.0f / cone->height;
 	obj = (t_object){0};
 	obj.type = OBJ_CONE;
-	obj.shape.cone = *cone;
 	obj.material_id = mat_id;
 	obj.transform.pos = cone->apex;
-	cone->apex = vec3_n(0.0f);
+	obj.transform.rot = quat_from_dir(cone->axis);
+	cone->apex = g_zero;
+	cone->axis = g_up;
 	obj.shape.cone = *cone;
 	return (add_object(ctx, &obj));
 }
@@ -41,15 +42,15 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 ** @param t_vals Output array for hit distances [near, far].
 ** @return       true if an intersection point is found.
 */
-static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray,
-		const t_vec3 oc, float t_vals[2])
+static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray, \
+float t_vals[2])
 {
 	float	coef[3];
 	float	discriminant;
 	float	inv_a;
 	float	tmp;
 
-	compute_coefficients(cone, ray, oc, coef);
+	compute_coefficients(cone, ray, coef);
 	if (fabsf(coef[0]) < G_EPSILON)
 		return (false);
 	discriminant = coef[1] * coef[1] - coef[0] * coef[2];
@@ -78,11 +79,9 @@ static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray,
 */
 static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
-	t_vec3	oc;
 	float	t_vals[2];
 
-	oc = vec3_sub(ray->origin, cone->apex);
-	if (!solve_cone_quadratic(cone, ray, oc, t_vals))
+	if (!solve_cone_quadratic(cone, ray, t_vals))
 		return (false);
 	if (is_valid_body_hit(cone, ray, t_vals[0], hit->t))
 		return (hit->t = t_vals[0], true);
@@ -101,23 +100,21 @@ static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 		t_hit *hit)
 {
-	t_vec3	apex_to_hit;
-	t_vec3	axis_component;
-	t_vec3	tang;
-	t_vec3	btan;
-	float	projection;
+	float	len_sq;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	apex_to_hit = vec3_sub(hit->point, cone->apex);
-	projection = vec3_dot(apex_to_hit, cone->axis);
-	axis_component = vec3_scale(cone->axis, projection * (1.0f + cone->tan_sq));
-	hit->normal = vec3_normalize(vec3_sub(apex_to_hit, axis_component));
-	onb(cone->axis, &tang, &btan);
-	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan), vec3_dot(hit->normal,
-				tang)) * M_1_2PI + 0.5f;
-	hit->uv.v = projection * cone->inv_height;
+	hit->normal = vec3_normalize(vec3(hit->point.x, 0.0f, hit->point.z));
+	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PI + 0.5f;
+	hit->uv.v = hit->point.y * cone->inv_height;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
+	hit->tangent = vec3(-hit->point.z, 0.0f, hit->point.x);
+	len_sq = hit->tangent.x * hit->tangent.x + hit->tangent.z * hit->tangent.z;
+	if (len_sq < G_EPSILON)
+		hit->tangent = g_right;
+	else
+		hit->tangent = vec3_scale(hit->tangent, 1.0f / sqrtf(len_sq));
+	hit->bitangent = vec3_cross(hit->normal, hit->tangent);
 }
 
 /*

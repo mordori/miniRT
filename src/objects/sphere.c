@@ -30,6 +30,7 @@ t_context *ctx, t_vec3 center, float diameter, uint32_t mat_id)
 	obj.transform.pos = center;
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
+	obj.transform.rot.w = 1.0f;
 	return (add_object(ctx, &obj));
 }
 
@@ -78,10 +79,11 @@ half_b * half_b - a * (vec3_dot(ray->origin, ray->origin) - sphere->radius_sq);
 	if (d < 0)
 		return (M_INF);
 	sqrt_d = sqrtf(d);
-	root = (-half_b - sqrt_d) / a;
+	a = 1.0f / a;
+	root = (-half_b - sqrt_d) * a;
 	if (root <= G_EPSILON || root >= t_max)
 	{
-		root = (-half_b + sqrt_d) / a;
+		root = (-half_b + sqrt_d) * a;
 		if (root <= G_EPSILON || root >= t_max)
 			return (M_INF);
 	}

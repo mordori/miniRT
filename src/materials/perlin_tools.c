@@ -71,7 +71,8 @@ t_vec3	pattern_perlin_marble(t_hit *hit, const t_material *mat)
 	float	t;
 
 	scale = mat->pattern_scale;
-	p = vec3_sub(hit->point, hit->obj->transform.pos);
+	p = mat4_mul_vec3(&hit->obj->transform.world_to_object, hit->point);
+	p = vec3_mul(p, hit->obj->transform.scale);
 	p = vec3_scale(p, scale);
 	p = vec3_add(p, object_seed(hit->obj));
 	t = 0.7f * (1.0f + sinf(p.z + 10.0f * turbulence(p)));
@@ -94,7 +95,8 @@ t_vec3	pattern_perlin_wood(t_hit *hit, const t_material *mat)
 	float	dist;
 
 	scale = mat->pattern_scale;
-	p = vec3_sub(hit->point, hit->obj->transform.pos);
+	p = mat4_mul_vec3(&hit->obj->transform.world_to_object, hit->point);
+	p = vec3_mul(p, hit->obj->transform.scale);
 	p = vec3_scale(p, scale);
 	p = vec3_add(p, object_seed(hit->obj));
 	dist = sqrtf(p.x * p.x + p.z * p.z);
@@ -116,7 +118,8 @@ t_vec3	pattern_perlin_turb(t_hit *hit, const t_material *mat)
 	float	t;
 
 	scale = mat->pattern_scale;
-	p = vec3_sub(hit->point, hit->obj->transform.pos);
+	p = mat4_mul_vec3(&hit->obj->transform.world_to_object, hit->point);
+	p = vec3_mul(p, hit->obj->transform.scale);
 	p = vec3_scale(p, scale);
 	p = vec3_add(p, object_seed(hit->obj));
 	t = turbulence(p);

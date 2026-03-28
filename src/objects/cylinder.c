@@ -12,7 +12,6 @@
 
 #include "objects.h"
 #include "materials.h"
-#include <math.h>
 
 /*
 ** Initializes a cylinder object and adds it to the scene.
@@ -31,6 +30,10 @@ t_error	init_cylinder(t_context *ctx, t_cylinder *cyl, int32_t mat_id)
 	obj.material_id = mat_id;
 	obj.transform.pos = cyl->center;
 	obj.shape.cylinder = *cyl;
+	obj.transform.rot = quat_from_dir(cyl->axis);
+	cyl->center = g_zero;
+	cyl->axis = g_up;
+	obj.shape.cylinder = *cyl;
 	return (add_object(ctx, &obj));
 }
 
@@ -47,13 +50,13 @@ static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 	float	t_vals[2];
 	float	params[2];
 
-	if (!solve_body_quadratic(cyl, ray, ray->origin, t_vals))
+	if (!solve_body_quadratic(cyl, ray, t_vals))
 		return (false);
 	params[0] = cyl->height * 0.5f;
 	params[1] = hit->t;
-	if (test_body_hit((t_cylinder *)cyl, (t_ray *)ray, params, t_vals[0]))
+	if (test_body_hit(ray, params, t_vals[0]))
 		return (hit->t = params[1], true);
-	if (test_body_hit((t_cylinder *)cyl, (t_ray *)ray, params, t_vals[1]))
+	if (test_body_hit(ray, params, t_vals[1]))
 		return (hit->t = params[1], true);
 	return (false);
 }
@@ -68,21 +71,21 @@ static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 				t_hit *hit)
 {
-	t_vec3	axis_point;
-	t_vec3	tang;
-	t_vec3	btan;
-	float	projection;
+	float	len_sq;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	projection = vec3_dot(hit->point, cyl->axis);
-	axis_point = vec3_scale(cyl->axis, projection);
-	hit->normal = vec3_normalize(vec3_sub(hit->point, axis_point));
-	onb(cyl->axis, &tang, &btan);
-	hit->uv.u = fast_atan2f(vec3_dot(hit->normal, btan),
-			vec3_dot(hit->normal, tang)) * M_1_2PI + 0.5f;
-	hit->uv.v = (projection / cyl->height) + 0.5f;
+	hit->normal = vec3_normalize(vec3(hit->point.x, 0.0f, hit->point.z));
+	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PI + 0.5f;
+	hit->uv.v = (hit->point.y / cyl->height) + 0.5f;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
+	hit->tangent = vec3(-hit->point.z, 0.0f, hit->point.x);
+	len_sq = hit->tangent.x * hit->tangent.x + hit->tangent.z * hit->tangent.z;
+	if (len_sq < G_EPSILON)
+		hit->tangent = g_right;
+	else
+		hit->tangent = vec3_scale(hit->tangent, 1.0f / sqrtf(len_sq));
+	hit->bitangent = vec3_cross(hit->normal, hit->tangent);
 }
 
 /*
@@ -105,7 +108,7 @@ static bool	hit_cap(const t_cylinder *cyl, const t_ray *ray
 	denom = vec3_dot(ray->dir, cyl->axis);
 	if (fabsf(denom) < G_EPSILON)
 		return (false);
-	c_pos = vec3_add(cyl->center, vec3_scale(cyl->axis, o));
+	c_pos = vec3_scale(cyl->axis, o);
 	t = vec3_dot(vec3_sub(c_pos, ray->origin), cyl->axis) / denom;
 	if (t < G_EPSILON || t >= hit->t)
 		return (false);

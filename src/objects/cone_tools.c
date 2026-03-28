@@ -23,21 +23,18 @@
 ** @param oc   Vector from apex to ray origin.
 ** @param coef Output array [a, half_b, c].
 */
-void	compute_coefficients(const t_cone *cone, const t_ray *ray,
-				const t_vec3 oc, float coef[3])
+void	compute_coefficients(const t_cone *cone, const t_ray *ray, \
+float coef[3])
 {
-	float	d_dot_a;
-	float	oc_dot_a;
-	float	oc_dot_oc;
 	float	d_dot_oc;
+	float	d_dot_d;
 
-	d_dot_a = vec3_dot(ray->dir, cone->axis);
-	oc_dot_a = vec3_dot(oc, cone->axis);
-	oc_dot_oc = vec3_dot(oc, oc);
-	d_dot_oc = vec3_dot(ray->dir, oc);
-	coef[0] = d_dot_a * d_dot_a - cone->cos_sq;
-	coef[1] = d_dot_a * oc_dot_a - cone->cos_sq * d_dot_oc;
-	coef[2] = oc_dot_a * oc_dot_a - cone->cos_sq * oc_dot_oc;
+	d_dot_oc = vec3_dot(ray->dir, ray->origin);
+	d_dot_d = vec3_dot(ray->dir, ray->dir);
+	coef[0] = ray->dir.y * ray->dir.y - cone->cos_sq * d_dot_d;
+	coef[1] = ray->dir.y * ray->origin.y - cone->cos_sq * d_dot_oc;
+	coef[2] = ray->origin.y * ray->origin.y - cone->cos_sq * \
+vec3_dot(ray->origin, ray->origin);
 }
 
 /*
@@ -52,15 +49,12 @@ void	compute_coefficients(const t_cone *cone, const t_ray *ray,
 bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
 				float t_max)
 {
-	t_vec3	hit_vec;
-	float	projection;
+	float	hit_y;
 
 	if (t <= G_EPSILON || t >= t_max)
 		return (false);
-	hit_vec = vec3_add(vec3_sub(ray->origin, cone->apex),
-			vec3_scale(ray->dir, t));
-	projection = vec3_dot(hit_vec, cone->axis);
-	if (projection < 0.0f || projection > cone->height)
+	hit_y = ray->origin.y + ray->dir.y * t;
+	if (hit_y < 0.0f || hit_y > cone->height)
 		return (false);
 	return (true);
 }
@@ -73,15 +67,13 @@ bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
 ** @param base_r The radius of the base circle.
 ** @param hit    The hit record to store UV data.
 */
-void	compute_cone_cap_uv(const t_cone *cone, t_vec3 to_hit,
+void	compute_cone_cap_uv(t_vec3 to_hit,
 		float base_r, t_hit *hit)
 {
-	t_vec3	tang;
-	t_vec3	btan;
-
-	onb(cone->axis, &tang, &btan);
-	hit->uv.u = vec3_dot(to_hit, tang) / base_r * 0.5f + 0.5f;
-	hit->uv.v = vec3_dot(to_hit, btan) / base_r * 0.5f + 0.5f;
+	hit->uv.u = to_hit.x / base_r * 0.5f + 0.5f;
+	hit->uv.v = to_hit.z / base_r * 0.5f + 0.5f;
+	hit->tangent = g_right;
+	hit->bitangent = vec3_cross(hit->normal, hit->tangent);
 }
 
 /*
@@ -95,28 +87,25 @@ void	compute_cone_cap_uv(const t_cone *cone, t_vec3 to_hit,
 */
 bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
-	t_vec3	base_c;
 	t_vec3	to_hit;
 	t_vec3	point;
-	float	denom;
 	float	t;
 
-	denom = vec3_dot(ray->dir, cone->axis);
-	if (fabsf(denom) < G_EPSILON)
+	if (fabsf(ray->dir.y) < G_EPSILON)
 		return (false);
-	base_c = vec3_add(cone->apex, vec3_scale(cone->axis, cone->height));
-	t = vec3_dot(vec3_sub(base_c, ray->origin), cone->axis) / denom;
+	t = (cone->height - ray->origin.y) / ray->dir.y;
 	if (t < G_EPSILON || t >= hit->t)
 		return (false);
 	point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	to_hit = vec3_sub(point, base_c);
-	if (vec3_dot(to_hit, to_hit) > cone->base_radius * cone->base_radius)
+	to_hit = vec3(point.x, 0.0f, point.z);
+	if (to_hit.x * to_hit.x + to_hit.z * to_hit.z > \
+cone->base_radius * cone->base_radius)
 		return (false);
 	hit->point = point;
 	hit->t = t;
-	hit->normal = vec3_scale(cone->axis, -1.0f);
+	hit->normal = g_up;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
-		hit->normal = vec3_scale(hit->normal, -1.0f);
-	compute_cone_cap_uv(cone, to_hit, cone->base_radius, hit);
+		hit->normal = g_up;
+	compute_cone_cap_uv(to_hit, cone->base_radius, hit);
 	return (true);
 }

@@ -343,5 +343,6 @@ t_quat		quat_from_euler_angle(t_vec3 axis, float angle);
 t_quat		quat_normalize(t_quat q);
 t_mat4		quat_to_mat4(t_quat q);
 t_quat		quat_mul(t_quat a, t_quat b);
+t_quat		quat_from_dir(t_vec3 dir);
 
 #endif
