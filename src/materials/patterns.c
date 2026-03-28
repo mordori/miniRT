@@ -28,12 +28,9 @@
 t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
-	t_vec3	p;
 
 	scale = mat->pattern_scale;
-	p = get_local_coords(hit);
-	if (((int)floorf(p.x * scale) + (int)floorf(p.y * scale)
-			+ (int)floorf(p.z * scale)) & 1)
+	if (((int)floorf(hit->uv.u * scale) + (int)floorf(hit->uv.v * scale)) & 1)
 		return (mat->albedo2);
 	return (mat->albedo);
 }
@@ -52,14 +49,7 @@ t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 */
 t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 {
-	float	scale;
-	float	t;
-	float	y;
-
-	scale = mat->pattern_scale;
-	y = get_local_coords(hit).y;
-	t = 0.5f * (sinf(y * scale) + 1.0f);
-	return (vec3_lerp(mat->albedo, mat->albedo2, t));
+	return (vec3_lerp(mat->albedo, mat->albedo2, hit->uv.v));
 }
 
 /*
@@ -74,13 +64,9 @@ t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
-	float	value;
-	float	y;
 
-	scale = mat->pattern_scale;
-	y = get_local_coords(hit).y;
-	value = sinf(y * scale);
-	if (value < 0.0f)
+	scale = mat->pattern_scale * M_TAU;
+	if (sinf(hit->uv.v * scale) < 0.0f)
 		return (mat->albedo2);
 	return (mat->albedo);
 }
@@ -102,15 +88,9 @@ t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
 t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 {
 	float	scale;
-	float	angle;
-	float	value;
-	t_vec3	p;
 
-	scale = mat->pattern_scale;
-	p = get_local_coords(hit);
-	angle = fast_atan2f(p.x, p.z);
-	value = sinf(p.y * scale + angle);
-	if (value < 0.0f)
+	scale = mat->pattern_scale * M_TAU;
+	if (sinf((hit->uv.u + hit->uv.v) * scale) < 0.0f)
 		return (mat->albedo2);
 	return (mat->albedo);
 }
@@ -122,17 +102,16 @@ t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 */
 t_vec3	pattern_grid(const t_hit *hit, const t_material *mat)
 {
-	float	scale;
-	t_vec3	p;
+	float	u;
+	float	v;
 	float	line_width;
 
-	scale = mat->pattern_scale;
-	p = vec3_scale(get_local_coords(hit), scale);
-	p.x = p.x - floorf(p.x);
-	p.y = p.y - floorf(p.y);
-	p.z = p.z - floorf(p.z);
+	u = hit->uv.u * mat->pattern_scale;
+	v = hit->uv.v * mat->pattern_scale;
+	u = u - floorf(u);
+	v = v - floorf(v);
 	line_width = 0.05f;
-	if (p.x < line_width || p.y < line_width || p.z < line_width)
+	if (u < line_width || v < line_width)
 		return (mat->albedo2);
 	return (mat->albedo);
 }

@@ -65,7 +65,7 @@ static t_error	parse_camera_fields(char **tokens, t_vec3 *pos, t_vec3 *orient,
 		return (E_INVALID_NUM);
 	if (!parse_vec3(tokens[2], orient))
 		return (E_INVALID_NUM);
-	if (!validate_normalized(*orient))
+	if (!validate_normalized(orient))
 		return (E_RANGE);
 	if (!parse_float(tokens[3], fov))
 		return (E_INVALID_NUM);

@@ -22,8 +22,7 @@ t_error	add_object(t_context *ctx, t_object *obj)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		return (E_MALLOC);
-	obj->transform.rot.w = 1.0f;
-	obj->transform.scale = vec3_n(1.0f);
+	obj->transform.scale = g_one;
 	update_transform(&obj->transform);
 	*new_obj = *obj;
 	new_obj->mat = \
@@ -53,6 +52,8 @@ bool	hit_object(const t_object *obj, const t_ray *ray, t_hit *hit)
 		result = hit_cone(&obj->shape, &r, hit);
 	else if (obj->type == OBJ_QUAD)
 		result = hit_quad(&obj->shape, &r, hit);
+	else if (obj->type == OBJ_PLANE)
+		result = hit_plane(&obj->shape, &r, hit);
 	else
 		return (false);
 	if (result)

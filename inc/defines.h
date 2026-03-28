@@ -197,6 +197,7 @@ enum e_axis
 };
 
 static const t_vec3				g_zero = {{0.0f, 0.0f, 0.0f, 0.0f}};
+static const t_vec3				g_one = {{1.0f, 1.0f, 1.0f, 0.0f}};
 static const t_vec3				g_right = {{1.0f, 0.0f, 0.0f, 0.0f}};
 static const t_vec3				g_up = {{0.0f, 1.0f, 0.0f, 0.0f}};
 static const t_vec3				g_forward = {{0.0f, 0.0f, 1.0f, 0.0f}};
@@ -331,6 +332,8 @@ struct __attribute__((aligned(16))) s_plane
 {
 	t_vec3			point;
 	t_vec3			normal;
+	t_vec3			u;
+	t_vec3			v;
 	float			d;
 };
 

@@ -76,7 +76,7 @@ void			try_free_all(char **lines);
 void			validate_scene(t_context *ctx, t_parser *p);
 
 bool			validate_range(float value, float min, float max);
-bool			validate_normalized(t_vec3 vec);
+bool			validate_normalized(t_vec3 *vec);
 
 /* Element parsing */
 t_error			parse_sphere(t_context *ctx, t_parser *p, char **tokens);

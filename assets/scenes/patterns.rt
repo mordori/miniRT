@@ -1,14 +1,13 @@
 # Render settings
 render	64	16
 
-# sky		stars.png
 
 # ----------------- MATERIALS -----------------
 # 	ID	Albedo		Met		Rou		IOR		Tra		EmStr	EmColor		Flg		Tex		Norm	Bump	Pattern		Scale	Alb2
 #rgb(18, 180, 180)
 
 # Emissive light material
-mat	0	255,255,255	0.0		0.0		1.0		0.0		999.0	255,250,240	0
+mat	0	255,255,255	0.0		0.0		1.0		0.0		999.0	255,250,240	2
 
 # Checkered floor plane
 mat	1	18,180,180	0.0		1.0		1.5		0.0		0.0		0,0,0		0		_		_		_		checker		2.0		0,0,0

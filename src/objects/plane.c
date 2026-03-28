@@ -24,9 +24,13 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 	*obj = (t_object){0};
 	obj->type = OBJ_PLANE;
 	obj->transform.pos = point;
-	obj->shape.plane.point = point;
-	obj->shape.plane.normal = normal;
-	obj->shape.plane.d = vec3_dot(point, normal);
+	obj->transform.rot = quat_from_dir(normal);
+	obj->transform.scale = g_one;
+	update_transform(&obj->transform);
+	onb(g_up, &obj->shape.plane.u, &obj->shape.plane.v);
+	obj->shape.plane.point = g_zero;
+	obj->shape.plane.normal = g_up;
+	obj->shape.plane.d = 0.0f;
 	obj->material_id = mat_id;
 	obj->mat = ((t_material **)ctx->scene.assets.materials.items)[mat_id];
 	obj->flags = obj->mat->flags;
@@ -43,15 +47,18 @@ bool	hit_planes(const t_context *ctx, const t_ray *ray, t_hit *hit)
 	size_t		idx;
 	bool		res;
 	t_object	*obj;
+	t_ray		r;
 
 	res = false;
 	idx = ctx->scene.geo.planes.total;
 	while (idx--)
 	{
 		obj = ((t_object **)ctx->scene.geo.planes.items)[idx];
-		if (hit_plane(&obj->shape, ray, hit))
+		r = ray_world_to_object(ray, &obj->transform.world_to_object);
+		if (hit_plane(&obj->shape, &r, hit))
 		{
 			hit->obj = obj;
+			hit_object_to_world(hit, &obj->transform);
 			res = true;
 		}
 	}
@@ -60,21 +67,23 @@ bool	hit_planes(const t_context *ctx, const t_ray *ray, t_hit *hit)
 
 bool	hit_plane(const t_shape *shape, const t_ray *ray, t_hit *hit)
 {
-	t_plane		plane;
 	float		denom;
 	float		t;
 
-	plane = shape->plane;
-	denom = vec3_dot(plane.normal, ray->dir);
+	denom = ray->dir.y;
 	if (fabsf(denom) < G_EPSILON)
 		return (false);
-	t = (plane.d - vec3_dot(ray->origin, plane.normal)) / denom;
+	t = -ray->origin.y / denom;
 	if (t < G_EPSILON || t >= hit->t)
 		return (false);
 	hit->t = t;
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	hit->normal = plane.normal;
+	hit->normal = g_up;
 	if (denom > 0)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
+	hit->uv.u = vec3_dot(hit->point, shape->plane.u);
+	hit->uv.v = vec3_dot(hit->point, shape->plane.v);
+	hit->tangent = shape->plane.u;
+	hit->bitangent = shape->plane.v;
 	return (true);
 }

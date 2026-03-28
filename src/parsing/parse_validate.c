@@ -15,15 +15,15 @@
 #include "materials.h"
 #include "libft_str.h"
 
-bool	validate_normalized(t_vec3 vec)
+bool	validate_normalized(t_vec3 *vec)
 {
 	float	length;
 
-	if (vec.x < -1.0f || vec.x > 1.0f || vec.y < -1.0f || vec.y > 1.0f
-		|| vec.z < -1.0f || vec.z > 1.0f)
+	length = vec3_length(*vec);
+	if (length < 0.0001f)
 		return (false);
-	length = vec3_length(vec);
-	return (fabsf(length - 1.0f) < 1e-6f);
+	*vec = vec3_normalize(*vec);
+	return (true);
 }
 
 bool	validate_range(float value, float min, float max)

@@ -54,7 +54,7 @@ t_error	parse_plane(t_context *ctx, t_parser *p, char **tokens)
 		return (E_ARGS);
 	if (!parse_vec3(tokens[1], &point) || !parse_vec3(tokens[2], &normal))
 		return (E_INVALID_NUM);
-	if (!validate_normalized(normal))
+	if (!validate_normalized(&normal))
 		return (E_RANGE);
 	err = resolve_material(ctx, p, tokens[3], &mat_id);
 	if (err != E_OK)
@@ -76,7 +76,7 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 		return (E_ARGS);
 	if (!parse_vec3(tkns[1], &cyl.center) || !parse_vec3(tkns[2], &cyl.axis))
 		return (E_INVALID_NUM);
-	if (!validate_normalized(cyl.axis))
+	if (!validate_normalized(&cyl.axis))
 		return (E_RANGE);
 	if (!parse_float(tkns[3], &cyl.radius) || !parse_float(tkns[4],
 			&cyl.height))
@@ -105,7 +105,7 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 		return (E_ARGS);
 	if (!parse_vec3(tkns[1], &cone.apex) || !parse_vec3(tkns[2], &cone.axis))
 		return (E_INVALID_NUM);
-	if (!validate_normalized(cone.axis))
+	if (!validate_normalized(&cone.axis))
 		return (E_RANGE);
 	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4],
 			&cone.height))
