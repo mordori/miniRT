@@ -56,19 +56,31 @@ static inline void	display_status(t_context *ctx, int *last, t_vec2i pos)
 {
 	static mlx_image_t	*img;
 	int					current;
+	static const char	*edit[] = {"Selected", "Translate", "Rotate", "Scale"};
+	static const char	*axis[] = {"", "X", "Y", "Z", "XY", "XZ", "YZ"};
+	static const char	*mode[] = {"Rendering", "Done!", "Editing", "Selected"};
 
 	current = (ctx->renderer.frame >= ctx->renderer.render_samples);
+	if (ctx->renderer.mode == SOLID)
+		current = 2 + (ctx->editor.selected_obj != NULL) + \
+ctx->editor.mode * 10 + ctx->editor.constraint_axis * 100;
 	if (!img_handling(ctx, &img, last, current))
 		return ;
-	if (current)
-		snprintf(g_buf, 128, "Status:  Done!");
+	if (ctx->renderer.mode != SOLID)
+		snprintf(g_buf, 128, "Status:  %s", mode[current]);
+	else if (ctx->editor.mode == EDIT_DEFAULT)
+		snprintf(\
+g_buf, 128, "Status:  %s", mode[2 + (ctx->editor.selected_obj != NULL)]);
 	else
-		snprintf(g_buf, 128, "Status:  Rendering");
+		snprintf(g_buf, 128, "Status:  %s %s", \
+edit[ctx->editor.mode], axis[ctx->editor.constraint_axis]);
 	img = mlx_put_string(ctx->mlx, g_buf, pos.x, pos.y);
 	if (!img)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
-	if (current)
-		set_text_color(img, 0x00FF00FF);
+	if (ctx->renderer.mode == SOLID)
+		set_text_color(img, 0xFA8128FF);
+	else if (current)
+		set_text_color(img, 0x88FF00FF);
 	else
 		set_text_color(img, 0xFFFF00FF);
 	*last = current;

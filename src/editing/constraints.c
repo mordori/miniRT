@@ -21,13 +21,11 @@ t_context *ctx, t_vec3 global_axis, uint32_t col);
 
 void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata)
 {
-	ctx->editor.axis_primary = ctx->scene.cam.right;
-	ctx->editor.axis_secondary = ctx->scene.cam.up;
-	ctx->editor.constraint_axis = AXIS_DEFAULT;
-	ctx->editor.constraints = 0;
 	if (keydata.key != MLX_KEY_X && keydata.key != MLX_KEY_Y && \
 keydata.key != MLX_KEY_Z)
 		return ;
+	ctx->editor.constraint_axis = AXIS_DEFAULT;
+	ctx->editor.constraints = 0;
 	ctx->editor.axis_secondary = g_zero;
 	if (keydata.key == MLX_KEY_X)
 		x_constraint(ctx);

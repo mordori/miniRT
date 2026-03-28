@@ -17,7 +17,7 @@
 
 void	select_object(t_context *ctx);
 bool	edit_object(t_context *ctx, t_vec2i delta);
-void	config_editor(t_context *ctx, mlx_key_data_t keydata);
+bool	config_editor(t_context *ctx, mlx_key_data_t keydata);
 void	apply_edit_action(t_context *ctx);
 void	cancel_edit_action(t_context *ctx);
 void	begin_edit_action(t_context *ctx);

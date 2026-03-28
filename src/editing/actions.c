@@ -43,6 +43,8 @@ void	begin_edit_action(t_context *ctx)
 	mlx_get_mouse_pos(ctx->mlx, &ctx->mouse.pos_orig.x, &ctx->mouse.pos_orig.y);
 	ctx->mouse.pos = ctx->mouse.pos_orig;
 	ctx->mouse.pos_prev = ctx->mouse.pos_orig;
+	ctx->editor.axis_primary = ctx->scene.cam.right;
+	ctx->editor.axis_secondary = ctx->scene.cam.up;
 }
 
 void	end_edit_action(t_context *ctx)

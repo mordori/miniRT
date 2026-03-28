@@ -18,6 +18,7 @@
 static inline void	process_frame(t_context *ctx, t_renderer *r);
 static inline void	\
 set_renderer_state(t_context *ctx, t_renderer *r, bool *update);
+static inline bool	is_active(t_context *ctx);
 
 void	frame_loop(void *param)
 {
@@ -30,7 +31,10 @@ void	frame_loop(void *param)
 	pthread_mutex_lock(&r->mutex);
 	process_input(ctx, &update);
 	if (atomic_load(&r->render_cancel) || r->resize_pending)
+	{
 		cancel_render(r);
+		update = true;
+	}
 	else if (r->frame_complete && !r->resize_pending)
 		process_frame(ctx, r);
 	set_renderer_state(ctx, r, &update);
@@ -49,12 +53,35 @@ t_context *ctx, t_renderer *r, bool *update)
 			resize_window(ctx);
 		return ;
 	}
-	else if (\
-!r->threads_running && (*update || r->mode == SOLID || \
-(ctx->scene.cam.state != CAM_DEFAULT || ctx->editor.mode != EDIT_DEFAULT)))
+	if (r->threads_running)
+		return ;
+	if (is_active(ctx) || (r->mode == SOLID && *update))
 		set_mode_preview(ctx, r, update);
-	else if (!r->threads_running && r->frame < r->render_samples + 1)
+	else if (*update)
+	{
+		*update = false;
 		set_mode_rendered(r);
+	}
+	else if (r->mode != SOLID && r->frame < r->render_samples + 1)
+		set_mode_rendered(r);
+}
+
+static inline bool	is_active(t_context *ctx)
+{
+	if (ctx->scene.cam.state != CAM_DEFAULT || ctx->editor.mode != EDIT_DEFAULT)
+		return (true);
+	if (ctx->renderer.mode == SOLID)
+		return (false);
+	if (mlx_is_key_down(ctx->mlx, KEY_FORWARD)
+|| mlx_is_key_down(ctx->mlx, KEY_BACK))
+		return (true);
+	if (mlx_is_key_down(ctx->mlx, KEY_RIGHT)
+|| mlx_is_key_down(ctx->mlx, KEY_LEFT))
+		return (true);
+	if (mlx_is_key_down(ctx->mlx, KEY_UP)
+|| mlx_is_key_down(ctx->mlx, KEY_DOWN))
+		return (true);
+	return (false);
 }
 
 void	blit(const t_context *ctx, const t_renderer *r)

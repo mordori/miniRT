@@ -77,7 +77,7 @@ void		print_render_status(t_context *ctx, t_renderer *r);
 void		wait_until(uint32_t end);
 void		limit_polling_rate(t_renderer *r);
 t_hit		new_hit(uint32_t bounce);
-void		printf_init(t_context *ctx);
+void		printf_init(void);
 void		screenshot(t_context *ctx);
 char		*timestamp(char *buf);
 float		static_blue_noise(\
