@@ -33,7 +33,7 @@ void	init_scene(t_context *ctx)
 	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
 	if (!ctx->tex_bn.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
-	printf_init(ctx);
+	printf_init();
 	ctx->bn_stride = \
 (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
 	close(ctx->fd);

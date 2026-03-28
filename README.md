@@ -39,8 +39,8 @@
 - Bilinear texture filtering and normal mapping
 - Plane, sphere, cylinder, cone, and quad primitives
 - Multiple procedural patterns such as marble with Perlin noise
-- Physical camera with fly controller
-- Edit mode with simplified rendering and trackball controller
+- Physical camera with fly and trackball controller
+- Editing mode with simplified rendering
 
 #### TODO
 - Anisotropic & clear coat BRDF
@@ -149,6 +149,7 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
 | <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
 | <kbd>R</kbd>                                                   | Reset Camera                                  |
+| <kbd>Y</kbd>                                                   | Save render                                   |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -183,7 +184,6 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
 | <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
 | <kbd>H</kbd>                                                   | Toggle UI                                     |
-| <kbd>Y</kbd>                                                   | Save render                                   |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 
 ## Project Review

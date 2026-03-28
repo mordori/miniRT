@@ -28,22 +28,23 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	{
 		while (ctx->renderer.threads_running)
 			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
-		config_editor(ctx, keydata);
-		if (keydata.key == MLX_KEY_F && keydata.action == MLX_RELEASE)
+		if (config_editor(ctx, keydata))
+			dirty = true;
+		if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
 			dirty = frame_camera(ctx);
-		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_RELEASE)
+		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
 			dirty = deselect_object(ctx, &ctx->renderer);
 	}
-	if (keydata.key == MLX_KEY_H && keydata.action == MLX_RELEASE)
+	if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && \
-keydata.action == MLX_RELEASE)
+keydata.action == MLX_PRESS)
 		dirty = reset_camera(ctx);
 	pthread_mutex_unlock(&ctx->renderer.mutex);
 	if (config_renderer(ctx, keydata))
 		dirty = true;
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_Y && \
-keydata.action == MLX_RELEASE)
+keydata.action == MLX_PRESS)
 		screenshot(ctx);
 	atomic_store(&ctx->renderer.render_cancel, dirty);
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
@@ -53,10 +54,10 @@ keydata.action == MLX_RELEASE)
 void	mouse_hook(\
 mouse_key_t button, action_t action, modifier_key_t mods, void *param)
 {
-	t_context	*ctx;
-	t_renderer	*r;
+	t_context		*ctx;
+	t_renderer		*r;
 
-	(void)mods;
+	mods = 0;
 	ctx = (t_context *)param;
 	r = &ctx->renderer;
 	pthread_mutex_lock(&r->mutex);
@@ -64,18 +65,23 @@ mouse_key_t button, action_t action, modifier_key_t mods, void *param)
 	{
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);
-		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE && \
-r->cam.state == CAM_DEFAULT)
+		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_PRESS && \
+r->cam.state == CAM_DEFAULT && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 		{
 			if (ctx->editor.mode == EDIT_DEFAULT)
 				select_object(ctx);
 			else
 				apply_edit_action(ctx);
+			mods = 1;
 		}
-		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_RELEASE && \
+		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_PRESS && \
 ctx->editor.mode != EDIT_DEFAULT)
+		{
 			cancel_edit_action(ctx);
+			mods = 1;
+		}
 	}
+	atomic_store(&ctx->renderer.render_cancel, mods);
 	pthread_mutex_unlock(&r->mutex);
 }
 

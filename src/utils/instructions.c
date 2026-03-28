@@ -15,12 +15,9 @@
 static inline void	print_editing(void);
 static inline void	print_general(void);
 
-void	printf_init(t_context *ctx)
+void	printf_init(void)
 {
-	printf("\033[?25l\nRENDER SETTINGS\n");
-	printf("Samples:\t%d\n", ctx->renderer.render_samples);
-	printf("Bounces:\t%d\n\n", ctx->renderer.render_bounces);
-	printf("CONTROLS\n");
+	printf("\n");
 	printf("                 RENDER MODE                        \n");
 	printf("|---------------------|----------------------------|\n");
 	printf("|         Key         |         Navigation         |\n");
@@ -30,6 +27,7 @@ void	printf_init(t_context *ctx)
 	printf("| W A S D             | Move                       |\n");
 	printf("| SHIFT / SPACE       | Descend / Ascend           |\n");
 	printf("| R                   | Reset Camera               |\n");
+	printf("| Y                   | Save render                |\n");
 	printf("|---------------------|----------------------------|\n");
 	printf("\n");
 	print_editing();
@@ -78,7 +76,6 @@ static inline void	print_general(void)
 	printf("| O / P               | Samples                    |\n");
 	printf("| U / I               | Bounces                    |\n");
 	printf("| H                   | Toggle UI                  |\n");
-	printf("| Y                   | Save render                |\n");
 	printf("| ESC                 | Quit                       |\n");
 	printf("|---------------------|----------------------------|\n");
 	printf("\n");

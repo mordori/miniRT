@@ -13,26 +13,21 @@
 #include "editing.h"
 #include "utils.h"
 
-void	config_editor(t_context *ctx, mlx_key_data_t keydata)
+static inline void	switch_edit_mode(\
+t_context *ctx, mlx_key_data_t keydata, t_edit_mode *mode);
+
+bool	config_editor(t_context *ctx, mlx_key_data_t keydata)
 {
 	const t_edit_mode	prev_mode = ctx->editor.mode;
 	const t_axis		prev_constraints = ctx->editor.constraint_axis;
+	t_edit_mode			mode;
 
-	if (!ctx->editor.selected_obj || keydata.action != MLX_RELEASE)
-		return ;
-	if (keydata.key == MLX_KEY_G || keydata.key == MLX_KEY_R || \
-keydata.key == MLX_KEY_S)
-	{
-		if (ctx->editor.mode == EDIT_DEFAULT)
-			ctx->editor.orig_transform = ctx->editor.selected_obj->transform;
-		if (keydata.key == MLX_KEY_G)
-			ctx->editor.mode = EDIT_TRANSLATE;
-		if (keydata.key == MLX_KEY_R)
-			ctx->editor.mode = EDIT_ROTATE;
-		if (keydata.key == MLX_KEY_S)
-			ctx->editor.mode = EDIT_SCALE;
-		begin_edit_action(ctx);
-	}
+	if (!ctx->editor.selected_obj || keydata.action != MLX_PRESS)
+		return (false);
+	mode = EDIT_DEFAULT;
+	switch_edit_mode(ctx, keydata, &mode);
+	if (mode != EDIT_DEFAULT && prev_mode == mode)
+		return (false);
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		set_axis_constraints(ctx, keydata);
 	if (ctx->editor.constraint_axis != prev_constraints || \
@@ -41,6 +36,8 @@ keydata.key == MLX_KEY_S)
 		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 		update_transform(&ctx->editor.selected_obj->transform);
 	}
+	return (ctx->editor.mode != prev_mode || \
+ctx->editor.constraint_axis != prev_constraints);
 }
 
 bool	edit_object(t_context *ctx, t_vec2i delta)
@@ -109,4 +106,31 @@ vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
 			magnitude = ((float)(delta.x - delta.y)) * speed;
 	}
 	return (magnitude);
+}
+
+static inline void	switch_edit_mode(\
+t_context *ctx, mlx_key_data_t keydata, t_edit_mode *mode)
+{
+	if (keydata.key == MLX_KEY_G)
+		*mode = EDIT_TRANSLATE;
+	else if (keydata.key == MLX_KEY_R)
+		*mode = EDIT_ROTATE;
+	else if (keydata.key == MLX_KEY_S)
+		*mode = EDIT_SCALE;
+	if (*mode == EDIT_DEFAULT || ctx->editor.mode == *mode)
+		return ;
+	if (ctx->editor.mode == EDIT_DEFAULT)
+	{
+		ctx->editor.orig_transform = ctx->editor.selected_obj->transform;
+		begin_edit_action(ctx);
+	}
+	else
+	{
+		ctx->editor.constraint_axis = AXIS_DEFAULT;
+		ctx->editor.constraints = 0;
+		ctx->editor.axis_primary = ctx->scene.cam.right;
+		ctx->editor.axis_secondary = ctx->scene.cam.up;
+		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
+	}
+	ctx->editor.mode = *mode;
 }
