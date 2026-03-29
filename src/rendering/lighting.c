@@ -27,16 +27,9 @@ t_vec3	add_lighting(\
 const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
 	t_vec3			radiance;
-	const float		orig_roughness = path->mat->roughness;
-	const float		orig_alpha = path->alpha;
-
-	path->mat->roughness = fmaxf(path->mat->roughness, 0.15f);
-	path->alpha = path->mat->roughness * path->mat->roughness;
 	radiance = evaluate_light(ctx, path, light, pixel);
 	if (path->bounce > 0)
 		radiance = vec3_clamp_mag(radiance, light->max_radiance);
-	path->mat->roughness = orig_roughness;
-	path->alpha = orig_alpha;
 	return (vec3_mul(path->throughput, radiance));
 }
 

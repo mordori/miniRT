@@ -20,6 +20,7 @@ static t_error	parse_light_core(char **tokens, t_light *light, int tc)
 	t_vec3	color;
 	float	ratio;
 
+	light->radius = 10.0f;
 	if (!parse_vec3(tokens[1], &position))
 		return (E_INVALID_NUM);
 	if (!parse_float(tokens[2], &ratio))
@@ -48,6 +49,7 @@ static t_error	default_emissive_mat(t_context *ctx, t_light *light,
 	mat.albedo = light->color;
 	mat.emission = vec3_scale(light->color, 50 * light->intensity);
 	mat.is_emissive = true;
+	mat.flags = 2;
 	return (new_material(ctx, &mat, out_id));
 }
 
@@ -78,7 +80,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	tc = count_tokens(tokens);
 	if (tc < 4 || tc > 6)
 		return (E_ARGS);
-	light = (t_light){0};
+	memset(&light, 0, sizeof(t_light));
 	err = parse_light_core(tokens, &light, tc);
 	if (err == E_OK && tc == 6)
 		err = parse_light_mat(p, tokens, &mat_id);

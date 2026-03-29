@@ -20,7 +20,9 @@ void	obj_scale(t_context *ctx, float magnitude)
 {
 	t_mat4		*m;
 	t_vec3		axis;
+	t_vec3		*scale;
 
+	scale = &ctx->editor.selected_obj->transform.scale;
 	if (ctx->editor.constraint_axis == AXIS_DEFAULT)
 		axis = vec3_n(expf(magnitude));
 	else
@@ -30,11 +32,8 @@ void	obj_scale(t_context *ctx, float magnitude)
 		axis.y = get_local_axis_component(ctx, magnitude, m, 1);
 		axis.z = get_local_axis_component(ctx, magnitude, m, 2);
 	}
-	ctx->editor.selected_obj->transform.scale = \
-vec3_mul(ctx->editor.selected_obj->transform.scale, axis);
-	ctx->editor.selected_obj->transform.scale.v = \
-_mm_max_ps(ctx->editor.selected_obj->transform.scale.v, \
-vec4_3(vec3_n(0.01f), 1.0f).v);
+	*scale = vec3_mul(*scale, axis);
+	scale->v = _mm_max_ps(scale->v, vec4_3(vec3_n(0.01f), 1.0f).v);
 }
 
 float	eval_scale_magnitude(t_context *ctx, t_vec2i delta, float speed)
