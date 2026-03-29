@@ -36,7 +36,7 @@ void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
 	cam->focal_len_mm = SENSOR_HALF_HEIGHT_MM / tanf(fov * 0.5f);
 	cam->focal_len_mm = clampf(cam->focal_len_mm, 0.1f, 800.0f);
 	cam->focus_dist = clampf(cam->focus_dist, 0.1f, 1000.0f);
-	cam->f_stop = 5.6f;
+	cam->f_stop = 16.0f;
 	cam->shutter_speed = 1.0f / 100.0f;
 	cam->iso = 100.0f;
 	cam->init_pos = position;
@@ -73,8 +73,6 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	cam->right = vec3_normalize(vec3(m.m[0][0], m.m[1][0], m.m[2][0]));
 	cam->up = vec3_normalize(vec3(m.m[0][1], m.m[1][1], m.m[2][1]));
 	cam->forward = vec3_normalize(vec3(m.m[0][2], m.m[1][2], m.m[2][2]));
-	cam->yaw = atan2f(cam->forward.x, cam->forward.z);
-	cam->pitch = asinf(cam->forward.y);
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
 	update_viewport(\
 cam, &cam->viewport, (float)ctx->img->width, (float)ctx->img->height);

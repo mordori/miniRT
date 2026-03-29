@@ -34,5 +34,6 @@ void	cam_orbit(t_context *ctx, t_vec2i delta, float speed);
 void	cam_zoom(t_context *ctx, t_vec2i delta, float speed);
 void	cam_pan(t_context *ctx, t_vec2i delta, float speed);
 bool	frame_camera(t_context *ctx);
+void	set_default_view(t_context *ctx);
 
 #endif

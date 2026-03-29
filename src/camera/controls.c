@@ -37,8 +37,6 @@ void	cam_turn(t_context *ctx, t_vec2i delta, float speed)
 void	cam_orbit(t_context *ctx, t_vec2i delta, float speed)
 {
 	t_camera	*cam;
-	t_quat		pitch;
-	t_quat		yaw;
 	t_vec3		diff;
 	t_vec3		local;
 
@@ -53,10 +51,10 @@ vec3_scale(cam->forward, cam->distance));
 	cam->distance = fmaxf(vec3_length(diff), 0.01f);
 	local = vec3(vec3_dot(diff, cam->right), vec3_dot(diff, cam->up), \
 vec3_dot(diff, cam->forward));
-	yaw = quat_from_euler_angle(g_up, (float)delta.x * speed);
-	pitch = quat_from_euler_angle(cam->right, (float)delta.y * speed);
-	cam->transform.rot = quat_mul(yaw, cam->transform.rot);
-	cam->transform.rot = quat_mul(pitch, cam->transform.rot);
+	cam->yaw += (float)delta.x * speed;
+	cam->pitch -= (float)delta.y * speed;
+	cam->pitch = clampf(cam->pitch, -M_PI_2 + 0.001f, M_PI_2 - 0.001f);
+	cam->transform.rot = quat_from_euler(vec3(-cam->pitch, cam->yaw, 0.0f));
 	update_camera(ctx, cam);
 	diff = vec3_add(vec3_scale(cam->right, local.x), \
 vec3_scale(cam->up, local.y));

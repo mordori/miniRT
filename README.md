@@ -39,7 +39,7 @@
 - Bilinear texture filtering and normal mapping
 - Plane, sphere, cylinder, cone, and quad primitives
 - Multiple procedural patterns such as marble with Perlin noise
-- Physical camera with fly and trackball controller
+- Physical camera with fly and turntable controllers
 - Object Editing mode with simplified rendering mimicing Blender
 
 #### TODO
@@ -148,8 +148,9 @@ As the project is still under construction, we recommend to run the program with
 | <kbd>RMB</kbd>                                                 | Turn                                          |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
 | <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
-| <kbd>R</kbd>                                                   | Reset Camera                                  |
-| <kbd>Y</kbd>                                                   | Save render                                   |
+| <kbd>T</kbd>                                                   | Save View                                     |
+| <kbd>R</kbd>                                                   | Apply Saved View                              |
+| <kbd>Y</kbd>                                                   | Save Render                                   |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |

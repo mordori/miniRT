@@ -32,6 +32,17 @@ bool	control_camera(t_context *ctx, t_vec2i delta)
 	return (true);
 }
 
+void	set_default_view(t_context *ctx)
+{
+	t_camera	*cam;
+
+	cam = &ctx->scene.cam;
+	cam->init_pos = cam->transform.pos;
+	cam->init_rot = cam->transform.rot;
+	cam->init_focal_len_mm = cam->focal_len_mm;
+	cam->init_focus_dist = cam->focus_dist;
+}
+
 bool	reset_camera(t_context *ctx)
 {
 	t_camera	*cam;
@@ -41,7 +52,7 @@ bool	reset_camera(t_context *ctx)
 	cam->transform.rot = cam->init_rot;
 	cam->focal_len_mm = cam->init_focal_len_mm;
 	cam->focus_dist = cam->init_focus_dist;
-	cam->f_stop = 5.6f;
+	cam->f_stop = 16.0f;
 	cam->shutter_speed = 1.0f / 100.0f;
 	cam->iso = 100.0f;
 	cam->distance = fmaxf(vec3_dist(cam->transform.pos, g_zero), 0.01f);
@@ -49,6 +60,8 @@ bool	reset_camera(t_context *ctx)
 	cam->control_forward = cam->forward;
 	cam->control_right = cam->right;
 	ctx->renderer.cam = *cam;
+	cam->yaw = atan2f(cam->forward.x, cam->forward.z);
+	cam->pitch = asinf(clampf(cam->forward.y, -1.0f, 1.0f));
 	return (true);
 }
 

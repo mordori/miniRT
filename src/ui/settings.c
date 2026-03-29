@@ -78,7 +78,7 @@ edit[ctx->editor.mode], axis[ctx->editor.constraint_axis]);
 	if (!img)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
 	if (ctx->renderer.mode == SOLID)
-		set_text_color(img, 0xFA8128FF);
+		set_text_color(img, 0x00FFFFFF);
 	else if (current)
 		set_text_color(img, 0x88FF00FF);
 	else

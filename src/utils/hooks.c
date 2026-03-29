@@ -41,6 +41,9 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 keydata.action == MLX_PRESS)
 		dirty = reset_camera(ctx);
 	pthread_mutex_unlock(&ctx->renderer.mutex);
+	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_T && \
+keydata.action == MLX_PRESS)
+		set_default_view(ctx);
 	if (config_renderer(ctx, keydata))
 		dirty = true;
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_Y && \

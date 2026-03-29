@@ -26,8 +26,9 @@ void	printf_init(void)
 	printf("| RMB                 | Turn                       |\n");
 	printf("| W A S D             | Move                       |\n");
 	printf("| SHIFT / SPACE       | Descend / Ascend           |\n");
-	printf("| R                   | Reset Camera               |\n");
-	printf("| Y                   | Save render                |\n");
+	printf("| T                   | Save View                  |\n");
+	printf("| R                   | Apply Saved View           |\n");
+	printf("| Y                   | Save Render                |\n");
 	printf("|---------------------|----------------------------|\n");
 	printf("\n");
 	print_editing();

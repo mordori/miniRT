@@ -100,7 +100,7 @@ t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
 	int		tc;
 
 	tc = count_tokens(tokens);
-	ctx->scene.cam.exposure = 0.3f;
+	ctx->scene.cam.exposure = 1.0f;
 	ctx->scene.cam.focus_dist = 10.0f;
 	if (tc > 6 || tc < 4)
 		return (E_ARGS);
