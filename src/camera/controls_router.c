@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:28:08 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:12:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,30 @@ bool	reset_camera(t_context *ctx)
 
 bool	frame_camera(t_context *ctx)
 {
-	t_camera		*cam;
 	const t_object	*obj = ctx->editor.selected_obj;
+	t_camera		*cam;
+	float			max_dim;
 
 	if (!obj)
 		return (false);
 	cam = &ctx->scene.cam;
-	cam->distance = 10.0f;
-	cam->transform.pos = vec3_sub(obj->transform.pos, \
+	max_dim = \
+fmaxf(fmaxf(obj->bounds_dims.x, obj->bounds_dims.y), obj->bounds_dims.z);
+	if (ctx->img->width < ctx->img->height)
+		max_dim /= ctx->scene.cam.aspect;
+	if (obj->type == OBJ_PLANE)
+	{
+		ctx->scene.cam.distance = 20.0f;
+		cam->transform.pos = vec3_sub(obj->transform.pos, \
 vec3_scale(cam->forward, cam->distance));
+	}
+	else
+	{
+		ctx->scene.cam.distance = \
+(max_dim * 0.5f) / tanf(SENSOR_HALF_HEIGHT_MM / cam->focal_len_mm * 0.8f);
+		cam->transform.pos = vec3_sub(obj->bounds_center, \
+vec3_scale(cam->forward, cam->distance));
+	}
 	update_camera(ctx, cam);
 	return (true);
 }

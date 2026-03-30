@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:47 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:27:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:10:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ bool	config_editor(t_context *ctx, mlx_key_data_t keydata)
 {
 	const t_edit_mode	prev_mode = ctx->editor.mode;
 	const t_axis		prev_constraints = ctx->editor.constraint_axis;
-
 
 	if (!ctx->editor.selected_obj || keydata.action != MLX_PRESS)
 		return (false);

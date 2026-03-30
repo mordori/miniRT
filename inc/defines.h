@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:45:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 22:56:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 13:11:51 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -393,6 +393,7 @@ struct __attribute__((aligned(16))) s_object
 	t_transform		transform;
 	t_vec3			bounds_center;
 	uint32_t		material_id;
+	t_vec3			bounds_dims;
 };
 
 struct __attribute__((aligned(16))) s_light

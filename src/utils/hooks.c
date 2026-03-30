@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:20:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 22:53:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:19:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,14 @@ r->cam.state == CAM_DEFAULT && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 			mods = 1;
 		}
 		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_PRESS && \
-ctx->editor.mode != EDIT_DEFAULT)
+ctx->editor.mode != EDIT_DEFAULT && \
+!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 		{
 			cancel_edit_action(ctx);
 			mods = 1;
 		}
 	}
-	atomic_store(&ctx->renderer.render_cancel, mods);
+	atomic_store(&ctx->renderer.render_cancel, (bool)mods);
 	pthread_mutex_unlock(&r->mutex);
 }
 

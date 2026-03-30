@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:47:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 14:33:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	edit_action(t_context *ctx, t_vec2i delta)
 				obj_scale(ctx, magnitude);
 			update_transform(&ctx->editor.selected_obj->transform);
 			update_lights_radii(ctx);
+			update_bounds(ctx->editor.selected_obj);
 		}
 	}
 }
