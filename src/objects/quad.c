@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:47 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 20:28:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:10:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ t_error	init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id)
 	obj = (t_object){0};
 	obj.type = OBJ_QUAD;
 	obj.material_id = mat_id;
-
 	obj.transform.pos = \
 vec3_add(quad->q, vec3_scale(vec3_add(quad->u, quad->v), 0.5f));
 	obj.transform.rot = quat_from_dir(vec3_normalize(n_cross));

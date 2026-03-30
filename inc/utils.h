@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:46:09 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:46:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 14:33:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,6 @@ t_ui		ui_val(int32_t *last, int32_t current);
 t_ui		ui_valf(float *lastf, float currentf);
 void		branch_idx(\
 const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
+void		update_bounds(t_object *obj);
 
 #endif

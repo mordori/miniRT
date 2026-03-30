@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:21:01 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:21:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 14:33:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
+#include "scene.h"
 
 int	cmp_bounds_x(const void *a, const void *b)
 {
@@ -52,4 +53,13 @@ int	cmp_bounds_z(const void *a, const void *b)
 	mask_1 = (obj_1->bounds_center.z < obj_2->bounds_center.z);
 	mask_2 = (obj_1->bounds_center.z > obj_2->bounds_center.z);
 	return (-mask_1 + mask_2);
+}
+
+void	update_bounds(t_object *obj)
+{
+	t_aabb		aabb;
+
+	aabb = get_object_bounds(obj);
+	obj->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
+	obj->bounds_dims = vec3_sub(aabb.max, aabb.min);
 }

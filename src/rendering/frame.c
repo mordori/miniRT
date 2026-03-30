@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:49:52 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:49:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:08:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,14 @@ static inline bool	is_active(t_context *ctx)
 		return (false);
 	m = ctx->mlx;
 	if (mlx_is_key_down(m, KEY_FORWARD) || mlx_is_key_down(m, KEY_BACK) || \
-		mlx_is_key_down(m, KEY_RIGHT) || mlx_is_key_down(m, KEY_LEFT) || \
-		mlx_is_key_down(m, KEY_UP) || mlx_is_key_down(m, KEY_DOWN))
+mlx_is_key_down(m, KEY_RIGHT) || mlx_is_key_down(m, KEY_LEFT) || \
+mlx_is_key_down(m, KEY_UP) || mlx_is_key_down(m, KEY_DOWN))
 		return (true);
 	if (mlx_is_key_down(m, MLX_KEY_L) || mlx_is_key_down(m, MLX_KEY_K) || \
-		mlx_is_key_down(m, MLX_KEY_COMMA) || mlx_is_key_down(m, MLX_KEY_PERIOD))
+mlx_is_key_down(m, MLX_KEY_COMMA) || mlx_is_key_down(m, MLX_KEY_PERIOD))
 		return (true);
 	if (mlx_is_key_down(m, MLX_KEY_LEFT) || mlx_is_key_down(m, MLX_KEY_RIGHT) || \
-		mlx_is_key_down(m, MLX_KEY_UP) || mlx_is_key_down(m, MLX_KEY_DOWN))
+mlx_is_key_down(m, MLX_KEY_UP) || mlx_is_key_down(m, MLX_KEY_DOWN))
 		return (true);
 	return (false);
 }

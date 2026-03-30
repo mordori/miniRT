@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:57 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:26:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:10:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ hit->obj == ctx->scene.env.dir_light.obj)
 	if (ctx->editor.selected_obj)
 	{
 		if (ctx->editor.selected_obj->type == OBJ_PLANE)
-			vector_try_add(ctx, &ctx->scene.geo.planes, ctx->editor.selected_obj);
+			vector_try_add(\
+ctx, &ctx->scene.geo.planes, ctx->editor.selected_obj);
 		else
 		{
 			vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);

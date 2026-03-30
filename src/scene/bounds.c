@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:09:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:14:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 14:29:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,6 @@ t_aabb	sphere_bounds(const t_object *obj)
 	return (aabb);
 }
 
-/*
-** Compute AABB for an arbitrarily oriented cylinder.
-**
-** For a cylinder with normalized axis A, radius r, height h, the
-** half-extent along world axis i is:
-**   r * sqrt(1 - A_i^2)  +  (h/2) * |A_i|
-** The first term is the max radial projection (sin of angle to world axis),
-** the second is the axial projection along that world axis.
-*/
 t_aabb	cylinder_bounds(const t_object *obj)
 {
 	t_aabb		aabb;

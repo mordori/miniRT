@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quaternion_2.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/30 15:07:48 by myli-pen          #+#    #+#             */
+/*   Updated: 2026/03/30 15:11:44 by myli-pen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_math.h"
 
 t_quat	quat_from_dir(t_vec3 dir)
@@ -10,7 +22,7 @@ t_quat	quat_from_dir(t_vec3 dir)
 	dir = vec3_normalize(dir);
 	dot = vec3_dot(up, dir);
 	if (dot < -0.999f)
-		return  (quat_from_euler(vec3(M_PI, 0.0f, 0.0f)));
+		return (quat_from_euler(vec3(M_PI, 0.0f, 0.0f)));
 	cross = vec3_cross(up, dir);
 	q.x = cross.x;
 	q.y = cross.y;

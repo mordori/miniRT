@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 21:04:11 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:09:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:10:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ ctx->renderer.cam.focus_dist), vec2i(50, 140));
 
 static inline void	display_status(t_context *ctx, int *last, t_vec2i pos)
 {
-	static mlx_image_t	*img;
-	int					current;
 	static const char	*edit[] = {"Selected", "Translate", "Rotate", "Scale"};
 	static const char	*axis[] = {"", "X", "Y", "Z", "XY", "XZ", "YZ"};
 	static const char	*mode[] = {"Rendering", "Done!", "Editing", "Selected"};
+	static mlx_image_t	*img;
+	int					current;
 
 	current = (ctx->renderer.frame >= ctx->renderer.render_samples);
 	if (ctx->renderer.mode == SOLID)

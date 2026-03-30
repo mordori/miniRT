@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:09:45 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:11:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 14:29:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ t_aabb	get_volume_bounds(t_object **objs, size_t n)
 
 	res = get_object_bounds(objs[0]);
 	objs[0]->bounds_center = vec3_div(vec3_add(res.min, res.max), 2.0f);
+	objs[0]->bounds_dims = vec3_sub(res.max, res.min);
 	i = 1;
 	while (i < n)
 	{
 		aabb = get_object_bounds(objs[i]);
 		objs[i]->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
+		objs[i]->bounds_dims = vec3_sub(aabb.max, aabb.min);
 		res = combine_aabb(&res, &aabb);
 		++i;
 	}

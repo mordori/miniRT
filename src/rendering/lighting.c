@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:49:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:49:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:09:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_vec3	add_lighting(\
 const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel)
 {
 	t_vec3			radiance;
+
 	radiance = evaluate_light(ctx, path, light, pixel);
 	if (path->bounce > 0)
 		radiance = vec3_clamp_mag(radiance, light->max_radiance);
