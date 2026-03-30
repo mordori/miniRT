@@ -2,7 +2,7 @@
 render		256			8
 
 # Ambient Light (intensity, color, optional_color2)
-A		0.5			11,77,217 10,22,207
+A		1.0			11,77,217 10,22,207
 
 # Camera (pos, dir, fov, exposure, focus_dist)
 C		0,0.4,-13.0 		0,0.05,1		38		0.7		13.0

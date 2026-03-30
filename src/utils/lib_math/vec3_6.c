@@ -34,3 +34,13 @@ bool	vec3_is_nan_inf(t_vec3 vec)
 	v_s.v &= e_bits;
 	return (v_s.s[0] == e_bits | v_s.s[1] == e_bits | v_s.s[2] == e_bits);
 }
+
+t_vec3	vec3_fabsf(t_vec3 vec)
+{
+	return (vec3(fabsf(vec.x), fabsf(vec.y), fabsf(vec.z)));
+}
+
+t_vec3	vec3_powf(t_vec3 vec, float power)
+{
+	return (vec3(powf(vec.x, power), powf(vec.y, power), powf(vec.z, power)));
+}

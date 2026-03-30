@@ -48,6 +48,8 @@ t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
 		{
 			if (ctx->editor.selected_obj)
 				reset_editor(ctx, r);
+			else if (ctx->editor.mode != EDIT_DEFAULT)
+				end_edit_action(ctx);
 			ctx->editor.mode = EDIT_DEFAULT;
 			r->mode = RENDERED;
 		}

@@ -34,7 +34,8 @@ typedef enum e_error
 	E_TEXTURE,
 	E_MATERIAL,
 	E_EMISSIVE,
-	E_TOO_MANY
+	E_TOO_MANY,
+	E_TOO_BIG
 }				t_error;
 
 typedef struct s_mat_entry

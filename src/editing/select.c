@@ -88,6 +88,7 @@ bool	deselect_object(t_context *ctx, t_renderer *r)
 	obj = ctx->editor.selected_obj;
 	if (!obj)
 		return (false);
+	cancel_edit_action(ctx);
 	ctx->editor.selected_obj = NULL;
 	if (obj->type == OBJ_PLANE)
 	{

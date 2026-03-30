@@ -135,6 +135,11 @@ union u_vec2
 		float	sin;
 		float	cos;
 	};
+	struct
+	{
+		float	width;
+		float	height;
+	};
 };
 
 union __attribute__((aligned(16))) u_vec3
@@ -166,6 +171,12 @@ union __attribute__((aligned(16))) u_vec3
 		float	angle;
 		float	sin;
 		float	cos;
+	};
+	struct
+	{
+		float	width;
+		float	height;
+		float	depth;
 	};
 	t_vec2	xy;
 };
@@ -290,6 +301,8 @@ uint32_t	vec3_to_uint32(t_vec3 vec);
 float		vec3_dist_sq(t_vec3 a, t_vec3 b);
 bool		vec3_is_nan_inf(t_vec3 vec);
 float		vec3_dist(t_vec3 a, t_vec3 b);
+t_vec3		vec3_fabsf(t_vec3 vec);
+t_vec3		vec3_powf(t_vec3 vec, float power);
 
 // vec4
 // -----------------------------------------------------------------

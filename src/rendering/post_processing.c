@@ -30,12 +30,7 @@ t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c)
 
 static inline t_vec3	linear_to_srgb(t_vec3 c)
 {
-	t_vec3		res;
-
-	res.r = powf(c.r, M_1_2P2F);
-	res.g = powf(c.g, M_1_2P2F);
-	res.b = powf(c.b, M_1_2P2F);
-	return (res);
+	return (vec3_powf(c, M_1_2P2F));
 }
 
 // Reference Rendering Transform and Output Device Transform

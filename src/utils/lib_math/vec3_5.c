@@ -39,7 +39,15 @@ t_vec3	vec3_schlick(t_vec3 f0, float u)
 
 t_vec3	vec3_bias(t_vec3 vec, t_vec3 n)
 {
-	return (vec3_add(vec, vec3_scale(n, B_EPSILON)));
+	t_vec3		abs;
+	float		max_coord;
+	float		bias;
+
+	abs = vec3_fabsf(vec);
+	max_coord = fmaxf(fmaxf(abs.x, abs.y), abs.z);
+	bias = max_coord * G_EPSILON;
+	bias = fmaxf(B_EPSILON, bias);
+	return (vec3_add(vec, vec3_scale(n, bias)));
 }
 
 uint32_t	vec3_to_uint32(t_vec3 vec)

@@ -68,5 +68,6 @@ void	cancel_edit_action(t_context *ctx)
 {
 	ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 	update_transform(&ctx->editor.selected_obj->transform);
+	update_bounds(ctx->editor.selected_obj);
 	end_edit_action(ctx);
 }

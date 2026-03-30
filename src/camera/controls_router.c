@@ -55,7 +55,7 @@ bool	reset_camera(t_context *ctx)
 	cam->f_stop = 16.0f;
 	cam->shutter_speed = 1.0f / 100.0f;
 	cam->iso = 100.0f;
-	cam->distance = fmaxf(vec3_dist(cam->transform.pos, g_zero), 0.01f);
+	cam->distance = vec3_dist(cam->transform.pos, g_zero);
 	update_camera(ctx, cam);
 	cam->control_forward = cam->forward;
 	cam->control_right = cam->right;
@@ -69,25 +69,29 @@ bool	frame_camera(t_context *ctx)
 {
 	const t_object	*obj = ctx->editor.selected_obj;
 	t_camera		*cam;
-	float			max_dim;
+	t_vec3			half_bounds;
+	t_vec3			proj;
+	t_vec2			dist;
+	const float		tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
 
 	if (!obj)
 		return (false);
 	cam = &ctx->scene.cam;
-	max_dim = \
-fmaxf(fmaxf(obj->bounds_dims.x, obj->bounds_dims.y), obj->bounds_dims.z);
-	if (ctx->img->width < ctx->img->height)
-		max_dim /= ctx->scene.cam.aspect;
+	half_bounds = vec3_scale(obj->bounds, 0.5f);
+	proj.width = vec3_dot(vec3_fabsf(cam->right), half_bounds);
+	proj.height = vec3_dot(vec3_fabsf(cam->up), half_bounds);
+	proj.depth = vec3_dot(vec3_fabsf(cam->forward), half_bounds);
 	if (obj->type == OBJ_PLANE)
 	{
-		ctx->scene.cam.distance = 20.0f;
+		cam->distance = 20.0f;
 		cam->transform.pos = vec3_sub(obj->transform.pos, \
 vec3_scale(cam->forward, cam->distance));
 	}
 	else
 	{
-		ctx->scene.cam.distance = \
-(max_dim * 0.5f) / tanf(SENSOR_HALF_HEIGHT_MM / cam->focal_len_mm * 0.8f);
+		dist.height = proj.height / tan_half_fov;
+		dist.width = proj.width / (tan_half_fov * cam->aspect);
+		cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
 		cam->transform.pos = vec3_sub(obj->bounds_center, \
 vec3_scale(cam->forward, cam->distance));
 	}

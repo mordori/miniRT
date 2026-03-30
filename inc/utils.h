@@ -105,5 +105,6 @@ t_ui		ui_valf(float *lastf, float currentf);
 void		branch_idx(\
 const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
 void		update_bounds(t_object *obj);
+float		get_max_bounds_dim(const t_object *obj);
 
 #endif

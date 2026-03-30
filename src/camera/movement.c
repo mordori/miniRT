@@ -37,13 +37,9 @@ bool	camera_movement(t_context *ctx)
 
 static inline void	clamp_camera(t_camera *cam)
 {
-	t_vec3		limit;
-	t_vec3		negative_limit;
-
-	limit = (t_vec3){{CAMERA_LIMIT, CAMERA_LIMIT, CAMERA_LIMIT}};
-	negative_limit = (t_vec3){{-CAMERA_LIMIT, -CAMERA_LIMIT, -CAMERA_LIMIT}};
-	cam->transform.pos.v = _mm_max_ps(cam->transform.pos.v, negative_limit.v);
-	cam->transform.pos.v = _mm_min_ps(cam->transform.pos.v, limit.v);
+	cam->transform.pos.v = \
+_mm_max_ps(cam->transform.pos.v, g_world_limit_neg.v);
+	cam->transform.pos.v = _mm_min_ps(cam->transform.pos.v, g_world_limit.v);
 }
 
 static inline t_vec3	get_key_input(mlx_t *mlx)

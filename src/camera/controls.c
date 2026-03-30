@@ -48,7 +48,7 @@ void	cam_orbit(t_context *ctx, t_vec2i delta, float speed)
 		cam->target = vec3_add(cam->transform.pos, \
 vec3_scale(cam->forward, cam->distance));
 	diff = vec3_sub(cam->target, cam->transform.pos);
-	cam->distance = fmaxf(vec3_length(diff), 0.01f);
+	cam->distance = vec3_length(diff);
 	local = vec3(vec3_dot(diff, cam->right), vec3_dot(diff, cam->up), \
 vec3_dot(diff, cam->forward));
 	cam->yaw += (float)delta.x * speed;
@@ -74,7 +74,7 @@ void	cam_zoom(t_context *ctx, t_vec2i delta, float speed)
 	move = (float)delta.y * speed;
 	cam->transform.pos = vec3_add(cam->transform.pos, \
 vec3_scale(cam->forward, move));
-	cam->distance = fmaxf(cam->distance - move, 0.01f);
+	cam->distance = cam->distance - move;
 }
 
 void	cam_pan(t_context *ctx, t_vec2i delta, float speed)

@@ -45,21 +45,21 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray, \
 float t_vals[2])
 {
-	float	coef[3];
-	float	discriminant;
-	float	inv_a;
-	float	tmp;
+	double		coef[3];
+	double		discriminant;
+	double		inv_a;
+	float		tmp;
 
 	compute_coefficients(cone, ray, coef);
-	if (fabsf(coef[0]) < G_EPSILON)
+	if (fabs(coef[0]) < 1e-6f)
 		return (false);
 	discriminant = coef[1] * coef[1] - coef[0] * coef[2];
 	if (discriminant < 0.0f)
 		return (false);
-	discriminant = sqrtf(discriminant);
+	discriminant = sqrt(discriminant);
 	inv_a = 1.0f / coef[0];
-	t_vals[0] = (-coef[1] - discriminant) * inv_a;
-	t_vals[1] = (-coef[1] + discriminant) * inv_a;
+	t_vals[0] = (float)(-coef[1] - discriminant) * inv_a;
+	t_vals[1] = (float)(-coef[1] + discriminant) * inv_a;
 	if (coef[0] < 0.0f)
 	{
 		tmp = t_vals[0];
@@ -79,7 +79,7 @@ float t_vals[2])
 */
 static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
-	float	t_vals[2];
+	float		t_vals[2];
 
 	if (!solve_cone_quadratic(cone, ray, t_vals))
 		return (false);
@@ -100,10 +100,15 @@ static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 		t_hit *hit)
 {
-	float	len_sq;
+	float		len_sq;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	hit->normal = vec3_normalize(vec3(hit->point.x, 0.0f, hit->point.z));
+	hit->normal = vec3(hit->point.x, -hit->point.y * cone->tan_sq, hit->point.z);
+	len_sq = vec3_dot(hit->normal, hit->normal);
+	if (len_sq < G_EPSILON)
+		hit->normal = g_up;
+	else
+		hit->normal = vec3_scale(hit->normal, 1.0f / sqrtf(len_sq));
 	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PI + 0.5f;
 	hit->uv.v = hit->point.y * cone->inv_height;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
