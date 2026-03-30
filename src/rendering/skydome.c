@@ -40,8 +40,7 @@ const t_scene *scene, const float t)
 
 bool	rotate_skydome(t_context *ctx)
 {
-	static t_vec3	initial_pos = \
-(t_vec3){{704000.0f, 484000.0f, 520000.0f, 0.0f}};
+	static t_vec3	initial_pos = {{704000.0f, 484000.0f, 520000.0f, 0.0f}};
 	t_light			*light;
 	float			delta;
 	t_vec2			theta;

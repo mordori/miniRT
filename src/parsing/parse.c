@@ -84,7 +84,7 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 
 void	p_error(t_context *ctx, t_error err, int line_num)
 {
-	static char	*msgs[13];
+	static char	*msgs[14];
 
 	msgs[E_UNKNOWN_ID] = "Unknown element identifier";
 	msgs[E_ARGS] = "Invalid argument count for element";
@@ -98,6 +98,7 @@ void	p_error(t_context *ctx, t_error err, int line_num)
 	msgs[E_EMISSIVE] = "Emissive material on object / "
 		"non-emissive material on light";
 	msgs[E_TOO_MANY] = "Too many textures or materials";
-	if (err > E_OK && err <= E_TOO_MANY)
+	msgs[E_TOO_BIG] = "Object size is too big";
+	if (err > E_OK && err <= E_TOO_BIG)
 		fatal_error(ctx, msgs[err], ctx->file, line_num);
 }

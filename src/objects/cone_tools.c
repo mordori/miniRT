@@ -24,17 +24,29 @@
 ** @param coef Output array [a, half_b, c].
 */
 void	compute_coefficients(const t_cone *cone, const t_ray *ray, \
-float coef[3])
+double coef[3])
 {
-	float	d_dot_oc;
-	float	d_dot_d;
+	double		d_dot_oc;
+	double		d_dot_d;
+	double		o_dot_o;
+	double		cos_sq;
 
-	d_dot_oc = vec3_dot(ray->dir, ray->origin);
-	d_dot_d = vec3_dot(ray->dir, ray->dir);
-	coef[0] = ray->dir.y * ray->dir.y - cone->cos_sq * d_dot_d;
-	coef[1] = ray->dir.y * ray->origin.y - cone->cos_sq * d_dot_oc;
-	coef[2] = ray->origin.y * ray->origin.y - cone->cos_sq * \
-vec3_dot(ray->origin, ray->origin);
+	d_dot_oc = \
+(double)ray->dir.x * ray->origin.x + \
+(double)ray->dir.y * ray->origin.y + \
+(double)ray->dir.z * ray->origin.z;
+	d_dot_d = \
+(double)ray->dir.x * ray->dir.x + \
+(double)ray->dir.y * ray->dir.y + \
+(double)ray->dir.z * ray->dir.z;
+	o_dot_o = \
+(double)ray->origin.x * ray->origin.x + \
+(double)ray->origin.y * ray->origin.y + \
+(double)ray->origin.z * ray->origin.z;
+	cos_sq = (double)cone->cos_sq;
+	coef[0] = (double)ray->dir.y * ray->dir.y - cos_sq * d_dot_d;
+	coef[1] = (double)ray->dir.y * ray->origin.y - cos_sq * d_dot_oc;
+	coef[2] = (double)ray->origin.y * ray->origin.y - cos_sq * o_dot_o;
 }
 
 /*
@@ -49,7 +61,7 @@ vec3_dot(ray->origin, ray->origin);
 bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
 				float t_max)
 {
-	float	hit_y;
+	float		hit_y;
 
 	if (t <= G_EPSILON || t >= t_max)
 		return (false);
@@ -87,9 +99,9 @@ void	compute_cone_cap_uv(t_vec3 to_hit,
 */
 bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
-	t_vec3	to_hit;
-	t_vec3	point;
-	float	t;
+	t_vec3		to_hit;
+	t_vec3		point;
+	float		t;
 
 	if (fabsf(ray->dir.y) < G_EPSILON)
 		return (false);

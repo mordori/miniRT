@@ -15,8 +15,13 @@
 void	obj_translate(\
 t_context *ctx, float magnitude, t_vec2i delta, float speed)
 {
-	t_vec3		axis;
+	t_object		*obj;
+	t_vec3			axis;
+	t_vec3			half_bounds;
+	t_vec3			limit_min;
+	t_vec3			limit_max;
 
+	obj = ctx->editor.selected_obj;
 	if (ctx->editor.constraints == 1)
 		axis = vec3_scale(ctx->editor.axis_primary, magnitude);
 	else
@@ -25,6 +30,12 @@ t_context *ctx, float magnitude, t_vec2i delta, float speed)
 vec3_scale(ctx->editor.axis_primary, delta.x * speed), \
 vec3_scale(ctx->editor.axis_secondary, -delta.y * speed));
 	}
-	ctx->editor.selected_obj->transform.pos = \
-vec3_add(ctx->editor.selected_obj->transform.pos, axis);
+	obj->transform.pos = \
+vec3_add(obj->transform.pos, axis);
+	half_bounds = vec3_scale(obj->bounds, 0.5f);
+	limit_max = vec3_sub(g_world_limit, half_bounds);
+	limit_min = vec3_add(g_world_limit_neg, half_bounds);
+	limit_min.v = _mm_min_ps(limit_min.v, limit_max.v);
+	obj->transform.pos.v = _mm_max_ps(obj->transform.pos.v, limit_min.v);
+	obj->transform.pos.v = _mm_min_ps(obj->transform.pos.v, limit_max.v);
 }

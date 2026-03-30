@@ -24,6 +24,12 @@ t_error	add_object(t_context *ctx, t_object *obj)
 		return (E_MALLOC);
 	obj->transform.scale = g_one;
 	update_transform(&obj->transform);
+	update_bounds(obj);
+	if (get_max_bounds_dim(obj) > WORLD_LIMIT)
+	{
+		free(new_obj);
+		return (E_TOO_BIG);
+	}
 	*new_obj = *obj;
 	new_obj->mat = \
 ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];

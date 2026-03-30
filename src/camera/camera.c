@@ -68,6 +68,9 @@ void	update_camera(t_context *ctx, t_camera *cam)
 {
 	t_mat4		m;
 
+	cam->distance = clampf(cam->distance, 0.01f, WORLD_LIMIT);
+	cam->transform.pos = \
+vec3_clamp(cam->transform.pos, -WORLD_LIMIT, WORLD_LIMIT);
 	cam->transform.rot = quat_normalize(cam->transform.rot);
 	m = quat_to_mat4(cam->transform.rot);
 	cam->right = vec3_normalize(vec3(m.m[0][0], m.m[1][0], m.m[2][0]));

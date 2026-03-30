@@ -61,5 +61,10 @@ void	update_bounds(t_object *obj)
 
 	aabb = get_object_bounds(obj);
 	obj->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
-	obj->bounds_dims = vec3_sub(aabb.max, aabb.min);
+	obj->bounds = vec3_sub(aabb.max, aabb.min);
+}
+
+float	get_max_bounds_dim(const t_object *obj)
+{
+	return (fmaxf(fmaxf(obj->bounds.x, obj->bounds.y), obj->bounds.z));
 }

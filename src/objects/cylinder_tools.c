@@ -41,23 +41,24 @@ void	compute_cap_uv(const t_cylinder *cyl, t_vec3 to_hit, t_hit *hit)
 bool	solve_body_quadratic(const t_cylinder *cyl, const t_ray *ray, \
 float t_vals[2])
 {
-	float	a;
-	float	half_b;
-	float	c;
-	float	discriminant;
+	double		a;
+	double		half_b;
+	double		c;
+	double		discriminant;
 
-	a = ray->dir.x * ray->dir.x + ray->dir.z * ray->dir.z;
-	if (a < G_EPSILON)
+	a = (double)ray->dir.x * ray->dir.x + (double)ray->dir.z * ray->dir.z;
+	if (a < 1e-6f)
 		return (false);
-	half_b = ray->origin.x * ray->dir.x + ray->origin.z * ray->dir.z;
-	c = ray->origin.x * ray->origin.x + ray->origin.z * ray->origin.z - \
-cyl->radius * cyl->radius;
+	half_b = (double)ray->origin.x * ray->dir.x + \
+(double)ray->origin.z * ray->dir.z;
+	c = (double)ray->origin.x * ray->origin.x + \
+(double)ray->origin.z * ray->origin.z - (double)cyl->radius * cyl->radius;
 	discriminant = half_b * half_b - a * c;
 	if (discriminant < 0.0f)
 		return (false);
-	discriminant = sqrtf(discriminant);
-	t_vals[0] = (-half_b - discriminant) / a;
-	t_vals[1] = (-half_b + discriminant) / a;
+	discriminant = sqrt(discriminant);
+	t_vals[0] = (float)(-half_b - discriminant) / a;
+	t_vals[1] = (float)(-half_b + discriminant) / a;
 	return (true);
 }
 

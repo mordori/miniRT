@@ -44,14 +44,14 @@
 # define SENS_ORBIT				0.0006f
 # define SENS_ZOOM				0.0018f
 # define SENS_PAN				0.0002f
-# define SENS_MOVE				0.8f
+# define SENS_MOVE				1.0f
 
 # define SENSOR_HEIGHT_MM		24.0f
 # define SENSOR_HALF_HEIGHT_MM	12.0f
 
 # define MAX_RADIANCE			10.0f
 # define CLAMP_INDIRECT			10.0f
-# define CAMERA_LIMIT			999.0f
+# define WORLD_LIMIT			9999.9f
 
 # define KEY_FORWARD			MLX_KEY_W
 # define KEY_LEFT				MLX_KEY_A
@@ -201,6 +201,10 @@ static const t_vec3				g_one = {{1.0f, 1.0f, 1.0f, 0.0f}};
 static const t_vec3				g_right = {{1.0f, 0.0f, 0.0f, 0.0f}};
 static const t_vec3				g_up = {{0.0f, 1.0f, 0.0f, 0.0f}};
 static const t_vec3				g_forward = {{0.0f, 0.0f, 1.0f, 0.0f}};
+static const t_vec3				g_world_limit = \
+{{WORLD_LIMIT, WORLD_LIMIT, WORLD_LIMIT, 1.0f}};
+static const t_vec3				g_world_limit_neg = \
+{{-WORLD_LIMIT, -WORLD_LIMIT, -WORLD_LIMIT, 1.0f}};
 
 typedef enum e_obj_type			t_obj_type;
 typedef enum e_light_type		t_light_type;
@@ -393,7 +397,7 @@ struct __attribute__((aligned(16))) s_object
 	t_transform		transform;
 	t_vec3			bounds_center;
 	uint32_t		material_id;
-	t_vec3			bounds_dims;
+	t_vec3			bounds;
 };
 
 struct __attribute__((aligned(16))) s_light

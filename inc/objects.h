@@ -29,7 +29,7 @@ float t_max);
 bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit);
 void	compute_cone_cap_uv(t_vec3 to_hit, float base_r, t_hit *hit);
 void	compute_coefficients(const t_cone *cone, const t_ray *ray, \
-float coef[3]);
+double coef[3]);
 bool	test_body_hit(const t_ray *ray, float params[2], float t);
 bool	solve_body_quadratic(const t_cylinder *cyl, const t_ray *ray, \
 float t_vals[2]);

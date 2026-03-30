@@ -30,7 +30,8 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
 		if (config_editor(ctx, keydata))
 			dirty = true;
-		if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
+		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && \
+keydata.action == MLX_PRESS)
 			dirty = frame_camera(ctx);
 		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
 			dirty = deselect_object(ctx, &ctx->renderer);
