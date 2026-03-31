@@ -64,6 +64,7 @@ const t_context *ctx, const t_path *path, t_vec3 hit_biased, float dist)
 	t_hit		dummy_hit;
 
 	shadow_ray = new_ray(hit_biased, path->l);
+	memset(&dummy_hit, 0, sizeof(t_hit));
 	dummy_hit.t = dist;
 	if (\
 !(path->mat->flags & MAT_NO_REC_SHADOW) && \

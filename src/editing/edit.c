@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "editing.h"
+#include "lights.h"
 #include "utils.h"
 
 static inline void	switch_edit_mode(\
@@ -32,6 +33,7 @@ bool	config_editor(t_context *ctx, mlx_key_data_t keydata)
 		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 		update_transform(&ctx->editor.selected_obj->transform);
 		update_bounds(ctx->editor.selected_obj);
+		update_light_radius(ctx);
 	}
 	return (ctx->editor.mode != prev_mode || \
 ctx->editor.constraint_axis != prev_constraints);
