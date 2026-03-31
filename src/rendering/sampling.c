@@ -26,7 +26,8 @@ t_vec3	sample_cos_hemisphere(t_vec3 n, t_vec2 uv)
 	return (res);
 }
 
-t_vec3	sample_disk(t_vec2 uv)
+// Shirley's concentric mapping
+t_vec2	sample_disk(t_vec2 uv)
 {
 	t_vec2		phi;
 	float		u;
@@ -36,7 +37,7 @@ t_vec3	sample_disk(t_vec2 uv)
 	u = 2.0f * uv.u - 1.0f;
 	v = 2.0f * uv.v - 1.0f;
 	if (u == 0.0f && v == 0.0f)
-		return (vec3_n(0.0f));
+		return (vec2_n(0.0f));
 	if (u * u > v * v)
 	{
 		r = u;
@@ -47,7 +48,7 @@ t_vec3	sample_disk(t_vec2 uv)
 		r = v;
 		sincosf(M_PI_2 - M_PI_4 * (u / v), &phi.sin, &phi.cos);
 	}
-	return (vec3(r * phi.cos, r * phi.sin, 0.0f));
+	return (vec2(r * phi.cos, r * phi.sin));
 }
 
 t_vec3	sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv)
@@ -62,6 +63,7 @@ t_vec3	sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv)
 	return (res);
 }
 
+// Visible GGX Normals, Dupuy & Benyoub
 void	sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv)
 {
 	t_vec3		wi_std;

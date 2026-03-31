@@ -96,13 +96,12 @@ float	eval_speed(t_context *ctx)
 		dist = vec3_dist(ctx->scene.cam.transform.pos, \
 ctx->editor.selected_obj->transform.pos);
 		dist = fmaxf(dist, 1.0f);
-		speed = ctx->mlx->delta_time * 60.0f * SENS_TRANSLATE * dist * \
-(14.0f / ctx->scene.cam.focal_len_mm);
+		speed = SENS_TRANSLATE * dist * (14.0f / ctx->scene.cam.focal_len_mm);
 	}
 	else if (ctx->editor.mode == EDIT_ROTATE)
-		speed = ctx->mlx->delta_time * 60.0f * SENS_ROTATE;
+		speed = SENS_ROTATE;
 	else
-		speed = ctx->mlx->delta_time * 60.0f * SENS_SCALE;
+		speed = SENS_SCALE;
 	return (speed);
 }
 

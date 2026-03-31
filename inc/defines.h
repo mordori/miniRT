@@ -37,14 +37,14 @@
 # define MAX_NAME_LEN			64
 # define MAX_TEXTURES			64
 
-# define SENS_TRANSLATE			0.0007f
-# define SENS_ROTATE			0.002f
-# define SENS_SCALE				0.0007f
-# define SENS_LOOK				0.0008f
-# define SENS_ORBIT				0.0006f
-# define SENS_ZOOM				0.0018f
-# define SENS_PAN				0.0002f
-# define SENS_MOVE				1.0f
+# define SENS_TRANSLATE			0.0015f
+# define SENS_ROTATE			0.003f
+# define SENS_SCALE				0.0019f
+# define SENS_LOOK				0.0019f
+# define SENS_ORBIT				0.003f
+# define SENS_ZOOM				0.0035f
+# define SENS_PAN				0.0005f
+# define SENS_MOVE				2.0f
 
 # define SENSOR_HEIGHT_MM		24.0f
 # define SENSOR_HALF_HEIGHT_MM	12.0f

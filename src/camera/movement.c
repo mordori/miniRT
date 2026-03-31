@@ -21,6 +21,7 @@ bool	camera_movement(t_context *ctx)
 	t_camera	*cam;
 	t_vec3		input;
 	t_vec3		move;
+	float		dt;
 
 	if (ctx->renderer.mode == SOLID)
 		return (false);
@@ -28,7 +29,8 @@ bool	camera_movement(t_context *ctx)
 	input = get_key_input(ctx->mlx);
 	if (input.x == 0.0f && input.y == 0.0f && input.z == 0.0f)
 		return (false);
-	move = compute_move_vec(cam, input, ctx->mlx->delta_time);
+	dt = fminf(ctx->mlx->delta_time, 0.1f);
+	move = compute_move_vec(cam, input, dt);
 	cam->transform.pos = vec3_add(cam->transform.pos, move);
 	clamp_camera(cam);
 	update_camera(ctx, cam);

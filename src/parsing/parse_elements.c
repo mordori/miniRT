@@ -51,6 +51,8 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 		return (E_RANGE);
 	if (!parse_color(tokens[2], &color))
 		return (E_INVALID_NUM);
+	if (count_tokens(tokens) == 3)
+		ctx->scene.env.amb_color_2 = color;
 	ctx->scene.env.amb_light.type = LIGHT_AMBIENT;
 	ctx->scene.env.amb_light.intensity = ratio;
 	ctx->scene.env.amb_light.color = color;
