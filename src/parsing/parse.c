@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:45:01 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:45:09 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/03/31 18:55:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	p_error(t_context *ctx, t_error err, int line_num)
 	msgs[E_ARGS] = "Invalid argument count for element";
 	msgs[E_INVALID_NUM] = "Invalid number format";
 	msgs[E_RANGE] = "Value out of valid range";
-	msgs[E_DUPLICATE] = "Duplicate unique element (A, L, or C)";
+	msgs[E_DUPLICATE] = "Duplicate unique element (A or C)";
 	msgs[E_MALLOC] = "Memory allocation failed";
 	msgs[E_MISSING_OBJ] = "Missing object in scene";
 	msgs[E_TEXTURE] = "Failed to load texture";

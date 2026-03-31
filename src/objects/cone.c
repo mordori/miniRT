@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:52:56 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 20:21:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:08:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ float t_vals[2])
 		return (false);
 	discriminant = sqrt(discriminant);
 	inv_a = 1.0f / coef[0];
-	t_vals[0] = (float)(-coef[1] - discriminant) * inv_a;
-	t_vals[1] = (float)(-coef[1] + discriminant) * inv_a;
+	t_vals[0] = ((float)(-coef[1] - discriminant)) * inv_a;
+	t_vals[1] = ((float)(-coef[1] + discriminant)) * inv_a;
 	if (coef[0] < 0.0f)
 	{
 		tmp = t_vals[0];
@@ -103,7 +103,8 @@ static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
 	float		len_sq;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	hit->normal = vec3(hit->point.x, -hit->point.y * cone->tan_sq, hit->point.z);
+	hit->normal = vec3(\
+hit->point.x, -hit->point.y * cone->tan_sq, hit->point.z);
 	len_sq = vec3_dot(hit->normal, hit->normal);
 	if (len_sq < G_EPSILON)
 		hit->normal = g_up;

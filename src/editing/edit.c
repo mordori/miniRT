@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:47 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 15:10:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 20:02:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ bool	config_editor(t_context *ctx, mlx_key_data_t keydata)
 	{
 		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 		update_transform(&ctx->editor.selected_obj->transform);
+		update_bounds(ctx->editor.selected_obj);
 	}
 	return (ctx->editor.mode != prev_mode || \
 ctx->editor.constraint_axis != prev_constraints);
@@ -53,7 +54,7 @@ t_context *ctx, mlx_key_data_t keydata)
 	if (ctx->editor.mode == EDIT_DEFAULT)
 	{
 		ctx->editor.orig_transform = ctx->editor.selected_obj->transform;
-		begin_edit_action(ctx);
+		begin_edit_action(ctx, mode);
 	}
 	else
 	{

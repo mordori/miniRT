@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 15:12:08 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:58:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ bool	reset_camera(t_context *ctx)
 	return (true);
 }
 
-bool	frame_camera(t_context *ctx)
+bool	frame_camera(t_context *ctx, t_object *obj)
 {
-	const t_object	*obj = ctx->editor.selected_obj;
 	t_camera		*cam;
 	t_vec3			half_bounds;
 	t_vec3			proj;
 	t_vec2			dist;
-	const float		tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
+	const float		tan_half_fov = \
+SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
 
 	if (!obj)
 		return (false);
@@ -82,19 +82,15 @@ bool	frame_camera(t_context *ctx)
 	proj.height = vec3_dot(vec3_fabsf(cam->up), half_bounds);
 	proj.depth = vec3_dot(vec3_fabsf(cam->forward), half_bounds);
 	if (obj->type == OBJ_PLANE)
-	{
 		cam->distance = 20.0f;
-		cam->transform.pos = vec3_sub(obj->transform.pos, \
-vec3_scale(cam->forward, cam->distance));
-	}
 	else
 	{
 		dist.height = proj.height / tan_half_fov;
 		dist.width = proj.width / (tan_half_fov * cam->aspect);
 		cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
-		cam->transform.pos = vec3_sub(obj->bounds_center, \
-vec3_scale(cam->forward, cam->distance));
 	}
+	cam->transform.pos = vec3_sub(obj->bounds_center, \
+vec3_scale(cam->forward, cam->distance));
 	update_camera(ctx, cam);
 	return (true);
 }

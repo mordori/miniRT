@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:46:09 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 14:33:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:54:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void		cursor_hook(double xpos, double ypos, void *param);
 void		clean(t_context *ctx);
 void		vector_try_init(t_context *ctx, t_vector *vec, bool is_shrink,
 				void (*del)(void *));
-void		vector_try_add(t_context *ctx, t_vector *vec, void *item);
+bool		vector_try_add(t_context *ctx, t_vector *vec, void *item);
 int			try_open(t_context *ctx, const char *file, int o_flag, int p_flag);
 ssize_t		try_write(t_context *ctx, int fd, const char *src);
 ssize_t		try_write_endl(t_context *ctx, int fd, const char *src);
@@ -106,5 +106,7 @@ void		branch_idx(\
 const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
 void		update_bounds(t_object *obj);
 float		get_max_bounds_dim(const t_object *obj);
+void		check_edit_keys(\
+t_context *ctx, mlx_key_data_t keydata, bool *dirty);
 
 #endif

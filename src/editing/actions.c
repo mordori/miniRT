@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 14:33:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:15:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,10 @@ void	edit_action(t_context *ctx, t_vec2i delta)
 	}
 }
 
-void	begin_edit_action(t_context *ctx)
+void	begin_edit_action(t_context *ctx, t_edit_mode mode)
 {
-	mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_HIDDEN);
+	if (mode != EDIT_SCALE)
+		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_HIDDEN);
 	mlx_get_mouse_pos(ctx->mlx, &ctx->mouse.pos_orig.x, &ctx->mouse.pos_orig.y);
 	ctx->mouse.pos = ctx->mouse.pos_orig;
 	ctx->mouse.pos_prev = ctx->mouse.pos_orig;
@@ -50,13 +51,17 @@ void	begin_edit_action(t_context *ctx)
 
 void	end_edit_action(t_context *ctx)
 {
-	ctx->editor.mode = EDIT_DEFAULT;
 	ctx->editor.constraint_axis = AXIS_DEFAULT;
 	ctx->editor.constraints = 0;
-	mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
-	mlx_set_mouse_pos(ctx->mlx, ctx->mouse.pos_orig.x, ctx->mouse.pos_orig.y);
-	ctx->mouse.pos = ctx->mouse.pos_orig;
-	ctx->mouse.pos_prev = ctx->mouse.pos_orig;
+	if (ctx->editor.mode != EDIT_SCALE)
+	{
+		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
+		mlx_set_mouse_pos(\
+ctx->mlx, ctx->mouse.pos_orig.x, ctx->mouse.pos_orig.y);
+		ctx->mouse.pos = ctx->mouse.pos_orig;
+		ctx->mouse.pos_prev = ctx->mouse.pos_orig;
+	}
+	ctx->editor.mode = EDIT_DEFAULT;
 }
 
 void	apply_edit_action(t_context *ctx)
@@ -64,10 +69,11 @@ void	apply_edit_action(t_context *ctx)
 	end_edit_action(ctx);
 }
 
-void	cancel_edit_action(t_context *ctx)
+bool	cancel_edit_action(t_context *ctx)
 {
 	ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 	update_transform(&ctx->editor.selected_obj->transform);
 	update_bounds(ctx->editor.selected_obj);
 	end_edit_action(ctx);
+	return (true);
 }

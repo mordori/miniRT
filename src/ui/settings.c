@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 21:04:11 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 15:10:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:26:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_context *ctx, mlx_image_t **img, t_ui vals, t_vec2i pos);
 static inline void	display_text_f(\
 t_context *ctx, mlx_image_t **img, t_ui vals, t_vec2i pos);
 static inline void	display_status(\
-t_context *ctx, int *last, t_vec2i pos);
+t_context *ctx, int *last, t_vec2i pos, int current);
 static inline bool	img_handling(\
 t_context *ctx, mlx_image_t **img, int *last, int current);
 
@@ -30,7 +30,7 @@ void	update_ui(t_context *ctx)
 	static int			last_i[3] = {0, -1, -1};
 	static float		last_f[3] = {-1.0f, -1.0f, -1.0f};
 
-	display_status(ctx, &last_i[0], vec2i(50, 20));
+	display_status(ctx, &last_i[0], vec2i(50, 20), 0);
 	snprintf(g_buf, sizeof(g_buf), \
 "Samples: %d", ctx->renderer.render_samples);
 	display_text_uint(ctx, &img[0], ui_val(&last_i[1], \
@@ -52,13 +52,13 @@ ctx->renderer.cam.focus_dist);
 ctx->renderer.cam.focus_dist), vec2i(50, 140));
 }
 
-static inline void	display_status(t_context *ctx, int *last, t_vec2i pos)
+static inline void	display_status(t_context *ctx, int *last, t_vec2i pos, \
+int current)
 {
 	static const char	*edit[] = {"Selected", "Translate", "Rotate", "Scale"};
 	static const char	*axis[] = {"", "X", "Y", "Z", "XY", "XZ", "YZ"};
 	static const char	*mode[] = {"Rendering", "Done!", "Editing", "Selected"};
 	static mlx_image_t	*img;
-	int					current;
 
 	current = (ctx->renderer.frame >= ctx->renderer.render_samples);
 	if (ctx->renderer.mode == SOLID)
@@ -77,12 +77,11 @@ edit[ctx->editor.mode], axis[ctx->editor.constraint_axis]);
 	img = mlx_put_string(ctx->mlx, g_buf, pos.x, pos.y);
 	if (!img)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
+	set_text_color(img, 0xFFFF00FF);
 	if (ctx->renderer.mode == SOLID)
 		set_text_color(img, 0x00FFFFFF);
 	else if (current)
 		set_text_color(img, 0x88FF00FF);
-	else
-		set_text_color(img, 0xFFFF00FF);
 	*last = current;
 }
 

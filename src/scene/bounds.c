@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:09:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 14:29:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:09:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ t_aabb	cone_bounds(const t_object *obj)
 	t_vec3		base_center;
 	t_vec3		radial;
 	t_vec3		a2;
-	t_vec3		zero;
 
-	zero = vec3_n(0.0f);
 	cone = obj->shape.cone;
 	base_center = vec3_scale(cone.axis, cone.height);
 	a2.x = cone.axis.x * cone.axis.x;
@@ -63,8 +61,8 @@ t_aabb	cone_bounds(const t_object *obj)
 	radial.x = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.x));
 	radial.y = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.y));
 	radial.z = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z));
-	aabb.min.v = _mm_min_ps(zero.v, vec3_sub(base_center, radial).v);
-	aabb.max.v = _mm_max_ps(zero.v, vec3_add(base_center, radial).v);
+	aabb.min.v = _mm_min_ps(g_zero.v, vec3_sub(base_center, radial).v);
+	aabb.max.v = _mm_max_ps(g_zero.v, vec3_add(base_center, radial).v);
 	aabb = aabb_object_to_world(aabb, &obj->transform.object_to_world);
 	return (aabb);
 }

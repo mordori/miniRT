@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:45:26 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 17:25:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:15:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	select_object(t_context *ctx);
 bool	edit_object(t_context *ctx, t_vec2i delta);
 bool	config_editor(t_context *ctx, mlx_key_data_t keydata);
 void	apply_edit_action(t_context *ctx);
-void	cancel_edit_action(t_context *ctx);
-void	begin_edit_action(t_context *ctx);
+bool	cancel_edit_action(t_context *ctx);
+void	begin_edit_action(t_context *ctx, t_edit_mode mode);
 void	end_edit_action(t_context *ctx);
 void	edit_action(t_context *ctx, t_vec2i delta);
 void	obj_translate(\
