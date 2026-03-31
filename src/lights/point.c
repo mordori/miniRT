@@ -95,7 +95,7 @@ t_context *ctx, t_light *light, t_object *obj)
 	return (E_OK);
 }
 
-void	update_lights_radii(t_context *ctx)
+void	update_light_radius(t_context *ctx)
 {
 	t_light		*light;
 	uint32_t	i;

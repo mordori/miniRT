@@ -32,7 +32,7 @@ void	edit_action(t_context *ctx, t_vec2i delta)
 			else if (ctx->editor.mode == EDIT_SCALE)
 				obj_scale(ctx, magnitude);
 			update_transform(&ctx->editor.selected_obj->transform);
-			update_lights_radii(ctx);
+			update_light_radius(ctx);
 			update_bounds(ctx->editor.selected_obj);
 		}
 	}

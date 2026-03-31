@@ -50,6 +50,7 @@ float	pdf_ggx_vndf(const t_path *path)
 	return (pdf);
 }
 
+// Trowbridge-Reitz
 static inline float	d_ggx(float ndoth, float a)
 {
 	float		a2;

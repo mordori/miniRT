@@ -34,7 +34,7 @@ const t_scene *scene, const float t)
 {
 	t_vec3		res;
 
-	res = vec3_lerp(scene->env.amb_color_2, scene->env.amb_light.color, t);
+	res = vec3_lerp(scene->env.amb_light.color, scene->env.amb_color_2, t);
 	return (res);
 }
 
@@ -51,7 +51,7 @@ bool	rotate_skydome(t_context *ctx)
 (mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) && \
 !mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD)))
 	{
-		delta = 0.085f * ctx->mlx->delta_time;
+		delta = 0.085f * fminf(ctx->mlx->delta_time, 0.1f);
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA))
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;

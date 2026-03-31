@@ -47,7 +47,7 @@ bool	config_renderer(t_context *ctx, mlx_key_data_t keydata);
 // Sampling
 // -----------------------------------------------------------------
 t_vec3	sample_cos_hemisphere(t_vec3 n, t_vec2 uv);
-t_vec3	sample_disk(t_vec2 uv);
+t_vec2	sample_disk(t_vec2 uv);
 t_vec3	sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
 void	sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv);
 

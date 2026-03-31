@@ -47,6 +47,7 @@ t_vec3	tangent_to_world(t_vec3 vec, t_vec3 n)
 	return (world);
 }
 
+// Pixar Orthonormal Basis, Duff et al.
 void	onb(t_vec3 n, t_vec3 *b1, t_vec3 *b2)
 {
 	float		sign;
