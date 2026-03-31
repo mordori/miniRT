@@ -27,6 +27,7 @@ t_error	init_plane(t_context *ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id)
 	obj->transform.rot = quat_from_dir(normal);
 	obj->transform.scale = g_one;
 	update_transform(&obj->transform);
+	update_bounds(obj);
 	onb(g_up, &obj->shape.plane.u, &obj->shape.plane.v);
 	obj->shape.plane.point = g_zero;
 	obj->shape.plane.normal = g_up;

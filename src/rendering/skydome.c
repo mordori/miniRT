@@ -66,6 +66,7 @@ initial_pos.x * theta.cos + initial_pos.z * theta.sin;
 			light->obj->transform.pos.z = \
 -initial_pos.x * theta.sin + initial_pos.z * theta.cos;
 			update_transform(&light->obj->transform);
+			update_bounds(light->obj);
 		}
 		return (true);
 	}

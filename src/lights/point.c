@@ -82,6 +82,7 @@ t_context *ctx, t_light *light, t_object *obj)
 	obj->transform.rot.w = 1.0f;
 	obj->transform.scale = vec3_n(1.0f);
 	update_transform(&obj->transform);
+	update_bounds(obj);
 	*new_obj = *obj;
 	new_obj->mat = \
 ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
