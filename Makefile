@@ -65,30 +65,40 @@ endif
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
-				camera.c controls.c movement.c config.c controls_router.c actions.c)
+				camera.c controls.c movement.c config.c controls_router.c \
+				actions.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
-				select.c edit.c constraints.c translate.c rotate.c scale.c actions.c)
+				select.c edit.c constraints.c translate.c rotate.c scale.c \
+				actions.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input_router.c mouse.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
-				material.c patterns.c textures.c perlin_tools.c perlin_noise.c patterns_tools.c)
+				material.c patterns.c textures.c perlin_tools.c perlin_noise.c \
+				patterns_tools.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
-				object.c cylinder.c cylinder_tools.c plane.c sphere.c cone.c cone_tools.c quad.c)
+				object.c cylinder.c cylinder_tools.c plane.c sphere.c cone.c \
+				cone_tools.c quad.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse.c parse_elements.c parse_light.c parse_objects.c parse_tools.c parse_materials.c parse_textures.c parse_utils.c parse_pass.c \
-				 parse_patterns.c parse_validate.c)
+				parse.c parse_elements.c parse_light.c parse_objects.c \
+				parse_tools.c parse_materials.c parse_textures.c parse_utils.c \
+				parse_pass.c parse_patterns.c parse_validate.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				editing/tracer.c editing/lighting.c config.c\
-				renderer.c tracer.c post_processing.c skydome.c post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c lighting.c sampling.c )
+				editing/tracer.c editing/lighting.c config.c \
+				renderer.c tracer.c post_processing.c skydome.c \
+				post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c \
+				lighting.c sampling.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c validator.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
 				settings.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c noise.c mapping.c range.c alloc.c random.c window.c frame.c render.c hit.c transform.c projection.c threads.c constraints.c instructions.c ui.c \
-				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c ft_strtod.c)
+				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c \
+				noise.c mapping.c range.c alloc.c random.c window.c frame.c \
+				render.c hit.c transform.c projection.c threads.c \
+				constraints.c instructions.c ui.c keys.c ft_strtod.c \
+				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \
 				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \

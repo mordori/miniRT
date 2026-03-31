@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:21:01 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 14:33:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 20:01:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,14 @@ void	update_bounds(t_object *obj)
 {
 	t_aabb		aabb;
 
-	aabb = get_object_bounds(obj);
-	obj->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
-	obj->bounds = vec3_sub(aabb.max, aabb.min);
+	if (obj->type == OBJ_PLANE)
+		obj->bounds_center = obj->transform.pos;
+	else
+	{
+		aabb = get_object_bounds(obj);
+		obj->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
+		obj->bounds = vec3_sub(aabb.max, aabb.min);
+	}
 }
 
 float	get_max_bounds_dim(const t_object *obj)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:45:17 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:45:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:12:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	cam_turn(t_context *ctx, t_vec2i delta);
 void	cam_orbit(t_context *ctx, t_vec2i delta);
 void	cam_zoom(t_context *ctx, t_vec2i delta);
 void	cam_pan(t_context *ctx, t_vec2i delta);
-bool	frame_camera(t_context *ctx);
+bool	frame_camera(t_context *ctx, t_object *obj);
 void	set_default_view(t_context *ctx);
 
 #endif

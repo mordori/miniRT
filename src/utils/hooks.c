@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:20:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 15:19:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:20:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,7 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 	ctx = (t_context *)param;
 	dirty = false;
 	pthread_mutex_lock(&ctx->renderer.mutex);
-	if (ctx->renderer.mode == SOLID)
-	{
-		while (ctx->renderer.threads_running)
-			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
-		if (config_editor(ctx, keydata))
-			dirty = true;
-		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && \
-keydata.action == MLX_PRESS)
-			dirty = frame_camera(ctx);
-		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
-			dirty = deselect_object(ctx, &ctx->renderer);
-	}
+	check_edit_keys(ctx, keydata, &dirty);
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
 		ctx->hide_stats = !ctx->hide_stats;
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && \
@@ -81,10 +70,7 @@ r->cam.state == CAM_DEFAULT && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 		else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_PRESS && \
 ctx->editor.mode != EDIT_DEFAULT && \
 !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
-		{
-			cancel_edit_action(ctx);
-			mods = 1;
-		}
+			mods = cancel_edit_action(ctx);
 	}
 	atomic_store(&ctx->renderer.render_cancel, (bool)mods);
 	pthread_mutex_unlock(&r->mutex);

@@ -6,12 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:53:47 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/30 15:10:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:35:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "objects.h"
 #include "utils.h"
+
+static inline void	quad_init_helper(t_quad *quad, t_mat4 *world_to_obj);
 
 /*
 ** Initialize a quad (parallelogram) and add it to the scene.
@@ -40,8 +42,18 @@ vec3_add(quad->q, vec3_scale(vec3_add(quad->u, quad->v), 0.5f));
 	obj.transform.rot = quat_from_dir(vec3_normalize(n_cross));
 	world_to_obj = quat_to_mat4(obj.transform.rot);
 	world_to_obj = mat4_transpose(&world_to_obj);
-	quad->u = mat4_mul_vec3(&world_to_obj, quad->u);
-	quad->v = mat4_mul_vec3(&world_to_obj, quad->v);
+	quad_init_helper(quad, &world_to_obj);
+	obj.shape.quad = *quad;
+	return (add_object(ctx, &obj));
+}
+
+static inline void	quad_init_helper(t_quad *quad, t_mat4 *world_to_obj)
+{
+	t_vec3		n_cross;
+	float		n_len_sq;
+
+	quad->u = mat4_mul_vec3(world_to_obj, quad->u);
+	quad->v = mat4_mul_vec3(world_to_obj, quad->v);
 	quad->q = vec3_scale(vec3_add(quad->u, quad->v), -0.5f);
 	quad->d = 0.0f;
 	n_cross = vec3_cross(quad->u, quad->v);
@@ -51,8 +63,6 @@ vec3_add(quad->q, vec3_scale(vec3_add(quad->u, quad->v), 0.5f));
 	quad->w = vec3_scale(n_cross, 1.0f / n_len_sq);
 	quad->vec_alpha = vec3_cross(quad->v, quad->w);
 	quad->vec_beta = vec3_cross(quad->w, quad->u);
-	obj.shape.quad = *quad;
-	return (add_object(ctx, &obj));
 }
 
 /*

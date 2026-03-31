@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:57 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/30 15:10:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:55:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,16 @@ hit->obj == ctx->scene.env.dir_light.obj)
 	if (ctx->editor.selected_obj)
 	{
 		if (ctx->editor.selected_obj->type == OBJ_PLANE)
-			vector_try_add(\
-ctx, &ctx->scene.geo.planes, ctx->editor.selected_obj);
+			vector_try_add(ctx, &ctx->scene.geo.planes, \
+ctx->editor.selected_obj);
 		else
-		{
-			vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
-			rebuild_bvh = true;
-		}
+			rebuild_bvh = \
+vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
 	}
 	if (hit->obj->type == OBJ_PLANE)
 		vector_remove(&ctx->scene.geo.planes, hit->obj);
 	else
-	{
-		vector_remove(&ctx->scene.geo.objs, hit->obj);
-		rebuild_bvh = true;
-	}
+		rebuild_bvh = vector_remove(&ctx->scene.geo.objs, hit->obj);
 	ctx->editor.selected_obj = hit->obj;
 	cam->distance = \
 fmaxf(vec3_dist(cam->transform.pos, hit->obj->transform.pos), 0.01f);

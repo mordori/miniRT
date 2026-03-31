@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:47:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:08:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ float	eval_scale_magnitude(t_context *ctx, t_vec2i delta, float speed)
 (m_curr.y - obj_screen_pos.y) * (m_curr.y - obj_screen_pos.y));
 	return ((dist_curr - dist_prev) * speed);
 }
-
 
 static inline float	get_local_axis_component(\
 t_context *ctx, float magnitude, const t_mat4 *m, uint32_t i)

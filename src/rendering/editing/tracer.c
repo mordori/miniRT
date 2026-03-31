@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:49:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 21:03:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/03/31 19:30:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel)
 	t_vec3		bg_color;
 	t_vec3		light_emission;
 
-	if ((int)hit_object(ctx->editor.selected_obj, &path->ray, &path->hit) | \
+	if (\
+(int)hit_object(ctx->editor.selected_obj, &path->ray, &path->hit) | \
 (int)hit_object(\
 ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit) | \
 (int)hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, \
@@ -51,9 +52,8 @@ ctx->scene.geo.bvh_nodes) | (int)hit_planes(ctx, &path->ray, &path->hit))
 	}
 	ctx->editor.selection_mask[pixel->y * ctx->renderer.width + pixel->x] = \
 -M_INF;
-	bg_color = \
-background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
-	bg_color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
+	bg_color = vec3_scale(background_color(&ctx->scene, &path->ray, \
+ctx->renderer.cam.skydome_uv_offset), ctx->scene.env.amb_light.intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return (false);
 }
