@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:45:58 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:45:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/01 20:38:11 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ t_error			parse_texture_def(t_context *ctx, char **tokens);
 t_error			load_texture_file(const char *filename, t_texture *out);
 t_texture		*find_texture_by_name(t_scene *scene, const char *name);
 bool			is_placeholder(const char *str);
-void			p_error(t_context *ctx, t_error err, int line_num);
+void			p_error(\
+t_context *ctx, t_error err, int line_num, char **lines);
 
 #endif

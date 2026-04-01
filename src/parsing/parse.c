@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:45:01 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/31 18:55:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/01 20:37:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 	return (E_UNKNOWN_ID);
 }
 
-void	p_error(t_context *ctx, t_error err, int line_num)
+void	p_error(t_context *ctx, t_error err, int line_num, char **lines)
 {
 	static char	*msgs[14];
 
@@ -100,5 +100,8 @@ void	p_error(t_context *ctx, t_error err, int line_num)
 	msgs[E_TOO_MANY] = "Too many textures or materials";
 	msgs[E_TOO_BIG] = "Object size is too big";
 	if (err > E_OK && err <= E_TOO_BIG)
+	{
+		try_free_all(lines);
 		fatal_error(ctx, msgs[err], ctx->file, line_num);
+	}
 }

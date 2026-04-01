@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pass.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:46:37 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:46:44 by wshoweky         ###   ########.fr       */
+/*   Updated: 2026/04/01 20:38:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	try_pass(t_context *ctx, t_parser *p,
 			continue ;
 		tokens = try_split(line);
 		if (!tokens)
-			p_error(ctx, E_MALLOC, p->line_num);
+			p_error(ctx, E_MALLOC, p->line_num, lines);
 		err = dispatch_pass(ctx, p, tokens, pass);
 		ft_free_split(tokens);
 		if (err != E_OK && err != E_EMPTY)
-			p_error(ctx, err, p->line_num);
+			p_error(ctx, err, p->line_num, lines);
 	}
 }
 
