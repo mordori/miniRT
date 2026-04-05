@@ -61,7 +61,7 @@ t_error	dispatch_pass(t_context *ctx, t_parser *p,
 		if (ft_strcmp(id, "mat") == 0)
 			return (parse_material_def(ctx, p, tokens));
 		if (ft_strcmp(id, "render") == 0)
-			return (try_render_settings(ctx, tokens));
+			return (try_render_settings(ctx, p, tokens));
 		return (E_EMPTY);
 	}
 	if (ft_strcmp(id, "mat") == 0 || ft_strcmp(id, "tex") == 0
@@ -71,12 +71,14 @@ t_error	dispatch_pass(t_context *ctx, t_parser *p,
 }
 
 // Render settings: render <samples> <bounces>, '_' is the placeholder
-t_error	try_render_settings(t_context *ctx, char **tokens)
+t_error	try_render_settings(t_context *ctx, t_parser *p, char **tokens)
 {
 	uint32_t	val;
 
 	if (count_tokens(tokens) != 3)
 		return (E_ARGS);
+	if (p->has_render_settings)
+		return (E_DUPLICATE);
 	if (!is_placeholder(tokens[1]))
 	{
 		if (!parse_uint(tokens[1], &val) || val == 0 || !ft_is_pot(val))
@@ -89,6 +91,7 @@ t_error	try_render_settings(t_context *ctx, char **tokens)
 			return (E_RANGE);
 		ctx->renderer.render_bounces = val;
 	}
+	p->has_render_settings = true;
 	return (E_OK);
 }
 

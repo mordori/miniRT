@@ -41,7 +41,7 @@ t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
 	if (is_color_token(token))
 	{
 		if (!parse_color((char *)token, &color))
-			return (E_INVALID_NUM);
+			return (E_INVALID_COLOR);
 		mat = (t_material){0};
 		mat.albedo = color;
 		mat.base_color = BASE_COLOR;
@@ -162,7 +162,7 @@ t_error	parse_material_def(t_context *ctx, t_parser *p, char **tokens)
 	if (!parse_uint(tokens[1], &id) || id != p->mat_count)
 		return (E_MATERIAL);
 	if (!parse_color(tokens[2], &color))
-		return (E_INVALID_NUM);
+		return (E_INVALID_COLOR);
 	entry = &p->materials[p->mat_count];
 	mat = &entry->material;
 	*mat = (t_material){0};

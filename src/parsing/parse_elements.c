@@ -26,7 +26,7 @@ static t_error	parse_ambient_color2(t_context *ctx, char **tokens)
 	if (count_tokens(tokens) == 4)
 	{
 		if (!parse_color(tokens[3], &color))
-			return (E_INVALID_NUM);
+			return (E_INVALID_COLOR);
 		ctx->scene.env.amb_color_2 = color;
 	}
 	else if (count_tokens(tokens) != 3)
@@ -50,7 +50,7 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	if (!validate_range(ratio, 0.0f, 1.0f))
 		return (E_RANGE);
 	if (!parse_color(tokens[2], &color))
-		return (E_INVALID_NUM);
+		return (E_INVALID_COLOR);
 	if (count_tokens(tokens) == 3)
 		ctx->scene.env.amb_color_2 = color;
 	ctx->scene.env.amb_light.type = LIGHT_AMBIENT;
@@ -89,6 +89,8 @@ static t_error	more_camera_fields(char **tokens, t_camera *cam, int tc)
 	{
 		if (!parse_float(tokens[5], &cam->focus_dist))
 			return (E_INVALID_NUM);
+		if (!validate_range(cam->focus_dist, 0.1f, 1000000.0f))
+			return (E_RANGE);
 	}
 	return (E_OK);
 }

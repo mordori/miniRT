@@ -24,6 +24,8 @@ t_error	parse_skydome(t_context *ctx, char **tokens)
 {
 	if (count_tokens(tokens) != 2)
 		return (E_ARGS);
+	if (ctx->scene.env.skydome.tex || ctx->scene.env.skydome.pixels)
+		return (E_DUPLICATE);
 	return (load_texture_file(tokens[1], &ctx->scene.env.skydome));
 }
 

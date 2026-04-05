@@ -36,8 +36,8 @@ bool	is_color_token(const char *str)
 	return (str && ft_strchr(str, ',') != NULL);
 }
 
-void	validate_scene(t_context *ctx, t_parser *p)
+void	validate_scene(t_context *ctx, t_parser *p, char **lines)
 {
 	if (!p->has_camera)
-		fatal_error(ctx, "Missing camera (C)", ctx->file, p->line_num);
+		p_error(ctx, E_NO_CAMERA, p->line_num, lines);
 }

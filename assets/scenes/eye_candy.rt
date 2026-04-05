@@ -2,14 +2,14 @@
 render		128			32
 
 # Ambient Light
-A			0.3			255,30,140
+A			0.3			225,141,196
 
 # Camera (pos, dir, fov, exposure, focus_dist)
 C			0,3.5,-5	0,-0.3,1	70			0.7			8.0
 
 # ----------------- MATERIALS -----------------
 # mat ID  Albedo       Met  Rou  IOR  Tra  EmStr EmColor     Flg Tex  Nor  Bmp  Pat      Sca   Alb2
-#rgb(255, 200, 220)
+#rgb(225, 141, 196)
 
 # Light Source
 mat   0   255,255,255  0.0  0.0  1.0  0.0  50.0 255,240,240 2   _    _    _    _        _     _
@@ -43,7 +43,7 @@ mat   11  255,200,220  0.0  0.9  1.0  0.0  0.0   0,0,0       0   _    _    _    
 
 
 # ----------------- LIGHTS -----------------
-L     0,6,-3    1.0   255,255,255   0.8   0
+L     0,7,-3    1.0   255,255,255   0.8   0
 
 # ----------------- THE CAKE (CENTER) -----------------
 # Main Cake Body
