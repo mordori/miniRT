@@ -54,9 +54,6 @@ t_error	load_texture_file(const char *filename, t_texture *out)
 	return (E_OK);
 }
 
-/**
- * Find texture by name in parser's texture registry.
- */
 t_texture	*find_texture_by_name(t_scene *scene, const char *name)
 {
 	int	i;

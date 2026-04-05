@@ -17,7 +17,7 @@
 # include <string.h>
 
 # define MAX_MATERIALS 64
-# define MAX_LINES 100000
+# define MAX_LINES 10000
 # define TEXTURE_PATH "assets/textures/"
 
 typedef enum e_error
@@ -35,7 +35,10 @@ typedef enum e_error
 	E_MATERIAL,
 	E_EMISSIVE,
 	E_TOO_MANY,
-	E_TOO_BIG
+	E_TOO_BIG,
+	E_NO_CAMERA,
+	E_INVALID_PAT,
+	E_INVALID_COLOR
 }				t_error;
 
 typedef struct s_mat_entry
@@ -55,6 +58,7 @@ typedef struct s_parser
 	bool		has_cylinder;
 	bool		has_cone;
 	bool		has_quad;
+	bool		has_render_settings;
 	t_mat_entry	materials[MAX_MATERIALS];
 	uint32_t	mat_count;
 }				t_parser;
@@ -74,7 +78,7 @@ int				count_delimiter(const char *str, char delim);
 void			try_free_all(char **lines);
 
 /* Validation helpers */
-void			validate_scene(t_context *ctx, t_parser *p);
+void			validate_scene(t_context *ctx, t_parser *p, char **lines);
 
 bool			validate_range(float value, float min, float max);
 bool			validate_normalized(t_vec3 *vec);
@@ -103,7 +107,7 @@ bool			bump_strength(t_material *mat, char **tkns);
 bool			parse_pattern_token(const char *tkn, t_pattern *out);
 t_error			parse_mat_pattern(t_material *mat, char **tkns, int tc);
 
-t_error			try_render_settings(t_context *ctx, char **tokens);
+t_error			try_render_settings(t_context *ctx, t_parser *p, char **tokens);
 t_error			parse_texture_def(t_context *ctx, char **tokens);
 t_error			load_texture_file(const char *filename, t_texture *out);
 t_texture		*find_texture_by_name(t_scene *scene, const char *name);

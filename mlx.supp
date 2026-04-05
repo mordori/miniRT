@@ -52,3 +52,32 @@
     ...
     fun:__tls_get_addr
 }
+
+{
+    ignore_llvm_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    fun:_ZnwmSt11align_val_tRKSt9nothrow_t
+    fun:_ZN4llvm15allocate_bufferEmm
+    ...
+}
+{
+    ignore_unknown_calloc_definite
+    Memcheck:Leak
+    match-leak-kinds: definite
+    fun:calloc
+    obj:*
+    obj:*
+    obj:*
+    ...
+}
+{
+    ignore_unknown_calloc_indirect
+    Memcheck:Leak
+    match-leak-kinds: indirect
+    fun:calloc
+    obj:*
+    obj:*
+    obj:*
+    ...
+}

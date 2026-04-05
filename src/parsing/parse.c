@@ -33,7 +33,7 @@ bool	parse_scene(t_context *ctx, int fd)
 	pass = 0;
 	while (pass < 3)
 		try_pass(ctx, &parser, lines, pass++);
-	validate_scene(ctx, &parser);
+	validate_scene(ctx, &parser, lines);
 	try_free_all(lines);
 	return (true);
 }
@@ -42,16 +42,24 @@ static void	read_lines(t_context *ctx, int fd, char **lines)
 {
 	char	*line;
 	int		count;
+	int		status;
 
 	count = 0;
-	while (try_gnl(ctx, fd, &line) == GNL_OK)
+	while (1337)
 	{
+		status = get_next_line(fd, &line);
+		if (status == GNL_ERROR)
+		{
+			lines[count] = NULL;
+			p_error(ctx, E_MALLOC, count + 1, lines);
+		}
+		if (status == GNL_EOF)
+			break ;
 		if (count >= MAX_LINES)
 		{
 			free(line);
 			lines[count] = NULL;
-			try_free_all(lines);
-			fatal_error(ctx, "Too many lines in scene", ctx->file, count);
+			p_error(ctx, E_TOO_MANY, count + 1, lines);
 		}
 		lines[count++] = line;
 	}
@@ -84,24 +92,29 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 
 void	p_error(t_context *ctx, t_error err, int line_num, char **lines)
 {
-	static char	*msgs[14];
+	static char	*msgs[17];
 
 	msgs[E_UNKNOWN_ID] = "Unknown element identifier";
 	msgs[E_ARGS] = "Invalid argument count for element";
 	msgs[E_INVALID_NUM] = "Invalid number format";
 	msgs[E_RANGE] = "Value out of valid range";
-	msgs[E_DUPLICATE] = "Duplicate unique element (A or C)";
+	msgs[E_DUPLICATE] = "Duplicate unique element";
 	msgs[E_MALLOC] = "Memory allocation failed";
 	msgs[E_MISSING_OBJ] = "Missing object in scene";
 	msgs[E_TEXTURE] = "Failed to load texture";
 	msgs[E_MATERIAL] = "Invalid material reference";
-	msgs[E_EMISSIVE] = "Emissive material on object / "
-		"non-emissive material on light";
+	msgs[E_EMISSIVE] = "Emissive material on object";
 	msgs[E_TOO_MANY] = "Too many textures or materials";
 	msgs[E_TOO_BIG] = "Object size is too big";
-	if (err > E_OK && err <= E_TOO_BIG)
+	msgs[E_NO_CAMERA] = "Missing camera (C)";
+	msgs[E_INVALID_PAT] = "Invalid pattern type";
+	msgs[E_INVALID_COLOR] = "Invalid color format";
+	if (err > E_OK && err <= E_INVALID_COLOR)
 	{
 		try_free_all(lines);
-		fatal_error(ctx, msgs[err], ctx->file, line_num);
+		if (msgs[err])
+			fatal_error(ctx, msgs[err], ctx->file, line_num);
+		else
+			fatal_error(ctx, "Unknown parsing error", ctx->file, line_num);
 	}
 }

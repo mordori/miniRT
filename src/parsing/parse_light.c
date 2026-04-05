@@ -20,15 +20,14 @@ static t_error	parse_light_core(char **tokens, t_light *light, int tc)
 	t_vec3	color;
 	float	ratio;
 
-	light->radius = 10.0f;
 	if (!parse_vec3(tokens[1], &position))
 		return (E_INVALID_NUM);
 	if (!parse_float(tokens[2], &ratio))
 		return (E_INVALID_NUM);
-	if (ratio < 0.0f || ratio > 1.0f)
+	if (!validate_range(ratio, 0.0f, 1.0f))
 		return (E_RANGE);
 	if (!parse_color(tokens[3], &color))
-		return (E_INVALID_NUM);
+		return (E_INVALID_COLOR);
 	if (tc >= 5 && !parse_float(tokens[4], &light->radius))
 		return (E_INVALID_NUM);
 	if (tc >= 5 && !validate_range(light->radius, 0.01f, 1000000.0f))
@@ -48,7 +47,7 @@ static t_error	default_emissive_mat(t_context *ctx, t_light *light,
 	mat = (t_material){0};
 	mat.albedo = light->color;
 	mat.emission = vec3_scale(light->color, 50 * light->intensity);
-	mat.is_emissive = true;
+	mat.is_emissive = light->intensity > 0.0f;
 	mat.flags = 2;
 	return (new_material(ctx, &mat, out_id));
 }
@@ -67,8 +66,6 @@ static t_error	parse_light_mat(t_parser *p, char **tokens, uint32_t *mat_id)
 
 /**
  * Point Light: L <position> <intensity> <color> [radius] [mat_id]
- * radius defaults to 0.5 if not specified (area light with soft shadows).
- * mat_id defaults to 0 if not specified.
  */
 t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 {
@@ -89,7 +86,7 @@ t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
 	if (err != E_OK)
 		return (err);
 	if (light.radius <= 0.0f)
-		light.radius = 0.01f;
+		light.radius = 1.0f;
 	err = init_point_light(ctx, &light, mat_id);
 	if (err == E_OK)
 		p->has_light = true;

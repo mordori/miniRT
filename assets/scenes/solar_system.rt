@@ -5,7 +5,6 @@ render	32		8
 A		0.2	255,255,255
 
 # Cameras
-# Cinematic view near Earth looking roughly towards Jupiter and Outer Planets
 C		140,20,-150			0,0,1			100				0.7		16
 
 # Central Light Point matching the Sun
