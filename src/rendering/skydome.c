@@ -40,10 +40,11 @@ const t_scene *scene, const float t)
 
 bool	rotate_skydome(t_context *ctx)
 {
-	static t_vec3	initial_pos = {{704000.0f, 484000.0f, 520000.0f, 0.0f}};
-	t_light			*light;
-	float			delta;
-	t_vec2			theta;
+	static const t_vec3	initial_pos = \
+{{704000.0f, 484000.0f, 520000.0f, 0.0f}};
+	t_light				*const light = &ctx->scene.cam.directional_light;
+	float				delta;
+	t_vec2				theta;
 
 	if (\
 (mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) && \
@@ -57,7 +58,6 @@ bool	rotate_skydome(t_context *ctx)
 		ctx->scene.cam.skydome_uv_offset.u += delta;
 		if (ctx->scene.env.has_dir_light)
 		{
-			light = &ctx->scene.cam.directional_light;
 			sincosf(\
 ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);
 			light->obj->transform.pos.x = \

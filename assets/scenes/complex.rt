@@ -1,6 +1,5 @@
 # Render settings (samples, bounces)
-render	32		8
-
+render	128		16
 # Ambient
 A		0.5			64,64,80
 
@@ -11,8 +10,8 @@ sky		sky.png
 # mat	ID		Albedo			Met			Rou			IOR		Tra				EmStr				EmColor				Flg		Tex		Norm	Bump	Pattern		Scale	Alb2
 #rgb(64, 64, 80)
 mat		0		200,200,200		0.0			0.8			1.45	0.0				0.0					0,0,0				0
-mat		1		255,255,255		1.0			0.0			1.45	0.0				0.0					0,0,0				0
-mat		2		255,255,255		0.0			0.02		1.5		0.95			0.0					0,0,0				0
+mat		1		200,200,200		1.0			0.0			1.45	0.0				0.0					0,0,0				0
+mat		2		200,200,200		0.0			0.02		1.5		0.95			0.0					0,0,0				0
 mat		3		180,50,50		0.0			0.4			1.45	0.0				0.0					0,0,0				0
 mat		4		50,180,50		0.0			0.6			1.45	0.0				0.0					0,0,0				0
 mat		5		50,50,200		0.0			0.2			1.45	0.0				0.0					0,0,0				0

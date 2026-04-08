@@ -49,7 +49,6 @@ static inline void	initialize(t_context *ctx)
 	if (!ctx->img || mlx_image_to_window(ctx->mlx, ctx->img, 0, 0) == ERROR)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
 	mlx_key_hook(ctx->mlx, key_hook, ctx);
-	mlx_cursor_hook(ctx->mlx, cursor_hook, ctx);
 	mlx_mouse_hook(ctx->mlx, mouse_hook, ctx);
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
 	if (!init_renderer(ctx))

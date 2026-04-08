@@ -21,9 +21,8 @@ static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel);
 
 bool	init_renderer(t_context *ctx)
 {
-	t_renderer		*r;
+	t_renderer		*const r = &ctx->renderer;
 
-	r = &ctx->renderer;
 	r->init_mutex = !pthread_mutex_init(&r->mutex, NULL);
 	r->init_cond = !pthread_cond_init(&r->cond, NULL);
 	r->threads_amount = (int32_t)sysconf(_SC_NPROCESSORS_ONLN);
@@ -51,11 +50,10 @@ pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
 
 static inline void	*render_routine(void *arg)
 {
-	const t_context	*ctx = (const t_context *)arg;
-	t_renderer		*r;
+	t_context		*const ctx = (t_context *)arg;
+	t_renderer		*const r = &ctx->renderer;
 	uint32_t		tile_id;
 
-	r = &((t_context *)ctx)->renderer;
 	pthread_mutex_lock(&r->mutex);
 	while (true)
 	{
@@ -110,7 +108,7 @@ const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
 
 static inline void	render_pixel(const t_context *ctx, t_pixel *pixel)
 {
-	const t_renderer	*r = &ctx->renderer;
+	const t_renderer	*const r = &ctx->renderer;
 	uint32_t			seed;
 	t_vec3				color;
 
@@ -130,7 +128,7 @@ hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
 
 static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel)
 {
-	const t_renderer	*r = &ctx->renderer;
+	const t_renderer	*const r = &ctx->renderer;
 	t_vec2				aa;
 
 	if (r->mode == RENDERED)

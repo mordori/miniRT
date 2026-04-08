@@ -1,5 +1,5 @@
 # Render settings
-render	16		8
+render	128		16
 
 # Sky dome
 sky sky.png

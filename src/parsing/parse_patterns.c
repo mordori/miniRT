@@ -32,7 +32,7 @@ t_error	parse_mat_pattern(t_material *mat, char **tkns, int tc)
 	if (mat->pattern == PAT_NONE)
 		return (E_OK);
 	if (!parse_float(tkns[14], &mat->pattern_scale)
-		|| !validate_range(mat->pattern_scale, 0.0f, 100.0f))
+		|| !validate_range(mat->pattern_scale, 0.0f, 200.0f))
 		return (E_INVALID_NUM);
 	if (!parse_color(tkns[15], &mat->albedo2))
 		return (E_INVALID_COLOR);

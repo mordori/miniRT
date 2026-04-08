@@ -45,22 +45,28 @@ _mm_max_ps(obj->transform.scale.v, vec4_3(vec3_n(0.01f), 1.0f).v);
 
 float	eval_scale_magnitude(t_context *ctx, t_vec2i delta, float speed)
 {
-	t_vec2		obj_screen_pos;
-	t_vec2		m_prev;
-	t_vec2		m_curr;
-	float		dist_prev;
-	float		dist_curr;
+	static t_vec2	v_mouse;
+	static t_vec2i	orig;
+	t_vec2			obj_screen_pos;
+	float			dist_prev;
+	float			dist_curr;
 
+	if (orig.x != ctx->mouse.pos_orig.x || \
+orig.y != ctx->mouse.pos_orig.y)
+	{
+		orig = ctx->mouse.pos_orig;
+		v_mouse = vec2((float)ctx->mouse.pos_orig.x, (float)ctx->mouse.pos_orig.y);
+	}
 	obj_screen_pos = world_to_screen(ctx, &ctx->scene.cam, \
 &ctx->scene.cam.viewport, ctx->editor.selected_obj->transform.pos);
-	m_prev = vec2((float)ctx->mouse.pos_prev.x, (float)ctx->mouse.pos_prev.y);
-	m_curr = vec2(m_prev.x + (float)delta.x, m_prev.y + (float)delta.y);
 	dist_prev = sqrtf(\
-(m_prev.x - obj_screen_pos.x) * (m_prev.x - obj_screen_pos.x) + \
-(m_prev.y - obj_screen_pos.y) * (m_prev.y - obj_screen_pos.y));
+(v_mouse.x - obj_screen_pos.x) * (v_mouse.x - obj_screen_pos.x) + \
+(v_mouse.y - obj_screen_pos.y) * (v_mouse.y - obj_screen_pos.y));
+	v_mouse.x += (float)delta.x;
+	v_mouse.y += (float)delta.y;
 	dist_curr = sqrtf(\
-(m_curr.x - obj_screen_pos.x) * (m_curr.x - obj_screen_pos.x) + \
-(m_curr.y - obj_screen_pos.y) * (m_curr.y - obj_screen_pos.y));
+(v_mouse.x - obj_screen_pos.x) * (v_mouse.x - obj_screen_pos.x) + \
+(v_mouse.y - obj_screen_pos.y) * (v_mouse.y - obj_screen_pos.y));
 	return ((dist_curr - dist_prev) * speed);
 }
 

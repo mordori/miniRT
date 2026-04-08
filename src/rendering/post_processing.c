@@ -36,12 +36,10 @@ static inline t_vec3	linear_to_srgb(t_vec3 c)
 // Reference Rendering Transform and Output Device Transform
 static inline t_vec3	rrt_and_odt_fit(t_vec3 vec)
 {
-	t_vec3		res;
-	t_v4sf		a;
-	t_v4sf		b;
+	const t_v4sf	a = vec.v * (vec.v + 0.0245786f) - 0.000090537f;
+	const t_v4sf	b = vec.v * (0.983729f * vec.v + 0.4329510f) + 0.238081f;
+	t_vec3			res;
 
-	a = vec.v * (vec.v + 0.0245786f) - 0.000090537f;
-	b = vec.v * (0.983729f * vec.v + 0.4329510f) + 0.238081f;
 	res.v = a / b;
 	return (res);
 }

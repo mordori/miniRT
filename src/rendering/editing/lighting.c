@@ -52,7 +52,7 @@ const t_context *ctx, t_path *path, const t_light *light)
 	path->ndotl = clampf01(vec3_dot(path->n, path->l));
 	if (path->ndotl <= G_EPSILON)
 		return (vec3_n(0.0f));
-	if (hit_shadow(ctx, path, hit_biased, dist - light->radius - B_EPSILON))
+	if (hit_shadow(ctx, path, hit_biased, fmaxf(B_EPSILON, (dist - light->radius) * G_EPSILON)))
 		return (vec3_n(0.0f));
 	return (add_light(ctx, path, light, dist_sq));
 }
