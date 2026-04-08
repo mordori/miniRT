@@ -16,26 +16,20 @@ static inline t_vec3	sample_vndf_hemisphere(t_vec3 wi, t_vec2 uv);
 
 t_vec3	sample_cos_hemisphere(t_vec3 n, t_vec2 uv)
 {
-	t_vec3		res;
-	float		cos_theta;
-	float		sin_theta;
+	const float		cos_theta = sqrtf(uv.v);
+	const float		sin_theta = sqrtf(fmaxf(0.0f, 1.0f - uv.v));
 
-	cos_theta = sqrtf(uv.v);
-	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - uv.v));
-	res = spherical_to_world(n, uv.u, sin_theta, cos_theta);
-	return (res);
+	return (spherical_to_world(n, uv.u, sin_theta, cos_theta));
 }
 
 // Shirley's concentric mapping
 t_vec2	sample_disk(t_vec2 uv)
 {
-	t_vec2		phi;
-	float		u;
-	float		v;
-	float		r;
+	const float		u = 2.0f * uv.u - 1.0f;
+	const float		v = 2.0f * uv.v - 1.0f;
+	t_vec2			phi;
+	float			r;
 
-	u = 2.0f * uv.u - 1.0f;
-	v = 2.0f * uv.v - 1.0f;
 	if (u == 0.0f && v == 0.0f)
 		return (vec2_n(0.0f));
 	if (u * u > v * v)

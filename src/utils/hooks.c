@@ -18,10 +18,9 @@
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
-	t_context		*ctx;
+	t_context		*const ctx = (t_context *)param;
 	bool			dirty;
 
-	ctx = (t_context *)param;
 	dirty = false;
 	pthread_mutex_lock(&ctx->renderer.mutex);
 	check_edit_keys(ctx, keydata, &dirty);
@@ -39,7 +38,8 @@ keydata.action == MLX_PRESS)
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_Y && \
 keydata.action == MLX_PRESS)
 		screenshot(ctx);
-	atomic_store(&ctx->renderer.render_cancel, dirty);
+	if (dirty)
+		atomic_store(&ctx->renderer.render_cancel, true);
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
 }
@@ -72,18 +72,9 @@ ctx->editor.mode != EDIT_DEFAULT && \
 !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 			mods = cancel_edit_action(ctx);
 	}
-	atomic_store(&ctx->renderer.render_cancel, (bool)mods);
+	if (mods)
+		atomic_store(&ctx->renderer.render_cancel, true);
 	pthread_mutex_unlock(&r->mutex);
-}
-
-void	cursor_hook(double xpos, double ypos, void *param)
-{
-	t_context	*ctx;
-
-	ctx = (t_context *)param;
-	(void)ctx;
-	(void)xpos;
-	(void)ypos;
 }
 
 void	resize_hook(int width, int height, void *param)

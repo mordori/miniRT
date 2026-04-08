@@ -15,11 +15,9 @@
 
 float	power_heuristic(float a, float b)
 {
-	float		a2;
-	float		b2;
+	const float		a2 = a * a;
+	const float		b2 = b * b;
 
-	a2 = a * a;
-	b2 = b * b;
 	return (a2 / fmaxf(a2 + b2, G_EPSILON));
 }
 

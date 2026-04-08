@@ -607,7 +607,7 @@ struct s_mouse
 	t_vec2i			pos;
 	t_vec2i			pos_prev;
 	t_vec2i			pos_orig;
-	t_vec2i			pos_logical;
+	t_vec2i			delta_accum;
 };
 
 struct __attribute__((aligned(64))) s_context

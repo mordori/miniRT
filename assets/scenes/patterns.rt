@@ -1,5 +1,5 @@
 # Render settings
-render	64	16
+render	128	16
 
 
 # ----------------- MATERIALS -----------------
@@ -7,7 +7,7 @@ render	64	16
 #rgb(18, 180, 180)
 
 # Emissive light material
-mat	0	255,255,255	0.0		0.0		1.0		0.0		999.0	255,250,240	2
+mat	0	255,255,255	0.0		0.0		1.0		0.0		50.0	255,250,240	2
 
 # Checkered floor plane
 mat	1	18,180,180	0.0		1.0		1.5		0.0		0.0		0,0,0		0		_		_		_		checker		2.0		0,0,0
@@ -42,22 +42,22 @@ mat	9	255,255,255	0.0		0.6		1.5		0.0		0.0		0,0,0		0		_		_		_		gradient	1.0		0,0,
 A	0.3	0,0,0
 
 # Camera: position, look direction, FOV, exposure, focus distance
-C	0,3,-10		0,0,1		70		0.5		10
+C	-7,8,-9		0.5,-0.6,1		70		1.0		10
 
 # Point light
-L	1,10,-15	1.0		255,250,240		0.5		0
+L	1,5,2	1.0		255,250,240		1.1		0
 
 # -------------- Objects ----------------
 
 # Checkered floor plane
-pl	0,-1.5,0	0,1,0	1
+pl	0,0,0	0,1,0	1
 
 # Marble Sphere (center)
-sp	0,0.5,-3	3		5
+sp	2,1.5,-3	3		5
 
 # Brick Cylinder (left)
-cy	-7,4.5,0	0,1,0		2.0		4.0		3
+cy	-7,2.0,3	0,1,0		2.0		4.0		3
 
 # Spiral Cone (right)
-co	7,2,8		0,1,0		30		5.0		4
+co	6,0,9		0,1,0		30		5.0		4
 

@@ -119,14 +119,13 @@ add_lighting(ctx, path, &ctx->renderer.cam.directional_light, pixel));
 static inline void	nee(\
 const t_context *ctx, t_path *path, t_pixel *pixel, t_render_mode mode)
 {
-	const t_light	*light;
-	size_t			i;
-	uint32_t		li_dim;
-	float			li_rand;
+	const t_light		*light;
+	const uint32_t		li_dim = BN_LI + (path->bounce * ctx->bn_stride);
+	size_t				i;
+	float				li_rand;
 
 	if (mode == PREVIEW)
 	{
-		li_dim = BN_LI + (path->bounce * ctx->bn_stride);
 		if (path->bounce == 0)
 			li_rand = blue_noise(&ctx->tex_bn, pixel, li_dim);
 		else
@@ -151,17 +150,14 @@ vec3_add(path->color, add_lighting(ctx, path, light, pixel));
 
 static inline bool	scatter(const t_context *ctx, t_path *path, t_pixel *pixel)
 {
-	t_vec3		f;
-	float		p;
-	uint32_t	spec_dim;
-	float		spec_rand;
+	const t_vec3	f = vec3_schlick(path->f0, path->ndotv);
+	const float		p = fmaxf(fmaxf(f.r, f.g), f.b);
+	const uint32_t	spec_dim = BN_SR_U + (path->bounce * ctx->bn_stride);
+	float			spec_rand;
 
-	f = vec3_schlick(path->f0, path->ndotv);
-	p = fmaxf(fmaxf(f.r, f.g), f.b);
 	path->p_spec = clampf(p, 0.1f, 0.9f);
 	if (path->mat->metallic >= 0.9f)
 		path->p_spec = 1.0f;
-	spec_dim = BN_SR_U + (path->bounce * ctx->bn_stride);
 	if (path->bounce == 0)
 		spec_rand = blue_noise(&ctx->tex_bn, pixel, spec_dim);
 	else

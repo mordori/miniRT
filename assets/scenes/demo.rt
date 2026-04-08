@@ -1,8 +1,8 @@
 # Rendering Settings (samples, bounces)
-render		256			8
+render		256			16
 
 # Ambient Light (intensity, color, optional_color2)
-A		1.0			11,77,217 10,22,207
+A		1.0			11,77,217 	10,22,207
 
 # Camera (pos, dir, fov, exposure, focus_dist)
 C		0,0.4,-13.0 		0,0.05,1		38		0.7		13.0
@@ -16,7 +16,7 @@ C		0,0.4,-13.0 		0,0.05,1		38		0.7		13.0
 mat   0   255,255,255  0.0  0.0  1.0  0.0  50.0  255,255,255  2   _    _    _    _    _    _
 
 # 1: Floor (White Matte)
-mat   1   50,50,50  0.0  0.1  1.4  0.0  0.0   0,0,0       0   _    _    _    _    _    _
+mat   1   50,50,50  0.0  0.1  1.4  0.0  0.0   0,0,0      	 0   _    _    _    _    _    _
 
 # 2: Sphere
 mat   2   55,210,10    0.0  0.6  1.4  0.0  0.0   0,0,0       0   _    _    _    _    _    _
@@ -41,15 +41,15 @@ L		0,4.5,-4		1.0		255,255,255		0.85		0
 pl		0,0,0		0,1,0		1
 
 # Cone (apex, axis, half_angle, height, color/mat_id)
-co		-4.5,2.0,0.0		0,-1,0		30		2.0		2
+co		-4.5,2.0,0.0		0,-1,0		30		2.0			2
 
 # Sphere (center, diameter, color/mat_id)
 sp		-1.5,1.0,0.0		2.0			3
 
 # Cylinders (center, axis, diameter, height, color/mat_id)
-cy		1.5,1.0,0.0			0.6,-0.8123,0		0.4		2.5		4
+cy		1.5,1.0,0.0			0.6,-0.8,0		0.4		2.2		4
 
-cy		1.5,1.0,0.0			0.6,0.8,0			0.4		2.5		4
+cy		1.5,1.0,0.0			0.6,0.8,0		0.4		2.2		4
 
 # Quad (anchor corner, u vector, v vector, color/mat_id)
 qu		3.5,0.0,-1.0			2.0,0,0			0,2.0,0		5

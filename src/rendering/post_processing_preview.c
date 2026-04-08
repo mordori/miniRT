@@ -25,12 +25,10 @@ t_vec3	post_process_preview(const t_context *ctx, t_vec3 c)
 
 static inline t_vec3	tonemap_aces_preview(t_vec3 c)
 {
-	t_vec3		res;
-	t_v4sf		a;
-	t_v4sf		b;
+	const t_v4sf	a = c.v * (2.51f * c.v + 0.03f);
+	const t_v4sf	b = c.v * (2.43f * c.v + 0.59f) + 0.14f;
+	t_vec3			res;
 
-	a = c.v * (2.51f * c.v + 0.03f);
-	b = c.v * (2.43f * c.v + 0.59f) + 0.14f;
 	res.v = a / b;
 	return (res);
 }
