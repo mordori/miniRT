@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:50:04 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:50:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:55:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel);
 
 bool	init_renderer(t_context *ctx)
 {
-	t_renderer		*const r = &ctx->renderer;
+	t_renderer		*r;
 
+	r = &ctx->renderer;
 	r->init_mutex = !pthread_mutex_init(&r->mutex, NULL);
 	r->init_cond = !pthread_cond_init(&r->cond, NULL);
 	r->threads_amount = (int32_t)sysconf(_SC_NPROCESSORS_ONLN);
@@ -50,10 +51,12 @@ pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
 
 static inline void	*render_routine(void *arg)
 {
-	t_context		*const ctx = (t_context *)arg;
-	t_renderer		*const r = &ctx->renderer;
+	t_context		*ctx;
+	t_renderer		*r;
 	uint32_t		tile_id;
 
+	ctx = (t_context *)arg;
+	r = &ctx->renderer;
 	pthread_mutex_lock(&r->mutex);
 	while (true)
 	{
@@ -108,7 +111,7 @@ const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
 
 static inline void	render_pixel(const t_context *ctx, t_pixel *pixel)
 {
-	const t_renderer	*const r = &ctx->renderer;
+	const t_renderer	*r = &ctx->renderer;
 	uint32_t			seed;
 	t_vec3				color;
 
@@ -128,7 +131,7 @@ hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
 
 static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel)
 {
-	const t_renderer	*const r = &ctx->renderer;
+	const t_renderer	*r = &ctx->renderer;
 	t_vec2				aa;
 
 	if (r->mode == RENDERED)

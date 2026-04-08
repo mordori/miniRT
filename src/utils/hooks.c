@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 19:20:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/31 19:20:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:50:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
-	t_context		*const ctx = (t_context *)param;
+	t_context		*ctx;
 	bool			dirty;
 
+	ctx = (t_context *)param;
 	dirty = false;
 	pthread_mutex_lock(&ctx->renderer.mutex);
 	check_edit_keys(ctx, keydata, &dirty);

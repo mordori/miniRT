@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:50:11 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:50:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:53:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,11 @@ bool	rotate_skydome(t_context *ctx)
 {
 	static const t_vec3	initial_pos = \
 {{704000.0f, 484000.0f, 520000.0f, 0.0f}};
-	t_light				*const light = &ctx->scene.cam.directional_light;
+	t_light				*light;
 	float				delta;
 	t_vec2				theta;
 
+	light = &ctx->scene.cam.directional_light;
 	if (\
 (mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) && \
 !mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) || \
