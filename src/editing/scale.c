@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:47:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/31 19:08:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:52:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ float	eval_scale_magnitude(t_context *ctx, t_vec2i delta, float speed)
 orig.y != ctx->mouse.pos_orig.y)
 	{
 		orig = ctx->mouse.pos_orig;
-		v_mouse = vec2((float)ctx->mouse.pos_orig.x, (float)ctx->mouse.pos_orig.y);
+		v_mouse = vec2((float)ctx->mouse.pos_orig.x, \
+(float)ctx->mouse.pos_orig.y);
 	}
 	obj_screen_pos = world_to_screen(ctx, &ctx->scene.cam, \
 &ctx->scene.cam.viewport, ctx->editor.selected_obj->transform.pos);

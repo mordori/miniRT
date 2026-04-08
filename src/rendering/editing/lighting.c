@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:49:33 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:53:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:51:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ const t_context *ctx, t_path *path, const t_light *light)
 	path->ndotl = clampf01(vec3_dot(path->n, path->l));
 	if (path->ndotl <= G_EPSILON)
 		return (vec3_n(0.0f));
-	if (hit_shadow(ctx, path, hit_biased, fmaxf(B_EPSILON, (dist - light->radius) * G_EPSILON)))
+	if (hit_shadow(ctx, path, hit_biased, \
+fmaxf(B_EPSILON, (dist - light->radius) * G_EPSILON)))
 		return (vec3_n(0.0f));
 	return (add_light(ctx, path, light, dist_sq));
 }

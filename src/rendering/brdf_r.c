@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 22:49:42 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:49:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:51:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ float	reflectance(float ior)
 
 float	pdf_ggx_vndf(const t_path *path)
 {
-	const float		a2 = path->alpha * path->alpha;;
+	const float		a2 = path->alpha * path->alpha;
 	float			d;
 	float			pdf;
 	float			den;
