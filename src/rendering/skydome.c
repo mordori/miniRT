@@ -10,15 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rendering.h"
 #include "materials.h"
+#include "rendering.h"
 #include "utils.h"
 
-static inline t_vec3	background_gradient(const t_scene *scene, const float t);
+static inline t_vec3 background_gradient(const t_scene* scene, const float t);
 
-t_vec3	background_color(const t_scene *scene, const t_ray *ray, t_vec2 uv_offset)
-{
-	t_vec2		uv;
+t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset) {
+	t_vec2 uv;
 
 	if (!scene->env.skydome.pixels)
 		return (background_gradient(scene, (ray->dir.y + 1.0f) * 0.5f));
@@ -27,33 +26,30 @@ t_vec3	background_color(const t_scene *scene, const t_ray *ray, t_vec2 uv_offset
 	return (sample_texture(&scene->env.skydome, uv));
 }
 
-static inline t_vec3	background_gradient(const t_scene *scene, const float t)
-{
-	t_vec3		res;
+static inline t_vec3 background_gradient(const t_scene* scene, const float t) {
+	t_vec3 res;
 
 	res = vec3_lerp(scene->env.amb_light.color, scene->env.amb_color_2, t);
 	return (res);
 }
 
-bool	rotate_skydome(t_context *ctx)
-{
-	static const t_vec3	initial_pos = {{704000.0f, 484000.0f, 520000.0f, 0.0f}};
-	t_light				*light;
-	float				delta;
-	t_vec2				theta;
+bool rotate_skydome(t_context* ctx) {
+	static const t_vec3 initial_pos = { { 704000.0f, 484000.0f, 520000.0f, 0.0f } };
+	t_light* light;
+	float delta;
+	t_vec2 theta;
+
+	if (!ctx->scene.env.skydome.pixels)
+		return false;
 
 	light = &ctx->scene.cam.directional_light;
-	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) &&
-		!mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) ||
-		(mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) &&
-		!mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD)))
-	{
+	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) && !mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) ||
+		(mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) && !mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD))) {
 		delta = 0.085f * fminf(ctx->mlx->delta_time, 0.1f);
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA))
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;
-		if (ctx->scene.env.has_dir_light)
-		{
+		if (ctx->scene.env.has_dir_light) {
 			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);
 			light->obj->transform.pos.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin;
 			light->obj->transform.pos.y = initial_pos.y;

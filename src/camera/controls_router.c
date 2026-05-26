@@ -1,53 +1,35 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   controls_router.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:47:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/31 19:58:52 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include <stdbool.h>
 
 #include "camera.h"
-#include "input.h"
+#include "defines.h"
 
-static inline bool	set_cam_state(t_context *ctx);
+static inline bool set_cam_state(t_context* ctx);
 
-bool	control_camera(t_context *ctx, t_vec2i delta)
-{
-	const t_cam_state	prev_state = ctx->scene.cam.state;
+bool control_camera(t_context* ctx, t_vec2i delta) {
+	const t_cam_state prev_state = ctx->scene.cam.state;
 
 	if (ctx->editor.mode != EDIT_DEFAULT || !set_cam_state(ctx))
-		return (false);
-	if (!is_cam_action_active(ctx))
-	{
+		return false;
+	if (!is_cam_action_active(ctx)) {
 		if (prev_state != CAM_DEFAULT)
 			end_cam_action(ctx);
-		return (true);
+		return true;
 	}
 	if (prev_state != CAM_DEFAULT || ctx->scene.cam.state == CAM_DEFAULT)
 		apply_cam_action(ctx, delta);
-	return (true);
+	return true;
 }
 
-void	set_default_view(t_context *ctx)
-{
-	t_camera	*cam;
-
-	cam = &ctx->scene.cam;
+void set_default_view(t_context* ctx) {
+	t_camera* cam = &ctx->scene.cam;
 	cam->init_pos = cam->transform.pos;
 	cam->init_rot = cam->transform.rot;
 	cam->init_focal_len_mm = cam->focal_len_mm;
 	cam->init_focus_dist = cam->focus_dist;
 }
 
-bool	reset_camera(t_context *ctx)
-{
-	t_camera	*cam;
-
-	cam = &ctx->scene.cam;
+bool reset_camera(t_context* ctx) {
+	t_camera* cam = &ctx->scene.cam;
 	cam->transform.pos = cam->init_pos;
 	cam->transform.rot = cam->init_rot;
 	cam->focal_len_mm = cam->init_focal_len_mm;
@@ -62,62 +44,54 @@ bool	reset_camera(t_context *ctx)
 	ctx->renderer.cam = *cam;
 	cam->yaw = atan2f(cam->forward.x, cam->forward.z);
 	cam->pitch = asinf(clampf(cam->forward.y, -1.0f, 1.0f));
-	return (true);
+	return true;
 }
 
-bool	frame_camera(t_context *ctx, t_object *obj)
-{
-	t_camera		*cam;
-	t_vec3			half_bounds;
-	t_vec3			proj;
-	t_vec2			dist;
-	const float		tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
-
+bool frame_camera(t_context* ctx, t_object* obj) {
 	if (!obj)
-		return (false);
-	cam = &ctx->scene.cam;
-	half_bounds = vec3_scale(obj->bounds, 0.5f);
+		return false;
+
+	t_camera* cam = &ctx->scene.cam;
+	t_vec3 half_bounds = vec3_scale(obj->bounds, 0.5f);
+	t_vec3 proj;
 	proj.width = vec3_dot(vec3_fabsf(cam->right), half_bounds);
 	proj.height = vec3_dot(vec3_fabsf(cam->up), half_bounds);
 	proj.depth = vec3_dot(vec3_fabsf(cam->forward), half_bounds);
 	if (obj->type == OBJ_PLANE)
 		cam->distance = 20.0f;
-	else
-	{
+	else {
+		float tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
+		t_vec2 dist;
 		dist.height = proj.height / tan_half_fov;
 		dist.width = proj.width / (tan_half_fov * cam->aspect);
 		cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
 	}
 	cam->transform.pos = vec3_sub(obj->bounds_center, vec3_scale(cam->forward, cam->distance));
 	update_camera(ctx, cam);
-	return (true);
+	return true;
 }
 
-static inline bool	set_cam_state(t_context *ctx)
-{
+static inline bool set_cam_state(t_context* ctx) {
 	if (ctx->scene.cam.state != CAM_DEFAULT)
-		return (true);
-	if (ctx->renderer.mode == SOLID && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
-	{
+		return true;
+
+	t_cam_state state = CAM_DEFAULT;
+	if (ctx->renderer.mode == SOLID && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
-			begin_cam_action(ctx, CAM_ORBIT);
+			state = CAM_ORBIT;
 		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
-			begin_cam_action(ctx, CAM_ZOOM);
+			state = CAM_ZOOM;
 		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
-			begin_cam_action(ctx, CAM_PAN);
-		else
-			return (false);
-	}
-	else if (ctx->renderer.mode != SOLID)
-	{
+			state = CAM_PAN;
+	} else if (ctx->renderer.mode != SOLID) {
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
-			begin_cam_action(ctx, CAM_TURN);
+			state = CAM_TURN;
 		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
-			begin_cam_action(ctx, CAM_LOOK);
-		else
-			return (false);
+			state = CAM_LOOK;
 	}
-	else
-		return (false);
-	return (true);
+	if (state != CAM_DEFAULT) {
+		begin_cam_action(ctx, state);
+		return true;
+	}
+	return false;
 }

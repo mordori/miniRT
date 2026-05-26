@@ -1,30 +1,17 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   renderer.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:50:04 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/04/08 15:55:12 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "rendering.h"
 #include "utils.h"
 
-static inline void	*render_routine(void *arg);
-static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id);
-static inline void	render_pixel(const t_context *ctx, t_pixel *pixel);
-static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel);
+static inline void* render_routine(void* arg);
+static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_id);
+static inline void render_pixel(const t_context* ctx, t_pixel* pixel);
+static inline void sample_pixel(const t_context* ctx, t_pixel* pixel);
 
-bool	init_renderer(t_context *ctx)
-{
-	t_renderer		*r;
+bool init_renderer(t_context* ctx) {
+	t_renderer* r = &ctx->renderer;
 
-	r = &ctx->renderer;
 	r->init_mutex = !pthread_mutex_init(&r->mutex, NULL);
 	r->init_cond = !pthread_cond_init(&r->cond, NULL);
+
 	r->threads_amount = (int32_t)sysconf(_SC_NPROCESSORS_ONLN);
 	if (r->threads_amount == ERROR)
 		r->threads_amount = THREADS_DFL;
@@ -32,69 +19,62 @@ bool	init_renderer(t_context *ctx)
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->init_mutex || !r->init_cond || !r->threads)
 		fatal_error(ctx, errors(ERR_RENINIT), __FILE__, __LINE__);
+
 	r->active = true;
-	while (r->threads_init < r->threads_amount)
-	{
-		if (pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
-		{
+	while (r->threads_init < r->threads_amount) {
+		if (pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx)) {
 			pthread_mutex_lock(&r->mutex);
 			r->active = false;
 			pthread_mutex_unlock(&r->mutex);
-			break ;
+			break;
 		}
 		++r->threads_init;
 	}
-	return (r->threads_init == r->threads_amount);
+	return r->threads_init == r->threads_amount;
 }
 
-static inline void	*render_routine(void *arg)
-{
-	t_context		*ctx;
-	t_renderer		*r;
-	uint32_t		tile_id;
+static inline void* render_routine(void* arg) {
+	t_context* ctx = (t_context*)arg;
+	t_renderer* r = &ctx->renderer;
 
-	ctx = (t_context *)arg;
-	r = &ctx->renderer;
 	pthread_mutex_lock(&r->mutex);
-	while (true)
-	{
+	while (true) {
 		while (r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
 			pthread_cond_wait(&r->cond, &r->mutex);
+
+		uint32_t tile_id;
 		if (!get_thread_status(r, &tile_id))
-			break ;
+			break;
+
 		pthread_mutex_unlock(&r->mutex);
 		render_tile(ctx, r->buffer, tile_id);
 		pthread_mutex_lock(&r->mutex);
+
 		--r->threads_running;
-		if (r->threads_running == 0 && (r->resize_pending || r->tile_index >= r->tiles_total))
-		{
+		if (r->threads_running == 0 && (r->resize_pending || r->tile_index >= r->tiles_total)) {
 			r->frame_complete = true;
 			pthread_cond_broadcast(&r->cond);
 		}
 	}
-	return (NULL);
+	return NULL;
 }
 
-static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
-{
-	t_pixel			pixel;
-	t_uint2			start;
-	t_uint2			end;
-	uint32_t		width;
-
+static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_id) {
+	t_uint2 start;
 	start.x = (tile_id % ctx->renderer.tiles.x) * TILE_SIZE;
 	start.y = (tile_id / ctx->renderer.tiles.x) * TILE_SIZE;
+	t_uint2 end;
 	end.x = ft_uint_min(start.x + TILE_SIZE, ctx->renderer.width);
 	end.y = ft_uint_min(start.y + TILE_SIZE, ctx->renderer.height);
-	pixel.y = start.y;
-	width = ctx->renderer.width;
+
+	t_pixel pixel = { .y = start.y };
+	uint32_t width = ctx->renderer.width;
 	buf = __builtin_assume_aligned(buf, 64);
-	while (pixel.y < end.y && !atomic_load(&ctx->renderer.render_cancel))
-	{
+
+	while (pixel.y < end.y && !atomic_load(&ctx->renderer.render_cancel)) {
 		pixel.color = &buf[pixel.y * width + start.x];
 		pixel.x = start.x;
-		while (pixel.x < end.x)
-		{
+		while (pixel.x < end.x) {
 			render_pixel(ctx, &pixel);
 			++pixel.color;
 			++pixel.x;
@@ -103,38 +83,33 @@ static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_
 	}
 }
 
-static inline void	render_pixel(const t_context *ctx, t_pixel *pixel)
-{
-	const t_renderer	*r = &ctx->renderer;
-	uint32_t			seed;
-	t_vec3				color;
+static inline void render_pixel(const t_context* ctx, t_pixel* pixel) {
+	const t_renderer* r = &ctx->renderer;
 
-	seed = hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
+	uint32_t seed = hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
 	if (seed == 0)
 		seed = 1;
 	pixel->seed = &seed;
 	pixel->frame = r->frame;
+
 	sample_pixel(ctx, pixel);
-	color = trace_path(ctx, pixel, r->mode, r->ray_bounces);
+	t_vec3 color = trace_path(ctx, pixel, r->mode, r->ray_bounces);
+
 	if (r->frame == 1)
 		*pixel->color = color;
 	else
 		*pixel->color = vec3_add(*pixel->color, color);
 }
 
-static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel)
-{
-	const t_renderer	*r = &ctx->renderer;
-	t_vec2				aa;
+static inline void sample_pixel(const t_context* ctx, t_pixel* pixel) {
+	const t_renderer* r = &ctx->renderer;
 
-	if (r->mode == RENDERED)
-	{
-		aa = r2_sequence(r->frame, vec2(static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U), static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
-		pixel->u = (float)pixel->x + aa.u;
-		pixel->v = (float)pixel->y + aa.v;
-	}
-	else
-	{
+	if (r->mode == RENDERED) {
+		t_vec2 jitter =
+			r2_sequence(r->frame, vec2(static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U), static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
+		pixel->u = (float)pixel->x + jitter.u;
+		pixel->v = (float)pixel->y + jitter.v;
+	} else {
 		pixel->u = (float)pixel->x + 0.5f;
 		pixel->v = (float)pixel->y + 0.5f;
 	}
