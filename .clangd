@@ -1,0 +1,6 @@
+CompileFlags:
+    Add: [-Iinc, -Iutils, -std=c18, -Wall, -Wextra, -Werror]
+
+Diagnostics:
+    UnusedIncludes: Strict
+    MissingIncludes: None

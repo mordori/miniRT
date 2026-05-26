@@ -1,51 +1,28 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   input_router.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:48:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:48:06 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "input.h"
 #include "camera.h"
-#include "utils.h"
-#include "rendering.h"
 #include "editing.h"
+#include "input.h"
+#include "rendering.h"
 
-static inline void	flag_update(t_context *ctx, bool *update);
+static inline void flag_update(t_context* ctx, bool* update);
 
-void	process_input(t_context *ctx, bool *update)
-{
-	bool		dirty;
-	t_vec2i		delta;
-
-	if (ctx->renderer.mode != RENDERED)
-	{
+void process_input(t_context* ctx, bool* update) {
+	if (ctx->renderer.mode != RENDERED) {
 		while (ctx->renderer.threads_running)
 			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
 	}
-	dirty = false;
-	delta = get_mouse_delta(ctx);
-	if (config_camera(ctx))
-		dirty = true;
-	if (control_camera(ctx, delta))
-		dirty = true;
-	if (edit_object(ctx, delta))
-		dirty = true;
-	if (camera_movement(ctx))
-		dirty = true;
-	if (rotate_skydome(ctx))
-		dirty = true;
+
+	t_vec2i mouseDelta = get_mouse_delta(ctx);
+	bool dirty = false;
+	dirty |= config_camera(ctx);
+	dirty |= control_camera(ctx, mouseDelta);
+	dirty |= edit_object(ctx, mouseDelta);
+	dirty |= camera_movement(ctx);
+	dirty |= rotate_skydome(ctx);
 	if (dirty)
 		flag_update(ctx, update);
 }
 
-static inline void	flag_update(t_context *ctx, bool *update)
-{
+static inline void flag_update(t_context* ctx, bool* update) {
 	*update = true;
 	update_camera(ctx, &ctx->scene.cam);
 	if (ctx->renderer.mode == RENDERED)

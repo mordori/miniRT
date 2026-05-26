@@ -92,7 +92,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c \
 				lighting.c sampling.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c validator.c bvh.c aabb.c bounds.c)
+				scene.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
 				settings.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
@@ -100,7 +100,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				noise.c mapping.c range.c alloc.c random.c window.c frame.c \
 				render.c hit.c transform.c projection.c threads.c \
 				constraints.c instructions.c ui.c keys.c ft_strtod.c \
-				textures.c renderer.c time.c bvh.c try_split.c ft_atof.c )
+				textures.c renderer.c time.c try_split.c ft_atof.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
 				math.c mat4.c mat4_transforms.c \
 				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \
@@ -131,7 +131,6 @@ YELLOW		:=\033[1;33m
 GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
-
 
 
 all: $(MLX42) $(NAME)

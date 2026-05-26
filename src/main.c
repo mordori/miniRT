@@ -10,12 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
-#include "camera.h"
 #include "rendering.h"
 #include "scene.h"
+#include "utils.h"
 
-static inline void	initialize(t_context *ctx);
+static inline void initialize(t_context* ctx);
 
 /**
  * @brief	Entry point to the program.
@@ -24,24 +23,21 @@ static inline void	initialize(t_context *ctx);
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Wassem Showeky		https://github.com/wshoweky
  */
-int	main(int argc, char *argv[])
-{
-	t_context	ctx;
-
+int main(int argc, char* argv[]) {
 	if (argc != 2)
 		fatal_error(NULL, errors(ERR_ARGINVL), __FILE__, __LINE__);
-	ctx = (t_context){0};
+
+	t_context ctx = { 0 };
 	ctx.file = argv[1];
 	validate_file_type(ctx.file);
 	ctx.fd = try_open(NULL, ctx.file, O_RDONLY, 0);
 	initialize(&ctx);
 	try_write(&ctx, STDOUT_FILENO, "\033[?25h\n\nGoodbye!\n\n");
 	clean(&ctx);
-	return (EXIT_SUCCESS);
+	return EXIT_SUCCESS;
 }
 
-static inline void	initialize(t_context *ctx)
-{
+static inline void initialize(t_context* ctx) {
 	ctx->mlx = mlx_init(WIDTH, HEIGHT, "miniRT", true);
 	if (!ctx->mlx)
 		fatal_error(ctx, errors(ERR_MLXINIT), __FILE__, __LINE__);
@@ -52,7 +48,7 @@ static inline void	initialize(t_context *ctx)
 	mlx_mouse_hook(ctx->mlx, mouse_hook, ctx);
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
 	if (!init_renderer(ctx))
-		return ;
+		return;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	init_scene(ctx);
 	resize_window(ctx);
@@ -61,13 +57,10 @@ static inline void	initialize(t_context *ctx)
 	stop_render(&ctx->renderer);
 }
 
-void	clean(t_context *ctx)
-{
-	t_renderer	*r;
-
+void clean(t_context* ctx) {
 	if (!ctx)
-		return ;
-	r = &ctx->renderer;
+		return;
+	t_renderer* r = &ctx->renderer;
 	if (ctx->fd != ERROR)
 		close(ctx->fd);
 	stop_render(r);
