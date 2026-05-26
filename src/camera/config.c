@@ -37,11 +37,8 @@ static inline bool	set_f_stop(t_context *ctx, float dt)
 	float		mul;
 	float		div;
 
-	if (\
-(mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT)) || \
-(mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT)))
+	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT)) ||
+		(mlx_is_key_down(ctx->mlx, MLX_KEY_RIGHT) && !mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT)))
 	{
 		mul = powf(2.0f, 0.15f * dt);
 		div = 1.0f / mul;
@@ -61,11 +58,8 @@ static inline bool	set_focal_length(t_context *ctx, float dt)
 	float		mul;
 	float		div;
 
-	if (\
-(mlx_is_key_down(ctx->mlx, MLX_KEY_L) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_K)) || \
-(mlx_is_key_down(ctx->mlx, MLX_KEY_K) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_L)))
+	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_L) && !mlx_is_key_down(ctx->mlx, MLX_KEY_K)) ||
+		(mlx_is_key_down(ctx->mlx, MLX_KEY_K) && !mlx_is_key_down(ctx->mlx, MLX_KEY_L)))
 	{
 		mul = powf(2.0f, 0.5f * dt);
 		div = 1.0f / mul;
@@ -73,8 +67,7 @@ static inline bool	set_focal_length(t_context *ctx, float dt)
 			ctx->scene.cam.focal_len_mm *= div;
 		else
 			ctx->scene.cam.focal_len_mm *= mul;
-		ctx->scene.cam.focal_len_mm = \
-clampf(ctx->scene.cam.focal_len_mm, 1.0f, 800.0f);
+		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 1.0f, 800.0f);
 		return (true);
 	}
 	else
@@ -86,11 +79,8 @@ static inline bool	set_focus_dist(t_context *ctx, float dt)
 	float		mul;
 	float		div;
 
-	if (\
-(mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_UP)) || \
-(mlx_is_key_down(ctx->mlx, MLX_KEY_UP) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN)))
+	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN) && !mlx_is_key_down(ctx->mlx, MLX_KEY_UP)) ||
+		(mlx_is_key_down(ctx->mlx, MLX_KEY_UP) && !mlx_is_key_down(ctx->mlx, MLX_KEY_DOWN)))
 	{
 		mul = powf(2.0f, 0.3f * dt);
 		div = 1.0f / mul;
@@ -98,8 +88,7 @@ static inline bool	set_focus_dist(t_context *ctx, float dt)
 			ctx->scene.cam.focus_dist *= div;
 		else
 			ctx->scene.cam.focus_dist *= mul;
-		ctx->scene.cam.focus_dist = \
-clampf(ctx->scene.cam.focus_dist, 0.1f, 1000.0f);
+		ctx->scene.cam.focus_dist = clampf(ctx->scene.cam.focus_dist, 0.1f, 1000.0f);
 		return (true);
 	}
 	else

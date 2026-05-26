@@ -30,8 +30,7 @@ bool	russian_roulette(t_path *path, t_pixel *pixel)
 
 	if (path->bounce >= DEPTH_ENABLE_RR)
 	{
-		p = \
-fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
+		p = fmaxf(path->throughput.r, fmaxf(path->throughput.g, path->throughput.b));
 		p = clampf(p, 0.05f, 0.95f);
 		if (randomf01(pixel->seed) > p)
 			return (false);

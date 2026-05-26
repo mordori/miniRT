@@ -16,13 +16,11 @@
 static inline void	x_constraint(t_context *ctx);
 static inline void	y_constraint(t_context *ctx);
 static inline void	z_constraint(t_context *ctx);
-static inline t_vec3	get_contraint_axis(\
-t_context *ctx, t_vec3 global_axis, uint32_t col);
+static inline t_vec3	get_contraint_axis(t_context *ctx, t_vec3 global_axis, uint32_t col);
 
 void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata)
 {
-	if (keydata.key != MLX_KEY_X && keydata.key != MLX_KEY_Y && \
-keydata.key != MLX_KEY_Z)
+	if (keydata.key != MLX_KEY_X && keydata.key != MLX_KEY_Y && keydata.key != MLX_KEY_Z)
 		return ;
 	ctx->editor.constraint_axis = AXIS_DEFAULT;
 	ctx->editor.constraints = 0;

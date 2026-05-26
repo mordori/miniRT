@@ -79,9 +79,9 @@ t_vec4	mat4_mul_vec4(const t_mat4 *src, t_vec4 vec)
 	c2 = (__m128)src->rows[2];
 	c3 = (__m128)src->rows[3];
 	_MM_TRANSPOSE4_PS(c0, c1, c2, c3);
-	res.v = (t_v4sf)c0 * v4sf_n(vec.x) + \
-(t_v4sf)c1 * v4sf_n(vec.y) + \
-(t_v4sf)c2 * v4sf_n(vec.z) + \
-(t_v4sf)c3 * v4sf_n(vec.w);
+	res.v = (t_v4sf)c0 * v4sf_n(vec.x) +
+			(t_v4sf)c1 * v4sf_n(vec.y) +
+			(t_v4sf)c2 * v4sf_n(vec.z) +
+			(t_v4sf)c3 * v4sf_n(vec.w);
 	return (res);
 }

@@ -68,8 +68,7 @@ static bool	hit_body(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 ** @param ray The ray that caused the intersection.
 ** @param hit The hit record to populate.
 */
-static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
-				t_hit *hit)
+static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray, t_hit *hit)
 {
 	float	len_sq;
 
@@ -97,8 +96,7 @@ static void	compute_body_normal(const t_cylinder *cyl, const t_ray *ray,
 ** @param hit The output hit record.
 ** @return    true if the ray hits the bounded cap.
 */
-static bool	hit_cap(const t_cylinder *cyl, const t_ray *ray
-				, float o, t_hit *hit)
+static bool	hit_cap(const t_cylinder *cyl, const t_ray *ray, float o, t_hit *hit)
 {
 	t_vec3	c_pos;
 	t_vec3	pt;

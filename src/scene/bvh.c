@@ -14,8 +14,7 @@
 #include "objects.h"
 #include "utils.h"
 
-static inline uint32_t	build_bvh(\
-t_context *ctx, const t_object **objs, size_t n, uint32_t *nodes);
+static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n, uint32_t *nodes);
 
 bool	init_bvh(t_context *ctx)
 {
@@ -38,13 +37,11 @@ bool	init_bvh(t_context *ctx)
 	if (!scene->geo.bvh_nodes)
 		return (false);
 	nodes = 1;
-	scene->geo.bvh_root_idx = \
-build_bvh(ctx, (const t_object **)objs, n, &nodes);
+	scene->geo.bvh_root_idx = build_bvh(ctx, (const t_object **)objs, n, &nodes);
 	return (true);
 }
 
-static inline uint32_t	build_bvh(\
-t_context *ctx, const t_object **objs, size_t n, uint32_t *nodes)
+static inline uint32_t	build_bvh(t_context *ctx, const t_object **objs, size_t n, uint32_t *nodes)
 {
 	t_bvh_node	*node;
 	int32_t		idx;
@@ -67,8 +64,7 @@ t_context *ctx, const t_object **objs, size_t n, uint32_t *nodes)
 	return (idx);
 }
 
-bool	hit_bvh(\
-uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree)
+bool	hit_bvh(uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree)
 {
 	t_bvh_element	bvh;
 
@@ -85,9 +81,9 @@ uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree)
 		if (bvh.node->obj)
 		{
 			bvh.temp = *hit;
-			if (!(bvh.node->obj->flags & OBJ_HIDDEN_SCENE) && \
-!(hit->is_primary && (bvh.node->obj->flags & OBJ_HIDDEN_CAM)) && \
-hit_object(bvh.node->obj, ray, &bvh.temp))
+			if (!(bvh.node->obj->flags & OBJ_HIDDEN_SCENE) &&
+				!(hit->is_primary && (bvh.node->obj->flags & OBJ_HIDDEN_CAM)) &&
+				hit_object(bvh.node->obj, ray, &bvh.temp))
 			{
 				bvh.res = true;
 				*hit = bvh.temp;
@@ -99,8 +95,7 @@ hit_object(bvh.node->obj, ray, &bvh.temp))
 	return (bvh.res);
 }
 
-bool	hit_bvh_shadow(\
-uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node *tree)
+bool	hit_bvh_shadow(uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node *tree)
 {
 	uint32_t	stack[64];
 	int32_t		i;
@@ -129,8 +124,7 @@ uint32_t root_idx, const t_ray *ray, float dist, t_bvh_node *tree)
 	return (false);
 }
 
-bool	hit_bvh_editing(\
-uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree)
+bool	hit_bvh_editing(uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree)
 {
 	t_bvh_element	bvh;
 
@@ -147,8 +141,7 @@ uint32_t root_idx, const t_ray *ray, t_hit *hit, t_bvh_node *tree)
 		if (bvh.node->obj)
 		{
 			bvh.temp = *hit;
-			if (!(bvh.node->obj->flags & OBJ_HIDDEN_SCENE) && \
-hit_object(bvh.node->obj, ray, &bvh.temp))
+			if (!(bvh.node->obj->flags & OBJ_HIDDEN_SCENE) && hit_object(bvh.node->obj, ray, &bvh.temp))
 			{
 				bvh.res = true;
 				*hit = bvh.temp;

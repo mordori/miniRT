@@ -56,8 +56,7 @@ void	end_edit_action(t_context *ctx)
 	if (ctx->editor.mode != EDIT_SCALE)
 	{
 		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
-		mlx_set_mouse_pos(\
-ctx->mlx, ctx->mouse.pos_orig.x, ctx->mouse.pos_orig.y);
+		mlx_set_mouse_pos(ctx->mlx, ctx->mouse.pos_orig.x, ctx->mouse.pos_orig.y);
 		ctx->mouse.pos = ctx->mouse.pos_orig;
 		ctx->mouse.pos_prev = ctx->mouse.pos_orig;
 	}

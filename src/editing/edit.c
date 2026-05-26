@@ -14,8 +14,7 @@
 #include "lights.h"
 #include "utils.h"
 
-static inline void	switch_edit_mode(\
-t_context *ctx, mlx_key_data_t keydata);
+static inline void	switch_edit_mode(t_context *ctx, mlx_key_data_t keydata);
 
 bool	config_editor(t_context *ctx, mlx_key_data_t keydata)
 {
@@ -27,16 +26,14 @@ bool	config_editor(t_context *ctx, mlx_key_data_t keydata)
 	switch_edit_mode(ctx, keydata);
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		set_axis_constraints(ctx, keydata);
-	if (ctx->editor.constraint_axis != prev_constraints || \
-(prev_mode != EDIT_DEFAULT && ctx->editor.mode != prev_mode))
+	if (ctx->editor.constraint_axis != prev_constraints || (prev_mode != EDIT_DEFAULT && ctx->editor.mode != prev_mode))
 	{
 		ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 		update_transform(&ctx->editor.selected_obj->transform);
 		update_bounds(ctx->editor.selected_obj);
 		update_light_radius(ctx);
 	}
-	return (ctx->editor.mode != prev_mode || \
-ctx->editor.constraint_axis != prev_constraints);
+	return (ctx->editor.mode != prev_mode || ctx->editor.constraint_axis != prev_constraints);
 }
 
 static inline void	switch_edit_mode(\
@@ -73,8 +70,7 @@ bool	edit_object(t_context *ctx, t_vec2i delta)
 	static t_edit_mode	prev_mode = EDIT_DEFAULT;
 	const t_edit_mode	current_mode = ctx->editor.mode;
 
-	if (ctx->scene.cam.state != CAM_DEFAULT || current_mode == EDIT_DEFAULT || \
-!ctx->editor.selected_obj)
+	if (ctx->scene.cam.state != CAM_DEFAULT || current_mode == EDIT_DEFAULT || !ctx->editor.selected_obj)
 	{
 		prev_mode = current_mode;
 		return (false);
@@ -96,8 +92,7 @@ float	eval_speed(t_context *ctx)
 
 	if (ctx->editor.mode == EDIT_TRANSLATE)
 	{
-		dist = vec3_dist(ctx->scene.cam.transform.pos, \
-ctx->editor.selected_obj->transform.pos);
+		dist = vec3_dist(ctx->scene.cam.transform.pos, ctx->editor.selected_obj->transform.pos);
 		dist = fmaxf(dist, 1.0f);
 		speed = SENS_TRANSLATE * dist * (14.0f / ctx->scene.cam.focal_len_mm);
 	}
@@ -120,14 +115,12 @@ float	eval_magnitude(t_context *ctx, t_vec2i delta, float speed)
 	{
 		if (ctx->editor.constraints == 1)
 		{
-			right_align = \
-vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
+			right_align = vec3_dot(ctx->scene.cam.right, ctx->editor.axis_primary);
 			up_align = vec3_dot(ctx->scene.cam.up, ctx->editor.axis_primary);
 			if (fabsf(right_align) < 0.1f && fabsf(up_align) < 0.1f)
 				magnitude = ((float)(delta.x - delta.y)) * speed;
 			else
-				magnitude = \
-((float)delta.x * right_align - (float)delta.y * up_align) * speed;
+				magnitude = ((float)delta.x * right_align - (float)delta.y * up_align) * speed;
 		}
 		else
 			magnitude = ((float)(delta.x - delta.y)) * speed;

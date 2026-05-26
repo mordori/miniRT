@@ -39,8 +39,7 @@ bool	camera_movement(t_context *ctx)
 
 static inline void	clamp_camera(t_camera *cam)
 {
-	cam->transform.pos.v = \
-_mm_max_ps(cam->transform.pos.v, g_world_limit_neg.v);
+	cam->transform.pos.v = _mm_max_ps(cam->transform.pos.v, g_world_limit_neg.v);
 	cam->transform.pos.v = _mm_min_ps(cam->transform.pos.v, g_world_limit.v);
 }
 

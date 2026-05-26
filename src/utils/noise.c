@@ -31,8 +31,7 @@ float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
 	return (tex->pixels[index + (dim & 3u)]);
 }
 
-float	static_blue_noise(\
-const t_texture *tex, const t_pixel *pixel, uint32_t dim)
+float	static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
 {
 	uint32_t	tx;
 	uint32_t	ty;

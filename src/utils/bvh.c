@@ -30,8 +30,7 @@ void	sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n)
 		qsort(objs, n, sizeof(t_object *), cmp_bounds_z);
 }
 
-void	branch_idx(\
-const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i)
+void	branch_idx(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i)
 {
 	uint32_t		mask;
 

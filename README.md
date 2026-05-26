@@ -8,15 +8,11 @@
 
 > [!IMPORTANT]
 >
-> ⚠ This project is work in progress! ⚠
->
 > MacOS / Apple Silicon is not currently supported.
->
-> Some of the features will not be implemented until the project has been validated. This is due to restrictions placed upon the subject.
 
 > [!NOTE]
 >
-> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and manages a frame buffer to which we copy ours.
+> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and input hooks, and manages a frame buffer to which we copy ours.
 >
 > The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
 > Please ignore the section about XServer as it is no longer required for WSL2.
@@ -40,12 +36,11 @@
 - Plane, sphere, cylinder, cone, and quad primitives
 - Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly and turntable controllers
-- Object Editing mode with simplified rendering mimicing Blender
+- Object Editing mode with simplified lighting mimicing Blender
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
-- Clean up after project validation
 - Scene saving
 
 #### Future Work
@@ -54,8 +49,8 @@
 - EV100 exposure triangle
 - Agx tonemapping
 - Denoising solution
-- Loading .ojb meshes
-- Improve the BVH
+- Triangle primitive and loading meshes
+- Improve the naive median-split BVH
 - Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
 - Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
@@ -130,7 +125,7 @@ As the project is still under construction, we recommend to run the program with
 
 > [!TIP]
 >
-> Adjust the camera's focus distance to desired surfaces easily in edit mode when using a lower f-stop to produce a shallow depth of field.
+> Adjust the camera's focus distance to desired surfaces easily in Edit Mode when using a larger aperture to produce a shallow depth of field.
 >
 > **Previously accumulated frames are not wasted!**
 >

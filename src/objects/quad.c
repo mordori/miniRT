@@ -37,8 +37,7 @@ t_error	init_quad(t_context *ctx, t_quad *quad, uint32_t mat_id)
 	obj = (t_object){0};
 	obj.type = OBJ_QUAD;
 	obj.material_id = mat_id;
-	obj.transform.pos = \
-vec3_add(quad->q, vec3_scale(vec3_add(quad->u, quad->v), 0.5f));
+	obj.transform.pos = vec3_add(quad->q, vec3_scale(vec3_add(quad->u, quad->v), 0.5f));
 	obj.transform.rot = quat_from_dir(vec3_normalize(n_cross));
 	world_to_obj = quat_to_mat4(obj.transform.rot);
 	world_to_obj = mat4_transpose(&world_to_obj);
@@ -70,8 +69,7 @@ static inline void	quad_init_helper(t_quad *quad, t_mat4 *world_to_obj)
 ** Uses Cramer's rule: α = dot(w, cross(p, v)), β = dot(w, cross(u, p)).
 ** α,β ∈ [0,1] means inside. They also become the UV coordinates.
 */
-static bool	quad_hit_record(const t_quad *quad, const t_ray *ray,
-				t_hit *hit, float t)
+static bool	quad_hit_record(const t_quad *quad, const t_ray *ray, t_hit *hit, float t)
 {
 	t_vec3		p;
 	float		alpha;

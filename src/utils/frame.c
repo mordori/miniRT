@@ -13,8 +13,7 @@
 #include "utils.h"
 #include "rendering.h"
 
-void	copy_frame_buffer(\
-const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel)
+void	copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel)
 {
 	const uint32_t		limit = ctx->renderer.pixels;
 	const uint32_t		width = ctx->renderer.width;
@@ -35,8 +34,7 @@ const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel)
 	}
 }
 
-void	copy_frame_buffer_preview(\
-const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels)
+void	copy_frame_buffer_preview(const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels)
 {
 	const float			*m = ctx->editor.selection_mask;
 	const uint32_t		limit = ctx->renderer.pixels;
@@ -50,18 +48,14 @@ const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels)
 	{
 		if (m[i] > 0.0f)
 		{
-			mask = 0u - ((\
-(i % width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i] - 0.05f) || \
-((i + 1) % width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i] - 0.05f) || \
-(i >= width && m[i - width] < 0.0f && fabsf(m[i - width]) > m[i] - 0.05f) || \
-(i + width < limit && m[i + width] < 0.0f && \
-fabsf(m[i + width]) > m[i] - 0.05f)));
+			mask = 0u - (((i % width && m[i - 1] < 0.0f && fabsf(m[i - 1]) > m[i] - 0.05f) ||
+						((i + 1) % width && m[i + 1] < 0.0f && fabsf(m[i + 1]) > m[i] - 0.05f) ||
+						(i >= width && m[i - width] < 0.0f && fabsf(m[i - width]) > m[i] - 0.05f) ||
+						(i + width < limit && m[i + width] < 0.0f && fabsf(m[i + width]) > m[i] - 0.05f)));
 		}
 		else
 			mask = 0u;
-		pixels[i] = \
-(edge_color & mask) | \
-(vec3_to_uint32(post_process_preview(ctx, buf[i])) & ~mask);
+		pixels[i] = (edge_color & mask) | (vec3_to_uint32(post_process_preview(ctx, buf[i])) & ~mask);
 		++i;
 	}
 }
@@ -87,9 +81,7 @@ void	print_render_status(t_context *ctx, t_renderer *r)
 		++i;
 	}
 	bar[bar_width] = '\0';
-	snprintf(buf, sizeof(buf), \
-"\r\033[K\033[1;33mRendering...   [%s] [%u/%u]\033[0m", bar, r->frame, \
-r->render_samples);
+	snprintf(buf, sizeof(buf), "\r\033[K\033[1;33mRendering...   [%s] [%u/%u]\033[0m", bar, r->frame, r->render_samples);
 	try_write(ctx, STDOUT_FILENO, buf);
 }
 

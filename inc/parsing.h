@@ -79,7 +79,6 @@ void			try_free_all(char **lines);
 
 /* Validation helpers */
 void			validate_scene(t_context *ctx, t_parser *p, char **lines);
-
 bool			validate_range(float value, float min, float max);
 bool			validate_normalized(t_vec3 *vec);
 
@@ -97,12 +96,10 @@ t_error			identify_element(t_context *ctx, t_parser *p, char **tokens);
 
 /* Material and texture parsing */
 t_error			parse_material_def(t_context *ctx, t_parser *p, char **tokens);
-t_error			resolve_material(t_context *ctx, t_parser *p, const char *token,
-					uint32_t *out_id);
+t_error			resolve_material(t_context *ctx, t_parser *p, const char *token, uint32_t *out_id);
 t_material		*get_material_by_id(t_parser *p, uint32_t id);
 void			try_pass(t_context *ctx, t_parser *p, char **lines, int pass);
-t_error			dispatch_pass(t_context *ctx, t_parser *p, char **tokens,
-					int pass);
+t_error			dispatch_pass(t_context *ctx, t_parser *p, char **tokens, int pass);
 bool			bump_strength(t_material *mat, char **tkns);
 bool			parse_pattern_token(const char *tkn, t_pattern *out);
 t_error			parse_mat_pattern(t_material *mat, char **tkns, int tc);
@@ -112,7 +109,6 @@ t_error			parse_texture_def(t_context *ctx, char **tokens);
 t_error			load_texture_file(const char *filename, t_texture *out);
 t_texture		*find_texture_by_name(t_scene *scene, const char *name);
 bool			is_placeholder(const char *str);
-void			p_error(\
-t_context *ctx, t_error err, int line_num, char **lines);
+void			p_error(t_context *ctx, t_error err, int line_num, char **lines);
 
 #endif

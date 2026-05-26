@@ -56,8 +56,9 @@ bool	hit_planes(const t_context *ctx, const t_ray *ray, t_hit *hit)
 	{
 		obj = ((t_object **)ctx->scene.geo.planes.items)[idx];
 		r = ray_world_to_object(ray, &obj->transform.world_to_object);
-		if (!(obj->flags & OBJ_HIDDEN_SCENE) && !(hit->is_primary && \
-(obj->flags & OBJ_HIDDEN_CAM)) && hit_plane(&obj->shape, &r, hit))
+		if (!(obj->flags & OBJ_HIDDEN_SCENE) &&
+			!(hit->is_primary && (obj->flags & OBJ_HIDDEN_CAM)) &&
+			hit_plane(&obj->shape, &r, hit))
 		{
 			hit->obj = obj;
 			hit_object_to_world(hit, &obj->transform);

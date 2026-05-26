@@ -14,11 +14,9 @@
 #include "materials.h"
 #include "utils.h"
 
-static inline t_vec3	background_gradient(\
-const t_scene *scene, const float t);
+static inline t_vec3	background_gradient(const t_scene *scene, const float t);
 
-t_vec3	background_color(\
-const t_scene *scene, const t_ray *ray, t_vec2 uv_offset)
+t_vec3	background_color(const t_scene *scene, const t_ray *ray, t_vec2 uv_offset)
 {
 	t_vec2		uv;
 
@@ -29,8 +27,7 @@ const t_scene *scene, const t_ray *ray, t_vec2 uv_offset)
 	return (sample_texture(&scene->env.skydome, uv));
 }
 
-static inline t_vec3	background_gradient(\
-const t_scene *scene, const float t)
+static inline t_vec3	background_gradient(const t_scene *scene, const float t)
 {
 	t_vec3		res;
 
@@ -40,18 +37,16 @@ const t_scene *scene, const float t)
 
 bool	rotate_skydome(t_context *ctx)
 {
-	static const t_vec3	initial_pos = \
-{{704000.0f, 484000.0f, 520000.0f, 0.0f}};
+	static const t_vec3	initial_pos = {{704000.0f, 484000.0f, 520000.0f, 0.0f}};
 	t_light				*light;
 	float				delta;
 	t_vec2				theta;
 
 	light = &ctx->scene.cam.directional_light;
-	if (\
-(mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) || \
-(mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) && \
-!mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD)))
+	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) &&
+		!mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) ||
+		(mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) &&
+		!mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD)))
 	{
 		delta = 0.085f * fminf(ctx->mlx->delta_time, 0.1f);
 		if (mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA))
@@ -59,13 +54,10 @@ bool	rotate_skydome(t_context *ctx)
 		ctx->scene.cam.skydome_uv_offset.u += delta;
 		if (ctx->scene.env.has_dir_light)
 		{
-			sincosf(\
-ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);
-			light->obj->transform.pos.x = \
-initial_pos.x * theta.cos + initial_pos.z * theta.sin;
+			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);
+			light->obj->transform.pos.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin;
 			light->obj->transform.pos.y = initial_pos.y;
-			light->obj->transform.pos.z = \
--initial_pos.x * theta.sin + initial_pos.z * theta.cos;
+			light->obj->transform.pos.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos;
 			update_transform(&light->obj->transform);
 			update_bounds(light->obj);
 		}
