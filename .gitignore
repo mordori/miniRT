@@ -10,5 +10,5 @@ profiling/
 *.d
 libft.a
 .config
-.clangd
+.cache
 miniRT

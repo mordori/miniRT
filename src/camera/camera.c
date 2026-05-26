@@ -14,11 +14,9 @@
 #include "rendering.h"
 #include "utils.h"
 
-static inline void	update_viewport(\
-t_camera *cam, t_viewport *vp, float img_width, float img_height);
+static inline void	update_viewport(t_camera *cam, t_viewport *vp, float img_width, float img_height);
 
-void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation,
-		float fov)
+void	init_camera(t_context *ctx, t_vec3 position, t_vec3 orientation, float fov)
 {
 	t_camera	*cam;
 
@@ -53,9 +51,7 @@ t_vec3	sample_defocus_disk(const t_context *ctx, t_pixel *pixel)
 	t_vec2		uv;
 	t_vec2		disk;
 
-	uv = r4_sequence_d12(pixel->frame, vec2(\
-static_blue_noise(&ctx->tex_bn, pixel, BN_DD_U), \
-static_blue_noise(&ctx->tex_bn, pixel, BN_DD_V)));
+	uv = r4_sequence_d12(pixel->frame, vec2(static_blue_noise(&ctx->tex_bn, pixel, BN_DD_U), static_blue_noise(&ctx->tex_bn, pixel, BN_DD_V)));
 	disk = sample_disk(uv);
 	u = vec3_scale(ctx->renderer.cam.defocus_disk_u, disk.x);
 	v = vec3_scale(ctx->renderer.cam.defocus_disk_v, disk.y);
@@ -69,20 +65,17 @@ void	update_camera(t_context *ctx, t_camera *cam)
 	t_mat4		m;
 
 	cam->distance = clampf(cam->distance, 0.01f, WORLD_LIMIT);
-	cam->transform.pos = \
-vec3_clamp(cam->transform.pos, -WORLD_LIMIT, WORLD_LIMIT);
+	cam->transform.pos = vec3_clamp(cam->transform.pos, -WORLD_LIMIT, WORLD_LIMIT);
 	cam->transform.rot = quat_normalize(cam->transform.rot);
 	m = quat_to_mat4(cam->transform.rot);
 	cam->right = vec3_normalize(vec3(m.m[0][0], m.m[1][0], m.m[2][0]));
 	cam->up = vec3_normalize(vec3(m.m[0][1], m.m[1][1], m.m[2][1]));
 	cam->forward = vec3_normalize(vec3(m.m[0][2], m.m[1][2], m.m[2][2]));
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
-	update_viewport(\
-cam, &cam->viewport, (float)ctx->img->width, (float)ctx->img->height);
+	update_viewport(cam, &cam->viewport, (float)ctx->img->width, (float)ctx->img->height);
 }
 
-static inline void	update_viewport(\
-t_camera *cam, t_viewport *vp, float img_width, float img_height)
+static inline void	update_viewport(t_camera *cam, t_viewport *vp, float img_width, float img_height)
 {
 	t_vec3		u;
 	t_vec3		v;

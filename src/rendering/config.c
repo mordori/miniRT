@@ -15,8 +15,7 @@
 #include "scene.h"
 #include "editing.h"
 
-static inline bool	set_render_mode(\
-t_context *ctx, t_renderer *r, mlx_key_data_t keydata);
+static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata);
 static inline void	set_samples(t_context *ctx, mlx_key_data_t keydata);
 static inline bool	set_bounces(t_context *ctx, mlx_key_data_t keydata);
 static inline void	reset_editor(t_context *ctx, t_renderer *r);
@@ -34,8 +33,7 @@ bool	config_renderer(t_context *ctx, mlx_key_data_t keydata)
 	return (dirty);
 }
 
-static inline bool	set_render_mode(\
-t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
+static inline bool	set_render_mode(t_context *ctx, t_renderer *r, mlx_key_data_t keydata)
 {
 	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_PRESS)
 	{

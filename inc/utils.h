@@ -29,12 +29,10 @@ char		*errors(t_err_code code);
 void		fatal_error(t_context *ctx, char *message, char *file, int line);
 void		key_hook(mlx_key_data_t keydata, void *param);
 void		resize_hook(int width, int height, void *param);
-void		mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods,
-				void *param);
+void		mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void *param);
 void		cursor_hook(double xpos, double ypos, void *param);
 void		clean(t_context *ctx);
-void		vector_try_init(t_context *ctx, t_vector *vec, bool is_shrink,
-				void (*del)(void *));
+void		vector_try_init(t_context *ctx, t_vector *vec, bool is_shrink, void (*del)(void *));
 bool		vector_try_add(t_context *ctx, t_vector *vec, void *item);
 int			try_open(t_context *ctx, const char *file, int o_flag, int p_flag);
 ssize_t		try_write(t_context *ctx, int fd, const char *src);
@@ -57,8 +55,7 @@ float		ft_atof(const char *str, char **endptr);
 double		ft_strtod(const char *str, char **endptr);
 char		**try_split(char const *s);
 void		sort_bvh_objects(t_bvh_node *node, const t_object **objs, size_t n);
-float		blue_noise(const t_texture *tex, const t_pixel *pixel,
-				uint32_t dim);
+float		blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
 t_vec2		r2_sequence(uint32_t n, t_vec2 offset);
 float		r1_sequence(uint32_t n, float offset);
 t_vec2		r4_sequence_d12(uint32_t n, t_vec2 offset);
@@ -68,8 +65,7 @@ uint32_t	fast_range(uint32_t n, uint32_t range);
 size_t		uint64_to_str(uint64_t n, char *buf);
 void		*a_alloc(size_t alignment, size_t size);
 t_ray		new_ray(t_vec3 origin, t_vec3 dir);
-void		random_uv(const t_context *ctx, t_path *path, t_pixel *pixel,
-				t_bn_channel c);
+void		random_uv(const t_context *ctx, t_path *path, t_pixel *pixel, t_bn_channel c);
 void		cancel_render(t_renderer *r);
 void		set_mode_preview(t_context *ctx, t_renderer *r, bool *update);
 void		set_mode_rendered(t_renderer *r);
@@ -80,21 +76,16 @@ t_hit		new_hit(uint32_t bounce);
 void		printf_init(void);
 void		screenshot(t_context *ctx);
 char		*timestamp(char *buf);
-float		static_blue_noise(\
-const t_texture *tex, const t_pixel *pixel, uint32_t dim);
+float		static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
 uint32_t	color_wave(uint32_t c1, uint32_t c2, float speed);
 uint32_t	engine_time(void);
 void		update_transform(t_transform *t);
-t_ray		ray_world_to_object(\
-const t_ray *ray, const t_mat4 *world_to_object);
+t_ray		ray_world_to_object(const t_ray *ray, const t_mat4 *world_to_object);
 void		hit_object_to_world(t_hit *hit, const t_transform *t);
-t_vec2		world_to_screen(\
-t_context *ctx, const t_camera *cam, const t_viewport *vp, t_vec3 pos);
+t_vec2		world_to_screen(t_context *ctx, const t_camera *cam, const t_viewport *vp, t_vec3 pos);
 void		eval_hit_normal(const t_ray *ray, t_hit *hit, t_vec3 n);
-void		copy_frame_buffer(\
-const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
-void		copy_frame_buffer_preview(\
-const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
+void		copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
+void		copy_frame_buffer_preview(const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
 bool		get_thread_status(t_renderer *r, uint32_t *tile_id);
 bool		russian_roulette(t_path *path, t_pixel *pixel);
 void		planar_basis(t_context *ctx, t_vec3 n);
@@ -102,11 +93,9 @@ void		lut_srgb_to_linear(void);
 void		set_text_color(mlx_image_t *img, uint32_t color);
 t_ui		ui_val(int32_t *last, int32_t current);
 t_ui		ui_valf(float *lastf, float currentf);
-void		branch_idx(\
-const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
+void		branch_idx(const t_ray *ray, const t_bvh_node *node, uint32_t *stack, int32_t *i);
 void		update_bounds(t_object *obj);
 float		get_max_bounds_dim(const t_object *obj);
-void		check_edit_keys(\
-t_context *ctx, mlx_key_data_t keydata, bool *dirty);
+void		check_edit_keys(t_context *ctx, mlx_key_data_t keydata, bool *dirty);
 
 #endif

@@ -13,8 +13,7 @@
 #include "utils.h"
 #include "rendering.h"
 
-static inline void	save_render(\
-t_context *ctx, uint8_t *pixels, uint32_t n, uint32_t i);
+static inline void	save_render(t_context *ctx, uint8_t *pixels, uint32_t n, uint32_t i);
 static inline void	make_dir(t_context *ctx, const char *path);
 
 void	screenshot(t_context *ctx)
@@ -32,8 +31,7 @@ void	screenshot(t_context *ctx)
 	save_render(ctx, ctx->img->pixels, ctx->renderer.pixels, 0u);
 }
 
-static inline void	save_render(\
-t_context *ctx, uint8_t *pixels, uint32_t n, uint32_t i)
+static inline void	save_render(t_context *ctx, uint8_t *pixels, uint32_t n, uint32_t i)
 {
 	char			path[PATH_MAX];
 	char			buf[32];
@@ -42,8 +40,7 @@ t_context *ctx, uint8_t *pixels, uint32_t n, uint32_t i)
 
 	snprintf(path, sizeof(path), "renders/render_%s.ppm", timestamp(buf));
 	fd = try_open(ctx, path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	snprintf(buf, sizeof(buf), "P6\n%d %d\n255\n", ctx->renderer.width, \
-ctx->renderer.height);
+	snprintf(buf, sizeof(buf), "P6\n%d %d\n255\n", ctx->renderer.width, ctx->renderer.height);
 	try_write(ctx, fd, buf);
 	buf_rgb = malloc(n * 3);
 	if (!buf_rgb)

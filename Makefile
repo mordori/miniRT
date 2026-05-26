@@ -26,7 +26,9 @@ else
 	OPTS		+=-march=haswell -fno-plt
 endif
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
-MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+ifeq ($(MAKELEVEL),0)
+	MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+endif
 
 DIR_INC		:=inc/
 DIR_SRC		:=src/
@@ -130,9 +132,8 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
-# Removed config dependencies to use parallel compilation
-# For debug commands to work, add $(CONF) back to NAME and %.o and compile serially
-# TODO: remove config completely for shipping
+
+
 all: $(MLX42) $(NAME)
 
 config:

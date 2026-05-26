@@ -15,8 +15,7 @@
 #include "parsing.h"
 #include "utils.h"
 
-void	try_pass(t_context *ctx, t_parser *p,
-				char **lines, int pass)
+void	try_pass(t_context *ctx, t_parser *p, char **lines, int pass)
 {
 	int		i;
 	char	**tokens;
@@ -42,8 +41,7 @@ void	try_pass(t_context *ctx, t_parser *p,
 	}
 }
 
-t_error	dispatch_pass(t_context *ctx, t_parser *p,
-					char **tokens, int pass)
+t_error	dispatch_pass(t_context *ctx, t_parser *p, char **tokens, int pass)
 {
 	const char	*id;
 

@@ -22,8 +22,7 @@ void	check_edit_keys(t_context *ctx, mlx_key_data_t keydata, bool *dirty)
 			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
 		if (config_editor(ctx, keydata))
 			*dirty = true;
-		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && \
-keydata.action == MLX_PRESS)
+		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
 			*dirty = frame_camera(ctx, ctx->editor.selected_obj);
 		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
 			*dirty = deselect_object(ctx, &ctx->renderer);

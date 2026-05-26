@@ -22,21 +22,18 @@ t_mat4	mat4_rot(t_vec3 rot)
 	sincosf(rot.x, &x.sin, &x.cos);
 	sincosf(rot.y, &y.sin, &y.cos);
 	sincosf(rot.z, &z.sin, &z.cos);
-	res.rows[0] = v4sf(\
-y.cos * z.cos, \
-z.cos * x.sin * y.sin - x.cos * z.sin, \
-x.cos * z.cos * y.sin + x.sin * z.sin, \
-0.0f);
-	res.rows[1] = v4sf(\
-y.cos * z.sin, \
-x.cos * z.cos + x.sin * y.sin * z.sin, \
--z.cos * x.sin + x.cos * y.sin * z.sin, \
-0.0f);
-	res.rows[2] = v4sf(\
--y.sin, \
-y.cos * x.sin, \
-x.cos * y.cos, \
-0.0f);
+	res.rows[0] = v4sf(y.cos * z.cos,
+						z.cos * x.sin * y.sin - x.cos * z.sin,
+						x.cos * z.cos * y.sin + x.sin * z.sin,
+						0.0f);
+	res.rows[1] = v4sf(y.cos * z.sin,
+						x.cos * z.cos + x.sin * y.sin * z.sin,
+						-z.cos * x.sin + x.cos * y.sin * z.sin,
+						0.0f);
+	res.rows[2] = v4sf(-y.sin,
+						y.cos * x.sin,
+						x.cos * y.cos,
+						0.0f);
 	res.rows[3] = v4sf(0.0f, 0.0f, 0.0f, 1.0f);
 	return (res);
 }

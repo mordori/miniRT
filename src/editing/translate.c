@@ -12,8 +12,7 @@
 
 #include "editing.h"
 
-void	obj_translate(\
-t_context *ctx, float magnitude, t_vec2i delta, float speed)
+void	obj_translate(t_context *ctx, float magnitude, t_vec2i delta, float speed)
 {
 	t_object		*obj;
 	t_vec3			axis;
@@ -26,12 +25,10 @@ t_context *ctx, float magnitude, t_vec2i delta, float speed)
 		axis = vec3_scale(ctx->editor.axis_primary, magnitude);
 	else
 	{
-		axis = vec3_add(\
-vec3_scale(ctx->editor.axis_primary, delta.x * speed), \
-vec3_scale(ctx->editor.axis_secondary, -delta.y * speed));
+		axis = vec3_add(vec3_scale(ctx->editor.axis_primary, delta.x * speed),
+						vec3_scale(ctx->editor.axis_secondary, -delta.y * speed));
 	}
-	obj->transform.pos = \
-vec3_add(obj->transform.pos, axis);
+	obj->transform.pos = vec3_add(obj->transform.pos, axis);
 	half_bounds = vec3_scale(obj->bounds, 0.5f);
 	limit_max = vec3_sub(g_world_limit, half_bounds);
 	limit_min = vec3_add(g_world_limit_neg, half_bounds);

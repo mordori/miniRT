@@ -14,11 +14,9 @@
 #include "materials.h"
 #include "utils.h"
 
-static inline float	solve_quadratic(\
-const t_sphere *sphere, const t_ray *ray, float t_max);
+static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max);
 
-t_error	init_sphere(\
-t_context *ctx, t_vec3 center, float diameter, uint32_t mat_id)
+t_error	init_sphere(t_context *ctx, t_vec3 center, float diameter, uint32_t mat_id)
 {
 	t_object	obj;
 	float		radius;
@@ -63,8 +61,7 @@ bool	hit_sphere(const t_shape *shape, const t_ray *ray, t_hit *hit)
 	return (true);
 }
 
-static inline float	solve_quadratic(\
-const t_sphere *sphere, const t_ray *ray, float t_max)
+static inline float	solve_quadratic(const t_sphere *sphere, const t_ray *ray, float t_max)
 {
 	float		a;
 	float		half_b;
@@ -74,8 +71,7 @@ const t_sphere *sphere, const t_ray *ray, float t_max)
 
 	a = vec3_dot(ray->dir, ray->dir);
 	half_b = vec3_dot(ray->dir, ray->origin);
-	d = \
-half_b * half_b - a * (vec3_dot(ray->origin, ray->origin) - sphere->radius_sq);
+	d = half_b * half_b - a * (vec3_dot(ray->origin, ray->origin) - sphere->radius_sq);
 	if (d < 0)
 		return (M_INF);
 	sqrt_d = sqrtf(d);

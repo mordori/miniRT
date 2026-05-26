@@ -31,8 +31,7 @@ t_error	add_object(t_context *ctx, t_object *obj)
 		return (E_TOO_BIG);
 	}
 	*new_obj = *obj;
-	new_obj->mat = \
-((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
+	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
 	new_obj->flags = new_obj->mat->flags;
 	if (!vector_add(&ctx->scene.geo.objs, new_obj))
 	{

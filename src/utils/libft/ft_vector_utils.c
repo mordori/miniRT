@@ -100,8 +100,7 @@ bool	vector_del(t_vector *vec, size_t index)
 		++index;
 	}
 	vec->total--;
-	if (vec->is_shrink && vec->size > VECTOR_SIZE && vec->total > 0 && \
-vec->total == vec->size / 4)
+	if (vec->is_shrink && vec->size > VECTOR_SIZE && vec->total > 0 && vec->total == vec->size / 4)
 		if (!vector_resize(vec, vec->size / 2))
 			return (false);
 	return (true);

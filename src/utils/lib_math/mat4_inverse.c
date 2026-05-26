@@ -99,11 +99,8 @@ float	mat3_det(const t_mat3 *src)
 {
 	float		res;
 
-	res = \
-src->m[0][0] * (src->m[1][1] * src->m[2][2] - src->m[2][1] * src->m[1][2]);
-	res -= \
-src->m[0][1] * (src->m[1][0] * src->m[2][2] - src->m[2][0] * src->m[1][2]);
-	res += \
-src->m[0][2] * (src->m[1][0] * src->m[2][1] - src->m[2][0] * src->m[1][1]);
+	res = src->m[0][0] * (src->m[1][1] * src->m[2][2] - src->m[2][1] * src->m[1][2]);
+	res -= src->m[0][1] * (src->m[1][0] * src->m[2][2] - src->m[2][0] * src->m[1][2]);
+	res += src->m[0][2] * (src->m[1][0] * src->m[2][1] - src->m[2][0] * src->m[1][1]);
 	return (res);
 }

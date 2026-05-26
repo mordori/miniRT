@@ -38,8 +38,7 @@ void	compute_cap_uv(const t_cylinder *cyl, t_vec3 to_hit, t_hit *hit)
 ** @param t_vals Output intersection hit distances.
 ** @return       true if an intersection point is found.
 */
-bool	solve_body_quadratic(const t_cylinder *cyl, const t_ray *ray, \
-float t_vals[2])
+bool	solve_body_quadratic(const t_cylinder *cyl, const t_ray *ray, float t_vals[2])
 {
 	double		a;
 	double		half_b;
@@ -49,10 +48,10 @@ float t_vals[2])
 	a = (double)ray->dir.x * ray->dir.x + (double)ray->dir.z * ray->dir.z;
 	if (a < 1e-6f)
 		return (false);
-	half_b = (double)ray->origin.x * ray->dir.x + \
-(double)ray->origin.z * ray->dir.z;
-	c = (double)ray->origin.x * ray->origin.x + \
-(double)ray->origin.z * ray->origin.z - (double)cyl->radius * cyl->radius;
+	half_b = (double)ray->origin.x * ray->dir.x + (double)ray->origin.z * ray->dir.z;
+	c = (double)ray->origin.x * ray->origin.x +
+		(double)ray->origin.z * ray->origin.z -
+		(double)cyl->radius * cyl->radius;
 	discriminant = half_b * half_b - a * c;
 	if (discriminant < 0.0f)
 		return (false);

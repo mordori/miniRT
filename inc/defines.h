@@ -201,10 +201,8 @@ static const t_vec3				g_one = {{1.0f, 1.0f, 1.0f, 0.0f}};
 static const t_vec3				g_right = {{1.0f, 0.0f, 0.0f, 0.0f}};
 static const t_vec3				g_up = {{0.0f, 1.0f, 0.0f, 0.0f}};
 static const t_vec3				g_forward = {{0.0f, 0.0f, 1.0f, 0.0f}};
-static const t_vec3				g_world_limit = \
-{{WORLD_LIMIT, WORLD_LIMIT, WORLD_LIMIT, 1.0f}};
-static const t_vec3				g_world_limit_neg = \
-{{-WORLD_LIMIT, -WORLD_LIMIT, -WORLD_LIMIT, 1.0f}};
+static const t_vec3				g_world_limit = {{WORLD_LIMIT, WORLD_LIMIT, WORLD_LIMIT, 1.0f}};
+static const t_vec3				g_world_limit_neg = {{-WORLD_LIMIT, -WORLD_LIMIT, -WORLD_LIMIT, 1.0f}};
 
 typedef enum e_obj_type			t_obj_type;
 typedef enum e_light_type		t_light_type;

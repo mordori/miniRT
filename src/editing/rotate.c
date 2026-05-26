@@ -23,18 +23,14 @@ void	obj_rotate(t_context *ctx, float angle)
 		axis = ctx->editor.axis_primary;
 	else
 	{
-		if (\
-ctx->editor.axis_primary.z == 0.0f && ctx->editor.axis_secondary.z == 0.0f)
+		if (ctx->editor.axis_primary.z == 0.0f && ctx->editor.axis_secondary.z == 0.0f)
 			axis = g_forward;
-		else if (\
-ctx->editor.axis_primary.y == 0.0f && ctx->editor.axis_secondary.y == 0.0f)
+		else if (ctx->editor.axis_primary.y == 0.0f && ctx->editor.axis_secondary.y == 0.0f)
 			axis = g_up;
 		else
 			axis = g_right;
 	}
 	rot_delta = quat_from_euler_angle(axis, angle);
-	ctx->editor.selected_obj->transform.rot = \
-quat_mul(rot_delta, ctx->editor.selected_obj->transform.rot);
-	ctx->editor.selected_obj->transform.rot = \
-quat_normalize(ctx->editor.selected_obj->transform.rot);
+	ctx->editor.selected_obj->transform.rot = quat_mul(rot_delta, ctx->editor.selected_obj->transform.rot);
+	ctx->editor.selected_obj->transform.rot = quat_normalize(ctx->editor.selected_obj->transform.rot);
 }

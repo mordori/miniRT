@@ -15,10 +15,8 @@
 #include "objects.h"
 #include "materials.h"
 
-static inline void	init_params(\
-t_context *ctx, t_light *l, t_object *obj, uint32_t mat_id);
-static inline t_error	init_dir_light(\
-t_context *ctx, t_light *light, t_object *obj);
+static inline void	init_params(t_context *ctx, t_light *l, t_object *obj, uint32_t mat_id);
+static inline t_error	init_dir_light(t_context *ctx, t_light *light, t_object *obj);
 
 t_error	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 {
@@ -49,8 +47,7 @@ t_error	init_point_light(t_context *ctx, t_light *light, uint32_t mat_id)
 	return (E_OK);
 }
 
-static inline void	init_params(\
-t_context *ctx, t_light *l, t_object *obj, uint32_t mat_id)
+static inline void	init_params(t_context *ctx, t_light *l, t_object *obj, uint32_t mat_id)
 {
 	t_material	*mat;
 
@@ -68,8 +65,7 @@ t_context *ctx, t_light *l, t_object *obj, uint32_t mat_id)
 	obj->flags |= OBJ_NO_CAST_SHADOW | MAT_NO_REC_SHADOW;
 }
 
-static inline t_error	init_dir_light(\
-t_context *ctx, t_light *light, t_object *obj)
+static inline t_error	init_dir_light(t_context *ctx, t_light *light, t_object *obj)
 {
 	t_object	*new_obj;
 
@@ -84,8 +80,7 @@ t_context *ctx, t_light *light, t_object *obj)
 	update_transform(&obj->transform);
 	update_bounds(obj);
 	*new_obj = *obj;
-	new_obj->mat = \
-((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
+	new_obj->mat = ((t_material **)ctx->scene.assets.materials.items)[obj->material_id];
 	light->obj = new_obj;
 	light->intensity = 4000000000000.0f;
 	light->max_radiance = 2.0f;
@@ -106,8 +101,7 @@ void	update_light_radius(t_context *ctx)
 	while (i < ctx->scene.env.lights.total)
 	{
 		light = ((t_light **)ctx->scene.env.lights.items)[i++];
-		max_scale = fminf(fminf(light->obj->transform.scale.x, \
-light->obj->transform.scale.y), light->obj->transform.scale.z);
+		max_scale = fminf(fminf(light->obj->transform.scale.x, light->obj->transform.scale.y), light->obj->transform.scale.z);
 		light->radius = light->obj->shape.sphere.radius * max_scale;
 		light->radius_sq = light->radius * light->radius;
 	}

@@ -12,8 +12,7 @@
 
 #include "utils.h"
 
-void	vector_try_init(\
-t_context *ctx, t_vector *vec, bool is_shrink, void (*del)(void *))
+void	vector_try_init(t_context *ctx, t_vector *vec, bool is_shrink, void (*del)(void *))
 {
 	if (!vector_init(vec, is_shrink, del))
 		fatal_error(ctx, errors(ERR_VECINIT), __FILE__, __LINE__);

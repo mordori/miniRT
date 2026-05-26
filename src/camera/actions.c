@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "camera.h"
+#include "defines.h"
 
 void	apply_cam_action(t_context *ctx, t_vec2i delta)
 {
@@ -19,16 +20,14 @@ void	apply_cam_action(t_context *ctx, t_vec2i delta)
 	cam = &ctx->scene.cam;
 	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300)
 	{
-		if (cam->state == CAM_TURN)
-			cam_turn(ctx, delta);
-		else if (cam->state == CAM_LOOK)
-			cam_look(ctx, delta);
-		else if (cam->state == CAM_ORBIT)
-			cam_orbit(ctx, delta);
-		else if (cam->state == CAM_ZOOM)
-			cam_zoom(ctx, delta);
-		else if (cam->state == CAM_PAN)
-			cam_pan(ctx, delta);
+		switch (cam->state) {
+		case CAM_TURN : cam_turn(ctx, delta); break;
+		case CAM_LOOK : cam_look(ctx, delta); break;
+		case CAM_ORBIT : cam_orbit(ctx, delta); break;
+		case CAM_ZOOM : cam_zoom(ctx, delta); break;
+		case CAM_PAN : cam_pan(ctx, delta); break;
+		case CAM_DEFAULT : break;
+		}
 	}
 }
 
@@ -56,20 +55,11 @@ bool	is_cam_action_active(const t_context *ctx)
 	bool			is_held;
 
 	is_held = false;
-	if (cam->state == CAM_ORBIT && \
-mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
-		is_held = true;
-	else if (cam->state == CAM_ZOOM && \
-mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
-		is_held = true;
-	else if (cam->state == CAM_PAN && \
-mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE))
-		is_held = true;
-	else if (cam->state == CAM_TURN && \
-mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
-		is_held = true;
-	else if (cam->state == CAM_LOOK && \
-mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
+	if ((cam->state == CAM_ORBIT && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT)) ||
+		(cam->state == CAM_ZOOM && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT)) ||
+		(cam->state == CAM_PAN && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_MIDDLE)) ||
+		(cam->state == CAM_TURN && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT)) ||
+		(cam->state == CAM_LOOK && mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT)))
 		is_held = true;
 	return (is_held);
 }

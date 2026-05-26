@@ -23,26 +23,25 @@
 ** @param oc   Vector from apex to ray origin.
 ** @param coef Output array [a, half_b, c].
 */
-void	compute_coefficients(const t_cone *cone, const t_ray *ray, \
-double coef[3])
+void	compute_coefficients(const t_cone *cone, const t_ray *ray, double coef[3])
 {
 	double		d_dot_oc;
 	double		d_dot_d;
 	double		o_dot_o;
 	double		cos_sq;
 
-	d_dot_oc = \
-(double)ray->dir.x * ray->origin.x + \
-(double)ray->dir.y * ray->origin.y + \
-(double)ray->dir.z * ray->origin.z;
-	d_dot_d = \
-(double)ray->dir.x * ray->dir.x + \
-(double)ray->dir.y * ray->dir.y + \
-(double)ray->dir.z * ray->dir.z;
-	o_dot_o = \
-(double)ray->origin.x * ray->origin.x + \
-(double)ray->origin.y * ray->origin.y + \
-(double)ray->origin.z * ray->origin.z;
+	d_dot_oc = (double)ray->dir.x * ray->origin.x +
+				(double)ray->dir.y * ray->origin.y +
+				(double)ray->dir.z * ray->origin.z;
+
+	d_dot_d = (double)ray->dir.x * ray->dir.x +
+				(double)ray->dir.y * ray->dir.y +
+				(double)ray->dir.z * ray->dir.z;
+
+	o_dot_o = (double)ray->origin.x * ray->origin.x +
+				(double)ray->origin.y * ray->origin.y +
+				(double)ray->origin.z * ray->origin.z;
+
 	cos_sq = (double)cone->cos_sq;
 	coef[0] = (double)ray->dir.y * ray->dir.y - cos_sq * d_dot_d;
 	coef[1] = (double)ray->dir.y * ray->origin.y - cos_sq * d_dot_oc;
@@ -58,8 +57,7 @@ double coef[3])
 ** @param t_max The maximum valid hit distance.
 ** @return      true if the point lies on the valid part of the cone.
 */
-bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
-				float t_max)
+bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t, float t_max)
 {
 	float		hit_y;
 
@@ -79,8 +77,7 @@ bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t,
 ** @param base_r The radius of the base circle.
 ** @param hit    The hit record to store UV data.
 */
-void	compute_cone_cap_uv(t_vec3 to_hit,
-		float base_r, t_hit *hit)
+void	compute_cone_cap_uv(t_vec3 to_hit, float base_r, t_hit *hit)
 {
 	hit->uv.u = to_hit.x / base_r * 0.5f + 0.5f;
 	hit->uv.v = to_hit.z / base_r * 0.5f + 0.5f;
@@ -110,8 +107,7 @@ bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit)
 		return (false);
 	point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
 	to_hit = vec3(point.x, 0.0f, point.z);
-	if (to_hit.x * to_hit.x + to_hit.z * to_hit.z > \
-cone->base_radius * cone->base_radius)
+	if (to_hit.x * to_hit.x + to_hit.z * to_hit.z > cone->base_radius * cone->base_radius)
 		return (false);
 	hit->point = point;
 	hit->t = t;

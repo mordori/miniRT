@@ -22,8 +22,7 @@
  *
  * @return	Created memory arena or NULL if creation fails.
  */
-t_arena	arena_create(\
-void *ctx, size_t capacity, void (*err)(void *ctx, char *msg))
+t_arena	arena_create(void *ctx, size_t capacity, void (*err)(void *ctx, char *msg))
 {
 	t_arena	arena;
 

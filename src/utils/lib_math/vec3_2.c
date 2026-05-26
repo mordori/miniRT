@@ -18,12 +18,12 @@ t_vec3	vec3_cross(t_vec3 a, t_vec3 b)
 	t_v4sf		yzx;
 	t_v4sf		zxy;
 
-	yzx = \
-_mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 0, 2, 1)) * \
-_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 1, 0, 2));
-	zxy = \
-_mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 1, 0, 2)) * \
-_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 0, 2, 1));
+	yzx = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 0, 2, 1)) *
+			_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 1, 0, 2));
+
+	zxy = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 1, 0, 2)) *
+			_mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 0, 2, 1));
+
 	res.v = yzx - zxy;
 	return (res);
 }

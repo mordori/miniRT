@@ -21,8 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static t_error	parse_mat_fields(t_context *ctx, t_parser *p,
-					char **tkns, int tc);
+static t_error	parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc);
 static t_error	parse_mat_values(char **tkns, t_material *mat);
 
 /**
@@ -30,8 +29,7 @@ static t_error	parse_mat_values(char **tkns, t_material *mat);
  * Color format: "R,G,B" (0-255) -> creates new material, returns its ID.
  * Material ID: integer index -> uses existing material ID.
  */
-t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
-		uint32_t *out_id)
+t_error	resolve_material(t_context *ctx, t_parser *p, const char *token, uint32_t *out_id)
 {
 	uint32_t	id;
 	t_vec3		color;
@@ -61,8 +59,7 @@ t_error	resolve_material(t_context *ctx, t_parser *p, const char *token,
 }
 
 // Shallow copy — registry owns pixel data, materials borrow it
-static t_error	parse_mat_texture(t_context *ctx, char **tkn,
-		t_material *mat, int token_count)
+static t_error	parse_mat_texture(t_context *ctx, char **tkn, t_material *mat, int token_count)
 {
 	t_texture	*tex;
 
@@ -115,8 +112,7 @@ static t_error	parse_mat_values(char **tkns, t_material *mat)
 	return (E_OK);
 }
 
-static t_error	parse_mat_fields(t_context *ctx, t_parser *p,
-					char **tkns, int tc)
+static t_error	parse_mat_fields(t_context *ctx, t_parser *p, char **tkns, int tc)
 {
 	t_mat_entry	*entry;
 	t_material	*mat;

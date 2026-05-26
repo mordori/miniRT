@@ -24,21 +24,21 @@ t_vec2	vec2_n(float n)
 
 t_vec2	vec2_add(t_vec2 a, t_vec2 b)
 {
-	return ((t_vec2){{\
-a.x + b.x, \
-a.y + b.y}});
+	return ((t_vec2){{
+		a.x + b.x,
+		a.y + b.y}});
 }
 
 t_vec2	vec2_sub(t_vec2 a, t_vec2 b)
 {
-	return ((t_vec2){{\
-a.x - b.x, \
-a.y - b.y}});
+	return ((t_vec2){{
+		a.x - b.x,
+		a.y - b.y}});
 }
 
 t_vec2	vec2_scale(t_vec2 vec, float s)
 {
-	return ((t_vec2){{\
-vec.x * s, \
-vec.y * s}});
+	return ((t_vec2){{
+		vec.x * s,
+		vec.y * s}});
 }

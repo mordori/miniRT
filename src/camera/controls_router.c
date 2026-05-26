@@ -71,8 +71,7 @@ bool	frame_camera(t_context *ctx, t_object *obj)
 	t_vec3			half_bounds;
 	t_vec3			proj;
 	t_vec2			dist;
-	const float		tan_half_fov = \
-SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
+	const float		tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
 
 	if (!obj)
 		return (false);
@@ -89,8 +88,7 @@ SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
 		dist.width = proj.width / (tan_half_fov * cam->aspect);
 		cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
 	}
-	cam->transform.pos = vec3_sub(obj->bounds_center, \
-vec3_scale(cam->forward, cam->distance));
+	cam->transform.pos = vec3_sub(obj->bounds_center, vec3_scale(cam->forward, cam->distance));
 	update_camera(ctx, cam);
 	return (true);
 }
@@ -99,8 +97,7 @@ static inline bool	set_cam_state(t_context *ctx)
 {
 	if (ctx->scene.cam.state != CAM_DEFAULT)
 		return (true);
-	if (ctx->renderer.mode == SOLID && \
-mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
+	if (ctx->renderer.mode == SOLID && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT))
 	{
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			begin_cam_action(ctx, CAM_ORBIT);

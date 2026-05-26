@@ -54,8 +54,7 @@ void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
 	if (r->mode == RENDERED)
 		r->mode = PREVIEW;
 	if (r->mode == SOLID)
-		memset(\
-ctx->editor.selection_mask, 0, sizeof(float) * ctx->renderer.pixels);
+		memset(ctx->editor.selection_mask, 0, sizeof(float) * ctx->renderer.pixels);
 	r->cam = ctx->scene.cam;
 	r->ray_bounces = PREVIEW_BOUNCES;
 	r->frame = 1;

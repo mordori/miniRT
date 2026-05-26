@@ -23,8 +23,7 @@ bool	cancel_edit_action(t_context *ctx);
 void	begin_edit_action(t_context *ctx, t_edit_mode mode);
 void	end_edit_action(t_context *ctx);
 void	edit_action(t_context *ctx, t_vec2i delta);
-void	obj_translate(\
-t_context *ctx, float magnitude, t_vec2i delta, float speed);
+void	obj_translate(t_context *ctx, float magnitude, t_vec2i delta, float speed);
 void	obj_rotate(t_context *ctx, float angle);
 void	obj_scale(t_context *ctx, float magnitude);
 void	set_axis_constraints(t_context *ctx, mlx_key_data_t keydata);

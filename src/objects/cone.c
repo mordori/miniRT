@@ -42,8 +42,7 @@ t_error	init_cone(t_context *ctx, t_cone *cone, int32_t mat_id)
 ** @param t_vals Output array for hit distances [near, far].
 ** @return       true if an intersection point is found.
 */
-static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray, \
-float t_vals[2])
+static bool	solve_cone_quadratic(const t_cone *cone, const t_ray *ray, float t_vals[2])
 {
 	double		coef[3];
 	double		discriminant;
@@ -97,14 +96,12 @@ static bool	hit_cone_body(const t_cone *cone, const t_ray *ray, t_hit *hit)
 ** @param ray  The ray that caused the intersection.
 ** @param hit  The hit record to populate.
 */
-static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray,
-		t_hit *hit)
+static void	compute_cone_body_normal(const t_cone *cone, const t_ray *ray, t_hit *hit)
 {
 	float		len_sq;
 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	hit->normal = vec3(\
-hit->point.x, -hit->point.y * cone->tan_sq, hit->point.z);
+	hit->normal = vec3(hit->point.x, -hit->point.y * cone->tan_sq, hit->point.z);
 	len_sq = vec3_dot(hit->normal, hit->normal);
 	if (len_sq < G_EPSILON)
 		hit->normal = g_up;

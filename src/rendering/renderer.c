@@ -14,8 +14,7 @@
 #include "utils.h"
 
 static inline void	*render_routine(void *arg);
-static inline void	render_tile(\
-const t_context *ctx, t_vec3 *buf, uint32_t tile_id);
+static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id);
 static inline void	render_pixel(const t_context *ctx, t_pixel *pixel);
 static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel);
 
@@ -36,8 +35,7 @@ bool	init_renderer(t_context *ctx)
 	r->active = true;
 	while (r->threads_init < r->threads_amount)
 	{
-		if (\
-pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
+		if (pthread_create(&r->threads[r->threads_init], NULL, render_routine, ctx))
 		{
 			pthread_mutex_lock(&r->mutex);
 			r->active = false;
@@ -60,8 +58,7 @@ static inline void	*render_routine(void *arg)
 	pthread_mutex_lock(&r->mutex);
 	while (true)
 	{
-		while (\
-r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
+		while (r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
 			pthread_cond_wait(&r->cond, &r->mutex);
 		if (!get_thread_status(r, &tile_id))
 			break ;
@@ -69,9 +66,7 @@ r->active && (r->resize_pending || r->tile_index >= r->tiles_total))
 		render_tile(ctx, r->buffer, tile_id);
 		pthread_mutex_lock(&r->mutex);
 		--r->threads_running;
-		if (\
-r->threads_running == 0 && \
-(r->resize_pending || r->tile_index >= r->tiles_total))
+		if (r->threads_running == 0 && (r->resize_pending || r->tile_index >= r->tiles_total))
 		{
 			r->frame_complete = true;
 			pthread_cond_broadcast(&r->cond);
@@ -80,8 +75,7 @@ r->threads_running == 0 && \
 	return (NULL);
 }
 
-static inline void	render_tile(\
-const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
+static inline void	render_tile(const t_context *ctx, t_vec3 *buf, uint32_t tile_id)
 {
 	t_pixel			pixel;
 	t_uint2			start;
@@ -115,8 +109,7 @@ static inline void	render_pixel(const t_context *ctx, t_pixel *pixel)
 	uint32_t			seed;
 	t_vec3				color;
 
-	seed = \
-hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
+	seed = hash_lowerbias32((pixel->y * r->width + pixel->x) ^ hash_lowerbias32(r->frame));
 	if (seed == 0)
 		seed = 1;
 	pixel->seed = &seed;
@@ -136,9 +129,7 @@ static inline void	sample_pixel(const t_context *ctx, t_pixel *pixel)
 
 	if (r->mode == RENDERED)
 	{
-		aa = r2_sequence(r->frame, vec2(\
-static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U), \
-static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
+		aa = r2_sequence(r->frame, vec2(static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U), static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
 		pixel->u = (float)pixel->x + aa.u;
 		pixel->v = (float)pixel->y + aa.v;
 	}
