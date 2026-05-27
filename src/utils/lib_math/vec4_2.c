@@ -1,30 +1,13 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   vec4_2.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/19 23:32:25 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/02/06 04:31:37 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "lib_math.h"
 
-t_vec4	vec4_3(t_vec3 vec, float w)
-{
-	t_vec4		res;
-
+t_vec4 vec4_3(t_vec3 vec, float w) {
+	t_vec4 res;
 	res.v = vec.v;
 	res.w = w;
-	return (res);
+	return res;
 }
 
-float	vec4_dot(t_vec4 a, t_vec4 b)
-{
-	t_v4sf		res;
-
-	res = a.v * b.v;
-	return (res[0] + res[1] + res[2] + res[3]);
+float vec4_dot(t_vec4 a, t_vec4 b) {
+	t_v4sf res = a.v * b.v;
+	return res[0] + res[1] + res[2] + res[3];
 }
