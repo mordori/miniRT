@@ -12,18 +12,10 @@
 
 #include "lib_math.h"
 
-t_v4si	v4si(int32_t x, int32_t y, int32_t z, int32_t w)
-{
-	t_v4si	res;
-
-	res = (t_v4si){x, y, z, w};
-	return (res);
+t_v4si v4si(int32_t x, int32_t y, int32_t z, int32_t w) {
+	return (t_v4si){ x, y, z, w };
 }
 
-t_v4si	v4si_n(int32_t n)
-{
-	t_v4si	res;
-
-	res = (t_v4si){n, n, n, n};
-	return (res);
+t_v4si v4si_n(int32_t n) {
+	return (t_v4si){ n, n, n, n };
 }
