@@ -23,9 +23,8 @@ static inline bool set_f_stop(t_context* ctx, float dt) {
 		else
 			ctx->scene.cam.f_stop *= div;
 		ctx->scene.cam.f_stop = clampf(ctx->scene.cam.f_stop, 0.95f, 128.0f);
-		return true;
 	}
-	return false;
+	return (bool)change;
 }
 
 static inline bool set_focal_length(t_context* ctx, float dt) {
@@ -37,10 +36,9 @@ static inline bool set_focal_length(t_context* ctx, float dt) {
 			ctx->scene.cam.focal_len_mm *= mul;
 		else
 			ctx->scene.cam.focal_len_mm *= div;
-		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 1.0f, 800.0f);
-		return true;
+		ctx->scene.cam.focal_len_mm = clampf(ctx->scene.cam.focal_len_mm, 14.0f, 800.0f);
 	}
-	return false;
+	return (bool)change;
 }
 
 static inline bool set_focus_dist(t_context* ctx, float dt) {
@@ -53,7 +51,6 @@ static inline bool set_focus_dist(t_context* ctx, float dt) {
 		else
 			ctx->scene.cam.focus_dist *= div;
 		ctx->scene.cam.focus_dist = clampf(ctx->scene.cam.focus_dist, 0.1f, 1000.0f);
-		return true;
 	}
-	return false;
+	return (bool)change;
 }

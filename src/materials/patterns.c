@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   patterns.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:50:32 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:50:34 by wshoweky         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "lib_math.h"
 #include "materials.h"
 
@@ -25,9 +13,8 @@
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - albedo or albedo2 depending on checker position
 */
-t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
-{
-	float	scale;
+t_vec3 pattern_checkerboard(const t_hit* hit, const t_material* mat) {
+	float scale;
 
 	scale = mat->pattern_scale;
 	if (((int)floorf(hit->uv.u * scale) + (int)floorf(hit->uv.v * scale)) & 1)
@@ -47,8 +34,7 @@ t_vec3	pattern_checkerboard(const t_hit *hit, const t_material *mat)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - Linearly interpolated color based on hit->uv.v
 */
-t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
-{
+t_vec3 pattern_gradient(const t_hit* hit, const t_material* mat) {
 	return (vec3_lerp(mat->albedo, mat->albedo2, hit->uv.v));
 }
 
@@ -61,9 +47,8 @@ t_vec3	pattern_gradient(const t_hit *hit, const t_material *mat)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - albedo or albedo2 in alternating bands
 */
-t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
-{
-	float	scale;
+t_vec3 pattern_stripe(const t_hit* hit, const t_material* mat) {
+	float scale;
 
 	scale = mat->pattern_scale * M_TAU;
 	if (sinf(hit->uv.v * scale) < 0.0f)
@@ -85,9 +70,8 @@ t_vec3	pattern_stripe(const t_hit *hit, const t_material *mat)
 ** @param mat  - Material with primary and secondary albedo colors
 ** @return     - albedo or albedo2 in spiraling bands
 */
-t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
-{
-	float	scale;
+t_vec3 pattern_spiral(const t_hit* hit, const t_material* mat) {
+	float scale;
 
 	scale = mat->pattern_scale * M_TAU;
 	if (sinf((hit->uv.u + hit->uv.v) * scale) < 0.0f)
@@ -100,11 +84,10 @@ t_vec3	pattern_spiral(const t_hit *hit, const t_material *mat)
 ** Renders a neon-style wireframe grid by checking if the local point
 ** fractional coordinate is very close to 0.0. Good for debugging.
 */
-t_vec3	pattern_grid(const t_hit *hit, const t_material *mat)
-{
-	float	u;
-	float	v;
-	float	line_width;
+t_vec3 pattern_grid(const t_hit* hit, const t_material* mat) {
+	float u;
+	float v;
+	float line_width;
 
 	u = hit->uv.u * mat->pattern_scale;
 	v = hit->uv.v * mat->pattern_scale;

@@ -12,3 +12,4 @@ libft.a
 .config
 .cache
 miniRT
+compile_commands.json

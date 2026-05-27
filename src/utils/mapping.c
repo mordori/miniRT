@@ -1,33 +1,17 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   mapping.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 19:20:24 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:20:25 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+#include "lib_math.h"
 #include "utils.h"
 
 /**
  * Convert UV coordinates to a point on the unit sphere.
  * Inverse of spherical_uv().
  */
-t_vec3	map_spherical(float u, float v)
-{
-	t_vec3		res;
-	float		cos_theta;
-	float		sin_theta;
-	t_vec2		phi;
+t_vec3 map_spherical(float u, float v) {
+	t_vec2 phi;
 
-	cos_theta = 1.0f - 2.0f * v;
-	sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
+	float cos_theta = 1.0f - 2.0f * v;
+	float sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
 	sincosf(M_TAU * u, &phi.sin, &phi.cos);
-	res = vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
-	return (res);
+	return vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
 }
 
 /**
@@ -36,11 +20,9 @@ t_vec3	map_spherical(float u, float v)
  * U = longitude [0, 1], V = latitude [0, 1] (north pole = 0, south = 1)
  * Inverse of map_spherical().
  */
-t_vec2	spherical_uv(t_vec3 dir)
-{
-	t_vec2	uv;
-
-	uv.u = (fast_atan2f(dir.z, dir.x) + (float)M_PI) * M_1_2PI;
-	uv.v = fast_acosf(clampfn11(dir.y)) * M_1_PI;
-	return (uv);
+t_vec2 spherical_uv(t_vec3 dir) {
+	return (t_vec2){ //
+		.u = (fast_atan2f(dir.z, dir.x) + (float)M_PI) * M_1_2PI,
+		.v = fast_acosf(clampfn11(dir.y)) * M_1_PI
+	};
 }

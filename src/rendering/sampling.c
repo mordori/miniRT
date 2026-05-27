@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   sampling.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:50:07 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:50:09 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "rendering.h"
 
 static inline t_vec3 sample_vndf_hemisphere(t_vec3 wi, t_vec2 uv);
@@ -22,10 +10,10 @@ t_vec3 sample_cos_hemisphere(t_vec3 n, t_vec2 uv) {
 
 // Shirley's concentric mapping
 t_vec2 sample_disk(t_vec2 uv) {
-	float u = 2.0f * uv.u - 1.0f;
-	float v = 2.0f * uv.v - 1.0f;
 	t_vec2 phi;
 	float r;
+	float u = 2.0f * uv.u - 1.0f;
+	float v = 2.0f * uv.v - 1.0f;
 
 	if (u == 0.0f && v == 0.0f)
 		return (vec2_n(0.0f));

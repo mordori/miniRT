@@ -1,22 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   instructions.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 19:20:27 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 17:21:00 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "utils.h"
 
-static inline void	print_editing(void);
-static inline void	print_general(void);
+static inline void print_editing(void);
+static inline void print_general(void);
 
-void	printf_init(void)
-{
+void printf_init(void) {
 	printf("\n");
 	printf("                 RENDER MODE                        \n");
 	printf("|---------------------|----------------------------|\n");
@@ -35,8 +22,7 @@ void	printf_init(void)
 	print_general();
 }
 
-static inline void	print_editing(void)
-{
+static inline void print_editing(void) {
 	printf("                  EDIT MODE                         \n");
 	printf("|---------------------|----------------------------|\n");
 	printf("|         Key         |           Action           |\n");
@@ -64,8 +50,7 @@ static inline void	print_editing(void)
 	printf("\n");
 }
 
-static inline void	print_general(void)
-{
+static inline void print_general(void) {
 	printf("                   GENERAL                          \n");
 	printf("|---------------------|----------------------------|\n");
 	printf("|         Key         |           Action           |\n");

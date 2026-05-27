@@ -1,20 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   patterns_tools.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:50:59 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:51:00 by wshoweky         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "lib_math.h"
 #include "materials.h"
 
-t_vec3	eval_pattern(t_material *mat, t_hit *hit)
-{
+t_vec3 eval_pattern(t_material* mat, t_hit* hit) {
 	if (mat->pattern == PAT_NONE)
 		return (mat->albedo);
 	if (mat->pattern == PAT_CHECKERBOARD)
@@ -38,17 +25,15 @@ t_vec3	eval_pattern(t_material *mat, t_hit *hit)
 	return (mat->albedo);
 }
 
-t_vec3	get_local_coords(const t_hit *hit)
-{
+t_vec3 get_local_coords(const t_hit* hit) {
 	return (mat4_mul_vec3(&hit->obj->transform.world_to_object, hit->point));
 }
 
-t_vec3	pattern_brick(const t_hit *hit, const t_material *mat)
-{
-	float	scale;
-	float	u;
-	float	v;
-	int		row;
+t_vec3 pattern_brick(const t_hit* hit, const t_material* mat) {
+	float scale;
+	float u;
+	float v;
+	int row;
 
 	scale = mat->pattern_scale;
 	u = hit->uv.u * scale;

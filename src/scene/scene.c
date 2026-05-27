@@ -1,11 +1,12 @@
 #include "scene.h"
 
+#include "defines.h"
 #include "libft_str.h"
 #include "parsing.h"
 #include "utils.h"
 
 void init_scene(t_context* ctx) {
-	memset(&ctx->scene, 0, sizeof(t_scene));
+	ctx->scene = (t_scene){ 0 };
 	vector_try_init(ctx, &ctx->scene.geo.objs, false, free);
 	vector_try_init(ctx, &ctx->scene.geo.planes, false, free);
 	vector_try_init(ctx, &ctx->scene.env.lights, false, free);

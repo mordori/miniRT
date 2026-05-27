@@ -1,19 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   renderer.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 19:19:57 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:19:59 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "utils.h"
 
-void	start_render(t_renderer *r, const t_camera *cam)
-{
+void start_render(t_renderer* r, const t_camera* cam) {
 	pthread_mutex_lock(&r->mutex);
 	r->tiles.x = (r->width + TILE_SIZE - 1) / TILE_SIZE;
 	r->tiles.y = (r->height + TILE_SIZE - 1) / TILE_SIZE;
@@ -27,8 +14,7 @@ void	start_render(t_renderer *r, const t_camera *cam)
 	pthread_mutex_unlock(&r->mutex);
 }
 
-void	stop_render(t_renderer *r)
-{
+void stop_render(t_renderer* r) {
 	pthread_mutex_lock(&r->mutex);
 	r->active = false;
 	r->resize_pending = false;
@@ -36,8 +22,7 @@ void	stop_render(t_renderer *r)
 	pthread_mutex_unlock(&r->mutex);
 }
 
-void	cancel_render(t_renderer *r)
-{
+void cancel_render(t_renderer* r) {
 	r->tile_index = r->tiles_total;
 	pthread_cond_broadcast(&r->cond);
 	while (r->threads_running)
@@ -49,8 +34,7 @@ void	cancel_render(t_renderer *r)
 	r->blit_time = 0;
 }
 
-void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
-{
+void set_mode_preview(t_context* ctx, t_renderer* r, bool* update) {
 	if (r->mode == RENDERED)
 		r->mode = PREVIEW;
 	if (r->mode == SOLID)
@@ -64,10 +48,8 @@ void	set_mode_preview(t_context *ctx, t_renderer *r, bool *update)
 	pthread_cond_broadcast(&r->cond);
 }
 
-void	set_mode_rendered(t_renderer *r)
-{
-	if (r->mode != RENDERED)
-	{
+void set_mode_rendered(t_renderer* r) {
+	if (r->mode != RENDERED) {
 		r->blit_time = 0;
 		r->render_time = time_now();
 		r->frame = 1;

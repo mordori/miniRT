@@ -1,15 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   skydome.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:50:11 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/04/08 15:53:38 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+#include "lib_math.h"
 #include "materials.h"
 #include "rendering.h"
 #include "utils.h"
@@ -17,47 +6,43 @@
 static inline t_vec3 background_gradient(const t_scene* scene, const float t);
 
 t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset) {
-	t_vec2 uv;
-
 	if (!scene->env.skydome.pixels)
-		return (background_gradient(scene, (ray->dir.y + 1.0f) * 0.5f));
-	uv = spherical_uv(ray->dir);
+		return background_gradient(scene, (ray->dir.y + 1.0f) * 0.5f);
+
+	t_vec2 uv = spherical_uv(ray->dir);
 	uv = vec2_add(uv, uv_offset);
-	return (sample_texture(&scene->env.skydome, uv));
+	return sample_texture(&scene->env.skydome, uv);
 }
 
 static inline t_vec3 background_gradient(const t_scene* scene, const float t) {
-	t_vec3 res;
-
-	res = vec3_lerp(scene->env.amb_light.color, scene->env.amb_color_2, t);
-	return (res);
+	return vec3_lerp(scene->env.amb_light.color, scene->env.amb_color_2, t);
 }
 
 bool rotate_skydome(t_context* ctx) {
 	static const t_vec3 initial_pos = { { 704000.0f, 484000.0f, 520000.0f, 0.0f } };
-	t_light* light;
-	float delta;
-	t_vec2 theta;
 
 	if (!ctx->scene.env.skydome.pixels)
 		return false;
 
-	light = &ctx->scene.cam.directional_light;
-	if ((mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) && !mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA)) ||
-		(mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA) && !mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD))) {
-		delta = 0.085f * fminf(ctx->mlx->delta_time, 0.1f);
-		if (mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA))
+	int change = mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) - mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA);
+	if (change) {
+		float delta = 0.085f * fminf(ctx->mlx->delta_time, 0.1f);
+		if (change < 0)
 			delta = -delta;
 		ctx->scene.cam.skydome_uv_offset.u += delta;
+
 		if (ctx->scene.env.has_dir_light) {
+			t_light* light = &ctx->scene.cam.directional_light;
+			t_vec2 theta;
 			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);
-			light->obj->transform.pos.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin;
-			light->obj->transform.pos.y = initial_pos.y;
-			light->obj->transform.pos.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos;
+			light->obj->transform.pos = (t_vec3){ //
+				.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin,
+				.y = initial_pos.y,
+				.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos
+			};
 			update_transform(&light->obj->transform);
 			update_bounds(light->obj);
 		}
-		return (true);
 	}
-	return (false);
+	return (bool)change;
 }

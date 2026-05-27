@@ -1,79 +1,55 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   material.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:48:15 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 20:26:20 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "materials.h"
 #include "rendering.h"
-#include "utils.h"
 
-t_error	new_material(t_context *ctx, t_material *mat, uint32_t *out_id)
-{
-	t_material		*new_mat;
-
-	new_mat = malloc(sizeof(*new_mat));
+t_error new_material(t_context* ctx, t_material* mat, uint32_t* out_id) {
+	t_material* new_mat = malloc(sizeof(*new_mat));
 	if (!new_mat)
-		return (E_MALLOC);
+		return E_MALLOC;
+
 	mat->ior = fmaxf(mat->ior, 1.0f);
 	mat->roughness = fmaxf(mat->roughness, 0.045f);
 	mat->f0_dielectric = vec3_n(reflectance(mat->ior));
 	*new_mat = *mat;
-	if (!vector_add(&ctx->scene.assets.materials, new_mat))
-	{
+
+	if (!vector_add(&ctx->scene.assets.materials, new_mat)) {
 		free(new_mat);
-		return (E_MALLOC);
+		return E_MALLOC;
 	}
 	if (out_id)
 		*out_id = ctx->scene.assets.materials.total - 1;
-	return (E_OK);
+	return E_OK;
 }
 
-static t_vec3	apply_normal_map(const t_material *mat, t_vec3 n, t_path *path)
-{
-	t_vec3		sampled;
-
-	sampled = sample_texture(&mat->normal_map, path->hit.uv);
+static t_vec3 apply_normal_map(const t_material* mat, t_vec3 n, t_path* path) {
+	t_vec3 sampled = sample_texture(&mat->normal_map, path->hit.uv);
 	sampled = vec3_sub(vec3_scale(sampled, 2.0f), vec3_n(1.0f));
 	sampled.x *= mat->bump_strength;
 	sampled.y *= mat->bump_strength;
 	n = vec3_normalize(mul_tbn(sampled, n, path->hit.tangent, path->hit.bitangent));
-	return (n);
+	return n;
 }
 
-void	set_material_data(t_path *path)
-{
-	t_vec3		albedo;
-	float		rough_bump;
-
+void set_material_data(t_path* path) {
 	path->n = path->hit.normal;
 	path->v = vec3_negate(path->ray.dir);
 	if (path->mat->normal_map.pixels)
 		path->n = apply_normal_map(path->mat, path->n, path);
+
 	path->ndotv = clampf(vec3_dot(path->n, path->v), G_EPSILON, 1.0f);
 	path->alpha = path->mat->roughness * path->mat->roughness;
-	if (path->bounce > 0)
-	{
-		rough_bump = 0.05f * (float)path->bounce;
+
+	if (path->bounce > 0) {
+		float rough_bump = 0.05f * (float)path->bounce;
 		path->alpha = fmaxf(path->alpha, rough_bump * rough_bump);
 	}
-	albedo = get_surface_color(path->mat, &path->hit);
+
+	t_vec3 albedo = get_surface_color(path->mat, &path->hit);
 	path->f0 = vec3_lerp(path->mat->f0_dielectric, albedo, path->mat->metallic);
 }
 
-void	set_shader_data(t_path *path)
-{
-	t_vec3		h;
-	float		len_sq;
-
-	h = vec3_add(path->v, path->l);
-	len_sq = vec3_dot(h, h);
+void set_shader_data(t_path* path) {
+	t_vec3 h = vec3_add(path->v, path->l);
+	float len_sq = vec3_dot(h, h);
 	if (len_sq < LEN_SQ_EPSILON)
 		path->h = path->n;
 	else

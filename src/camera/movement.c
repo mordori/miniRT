@@ -12,6 +12,7 @@ bool camera_movement(t_context* ctx) {
 	t_vec3 input = get_key_input(ctx->mlx);
 	if (input.x == 0.0f && input.y == 0.0f && input.z == 0.0f)
 		return false;
+
 	float dt = fminf(ctx->mlx->delta_time, 0.1f);
 	t_vec3 move = compute_move_vec(cam, input, dt);
 	cam->transform.pos = vec3_add(cam->transform.pos, move);

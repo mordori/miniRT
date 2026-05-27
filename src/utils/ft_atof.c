@@ -1,112 +1,78 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_atof.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:49:28 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 20:23:34 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft_str.h"
-#include "libft_utils.h"
 #include <float.h>
 
-static float	skip_whitespace_and_sign(const char **str)
-{
+#include "libft_utils.h"
+
+static float skip_whitespace_and_sign(const char** str) {
 	while (ft_isspace(**str))
 		(*str)++;
-	if (**str == '-' || **str == '+')
-	{
-		if (**str == '-')
-		{
+	if (**str == '-' || **str == '+') {
+		if (**str == '-') {
 			(*str)++;
 			return (-1.0f);
 		}
 		(*str)++;
 	}
-	return (1.0f);
+	return 1.0f;
 }
 
-static float	parse_integer_part(const char **str)
-{
-	float	result;
-	float	digit;
-	int		count;
-
-	result = 0.0f;
-	count = 0;
-	while (ft_isdigit(**str))
-	{
+static float parse_integer_part(const char** str) {
+	float result = 0.0f;
+	int count = 0;
+	while (ft_isdigit(**str)) {
 		count++;
 		if (count > 10)
-			break ;
-		digit = *(*str)++ - '0';
-		if (result > (FLT_MAX - digit) / 10.0f)
-		{
+			break;
+
+		float digit = *(*str)++ - '0';
+		if (result > (FLT_MAX - digit) / 10.0f) {
 			while (ft_isdigit(**str))
 				(*str)++;
-			return (FLT_MAX);
+			return FLT_MAX;
 		}
 		result = result * 10.0f + digit;
 	}
-	return (result);
+	return result;
 }
 
-static float	parse_fraction(const char **str)
-{
-	float	fraction;
-	float	weight;
-	int		count;
-
-	fraction = 0.0f;
-	weight = 0.1f;
-	count = 0;
+static float parse_fraction(const char** str) {
+	float fraction = 0.0f;
+	float weight = 0.1f;
+	int count = 0;
 	(*str)++;
-	while (ft_isdigit(**str))
-	{
+	while (ft_isdigit(**str)) {
 		count++;
 		if (count > 10)
-			break ;
+			break;
+
 		fraction += (**str - '0') * weight;
 		weight *= 0.1f;
 		(*str)++;
 	}
-	return (fraction);
+	return fraction;
 }
 
-static void	set_end_pointer(const char *start, const char *current,
-		char **endptr)
-{
+static void set_end_pointer(const char* start, const char* current, char** endptr) {
 	if (!endptr || !start || !current)
-		return ;
-	if (current == start || (current == start + 1 && (*start == '-'
-				|| *start == '+')))
-		*endptr = (char *)start;
+		return;
+	if (current == start || (current == start + 1 && (*start == '-' || *start == '+')))
+		*endptr = (char*)start;
 	else
-		*endptr = (char *)current;
+		*endptr = (char*)current;
 }
 
-float	ft_atof(const char *str, char **endptr)
-{
-	float		result;
-	float		sign;
-	const char	*start;
-
+float ft_atof(const char* str, char** endptr) {
 	if (!str || !endptr)
-		return (0.0f);
-	start = str;
-	sign = skip_whitespace_and_sign(&str);
-	result = parse_integer_part(&str);
-	if (*str == '.' && !ft_isdigit(*(str + 1)))
-	{
-		*endptr = (char *)str;
-		return (result * sign);
+		return 0.0f;
+
+	const char* start = str;
+	float sign = skip_whitespace_and_sign(&str);
+	float result = parse_integer_part(&str);
+	if (*str == '.' && !ft_isdigit(*(str + 1))) {
+		*endptr = (char*)str;
+		return result * sign;
 	}
 	if (*str == '.' && ft_isdigit(*(str + 1)))
 		result += parse_fraction(&str);
 	set_end_pointer(start, str, endptr);
-	return (result * sign);
+	return result * sign;
 }

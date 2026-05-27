@@ -1,30 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   actions.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:47:40 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/31 19:15:52 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "editing.h"
 #include "lights.h"
 #include "utils.h"
 
-void	edit_action(t_context *ctx, t_vec2i delta)
-{
-	float		speed;
-	float		magnitude;
-
-	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300)
-	{
-		if (delta.x || delta.y)
-		{
-			speed = eval_speed(ctx);
-			magnitude = eval_magnitude(ctx, delta, speed);
+void edit_action(t_context* ctx, t_vec2i delta) {
+	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300) {
+		if (delta.x || delta.y) {
+			float speed = eval_speed(ctx);
+			float magnitude = eval_magnitude(ctx, delta, speed);
 			if (ctx->editor.mode == EDIT_TRANSLATE)
 				obj_translate(ctx, magnitude, delta, speed);
 			else if (ctx->editor.mode == EDIT_ROTATE)
@@ -38,8 +20,7 @@ void	edit_action(t_context *ctx, t_vec2i delta)
 	}
 }
 
-void	begin_edit_action(t_context *ctx, t_edit_mode mode)
-{
+void begin_edit_action(t_context* ctx, t_edit_mode mode) {
 	if (mode != EDIT_SCALE)
 		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_HIDDEN);
 	mlx_get_mouse_pos(ctx->mlx, &ctx->mouse.pos_orig.x, &ctx->mouse.pos_orig.y);
@@ -49,12 +30,10 @@ void	begin_edit_action(t_context *ctx, t_edit_mode mode)
 	ctx->editor.axis_secondary = ctx->scene.cam.up;
 }
 
-void	end_edit_action(t_context *ctx)
-{
+void end_edit_action(t_context* ctx) {
 	ctx->editor.constraint_axis = AXIS_DEFAULT;
 	ctx->editor.constraints = 0;
-	if (ctx->editor.mode != EDIT_SCALE)
-	{
+	if (ctx->editor.mode != EDIT_SCALE) {
 		mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
 		mlx_set_mouse_pos(ctx->mlx, ctx->mouse.pos_orig.x, ctx->mouse.pos_orig.y);
 		ctx->mouse.pos = ctx->mouse.pos_orig;
@@ -63,17 +42,15 @@ void	end_edit_action(t_context *ctx)
 	ctx->editor.mode = EDIT_DEFAULT;
 }
 
-void	apply_edit_action(t_context *ctx)
-{
+void apply_edit_action(t_context* ctx) {
 	end_edit_action(ctx);
 }
 
-bool	cancel_edit_action(t_context *ctx)
-{
+bool cancel_edit_action(t_context* ctx) {
 	ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 	update_transform(&ctx->editor.selected_obj->transform);
 	update_bounds(ctx->editor.selected_obj);
 	update_light_radius(ctx);
 	end_edit_action(ctx);
-	return (true);
+	return true;
 }
