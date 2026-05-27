@@ -1,99 +1,86 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:46:09 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/31 19:54:47 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef UTILS_H
-# define UTILS_H
+#define UTILS_H
 
-# define _GNU_SOURCE
+#define _GNU_SOURCE
 
-# include "defines.h"
-# include <errno.h>
-# include <fcntl.h>
-# include <string.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/time.h>
-# include <sys/stat.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <unistd.h>
 
-char		*errors(t_err_code code);
-void		fatal_error(t_context *ctx, char *message, char *file, int line);
-void		key_hook(mlx_key_data_t keydata, void *param);
-void		resize_hook(int width, int height, void *param);
-void		mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void *param);
-void		cursor_hook(double xpos, double ypos, void *param);
-void		clean(t_context *ctx);
-void		vector_try_init(t_context *ctx, t_vector *vec, bool is_shrink, void (*del)(void *));
-bool		vector_try_add(t_context *ctx, t_vector *vec, void *item);
-int			try_open(t_context *ctx, const char *file, int o_flag, int p_flag);
-ssize_t		try_write(t_context *ctx, int fd, const char *src);
-ssize_t		try_write_endl(t_context *ctx, int fd, const char *src);
-ssize_t		try_read(t_context *ctx, int fd, char *buf, size_t n_bytes);
-bool		cmp_strs(const char **types, const char *src);
-int			try_gnl(t_context *ctx, int fd, char **line);
-int			cmp_bounds_x(const void *a, const void *b);
-int			cmp_bounds_y(const void *a, const void *b);
-int			cmp_bounds_z(const void *a, const void *b);
-t_vec3		get_point(const t_ray *ray, float t);
-t_texture	load_texture(char *file, bool is_srgb);
-void		free_texture(t_texture *tex);
-void		resize_window(t_context *ctx);
-bool		resize_timer(const t_context *ctx);
-uint32_t	time_now(void);
-void		start_render(t_renderer *r, const t_camera *cam);
-void		stop_render(t_renderer *r);
-float		ft_atof(const char *str, char **endptr);
-double		ft_strtod(const char *str, char **endptr);
-char		**try_split(char const *s);
-float		blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
-t_vec2		r2_sequence(uint32_t n, t_vec2 offset);
-float		r1_sequence(uint32_t n, float offset);
-t_vec2		r4_sequence_d12(uint32_t n, t_vec2 offset);
-t_vec3		map_spherical(float u, float v);
-t_vec2		spherical_uv(t_vec3 dir);
-uint32_t	fast_range(uint32_t n, uint32_t range);
-size_t		uint64_to_str(uint64_t n, char *buf);
-void		*a_alloc(size_t alignment, size_t size);
-t_ray		new_ray(t_vec3 origin, t_vec3 dir);
-void		random_uv(const t_context *ctx, t_path *path, t_pixel *pixel, t_bn_channel c);
-void		cancel_render(t_renderer *r);
-void		set_mode_preview(t_context *ctx, t_renderer *r, bool *update);
-void		set_mode_rendered(t_renderer *r);
-void		print_render_status(t_context *ctx, t_renderer *r);
-void		wait_until(uint32_t end);
-void		limit_polling_rate(t_renderer *r);
-t_hit		new_hit(uint32_t bounce);
-void		printf_init(void);
-void		screenshot(t_context *ctx);
-char		*timestamp(char *buf);
-float		static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim);
-uint32_t	color_wave(uint32_t c1, uint32_t c2, float speed);
-uint32_t	engine_time(void);
-void		update_transform(t_transform *t);
-t_ray		ray_world_to_object(const t_ray *ray, const t_mat4 *world_to_object);
-void		hit_object_to_world(t_hit *hit, const t_transform *t);
-t_vec2		world_to_screen(t_context *ctx, const t_camera *cam, const t_viewport *vp, t_vec3 pos);
-void		eval_hit_normal(const t_ray *ray, t_hit *hit, t_vec3 n);
-void		copy_frame_buffer(const t_context *ctx, t_vec3 *buf, uint32_t *pixels, t_pixel *pixel);
-void		copy_frame_buffer_preview(const t_context *ctx, const uint32_t width, t_vec3 *buf, uint32_t *pixels);
-bool		get_thread_status(t_renderer *r, uint32_t *tile_id);
-bool		russian_roulette(t_path *path, t_pixel *pixel);
-void		planar_basis(t_context *ctx, t_vec3 n);
-void		lut_srgb_to_linear(void);
-void		set_text_color(mlx_image_t *img, uint32_t color);
-t_ui		ui_val(int32_t *last, int32_t current);
-t_ui		ui_valf(float *lastf, float currentf);
-void		update_bounds(t_object *obj);
-float		get_max_bounds_dim(const t_object *obj);
-void		check_edit_keys(t_context *ctx, mlx_key_data_t keydata, bool *dirty);
+#include "defines.h"
+
+char* errors(t_err_code code);
+void fatal_error(t_context* ctx, char* message, char* file, int line);
+void key_hook(mlx_key_data_t keydata, void* param);
+void resize_hook(int width, int height, void* param);
+void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param);
+void cursor_hook(double xpos, double ypos, void* param);
+void clean(t_context* ctx);
+void vector_try_init(t_context* ctx, t_vector* vec, bool is_shrink, void (*del)(void*));
+bool vector_try_add(t_context* ctx, t_vector* vec, void* item);
+int try_open(t_context* ctx, const char* file, int o_flag, int p_flag);
+ssize_t try_write(t_context* ctx, int fd, const char* src);
+ssize_t try_write_endl(t_context* ctx, int fd, const char* src);
+ssize_t try_read(t_context* ctx, int fd, char* buf, size_t n_bytes);
+bool cmp_strs(const char** types, const char* src);
+int try_gnl(t_context* ctx, int fd, char** line);
+int cmp_bounds_x(const void* a, const void* b);
+int cmp_bounds_y(const void* a, const void* b);
+int cmp_bounds_z(const void* a, const void* b);
+t_vec3 get_point(const t_ray* ray, float t);
+t_texture load_texture(char* file, bool is_srgb);
+void free_texture(t_texture* tex);
+void resize_window(t_context* ctx);
+bool resize_timer(const t_context* ctx);
+uint32_t time_now(void);
+void start_render(t_renderer* r, const t_camera* cam);
+void stop_render(t_renderer* r);
+float ft_atof(const char* str, char** endptr);
+double ft_strtod(const char* str, char** endptr);
+char** try_split(char const* s);
+float blue_noise(const t_texture* tex, const t_pixel* pixel, uint32_t dim);
+t_vec2 r2_sequence(uint32_t n, t_vec2 offset);
+float r1_sequence(uint32_t n, float offset);
+t_vec2 r4_sequence_d12(uint32_t n, t_vec2 offset);
+t_vec3 map_spherical(float u, float v);
+t_vec2 spherical_uv(t_vec3 dir);
+uint32_t fast_range(uint32_t n, uint32_t range);
+size_t uint64_to_str(uint64_t n, char* buf);
+void* a_alloc(size_t alignment, size_t size);
+t_ray new_ray(t_vec3 origin, t_vec3 dir);
+void random_uv(const t_context* ctx, t_path* path, t_pixel* pixel, t_bn_channel c);
+void cancel_render(t_renderer* r);
+void set_mode_preview(t_context* ctx, t_renderer* r, bool* update);
+void set_mode_rendered(t_renderer* r);
+void print_render_status(t_context* ctx, t_renderer* r);
+void wait_until(uint32_t end);
+void limit_polling_rate(t_renderer* r);
+t_hit new_hit(uint32_t bounce);
+void printf_init(void);
+void screenshot(t_context* ctx);
+char* timestamp(char* buf);
+float static_blue_noise(const t_texture* tex, const t_pixel* pixel, uint32_t dim);
+uint32_t color_wave(uint32_t c1, uint32_t c2, float speed);
+uint32_t engine_time(void);
+void update_transform(t_transform* t);
+t_ray ray_world_to_object(const t_ray* ray, const t_mat4* world_to_object);
+void hit_object_to_world(t_hit* hit, const t_transform* t);
+t_vec2 world_to_screen(t_context* ctx, const t_camera* cam, const t_viewport* vp, t_vec3 pos);
+void eval_hit_normal(const t_ray* ray, t_hit* hit, t_vec3 n);
+void copy_frame_buffer(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel);
+void copy_frame_buffer_preview(const t_context* ctx, const uint32_t width, t_vec3* buf, uint32_t* pixels);
+void planar_basis(t_context* ctx, t_vec3 n);
+void lut_srgb_to_linear(void);
+void set_text_color(mlx_image_t* img, uint32_t color);
+t_ui ui_val(int32_t* last, int32_t current);
+t_ui ui_valf(float* lastf, float currentf);
+void update_bounds(t_object* obj);
+float get_max_bounds_dim(const t_object* obj);
+void check_edit_keys(t_context* ctx, mlx_key_data_t keydata, bool* dirty);
 
 #endif

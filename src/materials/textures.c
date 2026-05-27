@@ -1,25 +1,11 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   textures.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:48:26 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:48:28 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "materials.h"
-#include "utils.h"
 
 /**
  * Linear interpolation between two colors.
  * Returns a + (b - a) * t = a * (1 - t) + b * t
  */
-static inline t_vec3	vlerp(t_vec3 a, t_vec3 b, float t)
-{
-	return (vec3_add(a, vec3_scale(vec3_sub(b, a), t)));
+static inline t_vec3 vlerp(t_vec3 a, t_vec3 b, float t) {
+	return vec3_add(a, vec3_scale(vec3_sub(b, a), t));
 }
 
 /**
@@ -27,14 +13,11 @@ static inline t_vec3	vlerp(t_vec3 a, t_vec3 b, float t)
  * Assumes coordinates are valid (within bounds).
  * Pixels stored as RGBA floats, we extract RGB.
  */
-static inline t_vec3	get_texel(const float *pixels, uint32_t idx)
-{
-	const float	*p;
-	t_vec3		result;
-
-	p = (const float *)__builtin_assume_aligned(pixels, 64);
+static inline t_vec3 get_texel(const float* pixels, uint32_t idx) {
+	const float* p = __builtin_assume_aligned(pixels, 64);
+	t_vec3 result;
 	memcpy(&result, &p[idx], sizeof(t_vec3));
-	return (result);
+	return result;
 }
 
 /**
@@ -47,20 +30,13 @@ static inline t_vec3	get_texel(const float *pixels, uint32_t idx)
  * coords[0..3] = x0, y0, x1, y1 (pixel indices, wrapped via bitmask)
  * weights[0..1] = fx, fy (fractional sub-pixel position for lerp blending)
  */
-static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
-	uint32_t *coords, float *weights)
-{
-	float		px;
-	float		py;
-	uint32_t	mask_x;
-	uint32_t	mask_y;
-
+static inline void compute_bilinear_coords(const t_texture* tex, t_vec2 uv, uint32_t* coords, float* weights) {
 	uv.u = uv.u - floorf(uv.u);
 	uv.v = uv.v - floorf(uv.v);
-	mask_x = tex->width - 1;
-	mask_y = tex->height - 1;
-	px = uv.u * (float)tex->width;
-	py = uv.v * (float)tex->height;
+	uint32_t mask_x = tex->width - 1;
+	uint32_t mask_y = tex->height - 1;
+	float px = uv.u * (float)tex->width;
+	float py = uv.v * (float)tex->height;
 	coords[0] = (uint32_t)px & mask_x;
 	coords[1] = (uint32_t)py & mask_y;
 	coords[2] = (coords[0] + 1) & mask_x;
@@ -80,38 +56,28 @@ static inline void	compute_bilinear_coords(const t_texture *tex, t_vec2 uv,
  *   3. Lerp horizontally: top = lerp(TL, TR, fx), bottom = lerp(BL, BR, fx)
  *   4. Lerp vertically: result = lerp(top, bottom, fy)
  */
-t_vec3	sample_texture(const t_texture *tex, t_vec2 uv)
-{
-	uint32_t	coords[4];
-	float		weights[2];
-	t_vec3		top;
-	t_vec3		bottom;
+t_vec3 sample_texture(const t_texture* tex, t_vec2 uv) {
+	uint32_t coords[4];
+	float weights[2];
 
 	compute_bilinear_coords(tex, uv, coords, weights);
 	coords[1] *= (tex->width << 2);
 	coords[3] *= (tex->width << 2);
 	coords[0] <<= 2;
 	coords[2] <<= 2;
-	top = vlerp(
-			get_texel(tex->pixels, coords[1] + coords[0]),
-			get_texel(tex->pixels, coords[1] + coords[2]),
-			weights[0]);
-	bottom = vlerp(
-			get_texel(tex->pixels, coords[3] + coords[0]),
-			get_texel(tex->pixels, coords[3] + coords[2]),
-			weights[0]);
-	return (vlerp(top, bottom, weights[1]));
+	t_vec3 top = vlerp(get_texel(tex->pixels, coords[1] + coords[0]), get_texel(tex->pixels, coords[1] + coords[2]), weights[0]);
+	t_vec3 bottom = vlerp(get_texel(tex->pixels, coords[3] + coords[0]), get_texel(tex->pixels, coords[3] + coords[2]), weights[0]);
+	return vlerp(top, bottom, weights[1]);
 }
 
 /**
  * Get surface color from material based on base_color type.
  * Uses texture if available, otherwise returns albedo.
  */
-t_vec3	get_surface_color(const t_material *mat, const t_hit *hit)
-{
+t_vec3 get_surface_color(const t_material* mat, const t_hit* hit) {
 	if (mat->base_color == BASE_TEXTURE)
-		return (sample_texture(&mat->texture, hit->uv));
+		return sample_texture(&mat->texture, hit->uv);
 	if (mat->base_color == BASE_PATTERN)
-		return (eval_pattern((t_material *)mat, (t_hit *)hit));
-	return (mat->albedo);
+		return eval_pattern((t_material*)mat, (t_hit*)hit);
+	return mat->albedo;
 }

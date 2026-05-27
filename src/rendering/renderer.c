@@ -1,3 +1,4 @@
+#include "lib_math.h"
 #include "rendering.h"
 #include "utils.h"
 
@@ -5,6 +6,7 @@ static inline void* render_routine(void* arg);
 static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_id);
 static inline void render_pixel(const t_context* ctx, t_pixel* pixel);
 static inline void sample_pixel(const t_context* ctx, t_pixel* pixel);
+static inline bool get_thread_status(t_renderer* r, uint32_t* tile_id);
 
 bool init_renderer(t_context* ctx) {
 	t_renderer* r = &ctx->renderer;
@@ -60,12 +62,14 @@ static inline void* render_routine(void* arg) {
 }
 
 static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_id) {
-	t_uint2 start;
-	start.x = (tile_id % ctx->renderer.tiles.x) * TILE_SIZE;
-	start.y = (tile_id / ctx->renderer.tiles.x) * TILE_SIZE;
-	t_uint2 end;
-	end.x = ft_uint_min(start.x + TILE_SIZE, ctx->renderer.width);
-	end.y = ft_uint_min(start.y + TILE_SIZE, ctx->renderer.height);
+	t_uint2 start = { //
+		.x = (tile_id % ctx->renderer.tiles.x) * TILE_SIZE,
+		.y = (tile_id / ctx->renderer.tiles.x) * TILE_SIZE
+	};
+	t_uint2 end = { //
+		.x = ft_uint_min(start.x + TILE_SIZE, ctx->renderer.width),
+		.y = ft_uint_min(start.y + TILE_SIZE, ctx->renderer.height)
+	};
 
 	t_pixel pixel = { .y = start.y };
 	uint32_t width = ctx->renderer.width;
@@ -105,12 +109,26 @@ static inline void sample_pixel(const t_context* ctx, t_pixel* pixel) {
 	const t_renderer* r = &ctx->renderer;
 
 	if (r->mode == RENDERED) {
-		t_vec2 jitter =
-			r2_sequence(r->frame, vec2(static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U), static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)));
-		pixel->u = (float)pixel->x + jitter.u;
-		pixel->v = (float)pixel->y + jitter.v;
+		t_vec2 random_01 = { //
+			.u = static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U),
+			.v = static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)
+		};
+		t_vec2 uv = r2_sequence(r->frame, random_01);
+		pixel->u = (float)pixel->x + uv.u;
+		pixel->v = (float)pixel->y + uv.v;
 	} else {
 		pixel->u = (float)pixel->x + 0.5f;
 		pixel->v = (float)pixel->y + 0.5f;
 	}
+}
+
+static inline bool get_thread_status(t_renderer* r, uint32_t* tile_id) {
+	if (!r->active) {
+		pthread_mutex_unlock(&r->mutex);
+		return false;
+	}
+
+	*tile_id = r->tile_index++;
+	++r->threads_running;
+	return true;
 }

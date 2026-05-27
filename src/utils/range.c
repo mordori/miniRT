@@ -1,19 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   range.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 19:20:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:20:12 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "utils.h"
 
 // Lemire's Method
-uint32_t	fast_range(uint32_t n, uint32_t range)
-{
-	return ((uint32_t)(((uint64_t)n * (uint64_t)range) >> 32));
+uint32_t fast_range(uint32_t n, uint32_t range) {
+	return (uint32_t)(((uint64_t)n * (uint64_t)range) >> 32);
 }

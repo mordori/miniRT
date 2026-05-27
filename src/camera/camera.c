@@ -1,9 +1,10 @@
 #include "camera.h"
 
+#include "lib_math.h"
 #include "rendering.h"
 #include "utils.h"
 
-static inline void update_viewport(t_camera* cam, t_viewport* vp, float img_width, float img_height);
+static inline void update_viewport(t_camera* cam, float img_width, float img_height);
 
 void init_camera(t_context* ctx, t_vec3 position, t_vec3 orientation, float fov) {
 	if (!ctx)
@@ -18,7 +19,7 @@ void init_camera(t_context* ctx, t_vec3 position, t_vec3 orientation, float fov)
 	cam->distance = fmaxf(vec3_dist(cam->transform.pos, g_zero), 0.01f);
 	fov = clampf(degrees_to_rad(fov), degrees_to_rad(0.01f), degrees_to_rad(179.9f));
 	cam->focal_len_mm = SENSOR_HALF_HEIGHT_MM / tanf(fov * 0.5f);
-	cam->focal_len_mm = clampf(cam->focal_len_mm, 1.0f, 800.0f);
+	cam->focal_len_mm = clampf(cam->focal_len_mm, 14.0f, 800.0f);
 	cam->focus_dist = clampf(cam->focus_dist, 0.1f, 1000.0f);
 	cam->f_stop = 16.0f;
 	cam->shutter_speed = 1.0f / 100.0f;
@@ -30,12 +31,15 @@ void init_camera(t_context* ctx, t_vec3 position, t_vec3 orientation, float fov)
 }
 
 t_vec3 sample_defocus_disk(const t_context* ctx, t_pixel* pixel) {
-	t_vec2 uv = r4_sequence_d12(
-		pixel->frame, vec2(static_blue_noise(&ctx->tex_bn, pixel, BN_DD_U), static_blue_noise(&ctx->tex_bn, pixel, BN_DD_V)));
+	t_vec2 random_01 = { //
+		.u = static_blue_noise(&ctx->tex_bn, pixel, BN_DD_U),
+		.v = static_blue_noise(&ctx->tex_bn, pixel, BN_DD_V)
+	};
+	t_vec2 uv = r4_sequence_d12(pixel->frame, random_01);
 	t_vec2 disk = sample_disk(uv);
-	t_vec3 u = vec3_scale(ctx->renderer.cam.defocus_disk_u, disk.x);
-	t_vec3 v = vec3_scale(ctx->renderer.cam.defocus_disk_v, disk.y);
-	return vec3_add(ctx->renderer.cam.transform.pos, vec3_add(u, v));
+	t_vec3 x = vec3_scale(ctx->renderer.cam.defocus_disk_u, disk.x);
+	t_vec3 y = vec3_scale(ctx->renderer.cam.defocus_disk_v, disk.y);
+	return vec3_add(ctx->renderer.cam.transform.pos, vec3_add(x, y));
 }
 
 void update_camera(t_context* ctx, t_camera* cam) {
@@ -47,11 +51,11 @@ void update_camera(t_context* ctx, t_camera* cam) {
 	cam->up = vec3_normalize(vec3(m.m[0][1], m.m[1][1], m.m[2][1]));
 	cam->forward = vec3_normalize(vec3(m.m[0][2], m.m[1][2], m.m[2][2]));
 	cam->aspect = (float)ctx->img->width / ctx->img->height;
-	update_viewport(cam, &cam->viewport, (float)ctx->img->width, (float)ctx->img->height);
+	update_viewport(cam, (float)ctx->img->width, (float)ctx->img->height);
 }
 
-static inline void update_viewport(t_camera* cam, t_viewport* vp, float img_width, float img_height) {
-	vp = (t_viewport*)&cam->viewport;
+static inline void update_viewport(t_camera* cam, float img_width, float img_height) {
+	t_viewport* vp = &cam->viewport;
 	vp->height = SENSOR_HEIGHT_MM / cam->focal_len_mm;
 	vp->width = vp->height * cam->aspect;
 	t_vec3 u = vec3_scale(cam->right, vp->width);

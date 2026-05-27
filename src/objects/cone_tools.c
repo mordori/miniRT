@@ -1,17 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cone_tools.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/13 17:52:54 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/13 17:54:52 by wshoweky         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "objects.h"
-#include "materials.h"
 
 /*
 ** Computes coefficients for the ray-cone quadratic equation.
@@ -23,26 +10,21 @@
 ** @param oc   Vector from apex to ray origin.
 ** @param coef Output array [a, half_b, c].
 */
-void	compute_coefficients(const t_cone *cone, const t_ray *ray, double coef[3])
-{
-	double		d_dot_oc;
-	double		d_dot_d;
-	double		o_dot_o;
-	double		cos_sq;
+void compute_coefficients(const t_cone* cone, const t_ray* ray, double coef[3]) {
+	// clang-format off
+	double d_dot_oc =	(double)ray->dir.x * ray->origin.x +
+						(double)ray->dir.y * ray->origin.y +
+						(double)ray->dir.z * ray->origin.z;
 
-	d_dot_oc = (double)ray->dir.x * ray->origin.x +
-				(double)ray->dir.y * ray->origin.y +
-				(double)ray->dir.z * ray->origin.z;
+	double d_dot_d = 	(double)ray->dir.x * ray->dir.x +
+						(double)ray->dir.y * ray->dir.y +
+						(double)ray->dir.z * ray->dir.z;
 
-	d_dot_d = (double)ray->dir.x * ray->dir.x +
-				(double)ray->dir.y * ray->dir.y +
-				(double)ray->dir.z * ray->dir.z;
-
-	o_dot_o = (double)ray->origin.x * ray->origin.x +
-				(double)ray->origin.y * ray->origin.y +
-				(double)ray->origin.z * ray->origin.z;
-
-	cos_sq = (double)cone->cos_sq;
+	double o_dot_o = 	(double)ray->origin.x * ray->origin.x +
+						(double)ray->origin.y * ray->origin.y +
+						(double)ray->origin.z * ray->origin.z;
+	// clang-format on
+	double cos_sq = (double)cone->cos_sq;
 	coef[0] = (double)ray->dir.y * ray->dir.y - cos_sq * d_dot_d;
 	coef[1] = (double)ray->dir.y * ray->origin.y - cos_sq * d_dot_oc;
 	coef[2] = (double)ray->origin.y * ray->origin.y - cos_sq * o_dot_o;
@@ -57,16 +39,14 @@ void	compute_coefficients(const t_cone *cone, const t_ray *ray, double coef[3])
 ** @param t_max The maximum valid hit distance.
 ** @return      true if the point lies on the valid part of the cone.
 */
-bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t, float t_max)
-{
-	float		hit_y;
-
+bool is_valid_body_hit(const t_cone* cone, const t_ray* ray, float t, float t_max) {
 	if (t <= G_EPSILON || t >= t_max)
-		return (false);
-	hit_y = ray->origin.y + ray->dir.y * t;
+		return false;
+
+	float hit_y = ray->origin.y + ray->dir.y * t;
 	if (hit_y < 0.0f || hit_y > cone->height)
-		return (false);
-	return (true);
+		return false;
+	return true;
 }
 
 /*
@@ -77,8 +57,7 @@ bool	is_valid_body_hit(const t_cone *cone, const t_ray *ray, float t, float t_ma
 ** @param base_r The radius of the base circle.
 ** @param hit    The hit record to store UV data.
 */
-void	compute_cone_cap_uv(t_vec3 to_hit, float base_r, t_hit *hit)
-{
+void compute_cone_cap_uv(t_vec3 to_hit, float base_r, t_hit* hit) {
 	hit->uv.u = to_hit.x / base_r * 0.5f + 0.5f;
 	hit->uv.v = to_hit.z / base_r * 0.5f + 0.5f;
 	hit->tangent = g_right;
@@ -94,26 +73,24 @@ void	compute_cone_cap_uv(t_vec3 to_hit, float base_r, t_hit *hit)
 ** @param hit  The output hit record.
 ** @return     true if the ray hits the bounded base cap.
 */
-bool	hit_cone_base(const t_cone *cone, const t_ray *ray, t_hit *hit)
-{
-	t_vec3		to_hit;
-	t_vec3		point;
-	float		t;
-
+bool hit_cone_base(const t_cone* cone, const t_ray* ray, t_hit* hit) {
 	if (fabsf(ray->dir.y) < G_EPSILON)
-		return (false);
-	t = (cone->height - ray->origin.y) / ray->dir.y;
+		return false;
+
+	float t = (cone->height - ray->origin.y) / ray->dir.y;
 	if (t < G_EPSILON || t >= hit->t)
-		return (false);
-	point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
-	to_hit = vec3(point.x, 0.0f, point.z);
+		return false;
+
+	t_vec3 point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
+	t_vec3 to_hit = vec3(point.x, 0.0f, point.z);
 	if (to_hit.x * to_hit.x + to_hit.z * to_hit.z > cone->base_radius * cone->base_radius)
-		return (false);
+		return false;
+
 	hit->point = point;
 	hit->t = t;
 	hit->normal = g_up;
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)
 		hit->normal = g_up;
 	compute_cone_cap_uv(to_hit, cone->base_radius, hit);
-	return (true);
+	return true;
 }

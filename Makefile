@@ -5,7 +5,7 @@ BUILD_TYPE	:=RELEASE
 
 CC			:=clang
 WFLAGS		:=-Wall -Wextra -Werror -Wpedantic -Wunreachable-code -Wshadow \
-			 -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wswitch-enum -Wundef
+				-Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wundef
 DEFS		:=
 DFLAGS		:=-D DEBUG -g
 SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
@@ -98,7 +98,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c \
 				noise.c mapping.c range.c alloc.c random.c window.c frame.c \
-				render.c hit.c transform.c projection.c threads.c \
+				render.c hit.c transform.c projection.c \
 				constraints.c instructions.c ui.c keys.c ft_strtod.c \
 				textures.c renderer.c time.c try_split.c ft_atof.c )
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \

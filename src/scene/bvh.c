@@ -74,6 +74,7 @@ bool hit_bvh(uint32_t root_idx, const t_ray* ray, t_hit* hit, t_bvh_node* tree) 
 		bvh.node = &tree[bvh.stack[--bvh.i] - 1];
 		if (!hit_aabb(&bvh.node->aabb, ray, hit->t))
 			continue;
+
 		if (bvh.node->obj) {
 			bvh.temp = *hit;
 			if (!(bvh.node->obj->flags & OBJ_HIDDEN_SCENE) && !(hit->is_primary && (bvh.node->obj->flags & OBJ_HIDDEN_CAM)) &&
@@ -100,6 +101,7 @@ bool hit_bvh_shadow(uint32_t root_idx, const t_ray* ray, float dist, t_bvh_node*
 		t_bvh_node* node = &tree[stack[--i] - 1];
 		if (!hit_aabb(&node->aabb, ray, dist))
 			continue;
+
 		if (node->obj) {
 			t_hit temp = { .t = dist };
 			if (!(node->obj->flags & OBJ_NO_CAST_SHADOW) && hit_object(node->obj, ray, &temp))
@@ -122,6 +124,7 @@ bool hit_bvh_editing(uint32_t root_idx, const t_ray* ray, t_hit* hit, t_bvh_node
 		bvh.node = &tree[bvh.stack[--bvh.i] - 1];
 		if (!hit_aabb(&bvh.node->aabb, ray, hit->t))
 			continue;
+
 		if (bvh.node->obj) {
 			bvh.temp = *hit;
 			if (!(bvh.node->obj->flags & OBJ_HIDDEN_SCENE) && hit_object(bvh.node->obj, ray, &bvh.temp)) {

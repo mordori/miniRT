@@ -21,9 +21,7 @@ t_aabb get_volume_bounds(t_object** objs, size_t n) {
 }
 
 t_aabb get_object_bounds(const t_object* obj) {
-	t_aabb res;
-	memset(&res, 0, sizeof(t_aabb));
-
+	t_aabb res = { 0 };
 	switch (obj->type) {
 		case OBJ_SPHERE: res = sphere_bounds(obj); break;
 		case OBJ_CYLINDER: res = cylinder_bounds(obj); break;
@@ -57,10 +55,10 @@ t_aabb aabb_object_to_world(t_aabb aabb, const t_mat4* object_to_world) {
 }
 
 static inline t_aabb combine_aabb(const t_aabb* a, const t_aabb* b) {
-	t_aabb res;
-	res.min.v = _mm_min_ps(a->min.v, b->min.v);
-	res.max.v = _mm_max_ps(a->max.v, b->max.v);
-	return res;
+	return (t_aabb){ //
+		.min.v = _mm_min_ps(a->min.v, b->min.v),
+		.max.v = _mm_max_ps(a->max.v, b->max.v)
+	};
 }
 
 bool hit_aabb(const t_aabb* aabb, const t_ray* ray, float closest_t) {

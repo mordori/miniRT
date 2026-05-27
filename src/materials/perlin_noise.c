@@ -1,17 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   perlin_noise.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:51:07 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/10 19:51:09 by wshoweky         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include <math.h>
 
 #include "materials.h"
-#include <math.h>
 
 /*
 ** Ken Perlin's permutation table (256 entries, wrapped via & 255).
@@ -19,9 +8,9 @@
 ** masking the index with & 255 achieves identical wrapping.
 ** https://raytracing.github.io/books/RayTracingTheNextWeek.html
 */
-static uint8_t	perm(int i)
-{
-	static const uint8_t	t[256] = {
+static uint8_t perm(int i) {
+	// clang-format off
+	static const uint8_t t[256] = {
 		151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7,
 		225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190,
 		6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117,
@@ -39,9 +28,10 @@ static uint8_t	perm(int i)
 		210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239,
 		107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115,
 		121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67,
-		29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180};
-
-	return (t[i & 255]);
+		29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
+	};
+	// clang-format on
+	return t[i & 255];
 }
 
 /*
@@ -49,9 +39,8 @@ static uint8_t	perm(int i)
 ** Provides C2 continuity (second derivative is continuous),
 ** which eliminates visible grid artifacts in the noise.
 */
-static inline float	fade(float t)
-{
-	return (t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f));
+static inline float fade(float t) {
+	return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
 }
 
 /*
@@ -59,28 +48,29 @@ static inline float	fade(float t)
 ** Uses the low 4 bits of the hash to select one of 12 gradient directions.
 ** This is Ken Perlin's improved noise gradient function.
 */
-static float	grad(int hash, float x, float y, float z)
-{
-	int		h;
-	float	u;
-	float	v;
+static float grad(int hash, float x, float y, float z) {
+	float u;
+	float v;
 
-	h = hash & 15;
+	int h = hash & 15;
 	if (h < 8)
 		u = x;
 	else
 		u = y;
+
 	if (h < 4)
 		v = y;
 	else if (h == 12 || h == 14)
 		v = x;
 	else
 		v = z;
+
 	if (h & 1)
 		u = -u;
 	if (h & 2)
 		v = -v;
-	return (u + v);
+
+	return u + v;
 }
 
 /*
@@ -93,25 +83,14 @@ static float	grad(int hash, float x, float y, float z)
 ** @param uvw - fade-curve weights (u, v, w)
 ** @return    - interpolated noise value
 */
-static float	perlin_lerp(const int *h, t_vec3 f, t_vec3 uvw)
-{
-	float	x1;
-	float	x2;
-	float	y1;
-	float	y2;
-
-	x1 = ft_lerp_fast(grad(perm(h[0]), f.x, f.y, f.z),
-			grad(perm(h[2]), f.x - 1.0f, f.y, f.z), uvw.x);
-	x2 = ft_lerp_fast(grad(perm(h[1]), f.x, f.y - 1.0f, f.z),
-			grad(perm(h[3]), f.x - 1.0f, f.y - 1.0f, f.z), uvw.x);
-	y1 = ft_lerp_fast(x1, x2, uvw.y);
-	x1 = ft_lerp_fast(grad(perm(h[0] + 1), f.x, f.y, f.z - 1.0f),
-			grad(perm(h[2] + 1), f.x - 1.0f, f.y, f.z - 1.0f), uvw.x);
-	x2 = ft_lerp_fast(grad(perm(h[1] + 1), f.x, f.y - 1.0f, f.z - 1.0f),
-			grad(perm(h[3] + 1), f.x - 1.0f, f.y - 1.0f, f.z - 1.0f),
-			uvw.x);
-	y2 = ft_lerp_fast(x1, x2, uvw.y);
-	return (ft_lerp_fast(y1, y2, uvw.z));
+static float perlin_lerp(const int* h, t_vec3 f, t_vec3 uvw) {
+	float x1 = ft_lerp_fast(grad(perm(h[0]), f.x, f.y, f.z), grad(perm(h[2]), f.x - 1.0f, f.y, f.z), uvw.x);
+	float x2 = ft_lerp_fast(grad(perm(h[1]), f.x, f.y - 1.0f, f.z), grad(perm(h[3]), f.x - 1.0f, f.y - 1.0f, f.z), uvw.x);
+	float y1 = ft_lerp_fast(x1, x2, uvw.y);
+	x1 = ft_lerp_fast(grad(perm(h[0] + 1), f.x, f.y, f.z - 1.0f), grad(perm(h[2] + 1), f.x - 1.0f, f.y, f.z - 1.0f), uvw.x);
+	x2 = ft_lerp_fast(grad(perm(h[1] + 1), f.x, f.y - 1.0f, f.z - 1.0f), grad(perm(h[3] + 1), f.x - 1.0f, f.y - 1.0f, f.z - 1.0f), uvw.x);
+	float y2 = ft_lerp_fast(x1, x2, uvw.y);
+	return ft_lerp_fast(y1, y2, uvw.z);
 }
 
 /*
@@ -125,21 +104,18 @@ static float	perlin_lerp(const int *h, t_vec3 f, t_vec3 uvw)
 **   4. Hash the 8 cube corners using the permutation table
 **   5. Blend the 8 gradient contributions via trilinear interpolation
 */
-float	perlin_noise(float x, float y, float z)
-{
-	int		cell[3];
-	t_vec3	f;
-	t_vec3	uvw;
-	int		h[4];
+float perlin_noise(float x, float y, float z) {
+	int cell[3];
+	int h[4];
 
 	cell[0] = (int)floorf(x) & 255;
 	cell[1] = (int)floorf(y) & 255;
 	cell[2] = (int)floorf(z) & 255;
-	f = vec3(x - floorf(x), y - floorf(y), z - floorf(z));
-	uvw = vec3(fade(f.x), fade(f.y), fade(f.z));
+	t_vec3 f = vec3(x - floorf(x), y - floorf(y), z - floorf(z));
+	t_vec3 uvw = vec3(fade(f.x), fade(f.y), fade(f.z));
 	h[0] = perm(perm(cell[0]) + cell[1]) + cell[2];
 	h[1] = perm(perm(cell[0]) + cell[1] + 1) + cell[2];
 	h[2] = perm(perm(cell[0] + 1) + cell[1]) + cell[2];
 	h[3] = perm(perm(cell[0] + 1) + cell[1] + 1) + cell[2];
-	return (perlin_lerp(h, f, uvw));
+	return perlin_lerp(h, f, uvw);
 }

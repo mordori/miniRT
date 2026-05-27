@@ -10,11 +10,13 @@ bool control_camera(t_context* ctx, t_vec2i delta) {
 
 	if (ctx->editor.mode != EDIT_DEFAULT || !set_cam_state(ctx))
 		return false;
+
 	if (!is_cam_action_active(ctx)) {
 		if (prev_state != CAM_DEFAULT)
 			end_cam_action(ctx);
 		return true;
 	}
+
 	if (prev_state != CAM_DEFAULT || ctx->scene.cam.state == CAM_DEFAULT)
 		apply_cam_action(ctx, delta);
 	return true;
@@ -57,9 +59,9 @@ bool frame_camera(t_context* ctx, t_object* obj) {
 	proj.width = vec3_dot(vec3_fabsf(cam->right), half_bounds);
 	proj.height = vec3_dot(vec3_fabsf(cam->up), half_bounds);
 	proj.depth = vec3_dot(vec3_fabsf(cam->forward), half_bounds);
-	if (obj->type == OBJ_PLANE)
+	if (obj->type == OBJ_PLANE) {
 		cam->distance = 20.0f;
-	else {
+	} else {
 		float tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
 		t_vec2 dist;
 		dist.height = proj.height / tan_half_fov;

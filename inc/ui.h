@@ -1,20 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ui.h                                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:46:07 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:46:08 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef UI_H
-# define UI_H
+#define UI_H
 
-# include "defines.h"
+#include "defines.h"
 
-void	update_ui(t_context *ctx);
+void update_ui(t_context* ctx);
 
 #endif

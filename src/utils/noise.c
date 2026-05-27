@@ -1,15 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   noise.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 19:20:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:20:22 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+#include "lib_math.h"
 #include "utils.h"
 
 // Samples a low discrepency sequence, where points are as evenly spaced as
@@ -17,32 +6,20 @@
 //
 // Pre-calculated texture in /assets/textures/ by Christoph Peters
 // https://momentsingraphics.de/BlueNoise.html
-float	blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
-{
-	uint32_t	tx;
-	uint32_t	ty;
-	uint32_t	index;
-	uint32_t	seed;
-
-	seed = pixel->frame + ((dim / 4u) * UINT_PRIME);
-	tx = (pixel->x + hash_lowerbias32(seed)) & (tex->width - 1u);
-	ty = (pixel->y + hash_lowerbias32(seed + 1u)) & (tex->height - 1u);
-	index = (ty * tex->width + tx) * 4u;
-	return (tex->pixels[index + (dim & 3u)]);
+float blue_noise(const t_texture* tex, const t_pixel* pixel, uint32_t dim) {
+	uint32_t seed = pixel->frame + ((dim / 4u) * UINT_PRIME);
+	uint32_t tx = (pixel->x + hash_lowerbias32(seed)) & (tex->width - 1u);
+	uint32_t ty = (pixel->y + hash_lowerbias32(seed + 1u)) & (tex->height - 1u);
+	uint32_t index = (ty * tex->width + tx) * 4u;
+	return tex->pixels[index + (dim & 3u)];
 }
 
-float	static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim)
-{
-	uint32_t	tx;
-	uint32_t	ty;
-	uint32_t	index;
-	uint32_t	seed;
-
-	seed = ((dim / 4u) * UINT_PRIME);
-	tx = (pixel->x + hash_lowerbias32(seed)) & (tex->width - 1u);
-	ty = (pixel->y + hash_lowerbias32(seed + 1u)) & (tex->height - 1u);
-	index = (ty * tex->width + tx) * 4u;
-	return (tex->pixels[index + (dim & 3u)]);
+float static_blue_noise(const t_texture* tex, const t_pixel* pixel, uint32_t dim) {
+	uint32_t seed = ((dim / 4u) * UINT_PRIME);
+	uint32_t tx = (pixel->x + hash_lowerbias32(seed)) & (tex->width - 1u);
+	uint32_t ty = (pixel->y + hash_lowerbias32(seed + 1u)) & (tex->height - 1u);
+	uint32_t index = (ty * tex->width + tx) * 4u;
+	return tex->pixels[index + (dim & 3u)];
 }
 
 /*
@@ -52,13 +29,10 @@ float	static_blue_noise(const t_texture *tex, const t_pixel *pixel, uint32_t dim
 ** bounces without degrading into white noise (which causes clumping).
 ** https://www.graphics.rwth-aachen.de/media/papers/jgt.pdf
 */
-float	r1_sequence(uint32_t n, float offset)
-{
-	float		res;
-
-	res = offset + (float)n * ONE_MINUS_GR;
+float r1_sequence(uint32_t n, float offset) {
+	float res = offset + (float)n * ONE_MINUS_GR;
 	res -= floorf(res);
-	return (res);
+	return res;
 }
 
 /*
@@ -66,28 +40,20 @@ float	r1_sequence(uint32_t n, float offset)
 ** Golden Ratio (plastic constant). By adding a blue noise offset and taking
 ** the fractional part, we get a perfectly uniform sampling distribution.
 */
-t_vec2	r2_sequence(uint32_t n, t_vec2 offset)
-{
-	t_vec2		res;
-	float		u;
-	float		v;
-
-	u = offset.u + (float)n * ONE_MINUS_PC;
-	v = offset.v + (float)n * ONE_MINUS_PC2;
-	res.u = u - floorf(u);
-	res.v = v - floorf(v);
-	return (res);
+t_vec2 r2_sequence(uint32_t n, t_vec2 offset) {
+	float u = offset.u + (float)n * ONE_MINUS_PC;
+	float v = offset.v + (float)n * ONE_MINUS_PC2;
+	return (t_vec2){ //
+		.u = u - floorf(u),
+		.v = v - floorf(v)
+	};
 }
 
-t_vec2	r4_sequence_d12(uint32_t n, t_vec2 offset)
-{
-	t_vec2		res;
-	float		u;
-	float		v;
-
-	u = offset.u + (float)n * 0.1433251161454971f;
-	v = offset.v + (float)n * 0.2661081433728707f;
-	res.u = u - floorf(u);
-	res.v = v - floorf(v);
-	return (res);
+t_vec2 r4_sequence_d12(uint32_t n, t_vec2 offset) {
+	float u = offset.u + (float)n * 0.1433251161454971f;
+	float v = offset.v + (float)n * 0.2661081433728707f;
+	return (t_vec2){ //
+		.u = u - floorf(u),
+		.v = v - floorf(v)
+	};
 }

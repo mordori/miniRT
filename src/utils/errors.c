@@ -1,38 +1,21 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   errors.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 19:20:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 19:22:04 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "utils.h"
 #include "libft_io.h"
 #include "libft_utils.h"
+#include "utils.h"
 
-void	fatal_error(t_context *ctx, char *msg, char *file, int line)
-{
-	char	str[INT32_LENGTH + 1];
+void fatal_error(t_context* ctx, char* msg, char* file, int line) {
+	char str[INT32_LENGTH + 1];
 
 	ft_putstr_fd("\nError:\n", STDERR_FILENO);
 	if (msg)
 		ft_putendl_fd(msg, STDERR_FILENO);
 	if (file)
-	{
 		ft_putstr_fd(file, STDERR_FILENO);
-	}
-	if (ctx && line > 0)
-	{
+	if (ctx && line > 0) {
 		ft_putstr_fd(", line: ", STDERR_FILENO);
 		int_to_str(line, str);
 		ft_putendl_fd(str, STDERR_FILENO);
 	}
-	if (ctx && ctx->mlx)
-	{
+	if (ctx && ctx->mlx) {
 		ft_putstr_fd("MLX42: ", STDERR_FILENO);
 		perror(mlx_strerror(mlx_errno));
 	}
@@ -40,9 +23,9 @@ void	fatal_error(t_context *ctx, char *msg, char *file, int line)
 	exit(EXIT_FAILURE);
 }
 
-char	*errors(t_err_code code)
-{
-	static char	*e[] = {
+char* errors(t_err_code code) {
+	static char* e[] = {
+		//
 		"invalid number of arguments",
 		"mlx init failed",
 		"mlx img failed",
@@ -63,8 +46,7 @@ char	*errors(t_err_code code)
 		"material add failed",
 		"NPOT texture",
 		"make dir failed",
-		"malloc failed"
+		"malloc failed",
 	};
-
-	return (e[code]);
+	return e[code];
 }

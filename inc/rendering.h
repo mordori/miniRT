@@ -1,57 +1,45 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   rendering.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 22:46:01 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/25 22:46:02 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef RENDERING_H
-# define RENDERING_H
+#define RENDERING_H
 
-# define _GNU_SOURCE
+#define _GNU_SOURCE
 
-# include <pthread.h>
-# include <unistd.h>
+#include <pthread.h>
+#include <unistd.h>
 
-# include "defines.h"
+#include "defines.h"
 
-bool	init_renderer(t_context *ctx);
-t_vec3	trace_path(const t_context *ctx, t_pixel *pixel, t_render_mode mode, uint8_t bounces);
-t_vec3	post_process(const t_context *ctx, const t_pixel *pixel, t_vec3 c);
-t_vec3	post_process_preview(const t_context *ctx, t_vec3 c);
-t_vec3	background_color(const t_scene *scene, const t_ray *ray, t_vec2 uv_offset);
-float	reflectance(float ior);
-t_vec3	disney_brdf(const t_path *path);
-void	frame_loop(void *param);
-void	blit(const t_context *ctx, const t_renderer *r);
-bool	rotate_skydome(t_context *ctx);
-t_vec3	bsdf(t_path *path);
-t_vec3	add_lighting(const t_context *ctx, t_path *path, const t_light *light, t_pixel *pixel);
-t_vec3	cook_torrance_brdf(const t_path *path);
-float	pdf_cos(float ndotl);
-float	pdf_ggx_vndf(const t_path *path);
-bool	sample_bsdf(t_path *path);
-float	power_heuristic(float pdf_d, float pdf_r);
-float	bsdf_pdf(t_path *path);
-float	light_pdf(t_vec3 l, float radius_sq);
-bool	config_renderer(t_context *ctx, mlx_key_data_t keydata);
+bool init_renderer(t_context* ctx);
+t_vec3 trace_path(const t_context* ctx, t_pixel* pixel, t_render_mode mode, uint8_t bounces);
+t_vec3 post_process(const t_context* ctx, const t_pixel* pixel, t_vec3 c);
+t_vec3 post_process_preview(const t_context* ctx, t_vec3 c);
+t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset);
+float reflectance(float ior);
+t_vec3 disney_brdf(const t_path* path);
+void frame_loop(void* param);
+void blit(const t_context* ctx, const t_renderer* r);
+bool rotate_skydome(t_context* ctx);
+t_vec3 bsdf(t_path* path);
+t_vec3 add_lighting(const t_context* ctx, t_path* path, const t_light* light, t_pixel* pixel);
+t_vec3 cook_torrance_brdf(const t_path* path);
+float pdf_cos(float ndotl);
+float pdf_ggx_vndf(const t_path* path);
+bool sample_bsdf(t_path* path);
+float power_heuristic(float pdf_d, float pdf_r);
+float bsdf_pdf(t_path* path);
+float light_pdf(t_vec3 l, float radius_sq);
+bool config_renderer(t_context* ctx, mlx_key_data_t keydata);
 
 // Sampling
 // -----------------------------------------------------------------
-t_vec3	sample_cos_hemisphere(t_vec3 n, t_vec2 uv);
-t_vec2	sample_disk(t_vec2 uv);
-t_vec3	sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
-void	sample_ggx_vndf(t_path *path, float alpha, t_vec2 uv);
+t_vec3 sample_cos_hemisphere(t_vec3 n, t_vec2 uv);
+t_vec2 sample_disk(t_vec2 uv);
+t_vec3 sample_cone(t_vec3 vec, float cos_theta_max, t_vec2 uv);
+void sample_ggx_vndf(t_path* path, float alpha, t_vec2 uv);
 
 // Solid mode
 // -----------------------------------------------------------------
-bool	trace_ray_editing(const t_context *ctx, t_path *path, t_pixel *pixel);
-void	add_lighting_editing(const t_context *ctx, t_path *path, const t_light *light);
-void	ambient_lighting(t_path *path, const t_light *light);
+bool trace_ray_editing(const t_context* ctx, t_path* path, t_pixel* pixel);
+void add_lighting_editing(const t_context* ctx, t_path* path, const t_light* light);
+void ambient_lighting(t_path* path, const t_light* light);
 
 #endif
