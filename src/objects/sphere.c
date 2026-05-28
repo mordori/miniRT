@@ -46,7 +46,7 @@ static inline float solve_quadratic(const t_sphere* sphere, const t_ray* ray, fl
 	float half_b = vec3_dot(ray->dir, ray->origin);
 	float d = half_b * half_b - a * (vec3_dot(ray->origin, ray->origin) - sphere->radius_sq);
 	if (d < 0)
-		return M_INF;
+		return M_INFf;
 
 	float sqrt_d = sqrtf(d);
 	a = 1.0f / a;
@@ -54,7 +54,7 @@ static inline float solve_quadratic(const t_sphere* sphere, const t_ray* ray, fl
 	if (root <= G_EPSILON || root >= t_max) {
 		root = (-half_b + sqrt_d) * a;
 		if (root <= G_EPSILON || root >= t_max)
-			return M_INF;
+			return M_INFf;
 	}
 	return root;
 }

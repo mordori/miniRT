@@ -102,7 +102,7 @@ t_error parse_cone(t_context* ctx, t_parser* p, char** tkns) {
 		return (E_INVALID_NUM);
 	if (angle_deg <= 0.0f || angle_deg >= 90.0f || cone.height <= 0.0f)
 		return (E_RANGE);
-	cone.angle = angle_deg * (M_PI / 180.0f);
+	cone.angle = angle_deg * (M_PIf / 180.0f);
 	err = resolve_material(ctx, p, tkns[5], &mat_id);
 	if (err != E_OK)
 		return (err);

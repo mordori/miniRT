@@ -10,14 +10,14 @@ t_vec3 post_process(const t_context* ctx, const t_pixel* pixel, t_vec3 c) {
 	c = vec3_scale(c, ctx->scene.cam.exposure);
 	c = tonemap_aces(c);
 	c = linear_to_srgb(c);
-	c.r += (blue_noise(&ctx->tex_bn, pixel, BN_PP_R) - 0.5f) * M_1_255F;
-	c.g += (blue_noise(&ctx->tex_bn, pixel, BN_PP_G) - 0.5f) * M_1_255F;
-	c.b += (blue_noise(&ctx->tex_bn, pixel, BN_PP_B) - 0.5f) * M_1_255F;
+	c.r += (blue_noise(&ctx->tex_bn, pixel, BN_PP_R) - 0.5f) * M_1_255f;
+	c.g += (blue_noise(&ctx->tex_bn, pixel, BN_PP_G) - 0.5f) * M_1_255f;
+	c.b += (blue_noise(&ctx->tex_bn, pixel, BN_PP_B) - 0.5f) * M_1_255f;
 	return c;
 }
 
 static inline t_vec3 linear_to_srgb(t_vec3 c) {
-	return vec3_powf(c, M_1_2P2F);
+	return vec3_powf(c, M_1_2P2f);
 }
 
 static inline t_vec3 rrt_and_odt_fit(t_vec3 vec) {

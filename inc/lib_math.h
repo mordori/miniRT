@@ -11,12 +11,36 @@
 #include <xmmintrin.h>
 
 #pragma region defines
-#define M_TAU 6.28318530717958647693f
-#define M_INF FLT_MAX
+#ifndef M_PIf
+#define M_PIf 3.14159265358979323846f
+#endif
 
-#define M_1_255F 0.003921568627451f
-#define M_1_2P2F 0.454545454545454f
-#define M_1_2PI 0.15915494309189533577f
+#ifndef M_PI_2f
+#define M_PI_2f 1.57079632679489661923f
+#endif
+
+#ifndef M_PI_4f
+#define M_PI_4f 0.78539816339744830962f
+#endif
+
+#ifndef M_1_PIf
+#define M_1_PIf 0.31830988618379067154f
+#endif
+
+#ifndef M_1_2PIf
+#define M_1_2PIf 0.15915494309189533577f
+#endif
+
+#ifndef M_TAUf
+#define M_TAUf 6.28318530717958647693f
+#endif
+
+#ifndef M_INFf
+#define M_INFf FLT_MAX
+#endif
+
+#define M_1_255f 0.003921568627451f
+#define M_1_2P2f 0.454545454545454f
 
 #define M_EPSILON 1e-6f
 #define LEN_EPSILON 1e-6f
@@ -460,12 +484,12 @@ static inline t_vec3 vec3_unit_random(uint32_t* seed) {
 }
 
 static inline t_vec3 vec3_min(t_vec3 vec, float min) {
-	t_v4sf limit = v4sf(min, min, min, M_INF);
+	t_v4sf limit = v4sf(min, min, min, M_INFf);
 	return (t_vec3){ .v = _mm_min_ps(vec.v, limit) };
 }
 
 static inline t_vec3 vec3_max(t_vec3 vec, float max) {
-	t_v4sf limit = v4sf(max, max, max, -M_INF);
+	t_v4sf limit = v4sf(max, max, max, -M_INFf);
 	return (t_vec3){ .v = _mm_max_ps(vec.v, limit) };
 }
 
@@ -735,8 +759,8 @@ static inline t_mat4 mat4_scale(t_vec3 s) {
 }
 
 static inline t_mat4 mat4_rot_x(float rad) {
-	float c, s;
-	sincosf(rad, &s, &c);
+	float s = sinf(rad);
+	float c = cosf(rad);
 	return (t_mat4){ //
 		.rows[0] = (t_v4sf){ 1.0f, 0.0f, 0.0f, 0.0f },
 		.rows[1] = (t_v4sf){ 0.0f, c, -s, 0.0f },
@@ -746,8 +770,8 @@ static inline t_mat4 mat4_rot_x(float rad) {
 }
 
 static inline t_mat4 mat4_rot_y(float rad) {
-	float c, s;
-	sincosf(rad, &s, &c);
+	float s = sinf(rad);
+	float c = cosf(rad);
 	return (t_mat4){ //
 		.rows[0] = (t_v4sf){ c, 0.0f, s, 0.0f },
 		.rows[1] = (t_v4sf){ 0.0f, 1.0f, 0.0f, 0.0f },
@@ -757,8 +781,8 @@ static inline t_mat4 mat4_rot_y(float rad) {
 }
 
 static inline t_mat4 mat4_rot_z(float rad) {
-	float c, s;
-	sincosf(rad, &s, &c);
+	float s = sinf(rad);
+	float c = cosf(rad);
 	return (t_mat4){ //
 		.rows[0] = (t_v4sf){ c, -s, 0.0f, 0.0f },
 		.rows[1] = (t_v4sf){ s, c, 0.0f, 0.0f },
@@ -768,10 +792,9 @@ static inline t_mat4 mat4_rot_z(float rad) {
 }
 
 static inline t_mat4 mat4_rot(t_vec3 rot) {
-	t_vec2 x, y, z;
-	sincosf(rot.x, &x.sin, &x.cos);
-	sincosf(rot.y, &y.sin, &y.cos);
-	sincosf(rot.z, &z.sin, &z.cos);
+	t_vec2 x = { .sin = sinf(rot.x), .cos = cosf(rot.x) };
+	t_vec2 y = { .sin = sinf(rot.y), .cos = cosf(rot.y) };
+	t_vec2 z = { .sin = sinf(rot.z), .cos = cosf(rot.z) };
 	return (t_mat4){ //
 		.rows[0] = v4sf(y.cos * z.cos, z.cos * x.sin * y.sin - x.cos * z.sin, x.cos * z.cos * y.sin + x.sin * z.sin, 0.0f),
 		.rows[1] = v4sf(y.cos * z.sin, x.cos * z.cos + x.sin * y.sin * z.sin, -z.cos * x.sin + x.cos * y.sin * z.sin, 0.0f),
@@ -790,11 +813,10 @@ static inline t_mat4 mat4_shear(t_vec3 x, t_vec3 y, t_vec3 z) {
 }
 
 static inline t_quat quat_from_euler(t_vec3 euler) {
-	t_vec2 x, y, z;
 	euler = vec3_scale(euler, 0.5f);
-	sincosf(euler.x, &x.sin, &x.cos);
-	sincosf(euler.y, &y.sin, &y.cos);
-	sincosf(euler.z, &z.sin, &z.cos);
+	t_vec2 x = { .sin = sinf(euler.x), .cos = cosf(euler.x) };
+	t_vec2 y = { .sin = sinf(euler.y), .cos = cosf(euler.y) };
+	t_vec2 z = { .sin = sinf(euler.z), .cos = cosf(euler.z) };
 	return (t_quat){ //
 		.w = x.cos * y.cos * z.cos + x.sin * y.sin * z.sin,
 		.x = x.sin * y.cos * z.cos - x.cos * y.sin * z.sin,
@@ -804,8 +826,8 @@ static inline t_quat quat_from_euler(t_vec3 euler) {
 }
 
 static inline t_quat quat_from_euler_angle(t_vec3 axis, float angle) {
-	t_vec2 theta;
-	sincosf(angle * 0.5f, &theta.sin, &theta.cos);
+	float half_angle = angle * 0.5f;
+	t_vec2 theta = { .sin = sinf(half_angle), .cos = cosf(half_angle) };
 	axis = vec3_normalize(axis);
 	t_vec3 imag = vec3_scale(axis, theta.sin);
 	return (t_quat){ //
@@ -855,7 +877,7 @@ static inline t_quat quat_from_dir(t_vec3 dir) {
 	dir = vec3_normalize(dir);
 	float dot = vec3_dot(up, dir);
 	if (dot < -0.999f)
-		return quat_from_euler(vec3(M_PI, 0.0f, 0.0f));
+		return quat_from_euler(vec3(M_PIf, 0.0f, 0.0f));
 
 	t_vec3 cross = vec3_cross(up, dir);
 	t_quat q = { //
@@ -926,11 +948,11 @@ static inline float f_schlick(float u, float f0, float f90) {
 }
 
 static inline float degrees_to_rad(float degrees) {
-	return degrees * M_PI / 180.0f;
+	return degrees * M_PIf / 180.0f;
 }
 
 static inline float rad_to_degrees(float rad) {
-	return rad * 180.0f * M_1_PI;
+	return rad * 180.0f * M_1_PIf;
 }
 
 static inline bool is_nan_inf(float x) {
@@ -945,9 +967,9 @@ static inline float fast_atan2f(float y, float x) {
 	float s = a * a;
 	float r = ((-0.0464964749f * s + 0.15931422f) * s - 0.327622764f) * s * a + a;
 	if (abs_y > abs_x)
-		r = M_PI_2 - r;
+		r = M_PI_2f - r;
 	if (x < 0.0f)
-		r = M_PI - r;
+		r = M_PIf - r;
 	if (y < 0.0f)
 		r = -r;
 	return r;
@@ -962,7 +984,7 @@ static inline float fast_acosf(float x) {
 	ret = ret * x + 1.5707288f;
 	ret = ret * sqrtf(1.0f - x);
 	ret = ret - 2.0f * negate * ret;
-	return negate * M_PI + ret;
+	return negate * M_PIf + ret;
 }
 
 static inline float fast_srgb(float x) {
@@ -1011,8 +1033,8 @@ static inline uint32_t fast_range(uint32_t n, uint32_t range) {
 }
 
 static inline t_vec3 spherical_to_cartesian(float u, float sin_theta, float cos_theta) {
-	t_vec2 phi;
-	sincosf(M_TAU * u, &phi.sin, &phi.cos);
+	float angle = M_TAUf * u;
+	t_vec2 phi = { .sin = sinf(angle), .cos = cosf(angle) };
 	return (t_vec3){ //
 		.x = sin_theta * phi.cos,
 		.y = sin_theta * phi.sin,
@@ -1047,24 +1069,24 @@ static inline t_vec3 mul_tbn(t_vec3 vec, t_vec3 n, t_vec3 t, t_vec3 b) {
 }
 
 static inline t_vec3 map_spherical(float u, float v) {
-	t_vec2 phi;
 	float cos_theta = 1.0f - 2.0f * v;
 	float sin_theta = sqrtf(fmaxf(0.0f, 1.0f - cos_theta * cos_theta));
-	sincosf(M_TAU * u, &phi.sin, &phi.cos);
+	float angle = M_TAUf * u;
+	t_vec2 phi = { .sin = sinf(angle), .cos = cosf(angle) };
 	return vec3(sin_theta * phi.cos, sin_theta * phi.sin, cos_theta);
 }
 
 static inline t_vec2 spherical_uv(t_vec3 dir) {
 	return (t_vec2){ //
-		.u = (fast_atan2f(dir.z, dir.x) + (float)M_PI) * M_1_2PI,
-		.v = fast_acosf(clampfn11(dir.y)) * M_1_PI
+		.u = (fast_atan2f(dir.z, dir.x) + (float)M_PIf) * M_1_2PIf,
+		.v = fast_acosf(clampfn11(dir.y)) * M_1_PIf
 	};
 }
 
 static inline t_vec3 lerp_color(uint32_t c1, uint32_t c2, float t) {
 	t_v4sf a = v4sf((c1 >> 24) & 0xFF, (c1 >> 16) & 0xFF, (c1 >> 8) & 0xFF, 255.0f);
 	t_v4sf b = v4sf((c2 >> 24) & 0xFF, (c2 >> 16) & 0xFF, (c2 >> 8) & 0xFF, 255.0f);
-	return (t_vec3){ .v = ((1.0f - t) * a + t * b) * M_1_255F };
+	return (t_vec3){ .v = ((1.0f - t) * a + t * b) * M_1_255f };
 }
 
 static inline uint32_t rgba_to_abgr(uint32_t rgba) {

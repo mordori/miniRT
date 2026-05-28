@@ -30,7 +30,7 @@ bool trace_ray_editing(const t_context* ctx, t_path* path, t_pixel* pixel) {
 		return false;
 	}
 
-	ctx->editor.selection_mask[pixel->y * ctx->renderer.width + pixel->x] = -M_INF;
+	ctx->editor.selection_mask[pixel->y * ctx->renderer.width + pixel->x] = -M_INFf;
 	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	t_vec3 color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, color));

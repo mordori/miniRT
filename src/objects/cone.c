@@ -93,7 +93,7 @@ static void compute_cone_body_normal(const t_cone* cone, const t_ray* ray, t_hit
 	else
 		hit->normal = vec3_scale(hit->normal, 1.0f / sqrtf(len_sq));
 
-	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PI + 0.5f;
+	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PIf + 0.5f;
 	hit->uv.v = hit->point.y * cone->inv_height;
 
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)

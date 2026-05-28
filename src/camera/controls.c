@@ -9,7 +9,7 @@ void cam_look(t_context* ctx, t_vec2i delta) {
 	float speed = SENS_LOOK * (14.0f / cam->focal_len_mm);
 	cam->yaw += (float)delta.x * speed;
 	cam->pitch -= (float)delta.y * speed;
-	cam->pitch = clampf(cam->pitch, -M_PI_2 + 0.001f, M_PI_2 - 0.001f);
+	cam->pitch = clampf(cam->pitch, -M_PI_2f + 0.001f, M_PI_2f - 0.001f);
 	cam->transform.rot = quat_from_euler(vec3(-cam->pitch, cam->yaw, 0.0f));
 	update_camera(ctx, cam);
 }
@@ -31,7 +31,7 @@ void cam_orbit(t_context* ctx, t_vec2i delta) {
 	t_vec3 local = vec3(vec3_dot(diff, cam->right), vec3_dot(diff, cam->up), vec3_dot(diff, cam->forward));
 	cam->yaw += (float)delta.x * SENS_ORBIT;
 	cam->pitch -= (float)delta.y * SENS_ORBIT;
-	cam->pitch = clampf(cam->pitch, -M_PI_2 + 0.001f, M_PI_2 - 0.001f);
+	cam->pitch = clampf(cam->pitch, -M_PI_2f + 0.001f, M_PI_2f - 0.001f);
 	cam->transform.rot = quat_from_euler(vec3(-cam->pitch, cam->yaw, 0.0f));
 	update_camera(ctx, cam);
 	diff = vec3_add(vec3_scale(cam->right, local.x), vec3_scale(cam->up, local.y));

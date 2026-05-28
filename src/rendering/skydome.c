@@ -34,8 +34,8 @@ bool rotate_skydome(t_context* ctx) {
 
 		if (ctx->scene.env.has_dir_light) {
 			t_light* light = &ctx->scene.cam.directional_light;
-			t_vec2 theta;
-			sincosf(ctx->scene.cam.skydome_uv_offset.u * M_TAU, &theta.sin, &theta.cos);
+			float angle = ctx->scene.cam.skydome_uv_offset.u * M_TAUf;
+			t_vec2 theta = { .sin = sinf(angle), .cos = cosf(angle) };
 			light->obj->transform.pos = (t_vec3){ //
 				.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin,
 				.y = initial_pos.y,

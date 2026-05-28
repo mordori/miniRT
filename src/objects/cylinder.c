@@ -54,7 +54,7 @@ static bool hit_body(const t_cylinder* cyl, const t_ray* ray, t_hit* hit) {
 */
 static void compute_body_normal(const t_cylinder* cyl, const t_ray* ray, t_hit* hit) {
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, hit->t));
-	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PI + 0.5f;
+	hit->uv.u = fast_atan2f(hit->point.x, hit->point.z) * M_1_2PIf + 0.5f;
 	hit->uv.v = (hit->point.y / cyl->height) + 0.5f;
 	hit->normal = vec3_normalize(vec3(hit->point.x, 0.0f, hit->point.z));
 	if (vec3_dot(ray->dir, hit->normal) > 0.0f)

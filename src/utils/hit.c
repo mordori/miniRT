@@ -3,7 +3,7 @@
 
 t_hit new_hit(uint32_t bounce) {
 	return (t_hit){ //
-		.t = M_INF,
+		.t = M_INFf,
 		.is_primary = (bounce == 0)
 	};
 }

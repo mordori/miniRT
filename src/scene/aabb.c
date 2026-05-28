@@ -43,7 +43,7 @@ t_aabb aabb_object_to_world(t_aabb aabb, const t_mat4* object_to_world) {
 	corners[6] = vec3(aabb.min.x, aabb.max.y, aabb.max.z);
 	corners[7] = vec3(aabb.max.x, aabb.max.y, aabb.max.z);
 
-	t_aabb res = { .min = vec3_n(M_INF), .max = vec3_n(-M_INF) };
+	t_aabb res = { .min = vec3_n(M_INFf), .max = vec3_n(-M_INFf) };
 	uint32_t i = 0;
 	while (i < 8) {
 		t_vec4 p = mat4_mul_vec4(object_to_world, vec4_3(corners[i], 1.0f));
