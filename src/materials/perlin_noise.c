@@ -130,7 +130,7 @@ float perlin_noise(float x, float y, float z) {
 */
 static inline t_vec3 object_seed(const t_object* obj) {
 	float s = sinf(obj->transform.pos.x * 12.9898f + obj->transform.pos.y * 78.233f + obj->transform.pos.z * 37.719f) * 43758.5453f;
-	s = (s - floorf(s)) * M_TAU;
+	s = (s - floorf(s)) * M_TAUf;
 	return (t_vec3){ { s, s * 1.6180339f, s * 2.6180339f } };
 }
 

@@ -59,5 +59,5 @@ static inline t_vec3 add_light(const t_context* ctx, const t_path* path, const t
 		factor_radius = fmaxf(light->radius_sq, 1.0f) * light->radius;
 	float attenuation = light->intensity * factor_radius * path->ndotl / fmax(dist_sq, G_EPSILON);
 	t_vec3 res = vec3_mul(get_surface_color(path->mat, &path->hit), light->color);
-	return vec3_scale(res, attenuation * M_1_PI);
+	return vec3_scale(res, attenuation * M_1_PIf);
 }

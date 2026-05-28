@@ -1,3 +1,4 @@
+#include "lib_math.h"
 #include "rendering.h"
 
 static inline t_vec3 sample_vndf_hemisphere(t_vec3 wi, t_vec2 uv);
@@ -16,13 +17,16 @@ t_vec2 sample_disk(t_vec2 uv) {
 	float v = 2.0f * uv.v - 1.0f;
 
 	if (u == 0.0f && v == 0.0f)
-		return (vec2_n(0.0f));
+		return (t_vec2){ 0 };
+
 	if (u * u > v * v) {
 		r = u;
-		sincosf(M_PI_4 * (v / u), &phi.sin, &phi.cos);
+		float angle = M_PI_4f * (v / u);
+		phi = (t_vec2){ .sin = sinf(angle), .cos = cosf(angle) };
 	} else {
 		r = v;
-		sincosf(M_PI_2 - M_PI_4 * (u / v), &phi.sin, &phi.cos);
+		float angle = M_PI_2f - M_PI_4f * (u / v);
+		phi = (t_vec2){ .sin = sinf(angle), .cos = cosf(angle) };
 	}
 	return vec2(r * phi.cos, r * phi.sin);
 }

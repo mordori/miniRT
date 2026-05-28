@@ -39,11 +39,11 @@ static inline void tex_to_linear(t_texture* texture, bool is_srgb) {
 			*dst++ = g_lut[*src++];
 			*dst++ = g_lut[*src++];
 			*dst++ = g_lut[*src++];
-			*dst++ = (((float)(*src++)) * M_1_255F);
+			*dst++ = (((float)(*src++)) * M_1_255f);
 		}
 	} else {
 		while (dst < end)
-			*dst++ = (((float)(*src++)) * M_1_255F);
+			*dst++ = (((float)(*src++)) * M_1_255f);
 	}
 	mlx_delete_texture(texture->tex);
 	texture->tex = NULL;
@@ -55,7 +55,7 @@ void lut_srgb_to_linear(void) {
 	if (!init_lut) {
 		size_t i = 0;
 		while (i < 256) {
-			g_lut[i] = powf((float)i * M_1_255F, 2.2f);
+			g_lut[i] = powf((float)i * M_1_255f, 2.2f);
 			++i;
 		}
 		init_lut = true;

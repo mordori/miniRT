@@ -50,10 +50,10 @@ static inline t_vec3 sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float* p
 	float solid_angle;
 	if (sin_theta_sq < 1e-3f) {
 		cos_theta_max = 1.0f - (sin_theta_sq * 0.5f);
-		solid_angle = M_PI * sin_theta_sq;
+		solid_angle = M_PIf * sin_theta_sq;
 	} else {
 		cos_theta_max = sqrtf(1.0f - sin_theta_sq);
-		solid_angle = M_TAU * (1.0f - cos_theta_max);
+		solid_angle = M_TAUf * (1.0f - cos_theta_max);
 	}
 	*pdf = 1.0f / fmaxf(solid_angle, G_EPSILON);
 	return sample_cone(l_dir, cos_theta_max, uv);
@@ -69,10 +69,10 @@ float light_pdf(t_vec3 l, float radius_sq) {
 
 	float solid_angle;
 	if (sin_theta_sq < 1e-3f) {
-		solid_angle = M_PI * sin_theta_sq;
+		solid_angle = M_PIf * sin_theta_sq;
 	} else {
 		float cos_theta_max = sqrtf(1.0f - sin_theta_sq);
-		solid_angle = M_TAU * (1.0f - cos_theta_max);
+		solid_angle = M_TAUf * (1.0f - cos_theta_max);
 	}
 	return 1.0f / fmaxf(solid_angle, G_EPSILON);
 }

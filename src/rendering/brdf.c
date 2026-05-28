@@ -29,7 +29,7 @@ t_vec3 cook_torrance_brdf(const t_path* path) {
 static inline float d_ggx(float ndoth, float a) {
 	float a2 = a * a;
 	float den = (ndoth * ndoth) * (a2 - 1.0f) + 1.0f;
-	den = M_PI * (den * den);
+	den = M_PIf * (den * den);
 	return a2 / den;
 }
 
@@ -41,7 +41,7 @@ static inline float v_smith_ggx(float ndotv, float ndotl, float a) {
 }
 
 float pdf_cos(float ndotl) {
-	return ndotl * M_1_PI;
+	return ndotl * M_1_PIf;
 }
 
 t_vec3 disney_brdf(const t_path* path) {
@@ -56,5 +56,5 @@ static inline float burley(const t_path* path) {
 	float f90 = 0.5f + 2.0f * path->mat->roughness * path->ldoth * path->ldoth;
 	float l_scatter = f_schlick(path->ndotl, 1.0f, f90);
 	float v_scatter = f_schlick(path->ndotv, 1.0f, f90);
-	return l_scatter * v_scatter * M_1_PI;
+	return l_scatter * v_scatter * M_1_PIf;
 }

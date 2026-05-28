@@ -50,7 +50,7 @@ t_vec3 pattern_gradient(const t_hit* hit, const t_material* mat) {
 t_vec3 pattern_stripe(const t_hit* hit, const t_material* mat) {
 	float scale;
 
-	scale = mat->pattern_scale * M_TAU;
+	scale = mat->pattern_scale * M_TAUf;
 	if (sinf(hit->uv.v * scale) < 0.0f)
 		return (mat->albedo2);
 	return (mat->albedo);
@@ -73,7 +73,7 @@ t_vec3 pattern_stripe(const t_hit* hit, const t_material* mat) {
 t_vec3 pattern_spiral(const t_hit* hit, const t_material* mat) {
 	float scale;
 
-	scale = mat->pattern_scale * M_TAU;
+	scale = mat->pattern_scale * M_TAUf;
 	if (sinf((hit->uv.u + hit->uv.v) * scale) < 0.0f)
 		return (mat->albedo2);
 	return (mat->albedo);
