@@ -43,3 +43,10 @@ int try_gnl(t_context* ctx, int fd, char** line) {
 		fatal_error(ctx, errors(ERR_GNL), __FILE__, __LINE__);
 	return status;
 }
+
+void make_dir(t_context* ctx, const char* path) {
+	if (mkdir(path, 0777) == ERROR) {
+		if (errno != EEXIST)
+			fatal_error(ctx, errors(ERR_DIR), __FILE__, __LINE__);
+	}
+}

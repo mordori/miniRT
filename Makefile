@@ -1,14 +1,10 @@
 NAME		:=miniRT
 
-CONF		:=.config
-BUILD_TYPE	:=RELEASE
-
 CC			:=clang
-WFLAGS		:=-Wall -Wextra -Werror -Wpedantic -Wunreachable-code -Wshadow \
-				-Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wundef
-DEFS		:=
+WFLAGS		:=-Wall -Wextra -Werror -Wpedantic -Wunreachable-code -Wshadow -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wundef
+DEFS		:=-D_GNU_SOURCE -D_DARWIN_C_SOURCE
 DFLAGS		:=-D DEBUG -g
-SANFLAGS	:=-fsanitize=address,undefined,alignment -fno-omit-frame-pointer
+DEBUG		:=-O0 -g -fsanitize=address,undefined,alignment,float-cast-overflow,float-divide-by-zero -fno-omit-frame-pointer
 
 UNAME_S		:=$(shell uname -s)
 UNAME_M		:=$(shell uname -m)
@@ -25,11 +21,13 @@ else
 	LDFLAGS		+=-ldl
 	OPTS		+=-march=haswell -fno-plt
 endif
+
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 ifeq ($(MAKELEVEL),0)
 	MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 endif
 
+DIR_NAME	:= $(notdir $(CURDIR))
 DIR_INC		:=inc/
 DIR_SRC		:=src/
 DIR_LIB		:=lib/
@@ -38,6 +36,7 @@ DIR_DEP		:=dep/
 DIR_UTILS	:=utils/
 
 DIR_MLX		:=$(DIR_LIB)MLX42/
+DIR_LIBFT	:=libft/
 
 DIR_CAM		:=camera/
 DIR_EDIT	:=editing/
@@ -49,9 +48,6 @@ DIR_PARSE	:=parsing/
 DIR_RENDER	:=rendering/
 DIR_SCENE	:=scene/
 DIR_UI		:=ui/
-DIR_UTILS	:=utils/
-DIR_LIBFT	:=libft/
-DIR_MATH	:=lib_math/
 
 URL_MLX		:=https://github.com/codam-coding-college/MLX42.git
 MLX42		:=$(DIR_MLX)build/libmlx42.a
@@ -67,47 +63,31 @@ endif
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
-				camera.c controls.c movement.c config.c controls_router.c \
-				actions.c)
+				camera.c controls.c config.c controls_router.c actions.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
-				select.c edit.c constraints.c translate.c rotate.c scale.c \
-				actions.c)
+				select.c edit.c constraints.c translate.c rotate.c scale.c actions.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input_router.c mouse.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				point.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
-				material.c patterns.c textures.c perlin_tools.c perlin_noise.c \
-				patterns_tools.c)
+				material.c patterns.c textures.c perlin_noise.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
-				object.c cylinder.c cylinder_tools.c plane.c sphere.c cone.c \
-				cone_tools.c quad.c)
+				object.c cylinder.c plane.c sphere.c cone.c quad.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse.c parse_elements.c parse_light.c parse_objects.c \
+				parse.c parse_elements.c parse_light.c parse_objects.c try_split.c \
 				parse_tools.c parse_materials.c parse_textures.c parse_utils.c \
-				parse_pass.c parse_patterns.c parse_validate.c)
+				parse_pass.c parse_patterns.c parse_validate.c ft_strtod.c ft_atof.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
-				editing/tracer.c editing/lighting.c config.c \
-				renderer.c tracer.c post_processing.c skydome.c \
-				post_processing_preview.c frame.c bsdf.c brdf_r.c brdf_d.c \
-				lighting.c sampling.c )
+				editing/tracer.c editing/lighting.c \
+				renderer.c tracer.c post_processing.c skydome.c window.c \
+				frame.c bsdf.c brdf.c lighting.c sampling.c screenshot.c projection.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c bvh.c aabb.c bounds.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
-				settings.c )
+				settings.c ui.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c hooks.c strings.c vectors.c ray.c bounds.c \
-				noise.c mapping.c range.c alloc.c random.c window.c frame.c \
-				render.c hit.c transform.c projection.c \
-				constraints.c instructions.c ui.c keys.c ft_strtod.c \
-				textures.c renderer.c time.c try_split.c ft_atof.c )
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_MATH), \
-				math.c mat4.c mat4_transforms.c \
-				vec4.c vec3.c vec3_2.c mat4_utils.c mat4_inverse.c \
-				vec2.c vec4_2.c vec2i.c vec2i_2.c math_2.c math_3.c \
-				vec3_3.c color.c v4sf.c v4si.c coords.c quaternion.c \
-				mat4_transforms_2.c random.c vec3_4.c vec3_5.c vec3_6.c \
-				fast_math.c quaternion_2.c)
+				errors.c files.c ray.c memory.c random.c hit.c instructions.c time.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 				ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
@@ -132,11 +112,16 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
-
 all: $(MLX42) $(NAME)
 
-config:
-	@$(call check_config,$(BUILD_TYPE))
+compdb:
+	@if command -v bear >/dev/null 2>&1; then \
+		bear --append -- $(MAKE) all; \
+	elif command -v compiledb >/dev/null 2>&1; then \
+		compiledb $(MAKE) all; \
+	else \
+		$(MAKE) all; \
+	fi
 
 $(MLX42):
 	@if [ ! -d "$(DIR_MLX)" ]; then \
@@ -153,39 +138,39 @@ $(NAME): $(MLX42) $(OBJS)
 	@$(call output)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(MLX42)
-	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
-	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
-	@echo "$(GREEN) [+]$(COLOR) compiling $@"
+	@$(call compile_objs)
 
 clean:
 	@$(call rm_dir,$(DIR_OBJ))
+	@$(call rm_dir,.cache/)
 
 fclean: clean
-# 	@$(call rm_dir,$(DIR_LIB))
 	@$(call rm_dir,$(DIR_DEP))
-	@$(call rm_file,$(CONF))
 	@$(call rm_file,$(NAME))
-	@$(call rm_file,$(NAME)_sanitize)
+	@$(call rm_file,compile_commands.json)
 
 re:
-	@$(MAKE) fclean 2> /dev/null
+	@$(MAKE) fclean
 	@$(MAKE) all
 
-debug: BUILD_TYPE	:=DEBUG
-debug: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) -O0
-debug: LDFLAGS		:=-ldl -lglfw -pthread -lm
-debug: all
+debug:
+	@$(MAKE) fclean
+	@$(MAKE) all OPTS="$(DEBUG)" BUILD_TYPE="DEBUG"
 
-sanitize: BUILD_TYPE	:=SANITIZE
-sanitize: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) $(SANFLAGS) -O1
-sanitize: LDFLAGS		:=-ldl -lglfw -pthread -lm $(SANFLAGS)
-sanitize: NAME			:=$(NAME)_sanitize
-sanitize: all
+debugdb:
+	@$(MAKE) fclean
+	@$(MAKE) compdb OPTS="$(DEBUG)" BUILD_TYPE="DEBUG"
 
-.PHONY: all clean fclean re config debug sanitize
-.SECONDARY: $(OBJS) $(DEPS) $(CONF)
+.PHONY: all clean fclean re debug compdb debugdb
+.SECONDARY: $(OBJS) $(DEPS)
 
 -include $(DEPS)
+
+define compile_objs
+	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
+	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
+	@echo "$(GREEN) [+]$(COLOR) compiling $@"
+endef
 
 define rm_dir
 	@if [ -d "$(1)" ]; then \
@@ -198,16 +183,6 @@ define rm_file
 	@if [ -e "$(1)" ]; then \
 		rm -f $(1); \
 		echo "$(RED) [-]$(COLOR) removed $(1)"; \
-	fi
-endef
-
-define check_config
-	@if [ ! -e "$(CONF)" ]; then \
-		touch "$(CONF)"; \
-		echo "" >> $(CONF); \
-	fi
-	@if [ "$$(head -n 1 $(CONF))" != "$(1)" ]; then \
-		sed -i '1c\$(1)' "$(CONF)"; \
 	fi
 endef
 

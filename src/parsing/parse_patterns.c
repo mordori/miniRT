@@ -10,29 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft_str.h"
 #include "parsing.h"
-#include "libft.h"
 
-bool	bump_strength(t_material *mat, char **tkns)
-{
+bool bump_strength(t_material* mat, char** tkns) {
 	if (is_placeholder(tkns[12]))
 		return (true);
-	if (!parse_float(tkns[12], &mat->bump_strength)
-		|| !validate_range(mat->bump_strength, 0.0f, 4.0f))
+	if (!parse_float(tkns[12], &mat->bump_strength) || !validate_range(mat->bump_strength, 0.0f, 4.0f))
 		return (false);
 	return (true);
 }
 
-t_error	parse_mat_pattern(t_material *mat, char **tkns, int tc)
-{
+t_error parse_mat_pattern(t_material* mat, char** tkns, int tc) {
 	if (tc < 16)
 		return (E_ARGS);
 	if (!parse_pattern_token(tkns[13], &mat->pattern))
 		return (E_INVALID_PAT);
 	if (mat->pattern == PAT_NONE)
 		return (E_OK);
-	if (!parse_float(tkns[14], &mat->pattern_scale)
-		|| !validate_range(mat->pattern_scale, 0.0f, 200.0f))
+	if (!parse_float(tkns[14], &mat->pattern_scale) || !validate_range(mat->pattern_scale, 0.0f, 200.0f))
 		return (E_INVALID_NUM);
 	if (!parse_color(tkns[15], &mat->albedo2))
 		return (E_INVALID_COLOR);
@@ -40,8 +36,7 @@ t_error	parse_mat_pattern(t_material *mat, char **tkns, int tc)
 	return (E_OK);
 }
 
-bool	parse_pattern_token(const char *tkn, t_pattern *out)
-{
+bool parse_pattern_token(const char* tkn, t_pattern* out) {
 	if (ft_strcmp(tkn, "none") == 0 || is_placeholder(tkn))
 		return (*out = PAT_NONE, true);
 	if (ft_strcmp(tkn, "checker") == 0)

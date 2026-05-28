@@ -2,7 +2,7 @@
 
 #include "lights.h"
 #include "objects.h"
-#include "utils.h"
+#include "scene.h"
 
 static inline void init_params(t_context* ctx, t_light* l, t_object* obj, uint32_t mat_id);
 static inline t_error init_dir_light(t_context* ctx, t_light* light, t_object* obj);

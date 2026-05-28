@@ -19,13 +19,14 @@ void fatal_error(t_context* ctx, char* msg, char* file, int line) {
 		ft_putstr_fd("MLX42: ", STDERR_FILENO);
 		perror(mlx_strerror(mlx_errno));
 	}
-	clean(ctx);
+	if (ctx)
+		clean_context(ctx);
 	exit(EXIT_FAILURE);
 }
 
 char* errors(t_err_code code) {
+	// clang-format off
 	static char* e[] = {
-		//
 		"invalid number of arguments",
 		"mlx init failed",
 		"mlx img failed",
@@ -48,5 +49,6 @@ char* errors(t_err_code code) {
 		"make dir failed",
 		"malloc failed",
 	};
+	// clang-format on
 	return e[code];
 }

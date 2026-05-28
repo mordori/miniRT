@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include "libft_str.h"
+#include "materials.h"
 #include "parsing.h"
 #include "utils.h"
 

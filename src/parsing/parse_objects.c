@@ -10,22 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include "libft_str.h"
-#include "libft_vector.h"
 #include "objects.h"
-#include "utils.h"
-#include <stdlib.h>
+#include "parsing.h"
 
 /**
  * Sphere: sp <center> <diameter> <color|mat_id>
  */
-t_error	parse_sphere(t_context *ctx, t_parser *p, char **tokens)
-{
-	t_vec3		center;
-	float		diameter;
-	uint32_t	mat_id;
-	t_error		err;
+t_error parse_sphere(t_context* ctx, t_parser* p, char** tokens) {
+	t_vec3 center;
+	float diameter;
+	uint32_t mat_id;
+	t_error err;
 
 	if (count_tokens(tokens) != 4)
 		return (E_ARGS);
@@ -43,12 +38,11 @@ t_error	parse_sphere(t_context *ctx, t_parser *p, char **tokens)
 /**
  * Plane: pl <point> <normal> <color|mat_id>
  */
-t_error	parse_plane(t_context *ctx, t_parser *p, char **tokens)
-{
-	t_vec3		point;
-	t_vec3		normal;
-	uint32_t	mat_id;
-	t_error		err;
+t_error parse_plane(t_context* ctx, t_parser* p, char** tokens) {
+	t_vec3 point;
+	t_vec3 normal;
+	uint32_t mat_id;
+	t_error err;
 
 	if (count_tokens(tokens) != 4)
 		return (E_ARGS);
@@ -66,11 +60,10 @@ t_error	parse_plane(t_context *ctx, t_parser *p, char **tokens)
 /**
  * Cylinder: cy <center> <axis> <diameter> <height> <color|mat_id>
  */
-t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
-{
-	t_cylinder	cyl;
-	uint32_t	mat_id;
-	t_error		err;
+t_error parse_cylinder(t_context* ctx, t_parser* p, char** tkns) {
+	t_cylinder cyl;
+	uint32_t mat_id;
+	t_error err;
 
 	if (count_tokens(tkns) != 6)
 		return (E_ARGS);
@@ -78,8 +71,7 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 		return (E_INVALID_NUM);
 	if (!validate_normalized(&cyl.axis))
 		return (E_RANGE);
-	if (!parse_float(tkns[3], &cyl.radius) || !parse_float(tkns[4],
-			&cyl.height))
+	if (!parse_float(tkns[3], &cyl.radius) || !parse_float(tkns[4], &cyl.height))
 		return (E_INVALID_NUM);
 	cyl.radius *= 0.5f;
 	if (cyl.radius <= 0.0f || cyl.height <= 0.0f)
@@ -94,12 +86,11 @@ t_error	parse_cylinder(t_context *ctx, t_parser *p, char **tkns)
 /**
  * Cone: co <apex> <axis> <angle_deg> <height> <color|mat_id>
  */
-t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
-{
-	t_cone		cone;
-	uint32_t	mat_id;
-	float		angle_deg;
-	t_error		err;
+t_error parse_cone(t_context* ctx, t_parser* p, char** tkns) {
+	t_cone cone;
+	uint32_t mat_id;
+	float angle_deg;
+	t_error err;
 
 	if (count_tokens(tkns) != 6)
 		return (E_ARGS);
@@ -107,8 +98,7 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 		return (E_INVALID_NUM);
 	if (!validate_normalized(&cone.axis))
 		return (E_RANGE);
-	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4],
-			&cone.height))
+	if (!parse_float(tkns[3], &angle_deg) || !parse_float(tkns[4], &cone.height))
 		return (E_INVALID_NUM);
 	if (angle_deg <= 0.0f || angle_deg >= 90.0f || cone.height <= 0.0f)
 		return (E_RANGE);
@@ -121,12 +111,11 @@ t_error	parse_cone(t_context *ctx, t_parser *p, char **tkns)
 }
 
 // qu <q> <u> <v> <color|mat_id>
-t_error	parse_quad(t_context *ctx, t_parser *p, char **tokens)
-{
-	uint32_t	tc;
-	uint32_t	mat_id;
-	t_quad		quad;
-	t_error		err;
+t_error parse_quad(t_context* ctx, t_parser* p, char** tokens) {
+	uint32_t tc;
+	uint32_t mat_id;
+	t_quad quad;
+	t_error err;
 
 	tc = count_tokens(tokens);
 	if (tc != 5)

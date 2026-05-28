@@ -1,6 +1,7 @@
 #include "editing.h"
 #include "lights.h"
-#include "utils.h"
+#include "objects.h"
+#include "scene.h"
 
 void edit_action(t_context* ctx, t_vec2i delta) {
 	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300) {

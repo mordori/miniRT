@@ -7,9 +7,6 @@
 static inline void update_viewport(t_camera* cam, float img_width, float img_height);
 
 void init_camera(t_context* ctx, t_vec3 position, t_vec3 orientation, float fov) {
-	if (!ctx)
-		return;
-
 	t_camera* cam = &ctx->scene.cam;
 	cam->state = CAM_DEFAULT;
 	cam->transform.pos = position;

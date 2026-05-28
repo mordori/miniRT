@@ -10,6 +10,6 @@ profiling/
 *.d
 libft.a
 .config
-.cache
+.cache/
 miniRT
 compile_commands.json

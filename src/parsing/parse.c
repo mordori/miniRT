@@ -12,21 +12,19 @@
 
 #include "libft_io.h"
 #include "libft_str.h"
-#include "libft_utils.h"
 #include "parsing.h"
 #include "utils.h"
 
-static void	read_lines(t_context *ctx, int fd, char **lines);
+static void read_lines(t_context* ctx, int fd, char** lines);
 
-bool	parse_scene(t_context *ctx, int fd)
-{
-	t_parser	parser;
-	char		*lines[MAX_LINES + 1];
-	int			pass;
+bool parse_scene(t_context* ctx, int fd) {
+	t_parser parser;
+	char* lines[MAX_LINES + 1];
+	int pass;
 
 	if (!ctx || fd < 0)
 		return (false);
-	parser = (t_parser){0};
+	parser = (t_parser){ 0 };
 	ctx->renderer.render_samples = RENDER_SAMPLES;
 	ctx->renderer.render_bounces = RENDER_BOUNCES;
 	read_lines(ctx, fd, lines);
@@ -38,25 +36,21 @@ bool	parse_scene(t_context *ctx, int fd)
 	return (true);
 }
 
-static void	read_lines(t_context *ctx, int fd, char **lines)
-{
-	char	*line;
-	int		count;
-	int		status;
+static void read_lines(t_context* ctx, int fd, char** lines) {
+	char* line;
+	int count;
+	int status;
 
 	count = 0;
-	while (1337)
-	{
+	while (1337) {
 		status = get_next_line(fd, &line);
-		if (status == GNL_ERROR)
-		{
+		if (status == GNL_ERROR) {
 			lines[count] = NULL;
 			p_error(ctx, E_MALLOC, count + 1, lines);
 		}
 		if (status == GNL_EOF)
-			break ;
-		if (count >= MAX_LINES)
-		{
+			break;
+		if (count >= MAX_LINES) {
 			free(line);
 			lines[count] = NULL;
 			p_error(ctx, E_TOO_MANY, count + 1, lines);
@@ -66,9 +60,8 @@ static void	read_lines(t_context *ctx, int fd, char **lines)
 	lines[count] = NULL;
 }
 
-t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
-{
-	const char	*id;
+t_error identify_element(t_context* ctx, t_parser* p, char** tokens) {
+	const char* id;
 
 	id = tokens[0];
 	if (ft_strcmp(id, "A") == 0)
@@ -90,9 +83,8 @@ t_error	identify_element(t_context *ctx, t_parser *p, char **tokens)
 	return (E_UNKNOWN_ID);
 }
 
-void	p_error(t_context *ctx, t_error err, int line_num, char **lines)
-{
-	static char	*msgs[17];
+void p_error(t_context* ctx, t_error err, int line_num, char** lines) {
+	static char* msgs[17];
 
 	msgs[E_UNKNOWN_ID] = "Unknown element identifier";
 	msgs[E_ARGS] = "Invalid argument count for element";
@@ -109,8 +101,7 @@ void	p_error(t_context *ctx, t_error err, int line_num, char **lines)
 	msgs[E_NO_CAMERA] = "Missing camera (C)";
 	msgs[E_INVALID_PAT] = "Invalid pattern type";
 	msgs[E_INVALID_COLOR] = "Invalid color format";
-	if (err > E_OK && err <= E_INVALID_COLOR)
-	{
+	if (err > E_OK && err <= E_INVALID_COLOR) {
 		try_free_all(lines);
 		if (msgs[err])
 			fatal_error(ctx, msgs[err], ctx->file, line_num);

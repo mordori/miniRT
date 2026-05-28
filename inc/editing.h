@@ -19,5 +19,6 @@ float eval_scale_magnitude(t_context* ctx, t_vec2i delta, float speed);
 float eval_speed(t_context* ctx);
 float eval_magnitude(t_context* ctx, t_vec2i delta, float speed);
 bool deselect_object(t_context* ctx, t_renderer* r);
+void reset_editor(t_context* ctx, t_renderer* r);
 
 #endif

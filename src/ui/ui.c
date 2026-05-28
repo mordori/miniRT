@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "ui.h"
 
 void set_text_color(mlx_image_t* img, uint32_t color) {
 	uint32_t pixels = img->width * img->height * 4u;

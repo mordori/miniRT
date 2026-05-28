@@ -1,8 +1,6 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define _GNU_SOURCE
-
 #include <pthread.h>
 #include <stdatomic.h>
 

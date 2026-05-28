@@ -12,33 +12,25 @@
 
 #include "camera.h"
 #include "lib_math.h"
-#include "libft_io.h"
-#include "libft_str.h"
-#include "lights.h"
-#include "materials.h"
 #include "parsing.h"
-#include "utils.h"
 
-static t_error	parse_ambient_color2(t_context *ctx, char **tokens)
-{
-	t_vec3	color;
+static t_error parse_ambient_color2(t_context* ctx, char** tokens) {
+	t_vec3 color;
 
-	if (count_tokens(tokens) == 4)
-	{
+	if (count_tokens(tokens) == 4) {
 		if (!parse_color(tokens[3], &color))
 			return (E_INVALID_COLOR);
 		ctx->scene.env.amb_color_2 = color;
-	}
-	else if (count_tokens(tokens) != 3)
+	} else if (count_tokens(tokens) != 3) {
 		return (E_ARGS);
+	}
 	return (E_OK);
 }
 
-t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
-{
-	float	ratio;
-	t_vec3	color;
-	t_error	err;
+t_error parse_ambient(t_context* ctx, t_parser* p, char** tokens) {
+	float ratio;
+	t_vec3 color;
+	t_error err;
 
 	if (p->has_ambient)
 		return (E_DUPLICATE);
@@ -60,9 +52,7 @@ t_error	parse_ambient(t_context *ctx, t_parser *p, char **tokens)
 	return (E_OK);
 }
 
-static t_error	parse_camera_fields(char **tokens, t_vec3 *pos, t_vec3 *orient,
-		float *fov)
-{
+static t_error parse_camera_fields(char** tokens, t_vec3* pos, t_vec3* orient, float* fov) {
 	if (!parse_vec3(tokens[1], pos))
 		return (E_INVALID_NUM);
 	if (!parse_vec3(tokens[2], orient))
@@ -76,17 +66,14 @@ static t_error	parse_camera_fields(char **tokens, t_vec3 *pos, t_vec3 *orient,
 	return (E_OK);
 }
 
-static t_error	more_camera_fields(char **tokens, t_camera *cam, int tc)
-{
-	if (tc >= 5)
-	{
+static t_error more_camera_fields(char** tokens, t_camera* cam, int tc) {
+	if (tc >= 5) {
 		if (!parse_float(tokens[4], &cam->exposure))
 			return (E_INVALID_NUM);
 		if (!validate_range(cam->exposure, 0.1f, 10.0f))
 			return (E_RANGE);
 	}
-	if (tc == 6)
-	{
+	if (tc == 6) {
 		if (!parse_float(tokens[5], &cam->focus_dist))
 			return (E_INVALID_NUM);
 		if (!validate_range(cam->focus_dist, 0.1f, 1000000.0f))
@@ -95,13 +82,12 @@ static t_error	more_camera_fields(char **tokens, t_camera *cam, int tc)
 	return (E_OK);
 }
 
-t_error	parse_camera(t_context *ctx, t_parser *p, char **tokens)
-{
-	t_vec3	position;
-	t_vec3	orientation;
-	float	fov;
-	t_error	err;
-	int		tc;
+t_error parse_camera(t_context* ctx, t_parser* p, char** tokens) {
+	t_vec3 position;
+	t_vec3 orientation;
+	float fov;
+	t_error err;
+	int tc;
 
 	tc = count_tokens(tokens);
 	ctx->scene.cam.exposure = 1.0f;

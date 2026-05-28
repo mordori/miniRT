@@ -1,6 +1,8 @@
 #include "defines.h"
 #include "editing.h"
 #include "lights.h"
+#include "objects.h"
+#include "scene.h"
 #include "utils.h"
 
 static inline void switch_edit_mode(t_context* ctx, mlx_key_data_t keydata);
@@ -92,4 +94,23 @@ float eval_magnitude(t_context* ctx, t_vec2i delta, float speed) {
 		magnitude = ((float)(delta.x - delta.y)) * speed;
 	}
 	return magnitude;
+}
+
+void reset_editor(t_context* ctx, t_renderer* r) {
+	if (ctx->editor.mode != EDIT_DEFAULT)
+		cancel_edit_action(ctx);
+
+	t_object* obj = ctx->editor.selected_obj;
+	ctx->editor.selected_obj = NULL;
+
+	if (obj->type == OBJ_PLANE) {
+		vector_try_add(ctx, &ctx->scene.geo.planes, obj);
+	} else {
+		vector_try_add(ctx, &ctx->scene.geo.objs, obj);
+		if (!init_bvh(ctx)) {
+			pthread_mutex_unlock(&r->mutex);
+			fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+		}
+	}
+	memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
 }

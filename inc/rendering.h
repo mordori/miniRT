@@ -1,8 +1,6 @@
 #ifndef RENDERING_H
 #define RENDERING_H
 
-#define _GNU_SOURCE
-
 #include <pthread.h>
 #include <unistd.h>
 
@@ -28,6 +26,15 @@ float power_heuristic(float pdf_d, float pdf_r);
 float bsdf_pdf(t_path* path);
 float light_pdf(t_vec3 l, float radius_sq);
 bool config_renderer(t_context* ctx, mlx_key_data_t keydata);
+void cancel_render(t_renderer* r);
+void set_mode_preview(t_context* ctx, t_renderer* r, bool* update);
+void set_mode_rendered(t_renderer* r);
+void start_render(t_renderer* r, const t_camera* cam);
+void stop_render(t_renderer* r);
+void screenshot(t_context* ctx);
+void resize_hook(int width, int height, void* param);
+void resize_window(t_context* ctx);
+t_vec2 world_to_screen(t_context* ctx, const t_camera* cam, const t_viewport* vp, t_vec3 pos);
 
 // Sampling
 // -----------------------------------------------------------------
