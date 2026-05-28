@@ -1,7 +1,8 @@
 #include "lib_math.h"
 #include "materials.h"
+#include "objects.h"
 #include "rendering.h"
-#include "utils.h"
+#include "scene.h"
 
 static inline t_vec3 background_gradient(const t_scene* scene, const float t);
 

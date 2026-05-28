@@ -1,6 +1,5 @@
 #include "objects.h"
 #include "scene.h"
-#include "utils.h"
 
 static inline uint32_t build_bvh(t_context* ctx, const t_object** objs, size_t n, uint32_t* nodes);
 static inline void sort_bvh_objects(t_bvh_node* node, const t_object** objs, size_t n);

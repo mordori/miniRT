@@ -1,4 +1,5 @@
 #include "objects.h"
+#include "scene.h"
 #include "utils.h"
 
 t_error init_plane(t_context* ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id) {

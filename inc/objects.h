@@ -19,8 +19,8 @@ void compute_coefficients(const t_cone* cone, const t_ray* ray, double coef[3]);
 bool test_body_hit(const t_ray* ray, float params[2], float t);
 bool solve_body_quadratic(const t_cylinder* cyl, const t_ray* ray, float t_vals[2]);
 void compute_cap_uv(const t_cylinder* cyl, t_vec3 to_hit, t_hit* hit);
+void update_transform(t_transform* t);
 
-/* Object initialization */
 t_error init_plane(t_context* ctx, t_vec3 point, t_vec3 normal, uint32_t mat_id);
 t_error init_sphere(t_context* ctx, t_vec3 center, float diameter, uint32_t mat_id);
 t_error init_cylinder(t_context* ctx, t_cylinder* cy, int32_t mat_id);

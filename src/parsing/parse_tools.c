@@ -10,19 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_io.h"
-#include "libft_str.h"
-#include "libft_utils.h"
-#include "libft_mem.h"
-#include "parsing.h"
-#include "utils.h"
-#include <math.h>
 #include <stdlib.h>
 
-bool	parse_float(char *str, float *out)
-{
-	char	*end;
-	float	value;
+#include "libft_mem.h"
+#include "libft_str.h"
+#include "libft_utils.h"
+#include "parsing.h"
+#include "utils.h"
+
+bool parse_float(char* str, float* out) {
+	char* end;
+	float value;
 
 	if (!str || !out)
 		return (false);
@@ -44,10 +42,9 @@ bool	parse_float(char *str, float *out)
 	return (true);
 }
 
-bool	parse_uint(char *str, uint32_t *out)
-{
-	unsigned long	value;
-	int				i;
+bool parse_uint(char* str, uint32_t* out) {
+	unsigned long value;
+	int i;
 
 	if (!str || !out)
 		return (false);
@@ -71,12 +68,10 @@ bool	parse_uint(char *str, uint32_t *out)
 	return (true);
 }
 
-static bool	color_normalize(t_vec3 *color)
-{
+static bool color_normalize(t_vec3* color) {
 	if (!color)
 		return (false);
-	if (color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255
-		|| color->b < 0 || color->b > 255)
+	if (color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255)
 		return (false);
 	color->r = color->r / 255.0f;
 	color->g = color->g / 255.0f;
@@ -84,33 +79,26 @@ static bool	color_normalize(t_vec3 *color)
 	return (true);
 }
 
-bool	parse_color(char *str, t_vec3 *color)
-{
-	char	**tokens;
-	bool	ret;
+bool parse_color(char* str, t_vec3* color) {
+	char** tokens;
+	bool ret;
 
 	ret = false;
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (false);
 	ft_memset(color, 0, sizeof(t_vec3));
-	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2)
-	{
-		if (parse_float(tokens[0], &(color->r))
-			&& parse_float(tokens[1], &(color->g))
-			&& parse_float(tokens[2], &(color->b)))
-		{
+	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2) {
+		if (parse_float(tokens[0], &(color->r)) && parse_float(tokens[1], &(color->g)) && parse_float(tokens[2], &(color->b)))
 			ret = color_normalize(color);
-		}
 	}
 	ft_free_split(tokens);
 	return (ret);
 }
 
-bool	parse_vec3(char *str, t_vec3 *vec)
-{
-	char	**tokens;
-	bool	ret;
+bool parse_vec3(char* str, t_vec3* vec) {
+	char** tokens;
+	bool ret;
 
 	ret = false;
 	if (!str || !vec)
@@ -119,10 +107,8 @@ bool	parse_vec3(char *str, t_vec3 *vec)
 	tokens = ft_split(str, ',');
 	if (!tokens)
 		return (ret);
-	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2)
-	{
-		ret = parse_float(tokens[0], &vec->x) && parse_float(tokens[1], &vec->y)
-			&& parse_float(tokens[2], &vec->z);
+	if (count_tokens(tokens) == 3 && count_delimiter(str, ',') == 2) {
+		ret = parse_float(tokens[0], &vec->x) && parse_float(tokens[1], &vec->y) && parse_float(tokens[2], &vec->z);
 		vec->data[3] = 0.0f;
 	}
 	ft_free_split(tokens);

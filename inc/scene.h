@@ -18,5 +18,10 @@ t_aabb cone_bounds(const t_object* obj);
 t_aabb quad_bounds(const t_object* obj);
 t_aabb get_object_bounds(const t_object* obj);
 t_aabb aabb_object_to_world(t_aabb aabb, const t_mat4* object_to_world);
+int cmp_bounds_x(const void* a, const void* b);
+int cmp_bounds_y(const void* a, const void* b);
+int cmp_bounds_z(const void* a, const void* b);
+void update_bounds(t_object* obj);
+float get_max_bounds_dim(const t_object* obj);
 
 #endif

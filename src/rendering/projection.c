@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "rendering.h"
 
 t_vec2 world_to_screen(t_context* ctx, const t_camera* cam, const t_viewport* vp, t_vec3 pos) {
 	t_vec3 cam_to_obj = vec3_sub(pos, cam->transform.pos);

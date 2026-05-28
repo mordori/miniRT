@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "input.h"
+#include "materials.h"
 #include "rendering.h"
 #include "scene.h"
 #include "utils.h"
@@ -33,7 +35,7 @@ int main(int argc, char* argv[]) {
 	ctx.fd = try_open(NULL, ctx.file, O_RDONLY, 0);
 	initialize(&ctx);
 	try_write(&ctx, STDOUT_FILENO, "\033[?25h\n\nGoodbye!\n\n");
-	clean(&ctx);
+	clean_context(&ctx);
 	return EXIT_SUCCESS;
 }
 
@@ -57,12 +59,10 @@ static inline void initialize(t_context* ctx) {
 	stop_render(&ctx->renderer);
 }
 
-void clean(t_context* ctx) {
-	if (!ctx)
-		return;
-	t_renderer* r = &ctx->renderer;
+void clean_context(t_context* ctx) {
 	if (ctx->fd != ERROR)
 		close(ctx->fd);
+	t_renderer* r = &ctx->renderer;
 	stop_render(r);
 	while (r->threads_init--)
 		pthread_join(r->threads[r->threads_init], NULL);

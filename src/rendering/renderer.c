@@ -1,3 +1,4 @@
+#include "editing.h"
 #include "lib_math.h"
 #include "rendering.h"
 #include "utils.h"
@@ -7,6 +8,9 @@ static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_
 static inline void render_pixel(const t_context* ctx, t_pixel* pixel);
 static inline void sample_pixel(const t_context* ctx, t_pixel* pixel);
 static inline bool get_thread_status(t_renderer* r, uint32_t* tile_id);
+static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t keydata);
+static inline void set_samples(t_context* ctx, mlx_key_data_t keydata);
+static inline bool set_bounces(t_context* ctx, mlx_key_data_t keydata);
 
 bool init_renderer(t_context* ctx) {
 	t_renderer* r = &ctx->renderer;
@@ -131,4 +135,126 @@ static inline bool get_thread_status(t_renderer* r, uint32_t* tile_id) {
 	*tile_id = r->tile_index++;
 	++r->threads_running;
 	return true;
+}
+
+void start_render(t_renderer* r, const t_camera* cam) {
+	pthread_mutex_lock(&r->mutex);
+	r->tiles.x = (r->width + TILE_SIZE - 1) / TILE_SIZE;
+	r->tiles.y = (r->height + TILE_SIZE - 1) / TILE_SIZE;
+	r->tiles_total = r->tiles.x * r->tiles.y;
+	r->tile_index = 0;
+	r->cam = *cam;
+	r->ray_bounces = r->render_bounces;
+	r->frame = 1;
+	r->render_time = time_now();
+	pthread_cond_broadcast(&r->cond);
+	pthread_mutex_unlock(&r->mutex);
+}
+
+void stop_render(t_renderer* r) {
+	pthread_mutex_lock(&r->mutex);
+	r->active = false;
+	r->resize_pending = false;
+	pthread_cond_broadcast(&r->cond);
+	pthread_mutex_unlock(&r->mutex);
+}
+
+void cancel_render(t_renderer* r) {
+	r->tile_index = r->tiles_total;
+	pthread_cond_broadcast(&r->cond);
+	while (r->threads_running)
+		pthread_cond_wait(&r->cond, &r->mutex);
+	atomic_store(&r->render_cancel, false);
+	r->frame_complete = false;
+	r->frame = 1;
+	r->render_time = time_now();
+	r->blit_time = 0;
+}
+
+void set_mode_preview(t_context* ctx, t_renderer* r, bool* update) {
+	if (r->mode == RENDERED)
+		r->mode = PREVIEW;
+	if (r->mode == SOLID)
+		memset(ctx->editor.selection_mask, 0, sizeof(float) * ctx->renderer.pixels);
+	r->cam = ctx->scene.cam;
+	r->ray_bounces = PREVIEW_BOUNCES;
+	r->frame = 1;
+	r->tile_index = 0;
+	*update = false;
+	r->render_time = time_now();
+	pthread_cond_broadcast(&r->cond);
+}
+
+void set_mode_rendered(t_renderer* r) {
+	if (r->mode != RENDERED) {
+		r->blit_time = 0;
+		r->render_time = time_now();
+		r->frame = 1;
+	}
+	r->mode = RENDERED;
+	r->ray_bounces = r->render_bounces;
+	r->tile_index = 0;
+	pthread_cond_broadcast(&r->cond);
+}
+
+bool config_renderer(t_context* ctx, mlx_key_data_t keydata) {
+	set_samples(ctx, keydata);
+	bool dirty = false;
+	dirty |= set_render_mode(ctx, &ctx->renderer, keydata);
+	dirty |= set_bounces(ctx, keydata);
+	return dirty;
+}
+
+static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t keydata) {
+	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_PRESS) {
+		pthread_mutex_lock(&r->mutex);
+		while (r->threads_running)
+			pthread_cond_wait(&r->cond, &r->mutex);
+
+		if (r->mode != SOLID) {
+			r->mode = SOLID;
+		} else {
+			if (ctx->editor.selected_obj)
+				reset_editor(ctx, r);
+			else if (ctx->editor.mode != EDIT_DEFAULT)
+				end_edit_action(ctx);
+			ctx->editor.mode = EDIT_DEFAULT;
+			r->mode = RENDERED;
+		}
+		pthread_mutex_unlock(&r->mutex);
+
+		return true;
+	}
+	return false;
+}
+
+static inline void set_samples(t_context* ctx, mlx_key_data_t keydata) {
+	if (keydata.key == MLX_KEY_O && keydata.action == MLX_PRESS) {
+		ctx->renderer.render_samples >>= 1u;
+		if (ctx->renderer.render_samples < 2u)
+			ctx->renderer.render_samples = 2u;
+	}
+	if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS) {
+		ctx->renderer.render_samples <<= 1u;
+		if (ctx->renderer.render_samples > 8192u)
+			ctx->renderer.render_samples = 8192u;
+	}
+}
+
+static inline bool set_bounces(t_context* ctx, mlx_key_data_t keydata) {
+	if (keydata.key == MLX_KEY_U && keydata.action == MLX_PRESS) {
+		ctx->renderer.render_bounces >>= 1u;
+		if (ctx->renderer.render_bounces < 2u)
+			ctx->renderer.render_bounces = 2u;
+		else
+			return true;
+	}
+	if (keydata.key == MLX_KEY_I && keydata.action == MLX_PRESS) {
+		ctx->renderer.render_bounces <<= 1u;
+		if (ctx->renderer.render_bounces > 128u)
+			ctx->renderer.render_bounces = 128u;
+		else
+			return true;
+	}
+	return false;
 }

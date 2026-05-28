@@ -3,6 +3,7 @@
 
 static inline t_vec3 linear_to_srgb(t_vec3 c);
 static inline t_vec3 tonemap_aces(t_vec3 color);
+static inline t_vec3 tonemap_aces_preview(t_vec3 color);
 
 t_vec3 post_process(const t_context* ctx, const t_pixel* pixel, t_vec3 c) {
 	c = vec3_max(c, 0.0f);
@@ -19,7 +20,6 @@ static inline t_vec3 linear_to_srgb(t_vec3 c) {
 	return vec3_powf(c, M_1_2P2F);
 }
 
-// Reference Rendering Transform and Output Device Transform
 static inline t_vec3 rrt_and_odt_fit(t_vec3 vec) {
 	t_v4sf a = vec.v * (vec.v + 0.0245786f) - 0.000090537f;
 	t_v4sf b = vec.v * (0.983729f * vec.v + 0.4329510f) + 0.238081f;
@@ -43,4 +43,19 @@ static inline t_vec3 tonemap_aces(t_vec3 color) {
 	color = rrt_and_odt_fit(color);
 	color = mat4_mul_vec3(&aces_output, color);
 	return vec3_max(color, 0.0f);
+}
+
+t_vec3 post_process_preview(const t_context* ctx, t_vec3 c) {
+	c = vec3_max(c, 0.0f);
+	c = vec3_scale(c, ctx->scene.cam.exposure * 0.565f);
+	c = tonemap_aces_preview(c);
+	c = vec3_sqrt(c);
+	return c;
+}
+
+// ACES filmic curve by Krzysztof Narkowicz
+static inline t_vec3 tonemap_aces_preview(t_vec3 c) {
+	t_v4sf a = c.v * (2.51f * c.v + 0.03f);
+	t_v4sf b = c.v * (2.43f * c.v + 0.59f) + 0.14f;
+	return (t_vec3){ .v = a / b };
 }

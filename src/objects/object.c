@@ -1,6 +1,7 @@
 #include "defines.h"
 #include "objects.h"
 #include "parsing.h"
+#include "scene.h"
 #include "utils.h"
 
 t_error add_object(t_context* ctx, t_object* obj) {
@@ -44,4 +45,15 @@ bool hit_object(const t_object* obj, const t_ray* ray, t_hit* hit) {
 		hit_object_to_world(hit, &obj->transform);
 	}
 	return result;
+}
+
+void update_transform(t_transform* t) {
+	t_mat4 translation = mat4_translate(t->pos);
+	t_mat4 rotation = quat_to_mat4(t->rot);
+	t_mat4 scale = mat4_scale(t->scale);
+
+	t->object_to_world = mat4_mul(&translation, &rotation);
+	t->object_to_world = mat4_mul(&t->object_to_world, &scale);
+
+	mat4_inverse(&t->object_to_world, &t->world_to_object);
 }

@@ -1,5 +1,8 @@
 #include "editing.h"
 #include "lib_math.h"
+#include "objects.h"
+#include "rendering.h"
+#include "scene.h"
 #include "utils.h"
 
 static inline float get_local_axis_component(t_context* ctx, float magnitude, const t_mat4* m, uint32_t i);

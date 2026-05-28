@@ -1,8 +1,7 @@
 #include "utils.h"
 
-bool resize_timer(const t_context* ctx) {
-	uint32_t time = time_now() - ctx->resize_time;
-	return time > 250;
+bool timer(uint32_t time, uint32_t target) {
+	return time_now() - time > target;
 }
 
 uint32_t time_now(void) {

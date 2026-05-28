@@ -2,7 +2,6 @@
 #include "utils.h"
 
 static inline void save_render(t_context* ctx, uint8_t* pixels, uint32_t n, uint32_t i);
-static inline void make_dir(t_context* ctx, const char* path);
 
 void screenshot(t_context* ctx) {
 	t_renderer* r = &ctx->renderer;
@@ -42,11 +41,4 @@ static inline void save_render(t_context* ctx, uint8_t* pixels, uint32_t n, uint
 	write(fd, buf_rgb, n * 3);
 	free(buf_rgb);
 	close(fd);
-}
-
-static inline void make_dir(t_context* ctx, const char* path) {
-	if (mkdir(path, 0777) == ERROR) {
-		if (errno != EEXIST)
-			fatal_error(ctx, errors(ERR_DIR), __FILE__, __LINE__);
-	}
 }
