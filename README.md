@@ -74,7 +74,7 @@ By analysing assembly output with GDB and compiler behaviour, several optimisati
 Our approach optimises memory alignment for SIMD (Single Instruction, Multiple Data) execution while delegating most of the instruction selection to the compiler, maintaining a clean codebase.
 
 ### Math Utilities
-- High-performance linear algebra library providing SIMD-accelerated, memory-aligned vector and matrix primitives.
+- High-performance [linear algebra library](https://github.com/mordori/Lib_math) providing SIMD-accelerated, memory-aligned vector and matrix primitives.
 
 ### Blit Function
 #### Vectorised Preview Mode
