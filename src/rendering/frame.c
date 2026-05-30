@@ -37,6 +37,8 @@ static inline void set_renderer_state(t_context* ctx, t_renderer* r, bool* updat
 		pthread_mutex_unlock(&r->mutex);
 		if (ctx->resize_time != 0 && timer(ctx->resize_time, 250))
 			resize_window(ctx);
+		else
+			pthread_mutex_lock(&r->mutex);
 		return;
 	}
 	if (r->threads_running)

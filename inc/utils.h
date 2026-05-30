@@ -55,4 +55,6 @@ void eval_hit_normal(const t_ray* ray, t_hit* hit, t_vec3 n);
 
 void make_dir(t_context* ctx, const char* path);
 
+bool is_wsl(void);
+
 #endif

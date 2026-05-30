@@ -109,31 +109,25 @@ union u_f_ui {
 };
 
 struct s_vec2i {
-	int32_t x;
-	int32_t y;
+	int32_t x, y;
 };
 
 struct s_vec2ui {
-	uint32_t x;
-	uint32_t y;
+	uint32_t x, y;
 };
 
 union u_vec2 {
 	struct {
-		float x;
-		float y;
+		float x, y;
 	};
 	struct {
-		float u;
-		float v;
+		float u, v;
 	};
 	struct {
-		float sin;
-		float cos;
+		float sin, cos;
 	};
 	struct {
-		float width;
-		float height;
+		float width, height;
 	};
 };
 
@@ -141,31 +135,19 @@ union __attribute__((aligned(16))) u_vec3 {
 	t_v4sf v;
 	float data[4];
 	struct {
-		float x;
-		float y;
-		float z;
-		float w;
+		float x, y, z, w;
 	};
 	struct {
-		float r;
-		float g;
-		float b;
-		float a;
+		float r, g, b, a;
 	};
 	struct {
-		float right;
-		float up;
-		float forward;
+		float right, up, forward;
 	};
 	struct {
-		float angle;
-		float sin;
-		float cos;
+		float angle, sin, cos;
 	};
 	struct {
-		float width;
-		float height;
-		float depth;
+		float width, height, depth;
 	};
 	t_vec2 xy;
 };
@@ -174,28 +156,18 @@ union __attribute__((aligned(16))) u_vec4 {
 	t_v4sf v;
 	float data[4];
 	struct {
-		float x;
-		float y;
-		float z;
-		float w;
+		float x, y, z, w;
 	};
 	struct {
-		float r;
-		float g;
-		float b;
-		float a;
+		float r, g, b, a;
 	};
-	t_vec3 xyz;
-	t_vec3 rgb;
+	t_vec3 xyz, rgb;
 };
 
 union u_color {
 	uint32_t full;
 	struct {
-		uint8_t r;
-		uint8_t g;
-		uint8_t b;
-		uint8_t a;
+		uint8_t r, g, b, a;
 	};
 };
 #pragma endregion
@@ -316,7 +288,7 @@ static inline float randomfn11(uint32_t* seed);
 static inline uint32_t hash_lowerbias32(uint32_t seed);
 static inline uint32_t fast_range(uint32_t n, uint32_t range);
 
-// Fast math approximations (cachegrind-motivated optimizations)
+// Fast approximations
 // -----------------------------------------------------------------
 static inline float fast_atan2f(float y, float x);
 static inline float fast_acosf(float x);
@@ -431,13 +403,12 @@ static inline t_vec3 vec3_sub(t_vec3 a, t_vec3 b) {
 
 static inline t_vec3 vec3_scale(t_vec3 vec, float s) {
 	t_vec3 factor = { .v = v4sf_n(s) };
-	return (vec3_mul(vec, factor));
+	return vec3_mul(vec, factor);
 }
 
 static inline t_vec3 vec3_cross(t_vec3 a, t_vec3 b) {
 	t_v4sf yzx = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 0, 2, 1)) * _mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 1, 0, 2));
 	t_v4sf zxy = _mm_shuffle_ps(a.v, a.v, _MM_SHUFFLE(3, 1, 0, 2)) * _mm_shuffle_ps(b.v, b.v, _MM_SHUFFLE(3, 0, 2, 1));
-
 	return (t_vec3){ .v = yzx - zxy };
 }
 
@@ -459,11 +430,11 @@ static inline t_vec3 vec3_normalize(t_vec3 vec) {
 		return (t_vec3){ 0 };
 
 	float len_recip = 1.0f / sqrtf(len_sq);
-	return (vec3_scale(vec, len_recip));
+	return vec3_scale(vec, len_recip);
 }
 
 static inline float vec3_length(t_vec3 vec) {
-	return (sqrtf(vec3_dot(vec, vec)));
+	return sqrtf(vec3_dot(vec, vec));
 }
 
 static inline t_vec3 vec3_mul(t_vec3 a, t_vec3 b) {
@@ -549,7 +520,7 @@ static inline uint32_t vec3_to_uint32(t_vec3 vec) {
 	res = _mm_cvtps_epi32(vec.v * v4sf_n(255.0f));
 	res = _mm_packs_epi32(res, res);
 	res = _mm_packus_epi16(res, res);
-	return ((uint32_t)_mm_cvtsi128_si32(res) | 0xFF000000);
+	return (uint32_t)_mm_cvtsi128_si32(res) | 0xFF000000;
 }
 
 static inline float vec3_dist(t_vec3 a, t_vec3 b) {
@@ -558,7 +529,7 @@ static inline float vec3_dist(t_vec3 a, t_vec3 b) {
 
 static inline float vec3_dist_sq(t_vec3 a, t_vec3 b) {
 	t_vec3 diff = vec3_sub(b, a);
-	return (vec3_dot(diff, diff));
+	return vec3_dot(diff, diff);
 }
 
 static inline bool vec3_is_nan_inf(t_vec3 vec) {
@@ -654,20 +625,15 @@ static inline t_mat4 mat4_mul(const t_mat4* a, const t_mat4* b) {
 }
 
 static inline t_vec4 mat4_mul_vec4(const t_mat4* src, t_vec4 vec) {
-	__m128 c0 = (__m128)src->rows[0];
-	__m128 c1 = (__m128)src->rows[1];
-	__m128 c2 = (__m128)src->rows[2];
-	__m128 c3 = (__m128)src->rows[3];
-	_MM_TRANSPOSE4_PS(c0, c1, c2, c3);
-
+	t_mat4 t = mat4_transpose(src);
 	// clang-format off
 	t_vec4 res;
-	res.v = (t_v4sf)c0 * v4sf_n(vec.x) +
-			(t_v4sf)c1 * v4sf_n(vec.y) +
-			(t_v4sf)c2 * v4sf_n(vec.z) +
-			(t_v4sf)c3 * v4sf_n(vec.w);
+	res.v = t.rows[0] * v4sf_n(vec.x) +
+			t.rows[1] * v4sf_n(vec.y) +
+			t.rows[2] * v4sf_n(vec.z) +
+			t.rows[3] * v4sf_n(vec.w);
 	// clang-format on
-	return (res);
+	return res;
 }
 
 static inline t_vec3 mat4_mul_vec3(const t_mat4* src, t_vec3 vec) {
@@ -1016,7 +982,7 @@ static inline uint32_t pcg(uint32_t* state) {
 }
 
 static inline float randomf(uint32_t* seed) {
-	return (float)(pcg(seed));
+	return (float)pcg(seed);
 }
 
 static inline float randomf01(uint32_t* seed) {

@@ -40,6 +40,8 @@ t_vec3 sample_defocus_disk(const t_context* ctx, t_pixel* pixel) {
 }
 
 void update_camera(t_context* ctx, t_camera* cam) {
+	// float ev100 = log2f(cam->f_stop * cam->f_stop / cam->shutter_speed * 100.0f / cam->iso);
+	// cam->exposure = 1.0f / (powf(2.0f, ev100) * 1.2f);
 	cam->distance = clampf(cam->distance, 0.01f, WORLD_LIMIT);
 	cam->transform.pos = vec3_clamp(cam->transform.pos, -WORLD_LIMIT, WORLD_LIMIT);
 	cam->transform.rot = quat_normalize(cam->transform.rot);

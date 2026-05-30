@@ -87,7 +87,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
 				settings.c ui.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				errors.c files.c ray.c memory.c random.c hit.c instructions.c time.c)
+				errors.c files.c ray.c memory.c random.c hit.c instructions.c time.c system.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 				ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
