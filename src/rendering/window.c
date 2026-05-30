@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "camera.h"
 #include "rendering.h"
 #include "utils.h"
@@ -56,27 +58,55 @@ static inline void resize_frame_buffer(t_context* ctx, t_renderer* r) {
 	r->pixels = r->width * r->height;
 	free(r->buffer);
 	free(r->denoise_buffer);
+	free(r->albedo_buffer);
+	free(r->normal_buffer);
 
 	size_t size = sizeof(t_vec3) * r->pixels;
 	r->buffer = a_alloc(64, size);
 	r->denoise_buffer = a_alloc(64, size);
-	if (!r->buffer || !r->denoise_buffer || !mlx_resize_image(ctx->img, r->width, r->height)) {
+	r->albedo_buffer = a_alloc(64, size);
+	r->normal_buffer = a_alloc(64, size);
+	if (!r->buffer || !r->denoise_buffer || !r->albedo_buffer || !r->normal_buffer || !mlx_resize_image(ctx->img, r->width, r->height)) {
 		pthread_mutex_unlock(&r->mutex);
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
 	}
 	memset(r->buffer, 0, size);
 	memset(r->denoise_buffer, 0, size);
+	memset(r->albedo_buffer, 0, size);
+	memset(r->normal_buffer, 0, size);
 
-	if (r->oidn_filter)
-		oidnReleaseFilter(r->oidn_filter);
 	if (r->oidn_buffer)
 		oidnReleaseBuffer(r->oidn_buffer);
+	if (r->oidn_albedo)
+		oidnReleaseBuffer(r->oidn_albedo);
+	if (r->oidn_normal)
+		oidnReleaseBuffer(r->oidn_normal);
+	if (r->oidn_filter)
+		oidnReleaseFilter(r->oidn_filter);
+	if (r->oidn_filter_fast)
+		oidnReleaseFilter(r->oidn_filter_fast);
+
 	r->oidn_buffer = oidnNewBuffer(r->oidn_device, size);
+	r->oidn_albedo = oidnNewBuffer(r->oidn_device, size);
+	r->oidn_normal = oidnNewBuffer(r->oidn_device, size);
+
 	r->oidn_filter = oidnNewFilter(r->oidn_device, "RT");
 	oidnSetFilterImage(r->oidn_filter, "color", r->oidn_buffer, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterImage(r->oidn_filter, "albedo", r->oidn_albedo, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterImage(r->oidn_filter, "normal", r->oidn_normal, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
 	oidnSetFilterImage(r->oidn_filter, "output", r->oidn_buffer, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
 	oidnSetFilterBool(r->oidn_filter, "hdr", true);
+	oidnSetFilterBool(r->oidn_filter, "cleanAux", true);
 	oidnCommitFilter(r->oidn_filter);
+
+	r->oidn_filter_fast = oidnNewFilter(r->oidn_device, "RT");
+	oidnSetFilterImage(r->oidn_filter_fast, "color", r->oidn_buffer, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterImage(r->oidn_filter_fast, "albedo", r->oidn_albedo, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterImage(r->oidn_filter_fast, "normal", r->oidn_normal, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterImage(r->oidn_filter_fast, "output", r->oidn_buffer, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterBool(r->oidn_filter_fast, "hdr", true);
+	oidnSetFilterBool(r->oidn_filter_fast, "cleanAux", false);
+	oidnCommitFilter(r->oidn_filter_fast);
 }
 
 static inline void resize_selection_mask(t_context* ctx, t_renderer* r) {

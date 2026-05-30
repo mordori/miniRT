@@ -54,6 +54,12 @@ void clean_context(t_context* ctx) {
 	t_renderer* r = &ctx->renderer;
 	if (r->oidn_filter)
 		oidnReleaseFilter(r->oidn_filter);
+	if (r->oidn_filter_fast)
+		oidnReleaseFilter(r->oidn_filter_fast);
+	if (r->oidn_normal)
+		oidnReleaseBuffer(r->oidn_normal);
+	if (r->oidn_albedo)
+		oidnReleaseBuffer(r->oidn_albedo);
 	if (r->oidn_buffer)
 		oidnReleaseBuffer(r->oidn_buffer);
 	if (r->oidn_device)
@@ -70,6 +76,8 @@ void clean_context(t_context* ctx) {
 	free_texture(&ctx->tex_bn);
 	free(r->buffer);
 	free(r->denoise_buffer);
+	free(r->albedo_buffer);
+	free(r->normal_buffer);
 	free(ctx->editor.selection_mask);
 	free(ctx->editor.selected_obj);
 	if (ctx->img)

@@ -1,4 +1,8 @@
+#include <stdint.h>
+
 #include "camera.h"
+#include "defines.h"
+#include "lib_math.h"
 #include "materials.h"
 #include "objects.h"
 #include "rendering.h"
@@ -36,7 +40,20 @@ t_vec3 trace_path(const t_context* ctx, t_pixel* pixel, t_render_mode mode, uint
 	return path.color;
 }
 
+static inline void accumulate_aux_buffers(const t_renderer* r, const t_pixel* p, t_vec3 albedo, t_vec3 normal) {
+	uint32_t i = p->y * r->width + p->x;
+	if (r->frame == 1) {
+		r->albedo_buffer[i] = albedo;
+		r->normal_buffer[i] = normal;
+	} else {
+		r->albedo_buffer[i] = vec3_add(r->albedo_buffer[i], albedo);
+		r->normal_buffer[i] = vec3_add(r->normal_buffer[i], normal);
+	}
+}
+
 static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel, t_render_mode mode) {
+	const t_renderer* r = &ctx->renderer;
+
 	bool hitDirLightObj = hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit);
 	bool hitBVH = hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, ctx->scene.geo.bvh_nodes);
 	bool hitPlanes = hit_planes(ctx, &path->ray, &path->hit);
@@ -44,6 +61,11 @@ static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel,
 	if (hitPlanes || hitBVH || hitDirLightObj) {
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);
+		if (path->bounce == 0) {
+			t_vec3 albedo = get_surface_color(path->mat, &path->hit);
+			t_vec3 normal = path->n;
+			accumulate_aux_buffers(r, pixel, albedo, normal);
+		}
 		if (evaluate_emissive(ctx, path, mode))
 			return false;
 		if (ctx->scene.env.has_dir_light)
@@ -54,6 +76,8 @@ static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel,
 	}
 	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
+	if (path->bounce == 0)
+		accumulate_aux_buffers(r, pixel, bg_color, vec3_negate(path->ray.dir));
 	return false;
 }
 
