@@ -71,12 +71,12 @@ t_error try_render_settings(t_context* ctx, t_parser* p, char** tokens) {
 	if (p->has_render_settings)
 		return (E_DUPLICATE);
 	if (!is_placeholder(tokens[1])) {
-		if (!parse_uint(tokens[1], &val) || val == 0 || !is_pot(val))
+		if (!parse_uint(tokens[1], &val) || val == 0 || val > 512u || val < 1u || !is_pot(val))
 			return (E_RANGE);
 		ctx->renderer.render_samples = val;
 	}
 	if (!is_placeholder(tokens[2])) {
-		if (!parse_uint(tokens[2], &val) || val == 0 || !is_pot(val))
+		if (!parse_uint(tokens[2], &val) || val == 0 || val > 16u || val < 2u || !is_pot(val))
 			return (E_RANGE);
 		ctx->renderer.render_bounces = val;
 	}

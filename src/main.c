@@ -1,3 +1,4 @@
+#include "defines.h"
 #include "input.h"
 #include "materials.h"
 #include "rendering.h"
@@ -51,6 +52,12 @@ void clean_context(t_context* ctx) {
 	if (ctx->fd != ERROR)
 		close(ctx->fd);
 	t_renderer* r = &ctx->renderer;
+	if (r->oidn_filter)
+		oidnReleaseFilter(r->oidn_filter);
+	if (r->oidn_buffer)
+		oidnReleaseBuffer(r->oidn_buffer);
+	if (r->oidn_device)
+		oidnReleaseDevice(r->oidn_device);
 	stop_render(r);
 	while (r->threads_init--)
 		pthread_join(r->threads[r->threads_init], NULL);
@@ -62,6 +69,7 @@ void clean_context(t_context* ctx) {
 	clean_scene(ctx);
 	free_texture(&ctx->tex_bn);
 	free(r->buffer);
+	free(r->denoise_buffer);
 	free(ctx->editor.selection_mask);
 	free(ctx->editor.selected_obj);
 	if (ctx->img)

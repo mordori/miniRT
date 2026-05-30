@@ -5,6 +5,7 @@
 #include <stdatomic.h>
 
 #include "MLX42.h"
+#include "OpenImageDenoise/oidn.h"
 #include "lib_math.h"
 #include "libft_defs.h"
 #include "libft_vector.h"
@@ -13,10 +14,10 @@
 #define HEIGHT 1080
 #define THREADS_DFL 4
 #define TILE_SIZE 32
-#define RENDER_SAMPLES 256
+#define RENDER_SAMPLES 32
 #define PREVIEW_BOUNCES 2
 #define SOLID_BOUNCES 1
-#define RENDER_BOUNCES 16
+#define RENDER_BOUNCES 8
 #define DEPTH_ENABLE_RR 3
 
 #define MAX_NAME_LEN 64
@@ -345,19 +346,19 @@ union __attribute__((aligned(16))) u_shape {
 struct __attribute__((aligned(16))) s_object {
 	t_obj_type type;
 	uint32_t flags;
+	uint32_t material_id;
 	t_material* mat;
 	t_shape shape;
 	t_transform transform;
 	t_vec3 bounds_center;
-	uint32_t material_id;
 	t_vec3 bounds;
 };
 
 struct __attribute__((aligned(16))) s_light {
 	t_vec3 pos;
 	t_vec3 color;
-	t_object* obj;
 	t_vec3 emission;
+	t_object* obj;
 	float idx;
 	float radius;
 	float intensity;
@@ -478,6 +479,7 @@ struct __attribute__((aligned(64))) s_renderer {
 	};
 	struct __attribute__((aligned(64))) {
 		t_vec3* buffer;
+		t_vec3* denoise_buffer;
 		t_camera cam;
 		t_int2 tiles;
 		uint32_t width;
@@ -501,15 +503,20 @@ struct __attribute__((aligned(64))) s_renderer {
 		bool init_mutex;
 		bool init_cond;
 	};
+	struct __attribute__((aligned(64))) {
+		OIDNDevice oidn_device;
+		OIDNFilter oidn_filter;
+		OIDNBuffer oidn_buffer;
+	};
 };
 
 struct __attribute__((aligned(16))) s_editor {
-	float* selection_mask;
-	t_object* selected_obj;
-	t_edit_mode mode;
 	t_vec3 axis_primary;
 	t_vec3 axis_secondary;
 	t_transform orig_transform;
+	float* selection_mask;
+	t_object* selected_obj;
+	t_edit_mode mode;
 	t_axis constraint_axis;
 	uint32_t constraints;
 };

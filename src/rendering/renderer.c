@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #include "editing.h"
 #include "lib_math.h"
 #include "rendering.h"
@@ -25,6 +27,11 @@ bool init_renderer(t_context* ctx) {
 	r->threads = malloc(sizeof(*r->threads) * r->threads_amount);
 	if (!r->init_mutex || !r->init_cond || !r->threads)
 		fatal_error(ctx, errors(ERR_RENINIT), __FILE__, __LINE__);
+
+	r->oidn_device = oidnNewDevice(OIDN_DEVICE_TYPE_DEFAULT);
+	oidnCommitDevice(r->oidn_device);
+	r->oidn_buffer = NULL;
+	r->oidn_filter = NULL;
 
 	r->active = true;
 	while (r->threads_init < r->threads_amount) {
@@ -112,7 +119,7 @@ static inline void render_pixel(const t_context* ctx, t_pixel* pixel) {
 static inline void sample_pixel(const t_context* ctx, t_pixel* pixel) {
 	const t_renderer* r = &ctx->renderer;
 
-	if (r->mode == RENDERED) {
+	if (r->mode == RENDERED && r->render_samples > 1) {
 		t_vec2 random_01 = { //
 			.u = static_blue_noise(&ctx->tex_bn, pixel, BN_PX_U),
 			.v = static_blue_noise(&ctx->tex_bn, pixel, BN_PX_V)
@@ -207,7 +214,6 @@ bool config_renderer(t_context* ctx, mlx_key_data_t keydata) {
 
 static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t keydata) {
 	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_PRESS) {
-		pthread_mutex_lock(&r->mutex);
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);
 
@@ -221,38 +227,44 @@ static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t
 			ctx->editor.mode = EDIT_DEFAULT;
 			r->mode = RENDERED;
 		}
-		pthread_mutex_unlock(&r->mutex);
-
 		return true;
 	}
 	return false;
 }
 
 static inline void set_samples(t_context* ctx, mlx_key_data_t keydata) {
+	t_renderer* r = &ctx->renderer;
 	if (keydata.key == MLX_KEY_O && keydata.action == MLX_PRESS) {
-		ctx->renderer.render_samples >>= 1u;
-		if (ctx->renderer.render_samples < 2u)
-			ctx->renderer.render_samples = 2u;
+		r->render_samples >>= 1u;
+		if (r->render_samples < 1u)
+			r->render_samples = 1u;
 	}
 	if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS) {
-		ctx->renderer.render_samples <<= 1u;
-		if (ctx->renderer.render_samples > 8192u)
-			ctx->renderer.render_samples = 8192u;
+		bool was_finished = r->frame >= r->render_samples && r->mode == RENDERED;
+		r->render_samples <<= 1u;
+		if (r->render_samples > 512u) {
+			r->render_samples = 512u;
+		} else if (was_finished && r->frame < r->render_samples) {
+			--r->frame;
+			blit(ctx, r, false);
+			++r->frame;
+		}
 	}
 }
 
 static inline bool set_bounces(t_context* ctx, mlx_key_data_t keydata) {
+	t_renderer* r = &ctx->renderer;
 	if (keydata.key == MLX_KEY_U && keydata.action == MLX_PRESS) {
-		ctx->renderer.render_bounces >>= 1u;
-		if (ctx->renderer.render_bounces < 2u)
-			ctx->renderer.render_bounces = 2u;
+		r->render_bounces >>= 1u;
+		if (r->render_bounces < 2u)
+			r->render_bounces = 2u;
 		else
 			return true;
 	}
 	if (keydata.key == MLX_KEY_I && keydata.action == MLX_PRESS) {
-		ctx->renderer.render_bounces <<= 1u;
-		if (ctx->renderer.render_bounces > 128u)
-			ctx->renderer.render_bounces = 128u;
+		r->render_bounces <<= 1u;
+		if (r->render_bounces > 16u)
+			r->render_bounces = 16u;
 		else
 			return true;
 	}

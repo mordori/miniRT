@@ -11,15 +11,15 @@ UNAME_M		:=$(shell uname -m)
 OPTS		:=-O3 -ffast-math -funroll-loops -flto -DNDEBUG
 LDFLAGS		:=-lglfw -pthread -lm -flto
 ifeq ($(UNAME_S),Darwin)
-	LDFLAGS		+=-L"/opt/homebrew/lib" -L"/usr/local/lib" -L"/opt/local/lib" -framework Cocoa -framework OpenGL -framework IOKit
+	LDFLAGS		+= -L"/opt/homebrew/lib" -L"/usr/local/lib" -L"/opt/local/lib" -framework Cocoa -framework OpenGL -framework IOKit
 	ifeq ($(UNAME_M),arm64)
-		OPTS	+=-mcpu=native
+		OPTS	+= -mcpu=native
 	else
-		OPTS	+=-march=native
+		OPTS	+= -march=native
 	endif
 else
-	LDFLAGS		+=-ldl
-	OPTS		+=-march=haswell -fno-plt
+	LDFLAGS		+= -ldl
+	OPTS		+= -march=haswell -fno-plt
 endif
 
 CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
@@ -27,7 +27,7 @@ ifeq ($(MAKELEVEL),0)
 	MAKEFLAGS	+= --no-print-directory -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 endif
 
-DIR_NAME	:= $(notdir $(CURDIR))
+DIR_NAME	:=$(notdir $(CURDIR))
 DIR_INC		:=inc/
 DIR_SRC		:=src/
 DIR_LIB		:=lib/
@@ -36,6 +36,7 @@ DIR_DEP		:=dep/
 DIR_UTILS	:=utils/
 
 DIR_MLX		:=$(DIR_LIB)MLX42/
+DIR_OIDN	:=$(DIR_LIB)IntelOID/
 DIR_LIBFT	:=libft/
 
 DIR_CAM		:=camera/
@@ -54,41 +55,44 @@ MLX42		:=$(DIR_MLX)build/libmlx42.a
 
 INCS		:=$(addprefix -I, \
 				$(DIR_MLX)include/MLX42 \
+				$(DIR_OIDN)include \
 				$(DIR_INC) \
 				$(DIR_INC)$(DIR_LIBFT))
 ifeq ($(UNAME_S),Darwin)
-	INCS	+=-I"/opt/homebrew/include" -I"/usr/local/include" -I"/opt/local/include"
+	INCS	+= -I"/opt/homebrew/include" -I"/usr/local/include" -I"/opt/local/include"
 endif
+
+LDFLAGS		+= -L$(DIR_OIDN)lib -lOpenImageDenoise -Wl,-rpath,$(CURDIR)/$(DIR_OIDN)lib
 
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_CAM), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_CAM), \
 				camera.c controls.c config.c controls_router.c actions.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EDIT), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_EDIT), \
 				select.c edit.c constraints.c translate.c rotate.c scale.c actions.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_INPUT), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_INPUT), \
 				input_router.c mouse.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				point.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_MAT), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c perlin_noise.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c cylinder.c plane.c sphere.c cone.c quad.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PARSE), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse.c parse_elements.c parse_light.c parse_objects.c try_split.c \
 				parse_tools.c parse_materials.c parse_textures.c parse_utils.c \
 				parse_pass.c parse_patterns.c parse_validate.c ft_strtod.c ft_atof.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_RENDER), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				editing/tracer.c editing/lighting.c \
 				renderer.c tracer.c post_processing.c skydome.c window.c \
 				frame.c bsdf.c brdf.c lighting.c sampling.c screenshot.c projection.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_SCENE), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c bvh.c aabb.c bounds.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UI), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_UI), \
 				settings.c ui.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c ray.c memory.c random.c hit.c instructions.c time.c system.c)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
+SRCS		+= $(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
 				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 				ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
 				ft_calloc.c ft_isdigit.c ft_memcmp.c ft_putchar_fd.c \

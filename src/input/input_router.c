@@ -41,24 +41,27 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 		dirty |= config_editor(ctx, keydata);
 		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
 			dirty |= frame_camera(ctx, ctx->editor.selected_obj);
+
 		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
 			dirty |= deselect_object(ctx, &ctx->renderer);
 	}
 	if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
 		ctx->hide_stats = !ctx->hide_stats;
+
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
 		dirty |= reset_camera(ctx);
-	pthread_mutex_unlock(&ctx->renderer.mutex);
-
-	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
-		set_default_view(ctx);
-	dirty |= config_renderer(ctx, keydata);
 
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_Y && keydata.action == MLX_PRESS)
 		screenshot(ctx);
 
+	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
+		set_default_view(ctx);
+	dirty |= config_renderer(ctx, keydata);
+	pthread_mutex_unlock(&ctx->renderer.mutex);
+
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
+
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
 }

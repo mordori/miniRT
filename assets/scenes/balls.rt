@@ -1,6 +1,6 @@
 # Renderer
 #               samples     bounces
-render          256         16
+render          16         16
 
 # Ambient
 #       intensity       color
