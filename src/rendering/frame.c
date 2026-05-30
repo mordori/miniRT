@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "MLX42.h"
 #include "defines.h"
 #include "input.h"
 #include "lib_math.h"
@@ -113,7 +114,7 @@ static inline void process_frame(t_context* ctx, t_renderer* r) {
 		uint32_t render_time = time_now() - r->render_time;
 		bool is_final = r->frame >= r->render_samples && r->mode == RENDERED;
 		if (is_final)
-			denoise_buffer(r);
+			denoise(r);
 		blit(ctx, r, is_final);
 		r->blit_time = time_now();
 		if (is_final) {
@@ -199,13 +200,26 @@ static inline uint32_t color_wave(uint32_t c1, uint32_t c2, float speed) {
 	return vec3_to_uint32(lerp_color(c1, c2, t));
 }
 
-void denoise_buffer(t_renderer* r) {
+void denoise(t_renderer* r) {
 	uint32_t limit = r->pixels;
 	float scale = 1.0f / (float)r->frame;
+	size_t buffer_bytes = r->width * r->height * sizeof(t_vec3);
+
+	for (uint32_t i = 0; i < limit; ++i)
+		r->denoise_buffer[i] = vec3_scale(r->albedo_buffer[i], scale);
+	oidnWriteBuffer(r->oidn_albedo, 0, buffer_bytes, r->denoise_buffer);
+
+	for (uint32_t i = 0; i < limit; ++i)
+		r->denoise_buffer[i] = vec3_normalize(vec3_scale(r->normal_buffer[i], scale));
+	oidnWriteBuffer(r->oidn_normal, 0, buffer_bytes, r->denoise_buffer);
+
 	for (uint32_t i = 0; i < limit; ++i)
 		r->denoise_buffer[i] = vec3_scale(r->buffer[i], scale);
-	size_t buffer_bytes = r->width * r->height * sizeof(t_vec3);
 	oidnWriteBuffer(r->oidn_buffer, 0, buffer_bytes, r->denoise_buffer);
-	oidnExecuteFilter(r->oidn_filter);
+
+	if (r->frame <= 4)
+		oidnExecuteFilter(r->oidn_filter_fast);
+	else
+		oidnExecuteFilter(r->oidn_filter);
 	oidnReadBuffer(r->oidn_buffer, 0, buffer_bytes, r->denoise_buffer);
 }

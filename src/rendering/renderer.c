@@ -30,8 +30,6 @@ bool init_renderer(t_context* ctx) {
 
 	r->oidn_device = oidnNewDevice(OIDN_DEVICE_TYPE_DEFAULT);
 	oidnCommitDevice(r->oidn_device);
-	r->oidn_buffer = NULL;
-	r->oidn_filter = NULL;
 
 	r->active = true;
 	while (r->threads_init < r->threads_amount) {

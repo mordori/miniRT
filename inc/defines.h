@@ -480,6 +480,8 @@ struct __attribute__((aligned(64))) s_renderer {
 	struct __attribute__((aligned(64))) {
 		t_vec3* buffer;
 		t_vec3* denoise_buffer;
+		t_vec3* albedo_buffer;
+		t_vec3* normal_buffer;
 		t_camera cam;
 		t_int2 tiles;
 		uint32_t width;
@@ -506,7 +508,10 @@ struct __attribute__((aligned(64))) s_renderer {
 	struct __attribute__((aligned(64))) {
 		OIDNDevice oidn_device;
 		OIDNFilter oidn_filter;
+		OIDNFilter oidn_filter_fast;
 		OIDNBuffer oidn_buffer;
+		OIDNBuffer oidn_albedo;
+		OIDNBuffer oidn_normal;
 	};
 };
 

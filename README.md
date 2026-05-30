@@ -242,3 +242,6 @@ ONB
 
 Normal maps
 - https://www.shlom.dev/articles/geometry-behind-normal-maps/
+
+Intel Open Image Denoise
+- https://www.openimagedenoise.org/index.html
