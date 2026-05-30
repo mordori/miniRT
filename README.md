@@ -41,17 +41,17 @@
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
+- Triangle primitive and loading meshes from .obj format
+- Improve the naive median-split BVH
 - Scene saving
+- Object instantiation
+- Integrate Intel Open Image Denoise
 
 #### Future Work
 - Support for MacOS and Apple Silicon
 - Image based lighting
 - EV100 exposure triangle
-- Agx tonemapping
-- Denoising solution
-- Triangle primitive and loading meshes
-- Improve the naive median-split BVH
-- Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA) to ensure coalesced global memory access
+- Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA)
 - Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
 ## Physically Based Rendering

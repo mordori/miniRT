@@ -70,14 +70,6 @@ void free_texture(t_texture* texture) {
 }
 
 /**
- * Linear interpolation between two colors.
- * Returns a + (b - a) * t = a * (1 - t) + b * t
- */
-static inline t_vec3 vlerp(t_vec3 a, t_vec3 b, float t) {
-	return vec3_add(a, vec3_scale(vec3_sub(b, a), t));
-}
-
-/**
  * Get a single texel (pixel) from texture at integer coordinates.
  * Assumes coordinates are valid (within bounds).
  * Pixels stored as RGBA floats, we extract RGB.
@@ -134,9 +126,9 @@ t_vec3 sample_texture(const t_texture* tex, t_vec2 uv) {
 	coords[3] *= (tex->width << 2);
 	coords[0] <<= 2;
 	coords[2] <<= 2;
-	t_vec3 top = vlerp(get_texel(tex->pixels, coords[1] + coords[0]), get_texel(tex->pixels, coords[1] + coords[2]), weights[0]);
-	t_vec3 bottom = vlerp(get_texel(tex->pixels, coords[3] + coords[0]), get_texel(tex->pixels, coords[3] + coords[2]), weights[0]);
-	return vlerp(top, bottom, weights[1]);
+	t_vec3 top = vec3_lerp(get_texel(tex->pixels, coords[1] + coords[0]), get_texel(tex->pixels, coords[1] + coords[2]), weights[0]);
+	t_vec3 bottom = vec3_lerp(get_texel(tex->pixels, coords[3] + coords[0]), get_texel(tex->pixels, coords[3] + coords[2]), weights[0]);
+	return vec3_lerp(top, bottom, weights[1]);
 }
 
 /**

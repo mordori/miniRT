@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 20:49:58 by myli-pen          #+#    #+#             */
-/*   Updated: 2026/03/27 22:50:30 by myli-pen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "input.h"
 #include "materials.h"
 #include "rendering.h"
@@ -40,6 +28,7 @@ int main(int argc, char* argv[]) {
 }
 
 static inline void initialize(t_context* ctx) {
+	init_scene(ctx);
 	ctx->mlx = mlx_init(WIDTH, HEIGHT, "miniRT", true);
 	if (!ctx->mlx)
 		fatal_error(ctx, errors(ERR_MLXINIT), __FILE__, __LINE__);
@@ -52,7 +41,6 @@ static inline void initialize(t_context* ctx) {
 	if (!init_renderer(ctx))
 		return;
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
-	init_scene(ctx);
 	resize_window(ctx);
 	if (mlx_loop_hook(ctx->mlx, frame_loop, ctx))
 		mlx_loop(ctx->mlx);
