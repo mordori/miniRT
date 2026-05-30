@@ -10,6 +10,11 @@
 >
 > MacOS / Apple Silicon is not currently supported.
 
+## Prerequisites
+
+- Git LFS extension
+- MLX42 (see below)
+
 > [!NOTE]
 >
 > Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and input hooks, and manages a frame buffer to which we copy ours.
@@ -37,6 +42,7 @@
 - Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly and turntable controllers
 - Object Editing mode with simplified lighting mimicing Blender
+- Integrates Intel Open Image Denoise for cleaning up the final rendered frame
 
 #### TODO
 - Anisotropic & clear coat BRDF
@@ -45,7 +51,6 @@
 - Improve the naive median-split BVH
 - Scene saving
 - Object instantiation
-- Integrate Intel Open Image Denoise
 
 #### Future Work
 - Support for MacOS and Apple Silicon

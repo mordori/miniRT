@@ -2,14 +2,11 @@
 .vscode/
 dep/
 obj/
-docs/
 renders/
 lib/MLX42/
-profiling/
 *.o
 *.d
 libft.a
-.config
 .cache/
 miniRT
 compile_commands.json

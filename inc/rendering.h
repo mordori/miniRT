@@ -14,7 +14,8 @@ t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset
 float reflectance(float ior);
 t_vec3 disney_brdf(const t_path* path);
 void frame_loop(void* param);
-void blit(const t_context* ctx, const t_renderer* r);
+void blit(const t_context* ctx, const t_renderer* r, bool is_denoised);
+void denoise_buffer(t_renderer* r);
 bool rotate_skydome(t_context* ctx);
 t_vec3 bsdf(t_path* path);
 t_vec3 add_lighting(const t_context* ctx, t_path* path, const t_light* light, t_pixel* pixel);

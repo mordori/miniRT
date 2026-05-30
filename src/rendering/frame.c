@@ -1,4 +1,8 @@
+#include <stdint.h>
+
+#include "defines.h"
 #include "input.h"
+#include "lib_math.h"
 #include "rendering.h"
 #include "ui.h"
 #include "utils.h"
@@ -6,7 +10,7 @@
 static inline void process_frame(t_context* ctx, t_renderer* r);
 static inline void set_renderer_state(t_context* ctx, t_renderer* r, bool* update);
 static inline bool is_active(t_context* ctx);
-static inline void copy_frame_buffer(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel);
+static inline void copy_frame_buffer_rendered(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel);
 static inline void copy_frame_buffer_preview(const t_context* ctx, const uint32_t width, t_vec3* buf, uint32_t* pixels);
 static inline void print_render_status(t_context* ctx, t_renderer* r);
 static inline void limit_polling_rate(t_renderer* r);
@@ -41,15 +45,23 @@ static inline void set_renderer_state(t_context* ctx, t_renderer* r, bool* updat
 			pthread_mutex_lock(&r->mutex);
 		return;
 	}
-	if (r->threads_running)
+	if (r->threads_running || r->tile_index < r->tiles_total)
 		return;
 
 	if (is_active(ctx) || (r->mode == SOLID && *update)) {
 		set_mode_preview(ctx, r, update);
-	} else if (*update) {
+	} else if (r->mode == PREVIEW) {
 		*update = false;
 		set_mode_rendered(r);
-	} else if (r->mode != SOLID && r->frame < r->render_samples + 1) {
+	} else if (*update) {
+		*update = false;
+		if (r->mode == RENDERED && r->frame > 1) {
+			r->frame = 1;
+			r->render_time = time_now();
+			r->blit_time = 0;
+		}
+		set_mode_rendered(r);
+	} else if (r->mode != SOLID && r->frame <= r->render_samples) {
 		set_mode_rendered(r);
 	}
 }
@@ -76,18 +88,18 @@ static inline bool is_active(t_context* ctx) {
 	return false;
 }
 
-void blit(const t_context* ctx, const t_renderer* r) {
+void blit(const t_context* ctx, const t_renderer* r, bool is_denoised) {
 	uint32_t* pixels = (uint32_t*)((void*)ctx->img->pixels);
-	t_vec3* buf = __builtin_assume_aligned(r->buffer, 64);
+	t_vec3* buf = __builtin_assume_aligned(is_denoised ? r->denoise_buffer : r->buffer, 64);
 	t_pixel pixel = { .frame = r->frame };
-	if (pixel.frame > 1) {
-		pixel.scale = 1.0f / (float)pixel.frame;
-	} else {
+	if (pixel.frame <= 1 || is_denoised) {
 		pixel.scale = 1.0f;
 		pixel.frame = 1;
+	} else {
+		pixel.scale = 1.0f / (float)pixel.frame;
 	}
 	if (r->mode == RENDERED)
-		copy_frame_buffer(ctx, buf, pixels, &pixel);
+		copy_frame_buffer_rendered(ctx, buf, pixels, &pixel);
 	else
 		copy_frame_buffer_preview(ctx, r->width, buf, pixels);
 }
@@ -98,10 +110,13 @@ static inline void process_frame(t_context* ctx, t_renderer* r) {
 	print_render_status(ctx, r);
 	if (r->mode != RENDERED || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 ||
 		r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame >= r->render_samples)) {
-		blit(ctx, r);
-		r->blit_time = time_now();
 		uint32_t render_time = time_now() - r->render_time;
-		if (r->frame >= r->render_samples) {
+		bool is_final = r->frame >= r->render_samples && r->mode == RENDERED;
+		if (is_final)
+			denoise_buffer(r);
+		blit(ctx, r, is_final);
+		r->blit_time = time_now();
+		if (is_final) {
 			snprintf(buf, sizeof(buf), "\r\033[K\033[1;32mDone!   Frames: %d   Render time: %.1fs\033[0m", r->frame, render_time / 1000.0f);
 			try_write(ctx, STDOUT_FILENO, buf);
 		}
@@ -110,7 +125,7 @@ static inline void process_frame(t_context* ctx, t_renderer* r) {
 	++r->frame;
 }
 
-static inline void copy_frame_buffer(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel) {
+static inline void copy_frame_buffer_rendered(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel) {
 	uint32_t limit = ctx->renderer.pixels;
 	uint32_t width = ctx->renderer.width;
 	uint32_t i = 0;
@@ -182,4 +197,15 @@ static inline uint32_t color_wave(uint32_t c1, uint32_t c2, float speed) {
 	float wave = sinf(time * speed);
 	float t = (wave + 1.0f) * 0.5f;
 	return vec3_to_uint32(lerp_color(c1, c2, t));
+}
+
+void denoise_buffer(t_renderer* r) {
+	uint32_t limit = r->pixels;
+	float scale = 1.0f / (float)r->frame;
+	for (uint32_t i = 0; i < limit; ++i)
+		r->denoise_buffer[i] = vec3_scale(r->buffer[i], scale);
+	size_t buffer_bytes = r->width * r->height * sizeof(t_vec3);
+	oidnWriteBuffer(r->oidn_buffer, 0, buffer_bytes, r->denoise_buffer);
+	oidnExecuteFilter(r->oidn_filter);
+	oidnReadBuffer(r->oidn_buffer, 0, buffer_bytes, r->denoise_buffer);
 }

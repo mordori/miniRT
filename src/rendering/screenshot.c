@@ -6,12 +6,11 @@ static inline void save_render(t_context* ctx, uint8_t* pixels, uint32_t n, uint
 void screenshot(t_context* ctx) {
 	t_renderer* r = &ctx->renderer;
 
-	pthread_mutex_lock(&r->mutex);
 	while (r->threads_running)
 		pthread_cond_wait(&r->cond, &r->mutex);
-	blit(ctx, r);
+	bool is_final = r->frame >= r->render_samples && r->mode == RENDERED;
+	blit(ctx, r, is_final);
 	r->blit_time = time_now();
-	pthread_mutex_unlock(&r->mutex);
 
 	make_dir(ctx, "renders");
 	save_render(ctx, ctx->img->pixels, ctx->renderer.pixels, 0u);

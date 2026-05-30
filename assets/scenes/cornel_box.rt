@@ -1,8 +1,8 @@
 #Rendering Settings
-render		128		16
+render		32		16
 
 #Ambient
-A	0.1		255,255,255
+A	0.1		0,0,0
 
 #Camera
 C	0,5,-20 	0,0,1	40	1.0		12

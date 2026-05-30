@@ -42,7 +42,7 @@ void resize_window(t_context* ctx) {
 	r->resize_pending = false;
 	if (r->frame == 0) {
 		reset_camera(ctx);
-		blit(ctx, &ctx->renderer);
+		blit(ctx, &ctx->renderer, false);
 	}
 	pthread_cond_broadcast(&r->cond);
 	pthread_mutex_unlock(&r->mutex);
@@ -55,14 +55,28 @@ static inline void resize_frame_buffer(t_context* ctx, t_renderer* r) {
 	r->height = r->new_height;
 	r->pixels = r->width * r->height;
 	free(r->buffer);
+	free(r->denoise_buffer);
 
 	size_t size = sizeof(t_vec3) * r->pixels;
 	r->buffer = a_alloc(64, size);
-	if (!r->buffer || !mlx_resize_image(ctx->img, r->width, r->height)) {
+	r->denoise_buffer = a_alloc(64, size);
+	if (!r->buffer || !r->denoise_buffer || !mlx_resize_image(ctx->img, r->width, r->height)) {
 		pthread_mutex_unlock(&r->mutex);
 		fatal_error(ctx, errors(ERR_RESIZE), __FILE__, __LINE__);
 	}
 	memset(r->buffer, 0, size);
+	memset(r->denoise_buffer, 0, size);
+
+	if (r->oidn_filter)
+		oidnReleaseFilter(r->oidn_filter);
+	if (r->oidn_buffer)
+		oidnReleaseBuffer(r->oidn_buffer);
+	r->oidn_buffer = oidnNewBuffer(r->oidn_device, size);
+	r->oidn_filter = oidnNewFilter(r->oidn_device, "RT");
+	oidnSetFilterImage(r->oidn_filter, "color", r->oidn_buffer, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterImage(r->oidn_filter, "output", r->oidn_buffer, OIDN_FORMAT_FLOAT3, r->width, r->height, 0, sizeof(t_vec3), 0);
+	oidnSetFilterBool(r->oidn_filter, "hdr", true);
+	oidnCommitFilter(r->oidn_filter);
 }
 
 static inline void resize_selection_mask(t_context* ctx, t_renderer* r) {
