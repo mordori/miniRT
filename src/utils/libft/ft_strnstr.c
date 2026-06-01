@@ -22,23 +22,21 @@
  * @return Pointer to the beginning of substring `little` in string `big`,
  * or `NULL` if not found.
  */
-char	*ft_strnstr(const char *big, const char *little, size_t len)
-{
-	size_t	start;
-	size_t	i;
+char* ft_strnstr(const char* big, const char* little, size_t len) {
+	size_t start;
+	size_t i;
 
 	if (!big || !little)
 		return (NULL);
 	if (!*little)
-		return ((char *)big);
+		return ((char*)big);
 	start = 0;
-	while (big[start])
-	{
+	while (big[start]) {
 		i = 0;
 		while (big[start + i] == little[i] && start + i < len)
 			++i;
 		if (!little[i])
-			return ((char *)&big[start]);
+			return ((char*)&big[start]);
 		++start;
 	}
 	return (NULL);

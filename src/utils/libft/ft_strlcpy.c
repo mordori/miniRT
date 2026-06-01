@@ -22,9 +22,8 @@
  * @param size Amount of characters to be copied.
  * @return Returns the length of the string `src` attempted to copy.
  */
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	len;
+size_t ft_strlcpy(char* dst, const char* src, size_t size) {
+	size_t len;
 
 	len = ft_strlen(src);
 	if (!dst || !src || !size)

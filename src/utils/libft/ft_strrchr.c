@@ -20,21 +20,19 @@
  * @return Pointer to the last occurrence of character `c` in `s`,
  * or `NULL` if not found.
  */
-char	*ft_strrchr(const char *s, int c)
-{
-	size_t	i;
+char* ft_strrchr(const char* s, int c) {
+	size_t i;
 
 	if (!s)
 		return (NULL);
 	c = (unsigned char)c;
 	i = ft_strlen(s);
-	while (i > 0)
-	{
+	while (i > 0) {
 		if (s[i] == c)
-			return ((char *)&s[i]);
+			return ((char*)&s[i]);
 		--i;
 	}
 	if (s[i] == c)
-		return ((char *)&s[i]);
+		return ((char*)&s[i]);
 	return (NULL);
 }

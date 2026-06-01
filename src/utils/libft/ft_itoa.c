@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 
-#include "libft_utils.h"
 #include "libft_str.h"
+#include "libft_utils.h"
 
 /**
  * Converts the signed integer `n` of `base` to a newly allocated string.
@@ -25,12 +25,11 @@
  * @param base Base of the number.
  * @return String of the converted integer.
  */
-char	*ft_itoa(int n, const char *base)
-{
-	char		*str;
-	size_t		digits;
-	size_t		base_len;
-	long long	num;
+char* ft_itoa(int n, const char* base) {
+	char* str;
+	size_t digits;
+	size_t base_len;
+	long long num;
 
 	if (!ft_strchrdup(base))
 		return (NULL);
@@ -43,8 +42,7 @@ char	*ft_itoa(int n, const char *base)
 	if (!str)
 		return (NULL);
 	str[digits] = '\0';
-	while (digits--)
-	{
+	while (digits--) {
 		str[digits] = base[num % base_len];
 		num /= base_len;
 	}
@@ -53,10 +51,9 @@ char	*ft_itoa(int n, const char *base)
 	return (str);
 }
 
-void	int_to_str(int n, char *str)
-{
-	size_t		i;
-	long long	num;
+void int_to_str(int n, char* str) {
+	size_t i;
+	long long num;
 
 	num = n;
 	if (n < 0)
@@ -65,8 +62,7 @@ void	int_to_str(int n, char *str)
 	if (n == 0)
 		str[0] = '0';
 	str[i] = 0;
-	while (i--)
-	{
+	while (i--) {
 		str[i] = '0' + (num % 10);
 		num /= 10;
 	}

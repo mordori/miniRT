@@ -19,14 +19,12 @@
  * @param new Pointer to the node to be added.
  * @return True if successful, else false.
  */
-bool	ft_lstadd_back(t_list **lst, t_list *new)
-{
-	t_list	*temp;
+bool ft_lstadd_back(t_list** lst, t_list* new) {
+	t_list* temp;
 
 	if (!lst)
 		return (false);
-	if (!*lst)
-	{
+	if (!*lst) {
 		*lst = new;
 		return (true);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_tools.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:47:09 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 20:08:54 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool parse_float(char* str, float* out) {
 		str++;
 	if (*str == '\0' || *str == '.' || (count_delimiter(str, '.') > 1))
 		return (false);
-	value = ft_atof(str, &end);
+	value = ft_strtof(str, &end);
 	if (end == str || !end)
 		return (false);
 	if (is_nan_inf(value))

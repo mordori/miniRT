@@ -21,26 +21,24 @@
  * @param fd File descriptor.
  * @return True if successful, else ERROR.
  */
-int	ft_putnbr_fd(int n, int fd)
-{
-	char	c;
+int ft_putnbr_fd(int n, int fd) {
+	char c;
 
-	if (n == INT_MIN)
-	{
+	if (n == INT_MIN) {
 		ft_putstr_fd("-2147483648", fd);
 		return (true);
 	}
-	if (n < 0)
-	{
-		if (write (fd, "-", 1) == ERROR)
+	if (n < 0) {
+		if (write(fd, "-", 1) == ERROR)
 			return (ERROR);
 		n = -n;
 	}
-	if (n >= 10)
+	if (n >= 10) {
 		if (ft_putnbr_fd(n / 10, fd) == ERROR)
 			return (ERROR);
+	}
 	c = n % 10 + '0';
-	if (write (fd, &c, 1) == ERROR)
+	if (write(fd, &c, 1) == ERROR)
 		return (ERROR);
 	return (true);
 }

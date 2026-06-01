@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 #define PARSING_H
-
-#include <string.h>
 
 #include "defines.h"
 
@@ -97,8 +107,9 @@ t_texture* find_texture_by_name(t_scene* scene, const char* name);
 bool is_placeholder(const char* str);
 void p_error(t_context* ctx, t_error err, int line_num, char** lines);
 
-float ft_atof(const char* str, char** endptr);
+float ft_strtof(const char* str, char** endptr);
 double ft_strtod(const char* str, char** endptr);
+
 char** try_split(char const* s);
 
 #endif

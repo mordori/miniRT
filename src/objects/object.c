@@ -30,15 +30,17 @@ t_error add_object(t_context* ctx, t_object* obj) {
 bool hit_object(const t_object* obj, const t_ray* ray, t_hit* hit) {
 	if (!obj)
 		return false;
-	t_ray r = ray_world_to_object(ray, &obj->transform.world_to_object);
 
+	const t_shape* shape = &obj->shape;
+	t_ray r = ray_world_to_object(ray, &obj->transform.world_to_object);
 	bool result = false;
 	switch (obj->type) {
-		case OBJ_SPHERE: result = hit_sphere(&obj->shape, &r, hit); break;
-		case OBJ_CYLINDER: result = hit_cylinder(&obj->shape, &r, hit); break;
-		case OBJ_CONE: result = hit_cone(&obj->shape, &r, hit); break;
-		case OBJ_QUAD: result = hit_quad(&obj->shape, &r, hit); break;
-		case OBJ_PLANE: result = hit_plane(&obj->shape, &r, hit); break;
+		case OBJ_SPHERE: result = hit_sphere(shape, &r, hit); break;
+		case OBJ_CYLINDER: result = hit_cylinder(shape, &r, hit); break;
+		case OBJ_CONE: result = hit_cone(shape, &r, hit); break;
+		case OBJ_QUAD: result = hit_quad(shape, &r, hit); break;
+		case OBJ_PLANE: result = hit_plane(shape, &r, hit); break;
+		case OBJ_MESH: result = hit_mesh(shape, &r, hit); break;
 	}
 	if (result) {
 		hit->obj = (t_object*)obj;

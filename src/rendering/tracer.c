@@ -54,14 +54,20 @@ static inline void accumulate_aux_buffers(const t_renderer* r, const t_pixel* p,
 static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel, t_render_mode mode) {
 	const t_renderer* r = &ctx->renderer;
 
-	bool hitDirLightObj = hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit);
+	bool is_primary_ray = path->bounce == 0;
+
+	bool hitDirLightObj = false;
+	if (ctx->scene.env.has_dir_light) {
+		t_object* dir_light = ctx->renderer.cam.directional_light.obj;
+		hitDirLightObj = !(is_primary_ray && (dir_light->flags & OBJ_HIDDEN_CAM)) && hit_object(dir_light, &path->ray, &path->hit);
+	}
 	bool hitBVH = hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, ctx->scene.geo.bvh_nodes);
 	bool hitPlanes = hit_planes(ctx, &path->ray, &path->hit);
 
 	if (hitPlanes || hitBVH || hitDirLightObj) {
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);
-		if (path->bounce == 0) {
+		if (is_primary_ray) {
 			t_vec3 albedo = get_surface_color(path->mat, &path->hit);
 			t_vec3 normal = path->n;
 			accumulate_aux_buffers(r, pixel, albedo, normal);
@@ -74,9 +80,9 @@ static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel,
 			nee(ctx, path, pixel, mode);
 		return scatter(ctx, path, pixel);
 	}
-	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset, is_primary_ray);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
-	if (path->bounce == 0)
+	if (is_primary_ray)
 		accumulate_aux_buffers(r, pixel, bg_color, vec3_negate(path->ray.dir));
 	return false;
 }

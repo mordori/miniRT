@@ -23,20 +23,17 @@
  * @param del Pointer to a function to delete `content` of a node.
  * @return New list, or NULL if allocation fails.
  */
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
-{
-	t_list	*temp;
-	t_list	*lst_new;
+t_list* ft_lstmap(t_list* lst, void* (*f)(void*), void (*del)(void*)) {
+	t_list* temp;
+	t_list* lst_new;
 
 	if (!lst || !f || !del)
 		return (NULL);
 	temp = NULL;
 	lst_new = NULL;
-	while (lst)
-	{
+	while (lst) {
 		temp = ft_lstnew(f(lst->content));
-		if (!temp)
-		{
+		if (!temp) {
 			ft_lstclear(&lst_new, del);
 			return (NULL);
 		}

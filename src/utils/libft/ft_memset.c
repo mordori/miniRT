@@ -20,13 +20,12 @@
  * @param n Number of bytes to be written.
  * @return Pointer to modified `s`.
  */
-void	*ft_memset(void *s, int c, size_t n)
-{
-	unsigned char	*d;
+void* ft_memset(void* s, int c, size_t n) {
+	unsigned char* d;
 
 	if (!s && n)
 		return (NULL);
-	d = (unsigned char *)s;
+	d = (unsigned char*)s;
 	while (n--)
 		*d++ = (unsigned char)c;
 	return (s);

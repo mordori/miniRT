@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "lib_math.h"
 #include "materials.h"
 #include "objects.h"
@@ -6,7 +8,12 @@
 
 static inline t_vec3 background_gradient(const t_scene* scene, const float t);
 
-t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset) {
+t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset, bool is_primary) {
+	bool hide_background = false;
+
+	if (hide_background && is_primary)
+		return (t_vec3){ 0 };
+
 	if (!scene->env.skydome.pixels)
 		return background_gradient(scene, (ray->dir.y + 1.0f) * 0.5f);
 

@@ -6,29 +6,12 @@
 	<img src="doc/ball.gif" alt="Demo" />
 </p>
 
-> [!IMPORTANT]
->
-> MacOS / Apple Silicon is not currently supported.
-
-## Prerequisites
-
-- Git LFS extension
-- MLX42 (see below)
-
-> [!NOTE]
->
-> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and input hooks, and manages a frame buffer to which we copy ours.
->
-> The `Makefile` will download and build MLX42, but it might require certain dependencies to be installed on your system. Refer to their [installation documentation](https://github.com/codam-coding-college/MLX42?tab=readme-ov-file#for-linux) for more information.
-> Please ignore the section about XServer as it is no longer required for WSL2.
-
-<p align="center">
-	<img src="doc/still.png" alt="Demo" />
-</p>
-
-<p align="center">
-	<img src="doc/still2.png" alt="Demo" />
-</p>
+<table align="center">
+  <tr>
+    <td><img src="doc/bunny.png" alt="Demo 1" width="100%"/></td>
+    <td><img src="doc/tortoise.png" alt="Demo 2" width="100%"/></td>
+  </tr>
+</table>
 
 ## Features
 - Quasi-Monte Carlo integration with multiple importance sampling for Global Illumination
@@ -38,19 +21,19 @@
 - Modern PBR pipeline with microfacet BSDF
 - Custom scene description format
 - Bilinear texture filtering and normal mapping
-- Plane, sphere, cylinder, cone, and quad primitives
+- Plane, sphere, cylinder, cone, quad, and triangle primitives
 - Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly and turntable controllers
 - Object Editing mode with simplified lighting mimicing Blender
 - Integrates Intel Open Image Denoise for cleaning up the final rendered frame
+- Loads meshes from .obj format with object instantiation (currently disabled until ImGui is implemented)
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
-- Triangle primitive and loading meshes from .obj format
 - Improve the naive median-split BVH
 - Scene saving
-- Object instantiation
+- Integrate ImGui for controls and parameters
 
 #### Future Work
 - Support for MacOS and Apple Silicon
@@ -79,7 +62,7 @@ By analysing assembly output with GDB and compiler behaviour, several optimisati
 Our approach optimises memory alignment for SIMD (Single Instruction, Multiple Data) execution while delegating most of the instruction selection to the compiler, maintaining a clean codebase.
 
 ### Math Utilities
-- High-performance [linear algebra library](https://github.com/mordori/Lib_math) providing SIMD-accelerated, memory-aligned vector and matrix primitives.
+- Custom high-performance [linear algebra library](https://github.com/mordori/Lib_math) providing SIMD-accelerated, memory-aligned vector and matrix primitives.
 
 ### Blit Function
 #### Vectorised Preview Mode
@@ -101,6 +84,20 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 ### RNG
 - Documentation under construction
+
+## Prerequisites
+
+- Git LFS extension
+- CMake
+- GLFW
+
+> [!NOTE]
+>
+> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and input hooks, and manages a frame buffer to which we copy ours.
+
+> [!IMPORTANT]
+>
+> MacOS / Apple Silicon is not currently supported.
 
 ## How to use
 > [!NOTE]
@@ -245,3 +242,6 @@ Normal maps
 
 Intel Open Image Denoise
 - https://www.openimagedenoise.org/index.html
+
+Stanford 3D scans
+- https://graphics.stanford.edu/data/3Dscanrep/

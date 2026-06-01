@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "libft_arena.h"
-#include "libft_mem.h"
 #include "libft_io.h"
+#include "libft_mem.h"
 
 /**
  * @brief	Allocates and zero-initializes memory for the arena and initializes
@@ -22,23 +22,21 @@
  *
  * @return	Created memory arena or NULL if creation fails.
  */
-t_arena	arena_create(void *ctx, size_t capacity, void (*err)(void *ctx, char *msg))
-{
-	t_arena	arena;
+t_arena arena_create(void* ctx, size_t capacity, void (*err)(void* ctx, char* msg)) {
+	t_arena arena;
 
 	arena.base = NULL;
-	if (err)
-	{
+	if (err) {
 		if (capacity < MEM_UNIT)
 			err(ctx, "arena capacity is less than 1 KiB");
-		if (!ft_is_pot(capacity))
+		if (!is_pot(capacity))
 			err(ctx, "arena capacity is not a power of 2");
 		arena.base = ft_calloc(capacity, 1);
 		if (!arena.base)
 			err(ctx, "arena malloc failed");
-	}
-	else
+	} else {
 		ft_putendl_fd("error function is NULL: undefined behavior", 2);
+	}
 	arena.capacity = capacity;
 	arena.head = 0;
 	return (arena);
@@ -52,9 +50,8 @@ t_arena	arena_create(void *ctx, size_t capacity, void (*err)(void *ctx, char *ms
  *
  * @return	Pointer to the block of memory that was reserved.
  */
-void	*arena_alloc(t_arena *arena, size_t size)
-{
-	void	*ptr;
+void* arena_alloc(t_arena* arena, size_t size) {
+	void* ptr;
 
 	if (arena->head + size > arena->capacity)
 		return (NULL);
@@ -71,19 +68,17 @@ void	*arena_alloc(t_arena *arena, size_t size)
  *
  * @param	arena Pointer to the arena.
  */
-void	arena_reset(t_arena *arena)
-{
-	size_t	i;
-	size_t	bit;
-	size_t	e;
+void arena_reset(t_arena* arena) {
+	size_t i;
+	size_t bit;
+	size_t e;
 
 	bit = 0;
 	while (((arena->capacity >> bit) & 1) == 0)
 		++bit;
 	arena->base[0] = 0;
 	e = 0;
-	while (e < bit)
-	{
+	while (e < bit) {
 		i = 1UL << e++;
 		ft_memcpy(&arena->base[i], arena->base, i);
 	}
@@ -95,10 +90,9 @@ void	arena_reset(t_arena *arena)
  *
  * @param	arena Pointer to the arena.
  */
-void	arena_destroy(t_arena *arena)
-{
+void arena_destroy(t_arena* arena) {
 	if (!arena)
-		return ;
+		return;
 	if (arena->base)
 		free(arena->base);
 	arena->base = NULL;

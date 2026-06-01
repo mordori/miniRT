@@ -12,16 +12,7 @@
 
 #include "libft_utils.h"
 
-/**
- * Checks if `c` is a numeric character.
- *
- * @param c Character to be checked for.
- * @return True if successful, else false.
- */
-bool	ft_isdigit(int c)
-{
+bool ft_isdigit(int c) {
 	c = (unsigned char)c;
-	if (c >= '0' && c <= '9')
-		return (true);
-	return (false);
+	return c >= '0' && c <= '9';
 }

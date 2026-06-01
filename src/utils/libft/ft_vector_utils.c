@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_vector.h"
 #include "libft_mem.h"
+#include "libft_vector.h"
 
 /**
  * Creates a new items array and replaces the old one.
@@ -20,14 +20,13 @@
  * @param size Capacity of the new items array to be allocated.
  * @return True if successful, else false.
  */
-static inline bool	vector_resize(t_vector *vec, size_t size)
-{
-	void	**items;
+static inline bool vector_resize(t_vector* vec, size_t size) {
+	void** items;
 
-	items = malloc(sizeof(void *) * size);
+	items = malloc(sizeof(void*) * size);
 	if (!items)
 		return (false);
-	ft_memcpy(items, vec->items, sizeof(void *) * vec->total);
+	ft_memcpy(items, vec->items, sizeof(void*) * vec->total);
 	free(vec->items);
 	vec->items = items;
 	vec->size = size;
@@ -43,29 +42,28 @@ static inline bool	vector_resize(t_vector *vec, size_t size)
  * @param new New item to be added.
  * @return True if successful, else false.
  */
-bool	vector_add(t_vector *vec, void *new)
-{
+bool vector_add(t_vector* vec, void* new) {
 	if (!vec || !vec->size || !new)
 		return (false);
-	if (vec->total == vec->size)
+	if (vec->total == vec->size) {
 		if (!vector_resize(vec, vec->size * 2))
 			return (false);
+	}
 	vec->items[vec->total++] = new;
 	return (true);
 }
 
-bool	vector_insert(t_vector *vec, void *new, size_t index)
-{
-	size_t	i;
+bool vector_insert(t_vector* vec, void* new, size_t index) {
+	size_t i;
 
 	if (!vec || !vec->size || index > vec->total)
 		return (false);
-	if (vec->total == vec->size)
+	if (vec->total == vec->size) {
 		if (!vector_resize(vec, vec->size * 2))
 			return (false);
+	}
 	i = vec->total;
-	while (i > index)
-	{
+	while (i > index) {
 		vec->items[i] = vec->items[i - 1];
 		--i;
 	}
@@ -85,24 +83,22 @@ bool	vector_insert(t_vector *vec, void *new, size_t index)
  * @param index Index of the item to be removed.
  * @return True if successful, else false.
  */
-bool	vector_del(t_vector *vec, size_t index)
-{
+bool vector_del(t_vector* vec, size_t index) {
 	if (!vec || !vec->total || index >= vec->total)
 		return (false);
-	if (vec->del)
-	{
+	if (vec->del) {
 		vec->del(vec->items[index]);
 		vec->items[index] = NULL;
 	}
-	while (index < vec->total - 1)
-	{
+	while (index < vec->total - 1) {
 		vec->items[index] = vec->items[index + 1];
 		++index;
 	}
 	vec->total--;
-	if (vec->is_shrink && vec->size > VECTOR_SIZE && vec->total > 0 && vec->total == vec->size / 4)
+	if (vec->is_shrink && vec->size > VECTOR_SIZE && vec->total > 0 && vec->total == vec->size / 4) {
 		if (!vector_resize(vec, vec->size / 2))
 			return (false);
+	}
 	return (true);
 }
 
@@ -114,30 +110,25 @@ bool	vector_del(t_vector *vec, size_t index)
  * @param vec Vector to be operated.
  * @return True if successful, else false.
  */
-bool	vector_free(t_vector *vec, ...)
-{
-	size_t	i;
-	va_list	params;
+bool vector_free(t_vector* vec, ...) {
+	size_t i;
+	va_list params;
 
 	if (!vec)
 		return (false);
 	va_start(params, vec);
-	while (vec)
-	{
-		if (vec->size)
-		{
+	while (vec) {
+		if (vec->size) {
 			i = 0;
 			if (vec->del && vec->total)
-			{
 				while (i < vec->total)
 					vec->del(vec->items[i++]);
-			}
 			vec->total = 0;
 			vec->size = 0;
 			free(vec->items);
 			vec->items = NULL;
 		}
-		vec = va_arg(params, t_vector *);
+		vec = va_arg(params, t_vector*);
 	}
 	va_end(params);
 	return (true);

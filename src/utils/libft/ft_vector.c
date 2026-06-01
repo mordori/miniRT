@@ -19,16 +19,15 @@
  * @param is_heap Flag, if the items are to be allocated in heap.
  * @return True if successful, else false.
  */
-bool	vector_init(t_vector *vec, bool is_shrink, void (*del)(void *))
-{
-	const size_t	min_size = 4;
+bool vector_init(t_vector* vec, bool is_shrink, void (*del)(void*)) {
+	const size_t min_size = 4;
 
 	if (!vec)
 		return (false);
 	vec->total = 0;
 	vec->size = 0;
 	vec->is_shrink = true;
-	vec->items = malloc(sizeof(void *) * VECTOR_SIZE);
+	vec->items = malloc(sizeof(void*) * VECTOR_SIZE);
 	if (!vec->items)
 		return (false);
 	vec->size = VECTOR_SIZE;
@@ -49,12 +48,10 @@ bool	vector_init(t_vector *vec, bool is_shrink, void (*del)(void *))
  * @param new New item that will replace the old one.
  * @return True if successful, else false.
  */
-bool	vector_set(t_vector *vec, size_t index, void *new)
-{
+bool vector_set(t_vector* vec, size_t index, void* new) {
 	if (!vec || !new || !vec->total)
 		return (false);
-	if (index < vec->total)
-	{
+	if (index < vec->total) {
 		free(vec->items[index]);
 		vec->items[index] = new;
 	}
@@ -68,8 +65,7 @@ bool	vector_set(t_vector *vec, size_t index, void *new)
  * @param index Index of the item.
  * @return Item if successful, else NULL.
  */
-void	*vector_get(t_vector *vec, size_t index)
-{
+void* vector_get(t_vector* vec, size_t index) {
 	if (!vec || !vec->total)
 		return (NULL);
 	if (index < vec->total)
@@ -83,8 +79,7 @@ void	*vector_get(t_vector *vec, size_t index)
  * @param vec Vector to be operated.
  * @return Amount of items added in the vector.
  */
-size_t	vector_total(t_vector *vec)
-{
+size_t vector_total(t_vector* vec) {
 	if (!vec)
 		return (false);
 	return (vec->total);
@@ -96,8 +91,7 @@ size_t	vector_total(t_vector *vec)
  * @param vec Vector to be operated.
  * @return Capacity of items array in the vector.
  */
-size_t	vector_size(t_vector *vec)
-{
+size_t vector_size(t_vector* vec) {
 	if (!vec)
 		return (false);
 	return (vec->size);

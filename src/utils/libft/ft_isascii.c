@@ -18,8 +18,7 @@
  * @param c Character to be checked for.
  * @return True if successful, else false.
  */
-bool	ft_isascii(int c)
-{
+bool ft_isascii(int c) {
 	c = (unsigned char)c;
 	if (c >= 0 && c <= 127)
 		return (true);

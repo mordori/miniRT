@@ -18,19 +18,16 @@
  * @param str Source string.
  * @return True if no duplicates are found, false otherwise.
  */
-bool	ft_strchrdup(const char *str)
-{
-	int	i;
-	int	j;
+bool ft_strchrdup(const char* str) {
+	int i;
+	int j;
 
 	if (!str || !*str)
 		return (false);
 	i = 0;
-	while (str[i])
-	{
+	while (str[i]) {
 		j = 0;
-		while (j < i)
-		{
+		while (j < i) {
 			if (str[j] == str[i])
 				return (false);
 			++j;

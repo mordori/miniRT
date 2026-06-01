@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <stdatomic.h>
+#include <stdint.h>
 
 #include "MLX42.h"
 #include "OpenImageDenoise/oidn.h"
@@ -86,6 +87,7 @@ enum e_obj_type {
 	OBJ_CYLINDER,
 	OBJ_CONE,
 	OBJ_QUAD,
+	OBJ_MESH,
 };
 
 enum e_light_type {
@@ -198,6 +200,8 @@ typedef struct s_sphere t_sphere;
 typedef struct s_cylinder t_cylinder;
 typedef struct s_cone t_cone;
 typedef struct s_quad t_quad;
+typedef struct s_triangle t_triangle;
+typedef struct s_mesh t_mesh;
 typedef struct s_light t_light;
 typedef struct s_scene t_scene;
 typedef struct s_camera t_camera;
@@ -336,7 +340,24 @@ struct __attribute__((aligned(16))) s_quad {
 	float area;
 };
 
+struct __attribute__((aligned(16))) s_triangle {
+	t_vec3 v0, v1, v2;
+	t_vec3 n0, n1, n2;
+	t_vec2 uv0, uv1, uv2;
+	bool has_normals, has_uvs;
+};
+
+struct __attribute__((aligned(16))) s_mesh {
+	char name[64];
+	t_triangle* triangles;
+	t_bvh_node* bvh_nodes;
+	uint32_t bvh_root_idx;
+	uint32_t nodes;
+	uint32_t triangle_count;
+};
+
 union __attribute__((aligned(16))) u_shape {
+	t_mesh mesh;
 	t_plane plane;
 	t_sphere sphere;
 	t_cylinder cylinder;
@@ -544,9 +565,13 @@ struct __attribute__((aligned(16))) s_aabb {
 
 struct __attribute__((aligned(16))) s_bvh_node {
 	t_aabb aabb;
-	t_object* obj;
+	union {
+		t_object* obj;
+		uint32_t tri_idx;
+	};
 	uint32_t left_idx;
 	uint32_t right_idx;
+	uint32_t tri_count;
 	int axis;
 };
 
@@ -566,6 +591,9 @@ struct __attribute__((aligned(64))) s_context {
 	mlx_t* mlx;
 	t_image* img;
 	char* file;
+	t_mesh* lib_mesh;
+	uint32_t lib_mesh_capacity;
+	uint32_t loaded_mesh_count;
 	uint32_t resize_time;
 	uint8_t bn_stride;
 	int fd;

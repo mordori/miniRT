@@ -18,8 +18,7 @@
  * @param s Source string.
  * @return New string duplicated from `s`.
  */
-char	*ft_strdup(const char *s)
-{
+char* ft_strdup(const char* s) {
 	if (!s)
 		return (NULL);
 	return (ft_substr(s, 0, ft_strlen(s)));

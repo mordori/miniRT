@@ -18,8 +18,7 @@
  * @param c Character to be checked for.
  * @return True if successful, else false.
  */
-bool	ft_isalnum(int c)
-{
+bool ft_isalnum(int c) {
 	c = (unsigned char)c;
 	if (ft_isalpha(c) || ft_isdigit(c))
 		return (true);

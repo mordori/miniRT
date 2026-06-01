@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 
-#include "libft_str.h"
 #include "libft_mem.h"
+#include "libft_str.h"
 
 /**
  * Allocates memory and returns a substring from the string `s`.
@@ -23,10 +23,9 @@
  * @param len Maximum length of the substring.
  * @return New substring from `s`.
  */
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*sub;
-	size_t	i;
+char* ft_substr(char const* s, unsigned int start, size_t len) {
+	char* sub;
+	size_t i;
 
 	if (!s)
 		return (NULL);
@@ -35,8 +34,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		while (s[start + i] && i < len)
 			++i;
 	sub = malloc((i + 1) * sizeof(char));
-	if (sub)
-	{
+	if (sub) {
 		ft_memcpy(sub, &s[start], i);
 		sub[i] = '\0';
 	}

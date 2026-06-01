@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strtod.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft_utils.h"
+#include "parsing.h"
 
 static double skip_whitespace_and_sign(const char** str) {
 	while (ft_isspace(**str))

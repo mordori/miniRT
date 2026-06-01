@@ -19,7 +19,6 @@
  * @param n Number of bytes to be NUL-terminated.
  * @return Pointer to modified `s`.
  */
-void	*ft_bzero(void *s, size_t n)
-{
+void* ft_bzero(void* s, size_t n) {
 	return (ft_memset(s, 0, n));
 }

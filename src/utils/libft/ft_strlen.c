@@ -18,9 +18,8 @@
  * @param s Source string.
  * @return The length of the string `s`.
  */
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
+size_t ft_strlen(const char* s) {
+	size_t len;
 
 	if (!s)
 		return (0);

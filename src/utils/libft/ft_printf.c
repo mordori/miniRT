@@ -18,9 +18,9 @@
 #include "libft_str.h"
 #include "libft_utils.h"
 
-static inline char	*ft_ptrformat(char *s);
-static inline char	*ft_strformat(const char c, va_list *args);
-static inline ssize_t	ft_strprint(const char c, va_list *args);
+static inline char* ft_ptrformat(char* s);
+static inline char* ft_strformat(const char c, va_list* args);
+static inline ssize_t ft_strprint(const char c, va_list* args);
 
 /**
  * Formats and prints string `s` with variable type argument list.
@@ -33,26 +33,23 @@ static inline ssize_t	ft_strprint(const char c, va_list *args);
  * @return Number of bytes written, summed from characters written from `s`
  * and the type conversions. Returns 0 on error.
  */
-ssize_t	ft_printf(const char *s, ...)
-{
-	va_list	args;
-	ssize_t	totalbytes;
-	ssize_t	bytes;
+ssize_t ft_printf(const char* s, ...) {
+	va_list args;
+	ssize_t totalbytes;
+	ssize_t bytes;
 
 	if (!s)
 		return (ERROR);
 	va_start(args, s);
 	totalbytes = 0;
-	while (*s)
-	{
+	while (*s) {
 		if (*s++ == '%')
 			bytes = ft_strprint(*s++, &args);
 		else
 			bytes = ft_putchar_fd(*(s - 1), STDOUT_FILENO);
-		if (bytes == ERROR)
-		{
+		if (bytes == ERROR) {
 			totalbytes = 0;
-			break ;
+			break;
 		}
 		totalbytes += bytes;
 	}
@@ -67,9 +64,8 @@ ssize_t	ft_printf(const char *s, ...)
  * @return String of formatted pointer address in hex, beginning with `0x` or
  * `(nil)` if NULL pointer.
  */
-static inline char	*ft_ptrformat(char *s)
-{
-	char	*str;
+static inline char* ft_ptrformat(char* s) {
+	char* str;
 
 	if (!s)
 		return (NULL);
@@ -77,7 +73,7 @@ static inline char	*ft_ptrformat(char *s)
 		str = ft_strdup("(nil)");
 	else
 		str = ft_strjoin("0x", s);
-	free (s);
+	free(s);
 	return (str);
 }
 
@@ -89,16 +85,15 @@ static inline char	*ft_ptrformat(char *s)
  * @param args Variable type argument list.
  * @return String with formatted type conversion.
  */
-static inline char	*ft_strformat(const char c, va_list *args)
-{
-	char	*str;
+static inline char* ft_strformat(const char c, va_list* args) {
+	char* str;
 
 	if (c == '%')
 		str = ft_memset(ft_calloc(2, 1), '%', 1);
 	else if (c == 'c')
 		str = ft_memset(ft_calloc(2, 1), va_arg(*args, unsigned int), 1);
 	else if (c == 's')
-		str = ft_strdup(va_arg(*args, char *));
+		str = ft_strdup(va_arg(*args, char*));
 	else if (c == 'd' || c == 'i')
 		str = ft_itoa(va_arg(*args, int), BASE_10);
 	else if (c == 'u')
@@ -123,10 +118,9 @@ static inline char	*ft_strformat(const char c, va_list *args)
  * @param args Variable type argument list.
  * @return Number of bytes written or -1 on error.
  */
-static inline ssize_t	ft_strprint(const char c, va_list *args)
-{
-	char	*str;
-	ssize_t	bytes;
+static inline ssize_t ft_strprint(const char c, va_list* args) {
+	char* str;
+	ssize_t bytes;
 
 	if (!args)
 		return (ERROR);

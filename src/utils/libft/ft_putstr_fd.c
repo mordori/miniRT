@@ -20,19 +20,17 @@
  * @param fd File descriptor.
  * @return Number of characters written, ERROR on error or only partial write.
  */
-ssize_t	ft_putstr_fd(char *s, int fd)
-{
-	ssize_t	bytes;
-	ssize_t	totalbytes;
-	size_t	len;
+ssize_t ft_putstr_fd(char* s, int fd) {
+	ssize_t bytes;
+	ssize_t totalbytes;
+	size_t len;
 
 	if (!s)
 		return (ERROR);
 	totalbytes = 0;
 	len = ft_strlen(s);
-	while (len > 0)
-	{
-		bytes = write (fd, s, len);
+	while (len > 0) {
+		bytes = write(fd, s, len);
 		if (bytes < 0)
 			return (ERROR);
 		totalbytes += bytes;

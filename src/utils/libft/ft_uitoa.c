@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 
-#include "libft_utils.h"
 #include "libft_str.h"
+#include "libft_utils.h"
 
 /**
  * Converts the unsigned integer `n` of `base` to a newly allocated string.
@@ -23,11 +23,10 @@
  * @param base Base of the number.
  * @return String of the converted number.
  */
-char	*ft_uitoa(uintptr_t n, const char *base)
-{
-	char	*str;
-	size_t	digits;
-	size_t	len;
+char* ft_uitoa(uintptr_t n, const char* base) {
+	char* str;
+	size_t digits;
+	size_t len;
 
 	if (!ft_strchrdup(base))
 		return (NULL);
@@ -37,8 +36,7 @@ char	*ft_uitoa(uintptr_t n, const char *base)
 	if (!str)
 		return (NULL);
 	str[digits] = '\0';
-	while (digits--)
-	{
+	while (digits--) {
 		str[digits] = base[n % len];
 		n /= len;
 	}

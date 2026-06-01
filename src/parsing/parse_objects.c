@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse_objects.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:46:11 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 22:55:50 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <string.h>
 
 #include "objects.h"
 #include "parsing.h"

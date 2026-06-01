@@ -20,17 +20,15 @@
  * @param n Number of bytes to be written.
  * @return Integer value from the difference of the compared characters.
  */
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
-{
-	const unsigned char	*str1;
-	const unsigned char	*str2;
+int ft_memcmp(const void* s1, const void* s2, size_t n) {
+	const unsigned char* str1;
+	const unsigned char* str2;
 
 	if (!s1 || !s2 || !n)
 		return (0);
-	str1 = (const unsigned char *)s1;
-	str2 = (const unsigned char *)s2;
-	while (*str1 == *str2 && --n)
-	{
+	str1 = (const unsigned char*)s1;
+	str2 = (const unsigned char*)s2;
+	while (*str1 == *str2 && --n) {
 		++str1;
 		++str2;
 	}
