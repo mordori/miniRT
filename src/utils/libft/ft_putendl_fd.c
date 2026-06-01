@@ -19,14 +19,13 @@
  * @param fd File descriptor.
  * @return Number of characters written, ERROR on error or only partial write.
  */
-ssize_t	ft_putendl_fd(char *s, int fd)
-{
-	ssize_t	bytes;
+ssize_t ft_putendl_fd(char* s, int fd) {
+	ssize_t bytes;
 
 	if (!s)
 		return (ERROR);
 	bytes = ft_putstr_fd(s, fd);
-	if (bytes == ERROR || write (fd, "\n", 1) == ERROR)
+	if (bytes == ERROR || write(fd, "\n", 1) == ERROR)
 		return (ERROR);
 	return (bytes + 1);
 }

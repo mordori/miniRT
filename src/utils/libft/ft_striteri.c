@@ -19,9 +19,8 @@
  * @param f Fuction pointer
  * @return True if successful, else false.
  */
-bool	ft_striteri(char *s, int (*f)(char*))
-{
-	unsigned int	i;
+bool ft_striteri(char* s, int (*f)(char*)) {
+	unsigned int i;
 
 	if (!s || !f)
 		return (false);

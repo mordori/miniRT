@@ -3,6 +3,7 @@
 #include "defines.h"
 #include "libft_str.h"
 #include "materials.h"
+#include "objects.h"
 #include "parsing.h"
 #include "utils.h"
 
@@ -14,15 +15,21 @@ void init_scene(t_context* ctx) {
 	vector_try_init(ctx, &ctx->scene.assets.materials, false, free);
 	lut_srgb_to_linear();
 
+	load_mesh_dir(ctx, "assets/models");
+	printf("\n");
+
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
 	ctx->tex_bn = load_texture("assets/textures/blue_noise.png", false);
 	if (!ctx->tex_bn.pixels)
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	ctx->bn_stride = (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
+
 	printf_init();
 	close(ctx->fd);
 	ctx->fd = ERROR;
+
+	// add_mesh(ctx, "suzanne.obj", 3);
 
 	if (!init_bvh(ctx))
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);

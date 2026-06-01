@@ -19,8 +19,7 @@
  * @param new Pointer to the node to be added.
  * @return True if successful, else false.
  */
-bool	ft_lstadd_front(t_list **lst, t_list *new)
-{
+bool ft_lstadd_front(t_list** lst, t_list* new) {
 	if (!lst)
 		return (false);
 	if (*lst)

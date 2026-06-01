@@ -22,14 +22,13 @@
  * @return Pointer to the first occurrence of `c` in `s`,
  * or `NULL` if not found.
  */
-char	*ft_strchr(const char *s, int c)
-{
+char* ft_strchr(const char* s, int c) {
 	if (!s)
 		return (NULL);
 	c = (unsigned char)c;
 	while (*s && (const unsigned char)*s != c)
 		++s;
 	if ((const unsigned char)*s == c)
-		return ((char *)s);
+		return ((char*)s);
 	return (NULL);
 }

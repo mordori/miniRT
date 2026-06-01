@@ -25,9 +25,8 @@
  * @return Pointer to the beginning of the allocated memory area, or NULL
  * if allocation failed.
  */
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*ptr;
+void* ft_calloc(size_t nmemb, size_t size) {
+	void* ptr;
 
 	if (size && nmemb > SIZE_MAX / size)
 		return (NULL);

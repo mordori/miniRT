@@ -21,10 +21,9 @@ t_ray ray_world_to_object(const t_ray* ray, const t_mat4* world_to_object) {
 	t_vec4 orig = vec4_3(ray->origin, 1.0f);
 	t_vec4 dir = vec4_3(ray->dir, 0.0f);
 
-	return (t_ray){ //
-		.origin = mat4_mul_vec4(world_to_object, orig).xyz,
-		.dir = mat4_mul_vec4(world_to_object, dir).xyz
-	};
+	t_vec3 origOS = mat4_mul_vec4(world_to_object, orig).xyz;
+	t_vec3 dirOS = mat4_mul_vec4(world_to_object, dir).xyz;
+	return new_ray(origOS, dirOS);
 }
 
 t_vec3 get_point(const t_ray* ray, float t) {

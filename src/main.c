@@ -48,6 +48,7 @@ static inline void initialize(t_context* ctx) {
 	stop_render(&ctx->renderer);
 }
 
+// TODO: clean parse
 void clean_context(t_context* ctx) {
 	if (ctx->fd != ERROR)
 		close(ctx->fd);

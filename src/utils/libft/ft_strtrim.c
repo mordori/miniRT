@@ -20,9 +20,8 @@
  * @param set Set of characters to be trimmed.
  * @return New substring of `s1` trimmed with `set`.
  */
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	size_t	len;
+char* ft_strtrim(char const* s1, char const* set) {
+	size_t len;
 
 	if (!s1 || !set)
 		return (NULL);

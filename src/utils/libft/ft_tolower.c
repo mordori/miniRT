@@ -18,8 +18,7 @@
  * @param c Character to be converted.
  * @return `a-z`, otherwise `c`.
  */
-int	ft_tolower(char *c)
-{
+int ft_tolower(char* c) {
 	if (*c >= 'A' && *c <= 'Z')
 		*c += 'a' - 'A';
 	return (*c);

@@ -19,18 +19,16 @@
  * @param len Number of characters in the base used.
  * @return Number of digits in an integer number.
  */
-size_t	ft_countdigits(long long n, const size_t len)
-{
-	size_t		count;
-	long long	base;
+size_t ft_countdigits(long long n, const size_t len) {
+	size_t count;
+	long long base;
 
 	if (!len)
 		return (ERROR);
 	base = (long long)len;
 	count = 1;
 	n /= base;
-	while (n)
-	{
+	while (n) {
 		++count;
 		n /= base;
 	}
@@ -44,16 +42,14 @@ size_t	ft_countdigits(long long n, const size_t len)
  * @param len Number of characters in the base used.
  * @return Number of digits in an integer number.
  */
-size_t	ft_ucountdigits(uintptr_t n, const size_t len)
-{
-	size_t	count;
+size_t ft_ucountdigits(uintptr_t n, const size_t len) {
+	size_t count;
 
 	if (!len)
 		return (ERROR);
 	count = 1;
 	n /= len;
-	while (n)
-	{
+	while (n) {
 		++count;
 		n /= len;
 	}

@@ -1,3 +1,4 @@
+#include "defines.h"
 #include "objects.h"
 #include "scene.h"
 #include "utils.h"
@@ -50,6 +51,8 @@ bool hit_planes(const t_context* ctx, const t_ray* ray, t_hit* hit) {
 }
 
 bool hit_plane(const t_shape* shape, const t_ray* ray, t_hit* hit) {
+	const t_plane* plane = &shape->plane;
+
 	float denom = ray->dir.y;
 	if (fabsf(denom) < G_EPSILON)
 		return false;
@@ -63,9 +66,9 @@ bool hit_plane(const t_shape* shape, const t_ray* ray, t_hit* hit) {
 	hit->normal = g_up;
 	if (denom > 0)
 		hit->normal = vec3_scale(hit->normal, -1.0f);
-	hit->uv.u = vec3_dot(hit->point, shape->plane.u);
-	hit->uv.v = vec3_dot(hit->point, shape->plane.v);
-	hit->tangent = shape->plane.u;
-	hit->bitangent = shape->plane.v;
+	hit->uv.u = vec3_dot(hit->point, plane->u);
+	hit->uv.v = vec3_dot(hit->point, plane->v);
+	hit->tangent = plane->u;
+	hit->bitangent = plane->v;
 	return true;
 }

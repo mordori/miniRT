@@ -13,7 +13,6 @@
 #include "libft_str.h"
 #include "parsing.h"
 
-
 t_error parse_skydome(t_context* ctx, char** tokens) {
 	if (count_tokens(tokens) != 2)
 		return (E_ARGS);

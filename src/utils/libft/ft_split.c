@@ -24,26 +24,23 @@
  * @param c Delimiter character.
  * @return New array of strings split from the string `s`.
  */
-char	**ft_split(char const *s, char c)
-{
-	char	**strs;
-	size_t	words;
-	size_t	word_len;
-	size_t	i;
+char** ft_split(char const* s, char c) {
+	char** strs;
+	size_t words;
+	size_t word_len;
+	size_t i;
 
 	if (!s)
 		return (NULL);
 	words = ft_count_words(s, c);
-	strs = malloc((words + 1) * sizeof(char *));
+	strs = malloc((words + 1) * sizeof(char*));
 	if (!strs)
 		return (NULL);
 	i = 0;
-	while (words--)
-	{
+	while (words--) {
 		word_len = ft_word_len(&s, c);
 		strs[i] = ft_substr(s - word_len, 0, word_len);
-		if (!strs[i++])
-		{
+		if (!strs[i++]) {
 			ft_free_split(strs);
 			return (NULL);
 		}
@@ -59,13 +56,11 @@ char	**ft_split(char const *s, char c)
  * @param c Delimiter character.
  * @return Number of words found.
  */
-size_t	ft_count_words(char const *s, char c)
-{
-	size_t	count;
+size_t ft_count_words(char const* s, char c) {
+	size_t count;
 
 	count = 0;
-	while (*s)
-	{
+	while (*s) {
 		while (*s == c && *s)
 			++s;
 		while (*s != c && *s)
@@ -86,15 +81,13 @@ size_t	ft_count_words(char const *s, char c)
  * @param c Delimiter character.
  * @return Length of a word.
  */
-size_t	ft_word_len(char const **s, char c)
-{
-	size_t	len;
+size_t ft_word_len(char const** s, char c) {
+	size_t len;
 
 	len = 0;
 	while (**s == c && **s)
 		++*s;
-	while (**s != c && **s)
-	{
+	while (**s != c && **s) {
 		++len;
 		++*s;
 	}
@@ -108,13 +101,11 @@ size_t	ft_word_len(char const **s, char c)
  * @param s Array of strings.
  * @return NULL.
  */
-void	ft_free_split(char **strs)
-{
-	int	i;
+void ft_free_split(char** strs) {
+	int i;
 
 	i = 0;
-	while (strs[i])
-	{
+	while (strs[i]) {
 		free(strs[i]);
 		strs[i++] = NULL;
 	}

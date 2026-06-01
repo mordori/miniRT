@@ -20,18 +20,16 @@
  * @param n Number of bytes to be searched for.
  * @return Pointer to the matching byte, or `NULL` if not found.
  */
-void	*ft_memchr(const void *s, int c, size_t n)
-{
-	const unsigned char		*d;
+void* ft_memchr(const void* s, int c, size_t n) {
+	const unsigned char* d;
 
 	if (!s)
 		return (NULL);
-	d = (const unsigned char *)s;
+	d = (const unsigned char*)s;
 	c = (unsigned char)c;
-	while (n--)
-	{
+	while (n--) {
 		if (*d == c)
-			return ((void *)d);
+			return ((void*)d);
 		++d;
 	}
 	return (NULL);

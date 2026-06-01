@@ -2,6 +2,7 @@
 
 #include "libft_str.h"
 #include "libft_utils.h"
+#include "parsing.h"
 
 static size_t count_words(const char* s) {
 	size_t count = 0;

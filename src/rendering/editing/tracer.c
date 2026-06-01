@@ -8,8 +8,12 @@ static inline void nee_editing(const t_context* ctx, t_path* path);
 static inline void write_to_selection_mask(const t_context* ctx, t_path* path, t_pixel* pixel);
 
 bool trace_ray_editing(const t_context* ctx, t_path* path, t_pixel* pixel) {
+	const t_renderer* r = &ctx->renderer;
+
+	bool is_primary_ray = path->bounce == 0;
+
 	bool hitSelectedObj = hit_object(ctx->editor.selected_obj, &path->ray, &path->hit);
-	bool hitDirLightObj = hit_object(ctx->renderer.cam.directional_light.obj, &path->ray, &path->hit);
+	bool hitDirLightObj = hit_object(r->cam.directional_light.obj, &path->ray, &path->hit);
 	bool hitBVH = hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, ctx->scene.geo.bvh_nodes);
 	bool hitPlanes = hit_planes(ctx, &path->ray, &path->hit);
 
@@ -23,15 +27,15 @@ bool trace_ray_editing(const t_context* ctx, t_path* path, t_pixel* pixel) {
 			return false;
 		}
 		if (ctx->scene.env.has_dir_light)
-			add_lighting_editing(ctx, path, &ctx->renderer.cam.directional_light);
+			add_lighting_editing(ctx, path, &r->cam.directional_light);
 		if (ctx->scene.env.lights.total > 0)
 			nee_editing(ctx, path);
 		ambient_lighting(path, &ctx->scene.env.amb_light);
 		return false;
 	}
 
-	ctx->editor.selection_mask[pixel->y * ctx->renderer.width + pixel->x] = -M_INFf;
-	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset);
+	ctx->editor.selection_mask[pixel->y * r->width + pixel->x] = -M_INFf;
+	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, r->cam.skydome_uv_offset, is_primary_ray);
 	t_vec3 color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, color));
 	return false;

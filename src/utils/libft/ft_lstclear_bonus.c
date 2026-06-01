@@ -22,14 +22,12 @@
  * @param del Pointer to a function to delete `content` of a node.
  * @return True if successful, else false.
  */
-bool	ft_lstclear(t_list **lst, void (*del)(void *))
-{
-	t_list	*temp;
+bool ft_lstclear(t_list** lst, void (*del)(void*)) {
+	t_list* temp;
 
 	if (!lst || !*lst || !del)
 		return (false);
-	while (*lst)
-	{
+	while (*lst) {
 		temp = (*lst)->next;
 		ft_lstdelone(*lst, del);
 		(*lst) = temp;

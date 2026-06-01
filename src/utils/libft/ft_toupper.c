@@ -18,8 +18,7 @@
  * @param c Character to be converted.
  * @return `A-Z`, otherwise `c`.
  */
-int	ft_toupper(char *c)
-{
+int ft_toupper(char* c) {
 	if (*c >= 'a' && *c <= 'z')
 		*c -= 'a' - 'A';
 	return (*c);

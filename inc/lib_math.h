@@ -93,8 +93,8 @@ struct __attribute__((aligned(16))) s_mat3 {
 
 struct __attribute__((aligned(16))) s_mat4 {
 	union {
-		float m[4][4];
 		t_v4sf rows[4];
+		float m[4][4];
 	};
 };
 
@@ -149,7 +149,7 @@ union __attribute__((aligned(16))) u_vec3 {
 	struct {
 		float width, height, depth;
 	};
-	t_vec2 xy;
+	t_vec2 xy, uv;
 };
 
 union __attribute__((aligned(16))) u_vec4 {
@@ -161,7 +161,7 @@ union __attribute__((aligned(16))) u_vec4 {
 	struct {
 		float r, g, b, a;
 	};
-	t_vec3 xyz, rgb;
+	t_vec3 xyz, rgb, uvw;
 };
 
 union u_color {
@@ -538,7 +538,7 @@ static inline bool vec3_is_nan_inf(t_vec3 vec) {
 	t_v4ui_ui v_s;
 	v_s.v = (t_v4ui)vec.v;
 	v_s.v &= e_bits;
-	return (v_s.s[0] == e_bits) | (v_s.s[1] == e_bits) | (v_s.s[2] == e_bits);
+	return (v_s.s[0] == e_bits) | (v_s.s[1] == e_bits) | (v_s.s[2] == e_bits) | (v_s.s[3] == e_bits);
 }
 
 static inline t_vec3 vec3_fabsf(t_vec3 vec) {
@@ -700,7 +700,8 @@ static inline float mat4_det(const t_mat4* src) {
 }
 
 static inline float mat3_det(const t_mat3* src) {
-	float res = src->m[0][0] * (src->m[1][1] * src->m[2][2] - src->m[2][1] * src->m[1][2]);
+	float res;
+	res = src->m[0][0] * (src->m[1][1] * src->m[2][2] - src->m[2][1] * src->m[1][2]);
 	res -= src->m[0][1] * (src->m[1][0] * src->m[2][2] - src->m[2][0] * src->m[1][2]);
 	res += src->m[0][2] * (src->m[1][0] * src->m[2][1] - src->m[2][0] * src->m[1][1]);
 	return res;

@@ -18,46 +18,40 @@
  * @param vec Vector to be operated.
  * @return Item if successful, else NULL.
  */
-void	*vector_getlast(t_vector *vec)
-{
+void* vector_getlast(t_vector* vec) {
 	if (!vec || !vec->total)
 		return (NULL);
 	return (vec->items[vec->total - 1]);
 }
 
-void	vector_clean_items(t_vector *vec, void (*del)(void *))
-{
-	size_t	i;
-	void	*temp;
+void vector_clean_items(t_vector* vec, void (*del)(void*)) {
+	size_t i;
+	void* temp;
 
 	if (!vec || !del)
-		return ;
+		return;
 	i = 0;
-	while (i < vec->total)
-	{
+	while (i < vec->total) {
 		temp = vector_get(vec, i);
 		del(temp);
 		++i;
 	}
 }
 
-bool	vector_remove(t_vector *vec, void *item)
-{
-	uint32_t	i;
+bool vector_remove(t_vector* vec, void* item) {
+	uint32_t i;
 
 	if (!vec || !vec->total)
 		return (false);
 	i = 0;
-	while (i < vec->total)
-	{
+	while (i < vec->total) {
 		if (vec->items[i] == item)
-			break ;
+			break;
 		++i;
 	}
 	if (i == vec->total)
 		return (false);
-	while (i < vec->total - 1)
-	{
+	while (i < vec->total - 1) {
 		vec->items[i] = vec->items[i + 1];
 		++i;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_materials.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:45:57 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 21:12:26 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

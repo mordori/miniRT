@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   parse_light.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 19:45:40 by wshoweky          #+#    #+#             */
-/*   Updated: 2026/03/27 20:08:42 by myli-pen         ###   ########.fr       */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include "materials.h"
-#include "lights.h"
+#include <string.h>
 
-static t_error	parse_light_core(char **tokens, t_light *light, int tc)
-{
-	t_vec3	position;
-	t_vec3	color;
-	float	ratio;
+#include "lights.h"
+#include "materials.h"
+#include "parsing.h"
+
+static t_error parse_light_core(char** tokens, t_light* light, int tc) {
+	t_vec3 position;
+	t_vec3 color;
+	float ratio;
 
 	if (!parse_vec3(tokens[1], &position))
 		return (E_INVALID_NUM);
@@ -39,11 +40,10 @@ static t_error	parse_light_core(char **tokens, t_light *light, int tc)
 	return (E_OK);
 }
 
-static t_error	default_emissive_mat(t_context *ctx, t_light *light, uint32_t *out_id)
-{
-	t_material	mat;
+static t_error default_emissive_mat(t_context* ctx, t_light* light, uint32_t* out_id) {
+	t_material mat;
 
-	mat = (t_material){0};
+	mat = (t_material){ 0 };
 	mat.albedo = light->color;
 	mat.emission = vec3_scale(light->color, 50 * light->intensity);
 	mat.is_emissive = light->intensity > 0.0f;
@@ -51,9 +51,8 @@ static t_error	default_emissive_mat(t_context *ctx, t_light *light, uint32_t *ou
 	return (new_material(ctx, &mat, out_id));
 }
 
-static t_error	parse_light_mat(t_parser *p, char **tokens, uint32_t *mat_id)
-{
-	t_material	*mat;
+static t_error parse_light_mat(t_parser* p, char** tokens, uint32_t* mat_id) {
+	t_material* mat;
 
 	if (!parse_uint(tokens[5], mat_id))
 		return (E_RANGE);
@@ -66,12 +65,11 @@ static t_error	parse_light_mat(t_parser *p, char **tokens, uint32_t *mat_id)
 /**
  * Point Light: L <position> <intensity> <color> [radius] [mat_id]
  */
-t_error	parse_light(t_context *ctx, t_parser *p, char **tokens)
-{
-	t_light		light;
-	int			tc;
-	uint32_t	mat_id;
-	t_error		err;
+t_error parse_light(t_context* ctx, t_parser* p, char** tokens) {
+	t_light light;
+	int tc;
+	uint32_t mat_id;
+	t_error err;
 
 	tc = count_tokens(tokens);
 	if (tc < 4 || tc > 6)

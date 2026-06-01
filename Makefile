@@ -4,7 +4,8 @@ CC			:=clang
 WFLAGS		:=-Wall -Wextra -Werror -Wpedantic -Wunreachable-code -Wshadow -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wundef
 DEFS		:=-D_GNU_SOURCE -D_DARWIN_C_SOURCE
 DFLAGS		:=-D DEBUG -g
-DEBUG		:=-O0 -g -fsanitize=address,undefined,alignment,float-cast-overflow,float-divide-by-zero -fno-omit-frame-pointer
+DEBUG		:=-O0 -g
+# -fsanitize=address,undefined,alignment,float-cast-overflow,float-divide-by-zero -fno-omit-frame-pointer
 
 UNAME_S		:=$(shell uname -s)
 UNAME_M		:=$(shell uname -m)
@@ -77,23 +78,24 @@ SRCS		+= $(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c perlin_noise.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
-				object.c cylinder.c plane.c sphere.c cone.c quad.c)
+				object.c cylinder.c plane.c sphere.c cone.c quad.c triangle.c mesh.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_PARSE), \
+				parse_mesh.c \
 				parse.c parse_elements.c parse_light.c parse_objects.c try_split.c \
 				parse_tools.c parse_materials.c parse_textures.c parse_utils.c \
-				parse_pass.c parse_patterns.c parse_validate.c ft_strtod.c ft_atof.c)
+				parse_pass.c parse_patterns.c parse_validate.c ft_strtod.c ft_strtof.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				editing/tracer.c editing/lighting.c \
 				renderer.c tracer.c post_processing.c skydome.c window.c \
 				frame.c bsdf.c brdf.c lighting.c sampling.c screenshot.c projection.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_SCENE), \
-				scene.c bvh.c aabb.c bounds.c)
+				scene.c bvh.c bounds.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_UI), \
 				settings.c ui.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				errors.c files.c ray.c memory.c random.c hit.c instructions.c time.c system.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_UTILS)$(DIR_LIBFT), \
-				ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
+				ft_atoi.c ft_atof.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 				ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
 				ft_calloc.c ft_isdigit.c ft_memcmp.c ft_putchar_fd.c \
 				ft_isalnum.c ft_isprint.c ft_memcpy.c ft_putendl_fd.c \

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   textures.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wshoweky <wshoweky@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 19:47:18 by wshoweky          #+#    #+#             */
+/*   Updated: 2026/03/10 19:47:21 by wshoweky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "materials.h"
 #include "utils.h"
 
@@ -6,7 +18,7 @@ static inline void tex_to_linear(t_texture* texture, bool is_srgb);
 static float g_lut[256];
 
 t_texture load_texture(char* file, bool is_srgb) {
-	printf("Loading texture:    %s\n", file);
+	printf("\033[1;33mLoading texture:    %s\033[0m\n", file);
 	t_texture texture = (t_texture){ 0 };
 	texture.tex = mlx_load_png(file);
 	if (!texture.tex)

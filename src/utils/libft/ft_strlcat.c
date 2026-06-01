@@ -22,11 +22,10 @@
  * @param size Total amount of characters to be concatenated.
  * @return Returns the length of the string attempted to concatenate.
  */
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	dst_len;
-	size_t	src_len;
-	size_t	i;
+size_t ft_strlcat(char* dst, const char* src, size_t size) {
+	size_t dst_len;
+	size_t src_len;
+	size_t i;
 
 	if (!dst || !src)
 		return (0);
@@ -35,8 +34,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	if (dst_len >= size)
 		return (src_len + size);
 	i = 0;
-	while (dst_len + i < size - 1 && src[i])
-	{
+	while (dst_len + i < size - 1 && src[i]) {
 		dst[dst_len + i] = src[i];
 		++i;
 	}

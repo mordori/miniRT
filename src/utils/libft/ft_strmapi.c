@@ -23,10 +23,9 @@
  * @param f Fuction pointer
  * @return String containing the characters modified by `f`.
  */
-char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
-{
-	unsigned int	i;
-	char			*str;
+char* ft_strmapi(char const* s, char (*f)(unsigned int, char)) {
+	unsigned int i;
+	char* str;
 
 	if (!s || !f)
 		return (NULL);
@@ -34,8 +33,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (s[i])
-	{
+	while (s[i]) {
 		str[i] = f(i, s[i]);
 		++i;
 	}

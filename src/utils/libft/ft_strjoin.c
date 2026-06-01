@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 
-#include "libft_str.h"
 #include "libft_mem.h"
+#include "libft_str.h"
 
 /**
  * Allocates memory and copies characters from strings `s1` and `s2`.
@@ -22,11 +22,10 @@
  * @param s2 Source string 2.
  * @return New string, which is the result of concatenating `s1` and `s2`.
  */
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*str;
-	size_t	len1;
-	size_t	len2;
+char* ft_strjoin(char const* s1, char const* s2) {
+	char* str;
+	size_t len1;
+	size_t len2;
 
 	if (!s1 || !s2)
 		return (NULL);
@@ -49,19 +48,17 @@ char	*ft_strjoin(char const *s1, char const *s2)
  * @param s2 Source string 2.
  * @return New string, which is the result of concatenating `s1` and `s2`.
  */
-char	*ft_strjoin_free(char *s1, char *s2)
-{
-	char	*str;
-	size_t	len1;
-	size_t	len2;
+char* ft_strjoin_free(char* s1, char* s2) {
+	char* str;
+	size_t len1;
+	size_t len2;
 
 	if (!s1 && !s2)
 		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	str = malloc((len1 + len2 + 1) * sizeof(char));
-	if (str)
-	{
+	if (str) {
 		ft_memcpy(str, s1, len1);
 		ft_memcpy(&str[len1], s2, len2);
 		str[len1 + len2] = '\0';

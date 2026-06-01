@@ -18,8 +18,7 @@
  * @param c Character to be checked for.
  * @return True if successful, else false.
  */
-bool	ft_isalpha(int c)
-{
+bool ft_isalpha(int c) {
 	c = (unsigned char)c;
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
 		return (true);

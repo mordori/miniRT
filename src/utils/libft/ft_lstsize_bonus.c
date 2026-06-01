@@ -18,15 +18,13 @@
  * @param lst Head node of the list.
  * @return Length of `list`.
  */
-int	ft_lstsize(t_list *lst)
-{
-	int	len;
+int ft_lstsize(t_list* lst) {
+	int len;
 
 	if (!lst)
 		return (false);
 	len = 0;
-	while (lst)
-	{
+	while (lst) {
 		++len;
 		lst = lst->next;
 	}

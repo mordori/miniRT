@@ -4,7 +4,13 @@
 #include "defines.h"
 #include "parsing.h"
 
+void load_mesh_dir(t_context* ctx, const char* dir_path);
+void parse_obj(t_context* ctx, const char* file, t_mesh* mesh);
+void add_mesh(t_context* ctx, const char* name, uint32_t mat_id);
+bool hit_mesh(const t_shape* shape, const t_ray* ray, t_hit* hit);
+
 t_error add_object(t_context* ctx, t_object* obj);
+
 bool hit_object(const t_object* obj, const t_ray* ray, t_hit* hit);
 bool hit_sphere(const t_shape* shape, const t_ray* ray, t_hit* hit);
 bool hit_cylinder(const t_shape* shape, const t_ray* ray, t_hit* hit);
@@ -12,6 +18,8 @@ bool hit_cone(const t_shape* shape, const t_ray* ray, t_hit* hit);
 bool hit_quad(const t_shape* shape, const t_ray* ray, t_hit* hit);
 bool hit_plane(const t_shape* shape, const t_ray* ray, t_hit* hit);
 bool hit_planes(const t_context* ctx, const t_ray* ray, t_hit* hit);
+bool hit_triangle(const t_triangle* tri, const t_ray* ray, t_hit* hit);
+
 bool is_valid_body_hit(const t_cone* cone, const t_ray* ray, float t, float t_max);
 bool hit_cone_base(const t_cone* cone, const t_ray* ray, t_hit* hit);
 void compute_cone_cap_uv(t_vec3 to_hit, float base_r, t_hit* hit);

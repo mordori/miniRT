@@ -19,7 +19,6 @@
  * @param fd File descriptor.
  * @return Number of characters written, -1 on error.
  */
-ssize_t	ft_putchar_fd(char c, int fd)
-{
-	return (write (fd, &c, 1));
+ssize_t ft_putchar_fd(char c, int fd) {
+	return (write(fd, &c, 1));
 }
