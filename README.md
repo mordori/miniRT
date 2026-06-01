@@ -26,7 +26,10 @@
 - Physical camera with fly and turntable controllers
 - Object Editing mode with simplified lighting mimicing Blender
 - Integrates Intel Open Image Denoise for cleaning up the final rendered frame
-- Loads meshes from .obj format with object instantiation (currently disabled until ImGui is implemented)
+- Loads meshes from .obj format with object instantiation
+
+> [!NOTE]
+> Object instantiation from meshes is currently disabled until ImGui has been implemented
 
 #### TODO
 - Anisotropic & clear coat BRDF
