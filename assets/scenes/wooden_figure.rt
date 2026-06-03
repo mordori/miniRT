@@ -1,5 +1,5 @@
 # Rendering Settings
-render		256		16
+render		64		16
 
 # Ambient
 A	0.0		0,0,0

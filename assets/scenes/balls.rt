@@ -1,6 +1,6 @@
 # Renderer
 #               samples     bounces
-render          16         16
+render          32         16
 
 # Ambient
 #       intensity       color
@@ -23,7 +23,7 @@ mat     9       255,255,255     0.0         1.0         1.0     0.0             
 
 # Camera
 #       pos            dir           fov         exposure    focus_dist
-C       0.0,2.0,-10.0  0.0,-0,1      55          1.1         15.0
+C       0.0,3.0,-10.0  0.0,-0.2,1      55          1.1         15.0
 
 # Light
 #       pos                intensity   color           radius      mat_id

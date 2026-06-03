@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #include "defines.h"
 #include "objects.h"
 #include "scene.h"
@@ -39,7 +41,7 @@ bool hit_planes(const t_context* ctx, const t_ray* ray, t_hit* hit) {
 
 		bool isHiddenScene = (obj->flags & OBJ_HIDDEN_SCENE);
 		bool isHiddenCam = (hit->is_primary && (obj->flags & OBJ_HIDDEN_CAM));
-		bool hitPlane = hit_plane(&obj->shape, &r, hit);
+		bool hitPlane = hit_plane(&obj->shape, &r, hit, obj->flags);
 
 		if (!isHiddenScene && !isHiddenCam && hitPlane) {
 			hit->obj = obj;
@@ -50,12 +52,16 @@ bool hit_planes(const t_context* ctx, const t_ray* ray, t_hit* hit) {
 	return res;
 }
 
-bool hit_plane(const t_shape* shape, const t_ray* ray, t_hit* hit) {
+bool hit_plane(const t_shape* shape, const t_ray* ray, t_hit* hit, uint32_t flags) {
 	const t_plane* plane = &shape->plane;
 
 	float denom = ray->dir.y;
-	if (fabsf(denom) < G_EPSILON)
+	if (flags & MAT_DOUBLE_SIDED) {
+		if (fabsf(denom) < G_EPSILON)
+			return false;
+	} else if (denom > -G_EPSILON) {
 		return false;
+	}
 
 	float t = -ray->origin.y / denom;
 	if (t < G_EPSILON || t >= hit->t)

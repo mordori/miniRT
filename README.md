@@ -25,18 +25,18 @@
 - Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly and turntable controllers
 - Object Editing mode with simplified lighting mimicing Blender
-- Integrates Intel Open Image Denoise for cleaning up the final rendered frame
-- Loads meshes from .obj format with object instantiation
+- Integrates Intel Open Image Denoise for cleaning up the remaining noise in the completed render
+- Loads meshes in .obj format and the objects are instantiated
 
 > [!NOTE]
-> Object instantiation from meshes is currently disabled until ImGui has been implemented
+> Object instantiation from meshes is currently hard-coded to `empty.rt` and `cornell_box.rt` scenes until improved scene loading has been implemented.
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
 - Improve the naive median-split BVH
-- Scene saving
 - Integrate ImGui for controls and parameters
+- Migrate from requiring scenes as arguments to more universal setup with presets
 
 #### Future Work
 - Support for MacOS and Apple Silicon
@@ -117,16 +117,10 @@ make
 
 Run the program with a .rt scene file
 ``` bash
-./miniRT assets/scenes/test.rt
+./miniRT assets/scenes/empty.rt
 ```
 
-## Scene description
 Premade scenes can be found in `📁assets/scenes/`.
-
-As the project is still under construction, we recommend to run the program with
-``` bash
-./miniRT assets/scenes/test.rt
-```
 
 > [!TIP]
 >
