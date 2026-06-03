@@ -38,9 +38,9 @@ bool hit_object(const t_object* obj, const t_ray* ray, t_hit* hit) {
 		case OBJ_SPHERE: result = hit_sphere(shape, &r, hit); break;
 		case OBJ_CYLINDER: result = hit_cylinder(shape, &r, hit); break;
 		case OBJ_CONE: result = hit_cone(shape, &r, hit); break;
-		case OBJ_QUAD: result = hit_quad(shape, &r, hit); break;
-		case OBJ_PLANE: result = hit_plane(shape, &r, hit); break;
-		case OBJ_MESH: result = hit_mesh(shape, &r, hit); break;
+		case OBJ_QUAD: result = hit_quad(shape, &r, hit, obj->flags); break;
+		case OBJ_PLANE: result = hit_plane(shape, &r, hit, obj->flags); break;
+		case OBJ_MESH: result = hit_mesh(shape, &r, hit, obj->flags); break;
 	}
 	if (result) {
 		hit->obj = (t_object*)obj;

@@ -1,25 +1,30 @@
+#include "defines.h"
+#include "lib_math.h"
 #include "objects.h"
 #include "utils.h"
 
 // Akenine-Möller & Trumbore
-bool hit_triangle(const t_triangle* tri, const t_ray* ray, t_hit* hit) {
+bool hit_triangle(const t_triangle* tri, const t_ray* ray, t_hit* hit, uint32_t flags) {
 	t_vec3 e1 = vec3_sub(tri->v1, tri->v0);
 	t_vec3 e2 = vec3_sub(tri->v2, tri->v0);
 	t_vec3 pvec = vec3_cross(ray->dir, e2);
 	float det = vec3_dot(e1, pvec);
-	// if (fabsf(det) < M_EPSILON) // For transparent materials
-	if (det < M_EPSILON)
+	if (flags & MAT_DOUBLE_SIDED) {
+		if (det == 0.0f)
+			return false;
+	} else if (det <= 0.0f) {
 		return false;
+	}
 
-	float inv_det = 1.0f / det;
+	float inv_det = 1.0 / det;
 	t_vec3 tvec = vec3_sub(ray->origin, tri->v0);
 	float u = vec3_dot(tvec, pvec) * inv_det;
-	if (u < 0.0f || u > 1.0f)
+	if (!(u >= 0.0f && u <= 1.0f))
 		return false;
 
 	t_vec3 qvec = vec3_cross(tvec, e1);
 	float v = vec3_dot(ray->dir, qvec) * inv_det;
-	if (v < 0.0f || u + v > 1.0f)
+	if (!(v >= 0.0f && u + v <= 1.0f))
 		return false;
 
 	float t = vec3_dot(e2, qvec) * inv_det;

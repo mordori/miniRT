@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
+
+#include "defines.h"
 #include "objects.h"
 
 static inline void quad_init_helper(t_quad* quad, t_mat4* world_to_obj);
@@ -84,11 +87,15 @@ static bool quad_hit_record(const t_quad* quad, const t_ray* ray, t_hit* hit, fl
 /*
 ** Ray-quad intersection: intersect the plane, then bounds-check.
 */
-bool hit_quad(const t_shape* shape, const t_ray* ray, t_hit* hit) {
+bool hit_quad(const t_shape* shape, const t_ray* ray, t_hit* hit, uint32_t flags) {
 	const t_quad* quad = &shape->quad;
 	float denom = vec3_dot(quad->normal, ray->dir);
-	if (fabsf(denom) < G_EPSILON)
+	if (flags & MAT_DOUBLE_SIDED) {
+		if (fabsf(denom) < G_EPSILON)
+			return false;
+	} else if (denom > -G_EPSILON) {
 		return false;
+	}
 
 	float t = -vec3_dot(quad->normal, ray->origin) / denom;
 	if (t < G_EPSILON || t >= hit->t)

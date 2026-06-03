@@ -96,7 +96,7 @@ void add_mesh(t_context* ctx, const char* name, uint32_t mat_id) {
 	add_object(ctx, &obj);
 }
 
-bool hit_mesh(const t_shape* shape, const t_ray* ray, t_hit* hit) {
+bool hit_mesh(const t_shape* shape, const t_ray* ray, t_hit* hit, uint32_t flags) {
 	const t_mesh* mesh = &shape->mesh;
-	return hit_bvh_mesh(mesh, ray, hit);
+	return hit_bvh_mesh(mesh, ray, hit, flags);
 }

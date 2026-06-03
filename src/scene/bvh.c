@@ -199,7 +199,7 @@ static inline void sort_bvh_mesh_triangles(t_bvh_node* node, t_triangle* tris, s
 	}
 }
 
-bool hit_bvh_mesh(const t_mesh* mesh, const t_ray* ray, t_hit* hit) {
+bool hit_bvh_mesh(const t_mesh* mesh, const t_ray* ray, t_hit* hit, uint32_t flags) {
 	if (!mesh->bvh_root_idx || !mesh->bvh_nodes)
 		return false;
 
@@ -213,7 +213,7 @@ bool hit_bvh_mesh(const t_mesh* mesh, const t_ray* ray, t_hit* hit) {
 
 		if (bvh.node->tri_count > 0) {
 			for (uint32_t i = 0; i < bvh.node->tri_count; ++i)
-				if (hit_triangle(&mesh->triangles[bvh.node->tri_idx + i], ray, hit))
+				if (hit_triangle(&mesh->triangles[bvh.node->tri_idx + i], ray, hit, flags))
 					bvh.res = true;
 			continue;
 		}
