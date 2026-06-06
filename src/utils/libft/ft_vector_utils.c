@@ -42,18 +42,18 @@ static inline bool vector_resize(t_vector* vec, size_t size) {
  * @param new New item to be added.
  * @return True if successful, else false.
  */
-bool vector_add(t_vector* vec, void* new) {
-	if (!vec || !vec->size || !new)
+bool vector_add(t_vector* vec, void* item) {
+	if (!vec || !vec->size || !item)
 		return (false);
 	if (vec->total == vec->size) {
 		if (!vector_resize(vec, vec->size * 2))
 			return (false);
 	}
-	vec->items[vec->total++] = new;
+	vec->items[vec->total++] = item;
 	return (true);
 }
 
-bool vector_insert(t_vector* vec, void* new, size_t index) {
+bool vector_insert(t_vector* vec, void* item, size_t index) {
 	size_t i;
 
 	if (!vec || !vec->size || index > vec->total)
@@ -67,7 +67,7 @@ bool vector_insert(t_vector* vec, void* new, size_t index) {
 		vec->items[i] = vec->items[i - 1];
 		--i;
 	}
-	vec->items[index] = new;
+	vec->items[index] = item;
 	vec->total++;
 	return (true);
 }

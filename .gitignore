@@ -10,3 +10,4 @@ libft.a
 .cache/
 miniRT
 compile_commands.json
+imgui.ini

@@ -1,6 +1,15 @@
 CompileFlags:
-    Add: [-Iinc, -Iutils, -std=c18, -Wall, -Wextra, -Werror]
+  Add: [-Iinc, -Iutils, -std=c18, -Wall, -Wextra, -Werror]
 
 Diagnostics:
-    UnusedIncludes: Strict
-    MissingIncludes: None
+  UnusedIncludes: Strict
+  MissingIncludes: None
+
+---
+
+If:
+  PathMatch: .*\.cpp
+
+CompileFlags:
+  Remove: [-std=c18]
+  Add: [-xc++, -std=c++20]

@@ -1,3 +1,4 @@
+#include "MLX42.h"
 #include "defines.h"
 #include "editing.h"
 #include "lights.h"
@@ -28,7 +29,7 @@ void begin_edit_action(t_context* ctx, t_edit_mode mode) {
 		if (is_wsl())
 			mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_HIDDEN);
 		else
-			mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_HIDDEN);
+			mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_DISABLED);
 	}
 	mlx_get_mouse_pos(ctx->mlx, &ctx->mouse.pos_orig.x, &ctx->mouse.pos_orig.y);
 	ctx->mouse.pos = ctx->mouse.pos_orig;

@@ -11,17 +11,17 @@
 /* ************************************************************************** */
 
 #ifndef LIBFT_IO_H
-# define LIBFT_IO_H
+#define LIBFT_IO_H
 
-# include <unistd.h>
+#include <unistd.h>
 
-# include "libft_defs.h"
+#include "libft_defs.h"
 
-int		get_next_line(int fd, char **line);
-ssize_t	ft_printf(const char *s, ...);
-ssize_t	ft_putchar_fd(char c, int fd);
-ssize_t	ft_putendl_fd(char *s, int fd);
-ssize_t	ft_putstr_fd(char *s, int fd);
-int		ft_putnbr_fd(int n, int fd);
+int get_next_line(int fd, char** line);
+ssize_t ft_printf(const char* s, ...);
+ssize_t ft_putchar_fd(char c, int fd);
+ssize_t ft_putendl_fd(char* s, int fd);
+ssize_t ft_putstr_fd(char* s, int fd);
+int ft_putnbr_fd(int n, int fd);
 
 #endif

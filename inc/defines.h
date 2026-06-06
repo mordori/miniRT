@@ -13,6 +13,7 @@
 
 #define WIDTH 1920
 #define HEIGHT 1080
+#define UI_WIDTH 350
 #define THREADS_DFL 4
 #define TILE_SIZE 32
 #define RENDER_SAMPLES 32

@@ -48,12 +48,12 @@ bool vector_init(t_vector* vec, bool is_shrink, void (*del)(void*)) {
  * @param new New item that will replace the old one.
  * @return True if successful, else false.
  */
-bool vector_set(t_vector* vec, size_t index, void* new) {
-	if (!vec || !new || !vec->total)
+bool vector_set(t_vector* vec, size_t index, void* item) {
+	if (!vec || !item || !vec->total)
 		return (false);
 	if (index < vec->total) {
 		free(vec->items[index]);
-		vec->items[index] = new;
+		vec->items[index] = item;
 	}
 	return (true);
 }

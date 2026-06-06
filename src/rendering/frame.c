@@ -5,7 +5,6 @@
 #include "input.h"
 #include "lib_math.h"
 #include "rendering.h"
-#include "ui.h"
 #include "utils.h"
 
 static inline void process_frame(t_context* ctx, t_renderer* r);
@@ -33,7 +32,6 @@ void frame_loop(void* param) {
 	set_renderer_state(ctx, r, &update);
 	pthread_mutex_unlock(&r->mutex);
 
-	update_ui(ctx);
 	limit_polling_rate(r);
 }
 

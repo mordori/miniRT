@@ -2,6 +2,7 @@
 #include "editing.h"
 #include "input.h"
 #include "rendering.h"
+#include "ui.hpp"
 
 static inline void flag_update(t_context* ctx, bool* update);
 
@@ -18,6 +19,7 @@ void process_input(t_context* ctx, bool* update) {
 	if (ctx->renderer.mode != SOLID)
 		dirty |= cam_fly(ctx);
 	dirty |= rotate_skydome(ctx);
+	dirty |= check_ui_dirty();
 	if (dirty)
 		flag_update(ctx, update);
 }
@@ -25,6 +27,7 @@ void process_input(t_context* ctx, bool* update) {
 static inline void flag_update(t_context* ctx, bool* update) {
 	*update = true;
 	update_camera(ctx, &ctx->scene.cam);
+	ctx->renderer.cam = ctx->scene.cam;
 	if (ctx->renderer.mode == RENDERED)
 		atomic_store(&ctx->renderer.render_cancel, true);
 }

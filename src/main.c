@@ -3,9 +3,12 @@
 #include "materials.h"
 #include "rendering.h"
 #include "scene.h"
+#include "ui.hpp"
 #include "utils.h"
 
 static inline void initialize(t_context* ctx);
+
+void* g_ui_ctx = NULL;
 
 /**
  * @brief	Entry point to the program.
@@ -30,10 +33,10 @@ int main(int argc, char* argv[]) {
 
 static inline void initialize(t_context* ctx) {
 	init_scene(ctx);
-	ctx->mlx = mlx_init(WIDTH, HEIGHT, "miniRT", true);
+	ctx->mlx = mlx_init(WIDTH + UI_WIDTH, HEIGHT, "miniRT", true);
 	if (!ctx->mlx)
 		fatal_error(ctx, errors(ERR_MLXINIT), __FILE__, __LINE__);
-	ctx->img = mlx_new_image(ctx->mlx, ctx->mlx->width, ctx->mlx->height);
+	ctx->img = mlx_new_image(ctx->mlx, ctx->mlx->width - UI_WIDTH, ctx->mlx->height);
 	if (!ctx->img || mlx_image_to_window(ctx->mlx, ctx->img, 0, 0) == ERROR)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
 	mlx_key_hook(ctx->mlx, key_hook, ctx);
@@ -41,10 +44,14 @@ static inline void initialize(t_context* ctx) {
 	mlx_resize_hook(ctx->mlx, resize_hook, ctx);
 	if (!init_renderer(ctx))
 		return;
+	init_ui();
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	resize_window(ctx);
-	if (mlx_loop_hook(ctx->mlx, frame_loop, ctx))
-		mlx_loop(ctx->mlx);
+	g_ui_ctx = ctx;
+	// mlx_loop_hook(ctx->mlx, render_ui, ctx);
+	mlx_loop_hook(ctx->mlx, frame_loop, ctx);
+	mlx_loop(ctx->mlx);
+	cleanup_ui();
 	stop_render(&ctx->renderer);
 }
 
