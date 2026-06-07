@@ -30,7 +30,6 @@ void init_scene(t_context* ctx) {
 		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	ctx->bn_stride = (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
 
-	printf_init();
 	close(ctx->fd);
 	ctx->fd = ERROR;
 
@@ -59,6 +58,9 @@ void init_scene(t_context* ctx) {
 
 	if (!init_bvh(ctx))
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+
+	printf("\n\033[1;32mReady!\033[0m\n");
+	printf_init();
 }
 
 void clean_scene(t_context* ctx) {

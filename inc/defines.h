@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <stdatomic.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "MLX42.h"
@@ -546,6 +547,7 @@ struct __attribute__((aligned(16))) s_editor {
 	t_edit_mode mode;
 	t_axis constraint_axis;
 	uint32_t constraints;
+	bool request_ui_tab;
 };
 
 struct __attribute__((aligned(16))) s_pixel {

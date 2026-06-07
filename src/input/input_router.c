@@ -14,12 +14,14 @@ void process_input(t_context* ctx, bool* update) {
 	t_vec2i mouseDelta = get_mouse_delta(ctx);
 	bool dirty = false;
 	dirty |= config_camera(ctx);
-	dirty |= control_camera(ctx, mouseDelta);
-	dirty |= edit_object(ctx, mouseDelta);
-	if (ctx->renderer.mode != SOLID)
-		dirty |= cam_fly(ctx);
-	dirty |= rotate_skydome(ctx);
-	dirty |= check_ui_dirty();
+	if (!ui_want_mouse()) {
+		dirty |= control_camera(ctx, mouseDelta);
+		dirty |= edit_object(ctx, mouseDelta);
+		if (ctx->renderer.mode != SOLID)
+			dirty |= cam_fly(ctx);
+		dirty |= rotate_skydome(ctx);
+	}
+	dirty |= ui_check_dirty();
 	if (dirty)
 		flag_update(ctx, update);
 }
@@ -33,6 +35,8 @@ static inline void flag_update(t_context* ctx, bool* update) {
 }
 
 void key_hook(mlx_key_data_t keydata, void* param) {
+	if (ui_want_keyboard())
+		return;
 	t_context* ctx = (t_context*)param;
 
 	pthread_mutex_lock(&ctx->renderer.mutex);
@@ -54,9 +58,6 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
 		dirty |= reset_camera(ctx);
 
-	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_Y && keydata.action == MLX_PRESS)
-		screenshot(ctx);
-
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
 		set_default_view(ctx);
 	dirty |= config_renderer(ctx, keydata);
@@ -70,6 +71,9 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 }
 
 void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param) {
+	if (ui_want_mouse())
+		return;
+
 	mods = 0;
 	t_context* ctx = (t_context*)param;
 	t_renderer* r = &ctx->renderer;

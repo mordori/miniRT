@@ -1,3 +1,8 @@
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "libft_io.h"
 #include "libft_str.h"
 #include "utils.h"
@@ -49,4 +54,31 @@ void make_dir(t_context* ctx, const char* path) {
 		if (errno != EEXIST)
 			fatal_error(ctx, errors(ERR_DIR), __FILE__, __LINE__);
 	}
+}
+
+void open_image_viewer(const char* filepath) {
+	char command[512];
+
+#if defined(_WIN32)
+	snprintf(command, sizeof(command), "cmd.exe /c start \"\" \"%s\"", filepath);
+#elif defined(__APPLE__)
+	snprintf(command, sizeof(command), "open \"%s\"", filepath);
+#elif defined(__linux__)
+	if (is_wsl()) {
+		char abs_path[PATH_MAX];
+		if (realpath(filepath, abs_path) != NULL) {
+			snprintf(
+				command, sizeof(command), "powershell.exe -WindowStyle Hidden -Command \"Start-Process '$(wslpath -w '%s')'\"", abs_path);
+		} else {
+			return;
+		}
+	} else {
+		snprintf(command, sizeof(command), "xdg-open \"%s\" &", filepath);
+	}
+#else
+	return;
+#endif
+
+	int result = system(command);
+	(void)result;
 }

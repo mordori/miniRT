@@ -33,7 +33,8 @@ void set_mode_preview(t_context* ctx, t_renderer* r, bool* update);
 void set_mode_rendered(t_renderer* r);
 void start_render(t_renderer* r, const t_camera* cam);
 void stop_render(t_renderer* r);
-void screenshot(t_context* ctx);
+
+void screenshot(t_context* ctx, char* out_filepath, size_t max_len);
 void resize_hook(int width, int height, void* param);
 void resize_window(t_context* ctx);
 t_vec2 world_to_screen(t_context* ctx, const t_camera* cam, const t_viewport* vp, t_vec3 pos);

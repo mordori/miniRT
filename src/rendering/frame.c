@@ -12,7 +12,6 @@ static inline void set_renderer_state(t_context* ctx, t_renderer* r, bool* updat
 static inline bool is_active(t_context* ctx);
 static inline void copy_frame_buffer_rendered(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel);
 static inline void copy_frame_buffer_preview(const t_context* ctx, const uint32_t width, t_vec3* buf, uint32_t* pixels);
-static inline void print_render_status(t_context* ctx, t_renderer* r);
 static inline void limit_polling_rate(t_renderer* r);
 static inline uint32_t color_wave(uint32_t c1, uint32_t c2, float speed);
 
@@ -104,21 +103,13 @@ void blit(const t_context* ctx, const t_renderer* r, bool is_denoised) {
 }
 
 static inline void process_frame(t_context* ctx, t_renderer* r) {
-	static char buf[128];
-
-	print_render_status(ctx, r);
 	if (r->mode != RENDERED || r->frame < 8 || (r->frame < 16 && (r->frame & 1)) || r->frame == 32 || r->frame == 48 || r->frame == 64 ||
 		r->frame == 80 || (time_now() > r->blit_time + 5000 || r->frame >= r->render_samples)) {
-		uint32_t render_time = time_now() - r->render_time;
 		bool is_final = r->frame >= r->render_samples && r->mode == RENDERED;
 		if (is_final)
 			denoise(r);
 		blit(ctx, r, is_final);
 		r->blit_time = time_now();
-		if (is_final) {
-			snprintf(buf, sizeof(buf), "\r\033[K\033[1;32mDone!   Frames: %d   Render time: %.1fs\033[0m", r->frame, render_time / 1000.0f);
-			try_write(ctx, STDOUT_FILENO, buf);
-		}
 	}
 	r->frame_complete = false;
 	++r->frame;
@@ -158,27 +149,6 @@ static inline void copy_frame_buffer_preview(const t_context* ctx, const uint32_
 		pixels[i] = (edge_color & mask) | (vec3_to_uint32(post_process_preview(ctx, buf[i])) & ~mask);
 		++i;
 	}
-}
-
-static inline void print_render_status(t_context* ctx, t_renderer* r) {
-	const int bar_width = 20;
-	static char buf[128];
-	static char bar[32];
-
-	int hashes = (r->frame * bar_width) / r->render_samples;
-	if (hashes > bar_width)
-		hashes = bar_width;
-	int i = 0;
-	while (i < bar_width) {
-		if (i < hashes)
-			bar[i] = '#';
-		else
-			bar[i] = ' ';
-		++i;
-	}
-	bar[bar_width] = '\0';
-	snprintf(buf, sizeof(buf), "\r\033[K\033[1;33mRendering...   [%s] [%u/%u]\033[0m", bar, r->frame, r->render_samples);
-	try_write(ctx, STDOUT_FILENO, buf);
 }
 
 static inline void limit_polling_rate(t_renderer* r) {

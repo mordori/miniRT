@@ -1,4 +1,5 @@
 #include <GLFW/glfw3.h>
+#include <stdio.h>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -8,14 +9,23 @@ extern "C" {
 #include "defines.h"
 #include "rendering.h"
 #include "ui.hpp"
+#include "utils.h"
 }
 
 static bool g_ui_dirty = false;
 
-extern "C" bool check_ui_dirty(void) {
+extern "C" bool ui_check_dirty(void) {
 	bool state = g_ui_dirty;
 	g_ui_dirty = false;
 	return state;
+}
+
+extern "C" bool ui_want_mouse(void) {
+	return ImGui::GetIO().WantCaptureMouse;
+}
+
+extern "C" bool ui_want_keyboard(void) {
+	return ImGui::GetIO().WantCaptureKeyboard;
 }
 
 void init_ui() {
@@ -24,11 +34,6 @@ void init_ui() {
 		return;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	// io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	// io.ConfigViewportsNoAutoMerge = true;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
@@ -49,6 +54,7 @@ void render_ui(void* param) {
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
+	window_flags |= ImGuiWindowFlags_NoNav;
 	ImGui::Begin("Side Panel", NULL, window_flags);
 	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
 	if (ImGui::BeginTabBar("SideBarTabs")) {
@@ -70,7 +76,53 @@ void render_ui(void* param) {
 				g_ui_dirty |= ImGui::SliderScalar("Bounces", ImGuiDataType_U32, &r->render_bounces, &min_bounces, &max_bounces);
 				ImGui::Spacing();
 				ImGui::Spacing();
-				if (ImGui::Button("Save render", ImVec2(150.0f, 0.0f))) {}
+
+				float progress = 0.0f;
+				char progress_text[64];
+				bool is_done = false;
+				if (r->mode == RENDERED) {
+					progress = (float)r->frame / (float)r->render_samples;
+					if (progress >= 1.0f) {
+						progress = 1.0f;
+						is_done = true;
+					}
+					float elapsed_sec = (time_now() - r->render_time) / 1000.0f;
+					if (is_done)
+						snprintf(progress_text, sizeof(progress_text), "Done! (%.1fs)", elapsed_sec);
+					else
+						snprintf(progress_text, sizeof(progress_text), "Rendering: %u / %u", r->frame, r->render_samples);
+				} else {
+					snprintf(progress_text, sizeof(progress_text), "Preview Mode");
+				}
+				if (is_done)
+					ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.2f, 0.8f, 0.2f, 1.0f));
+				else if (r->mode != RENDERED)
+					progress = 1.0f;
+				ImGui::ProgressBar(progress, ImVec2(-1.0f, 0.0f), progress_text);
+				static uint64_t save_time = 0;
+				static char last_saved_file[256] = "";
+				if (is_done) {
+					ImGui::PopStyleColor();
+					ImGui::Spacing();
+					ImGui::Spacing();
+					float button_width = 150.0f;
+					float avail_width = ImGui::GetContentRegionAvail().x;
+					float offset = (avail_width - button_width) * 0.5f;
+					ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
+					if (ImGui::Button("Save render", ImVec2(button_width, 0.0f))) {
+						screenshot(ctx, last_saved_file, sizeof(last_saved_file));
+						open_image_viewer(last_saved_file);
+						save_time = time_now();
+					}
+					if (save_time > 0 && (time_now() - save_time) < 1000) {
+						ImGui::Spacing();
+						const char* text = "Image saved!";
+						float text_width = ImGui::CalcTextSize(text).x;
+						float text_offset = (ImGui::GetContentRegionAvail().x - text_width) * 0.5f;
+						ImGui::SetCursorPosX(ImGui::GetCursorPosX() + text_offset);
+						ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "%s", text);
+					}
+				}
 				ImGui::Spacing();
 				ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Presets", ImGuiTreeNodeFlags_DefaultOpen)) {}
@@ -103,8 +155,13 @@ void render_ui(void* param) {
 			ImGui::EndTabItem();
 		}
 
-		if (ctx->editor.selected_obj != NULL) {
-			ImGuiTabItemFlags tab_flags = ImGuiTabItemFlags_SetSelected;
+		bool is_selecting{ ctx->editor.selected_obj != NULL };
+		if (is_selecting) {
+			ImGuiTabItemFlags tab_flags = ImGuiTabItemFlags_None;
+			if (ctx->editor.request_ui_tab) {
+				tab_flags |= ImGuiTabItemFlags_SetSelected;
+				ctx->editor.request_ui_tab = false;
+			}
 			if (ImGui::BeginTabItem("Object", NULL, tab_flags)) {
 				ImGui::Text("Name");
 				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {}
@@ -114,8 +171,8 @@ void render_ui(void* param) {
 				ImGui::EndTabItem();
 			}
 		}
-		ImGui::EndTabBar();
 	}
+	ImGui::EndTabBar();
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -7,7 +7,9 @@
 extern "C" {
 #endif
 
-bool check_ui_dirty(void);
+bool ui_check_dirty(void);
+bool ui_want_mouse(void);
+bool ui_want_keyboard(void);
 
 void init_ui(void);
 void render_ui(void* param);

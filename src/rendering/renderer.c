@@ -203,10 +203,8 @@ void set_mode_rendered(t_renderer* r) {
 }
 
 bool config_renderer(t_context* ctx, mlx_key_data_t keydata) {
-	// set_samples(ctx, keydata);
 	bool dirty = false;
 	dirty |= set_render_mode(ctx, &ctx->renderer, keydata);
-	// dirty |= set_bounces(ctx, keydata);
 	return dirty;
 }
 
@@ -229,42 +227,3 @@ static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t
 	}
 	return false;
 }
-
-// static inline void set_samples(t_context* ctx, mlx_key_data_t keydata) {
-// 	t_renderer* r = &ctx->renderer;
-// 	if (keydata.key == MLX_KEY_O && keydata.action == MLX_PRESS) {
-// 		r->render_samples >>= 1u;
-// 		if (r->render_samples < 1u)
-// 			r->render_samples = 1u;
-// 	}
-// 	if (keydata.key == MLX_KEY_P && keydata.action == MLX_PRESS) {
-// 		bool was_finished = r->frame >= r->render_samples && r->mode == RENDERED;
-// 		r->render_samples <<= 1u;
-// 		if (r->render_samples > 512u) {
-// 			r->render_samples = 512u;
-// 		} else if (was_finished && r->frame < r->render_samples) {
-// 			--r->frame;
-// 			blit(ctx, r, false);
-// 			++r->frame;
-// 		}
-// 	}
-// }
-
-// static inline bool set_bounces(t_context* ctx, mlx_key_data_t keydata) {
-// 	t_renderer* r = &ctx->renderer;
-// 	if (keydata.key == MLX_KEY_U && keydata.action == MLX_PRESS) {
-// 		r->render_bounces >>= 1u;
-// 		if (r->render_bounces < 2u)
-// 			r->render_bounces = 2u;
-// 		else
-// 			return true;
-// 	}
-// 	if (keydata.key == MLX_KEY_I && keydata.action == MLX_PRESS) {
-// 		r->render_bounces <<= 1u;
-// 		if (r->render_bounces > 16u)
-// 			r->render_bounces = 16u;
-// 		else
-// 			return true;
-// 	}
-// 	return false;
-// }

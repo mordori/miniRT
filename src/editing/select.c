@@ -49,6 +49,7 @@ static inline void select_obj(t_context* ctx, t_renderer* r, t_ray* ray, t_hit* 
 		pthread_mutex_unlock(&r->mutex);
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	}
+	ctx->editor.request_ui_tab = true;
 }
 
 bool deselect_object(t_context* ctx, t_renderer* r) {
