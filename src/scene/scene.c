@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "defines.h"
+#include "lib_math.h"
 #include "libft_str.h"
 #include "materials.h"
 #include "objects.h"
@@ -16,6 +17,12 @@ void init_scene(t_context* ctx) {
 	vector_try_init(ctx, &ctx->scene.env.lights, false, free);
 	vector_try_init(ctx, &ctx->scene.assets.materials, false, free);
 	lut_srgb_to_linear();
+
+	t_material mat = { 0 };
+	mat.albedo = (t_vec3){ { 0.5f, 0.5f, 0.5f, 1.0f } };
+	mat.ior = 1.4f;
+	mat.roughness = 0.4f;
+	new_material(ctx, &mat, 0);
 
 	// TODO: remove hard coded test
 	if (strcmp("assets/scenes/empty.rt", ctx->file) == 0 || strcmp("assets/scenes/cornell_box.rt", ctx->file) == 0) {
@@ -36,13 +43,13 @@ void init_scene(t_context* ctx) {
 	// TODO: remove hard coded test
 	{
 		if (strcmp("assets/scenes/empty.rt", ctx->file) == 0)
-			add_mesh(ctx, "dragon.obj", 3);
+			add_mesh(ctx, "dragon.obj", 4);
 		else if (strcmp("assets/scenes/cornell_box.rt", ctx->file) == 0)
-			add_mesh(ctx, "bunny.obj", 4);
+			add_mesh(ctx, "bunny.obj", 5);
 
 		if (ctx->scene.env.has_dir_light) {
 			t_vec3 initial_pos = { { 704000.0f, 484000.0f, 520000.0f, 0.0f } };
-			ctx->scene.cam.skydome_uv_offset.u = 0.48f;
+			ctx->scene.cam.skydome_uv_offset.u = 0.5f;
 			t_light* light = &ctx->scene.cam.directional_light;
 			float angle = ctx->scene.cam.skydome_uv_offset.u * M_TAUf;
 			t_vec2 theta = { .sin = sinf(angle), .cos = cosf(angle) };

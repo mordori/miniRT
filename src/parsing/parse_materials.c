@@ -44,7 +44,7 @@ t_error resolve_material(t_context* ctx, t_parser* p, const char* token, uint32_
 		return (E_MATERIAL);
 	if (ref_mat->is_emissive)
 		return (E_EMISSIVE);
-	*out_id = id;
+	*out_id = id + 1;
 	return (E_OK);
 }
 

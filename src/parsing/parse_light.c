@@ -59,6 +59,7 @@ static t_error parse_light_mat(t_parser* p, char** tokens, uint32_t* mat_id) {
 	mat = get_material_by_id(p, *mat_id);
 	if (!mat)
 		return (E_MATERIAL);
+	*mat_id += 1;
 	return (E_OK);
 }
 

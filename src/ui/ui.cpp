@@ -7,17 +7,24 @@
 
 extern "C" {
 #include "defines.h"
+#include "lib_math.h"
+#include "materials.h"
+#include "objects.h"
 #include "rendering.h"
+#include "scene.h"
 #include "ui.hpp"
 #include "utils.h"
 }
 
 static bool g_ui_dirty = false;
+static bool g_ui_interacting = false;
 
 extern "C" bool ui_check_dirty(void) {
-	bool state = g_ui_dirty;
-	g_ui_dirty = false;
-	return state;
+	return g_ui_dirty;
+}
+
+extern "C" bool ui_is_interacting(void) {
+	return g_ui_interacting;
 }
 
 extern "C" bool ui_want_mouse(void) {
@@ -28,12 +35,20 @@ extern "C" bool ui_want_keyboard(void) {
 	return ImGui::GetIO().WantCaptureKeyboard;
 }
 
+static bool g_ui_transform_dirty = false;
+
+extern "C" bool ui_check_transform_dirty(void) {
+	return g_ui_transform_dirty;
+}
+
 void init_ui() {
 	GLFWwindow* window = glfwGetCurrentContext();
 	if (!window)
 		return;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
@@ -42,6 +57,9 @@ void init_ui() {
 void render_ui(void* param) {
 	t_context* ctx = (t_context*)param;
 	t_renderer* r = &ctx->renderer;
+	g_ui_dirty = false;
+	g_ui_interacting = false;
+	g_ui_transform_dirty = false;
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -56,10 +74,198 @@ void render_ui(void* param) {
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	window_flags |= ImGuiWindowFlags_NoNav;
 	ImGui::Begin("Side Panel", NULL, window_flags);
-	ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
 	if (ImGui::BeginTabBar("SideBarTabs")) {
 		if (ImGui::BeginTabItem("Scene")) {
+			if (ImGui::CollapsingHeader("Presets", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Spacing();
+				ImGui::Spacing();
+
+				const char* items[] = { "Empty", "Cornell Box" };
+				static int current_item = 0;
+				if (ImGui::BeginCombo("##scene_presets", items[current_item])) {
+					for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+						bool is_selected = (current_item == n);
+						if (ImGui::Selectable(items[n], is_selected)) {
+							current_item = n;
+							g_ui_dirty = true;
+						}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+			}
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			if (ImGui::CollapsingHeader("Add", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Spacing();
+				ImGui::Spacing();
+
+				if (ImGui::BeginTable("AddObjectTable", 2)) {
+					ImVec2 button_size(-FLT_MIN, 0.0f);
+
+					ImGui::TableNextColumn();
+					if (ImGui::Button("Cube", button_size)) {}
+
+					ImGui::TableNextColumn();
+					if (ImGui::Button("Sphere", button_size)) {}
+
+					ImGui::EndTable();
+				}
+			}
+			ImGui::Spacing();
+
+			float refresh_width = ImGui::CalcTextSize("Refresh").x + (ImGui::GetStyle().FramePadding.x * 2.0f);
+			float spacing = ImGui::GetStyle().ItemSpacing.x;
+
+			if (ImGui::Button("Mesh...", ImVec2(-(refresh_width + spacing), 0.0f)))
+				ImGui::OpenPopup("MeshDropdown");
+
+			ImGui::SameLine();
+			if (ImGui::Button("Refresh", ImVec2(refresh_width, 0.0f))) {
+				// TODO: scan_for_new_meshes(ctx)
+			}
+
+			if (ImGui::BeginPopup("MeshDropdown")) {
+				if (ctx->loaded_mesh_count == 0 || !ctx->lib_mesh) {
+					ImGui::TextDisabled("No meshes in library");
+				} else {
+					for (uint32_t i = 0; i < ctx->loaded_mesh_count; ++i) {
+						if (ImGui::Selectable(ctx->lib_mesh[i].name)) {
+							atomic_store(&r->render_cancel, true);
+							add_mesh(ctx, ctx->lib_mesh[i].name, 0);
+							pthread_mutex_lock(&r->mutex);
+							while (r->threads_running)
+								pthread_cond_wait(&r->cond, &r->mutex);
+							if (!init_bvh(ctx)) {
+								pthread_mutex_unlock(&r->mutex);
+								fatal_error(ctx, errors(ERR_BVH), (char*)__FILE__, __LINE__);
+							}
+							pthread_mutex_unlock(&r->mutex);
+							g_ui_dirty = true;
+						}
+					}
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
+				t_camera* cam = &ctx->scene.cam;
+				ImGuiSliderFlags cam_flags = ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp;
+				ImGui::Spacing();
+				ImGui::Spacing();
+
+				bool update = false;
+				ImGui::Text("Position");
+				if (ImGui::DragFloat3("##cam_pos", (float*)&cam->transform.pos, 0.005f)) {
+					if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+						update = true;
+				}
+				if (ImGui::IsItemDeactivatedAfterEdit())
+					update = true;
+				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+
+				ImGui::Text("Rotation");
+				t_vec3 degrees = { //
+					rad_to_degrees(-cam->transform.rot_euler.x),
+					rad_to_degrees(cam->transform.rot_euler.y),
+					0.0f
+				};
+				if (ImGui::DragFloat3("##cam_rot", (float*)&degrees, 0.05f)) {
+					cam->transform.rot_euler = { //
+						degrees_to_rad(-degrees.x),
+						degrees_to_rad(degrees.y),
+						0.0f
+					};
+					cam->transform.rot = quat_from_euler(cam->transform.rot_euler);
+					cam->pitch = -cam->transform.rot_euler.x;
+					cam->yaw = cam->transform.rot_euler.y;
+					if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+						update = true;
+				}
+				if (ImGui::IsItemDeactivatedAfterEdit())
+					update = true;
+				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+
+				if (update) {
+					g_ui_transform_dirty = true;
+					g_ui_dirty = true;
+				}
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+
+				if (ImGui::SliderFloat("Focal Length", &ctx->scene.cam.focal_len_mm, 14.0f, 200.0f, "%.1f", cam_flags))
+					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+
+				if (ImGui::SliderFloat("Focus Dist", &ctx->scene.cam.focus_dist, 0.1f, 100.0f, "%.1f", cam_flags))
+					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+
+				if (ImGui::SliderFloat("F-stop", &ctx->scene.cam.f_stop, 1.0f, 128.0f, "%.1f", cam_flags))
+					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+
+				// if (ImGui::SliderFloat("Shutter Speed", &ctx->scene.cam.shutter_speed, 0.01f, 10000.0f, "%.2f", cam_flags))
+				// 	g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				// g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+				// g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+
+				// if (ImGui::SliderFloat("ISO", &ctx->scene.cam.iso, 100.0f, 3000.0f, "%.0f", cam_flags))
+				// 	g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				// g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+				// g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+			}
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			if (ctx->scene.env.has_dir_light) {
+				if (ImGui::CollapsingHeader("Environment", ImGuiTreeNodeFlags_DefaultOpen)) {
+					ImGui::Spacing();
+					ImGui::Spacing();
+
+					if (ImGui::Checkbox("Show Background", &ctx->scene.env.show_background))
+						g_ui_dirty = true;
+					ImGui::Spacing();
+
+					float temp = ctx->scene.cam.skydome_uv_offset.u * 360.0f;
+					if (ImGui::SliderFloat("Rotate", &temp, 0.0f, 360.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp)) {
+						ctx->scene.cam.skydome_uv_offset.u = temp / 360.0f;
+						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+							rotate_skydome(ctx);
+							g_ui_dirty = true;
+						}
+					}
+					if (ImGui::IsItemDeactivatedAfterEdit()) {
+						rotate_skydome(ctx);
+						g_ui_dirty = true;
+					}
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+				}
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+			}
+
 			if (ImGui::CollapsingHeader("Renderer", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Spacing();
+				ImGui::Spacing();
+
 				uint32_t min_samples = 1u, max_samples = 256u;
 				uint32_t min_bounces = 1u, max_bounces = 16u;
 				if (ImGui::SliderScalar(
@@ -76,6 +282,8 @@ void render_ui(void* param) {
 				g_ui_dirty |= ImGui::SliderScalar("Bounces", ImGuiDataType_U32, &r->render_bounces, &min_bounces, &max_bounces);
 				ImGui::Spacing();
 				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
 
 				float progress = 0.0f;
 				char progress_text[64];
@@ -90,7 +298,7 @@ void render_ui(void* param) {
 					if (is_done)
 						snprintf(progress_text, sizeof(progress_text), "Done! (%.1fs)", elapsed_sec);
 					else
-						snprintf(progress_text, sizeof(progress_text), "Rendering: %u / %u", r->frame, r->render_samples);
+						snprintf(progress_text, sizeof(progress_text), "Rendering %u / %u", r->frame, r->render_samples);
 				} else {
 					snprintf(progress_text, sizeof(progress_text), "Preview Mode");
 				}
@@ -109,7 +317,7 @@ void render_ui(void* param) {
 					float avail_width = ImGui::GetContentRegionAvail().x;
 					float offset = (avail_width - button_width) * 0.5f;
 					ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
-					if (ImGui::Button("Save render", ImVec2(button_width, 0.0f))) {
+					if (ImGui::Button("Save Render", ImVec2(button_width, 0.0f))) {
 						screenshot(ctx, last_saved_file, sizeof(last_saved_file));
 						open_image_viewer(last_saved_file);
 						save_time = time_now();
@@ -123,66 +331,330 @@ void render_ui(void* param) {
 						ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "%s", text);
 					}
 				}
-				ImGui::Spacing();
-				ImGui::Spacing();
-				if (ImGui::CollapsingHeader("Presets", ImGuiTreeNodeFlags_DefaultOpen)) {}
-				ImGui::Spacing();
-				ImGui::Spacing();
-				if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
-					g_ui_dirty |= ImGui::SliderFloat(
-						"Focal Length", &ctx->scene.cam.focal_len_mm, 14.0f, 200.0f, "%.0f", ImGuiSliderFlags_Logarithmic);
-					g_ui_dirty |=
-						ImGui::SliderFloat("Focus Dist", &ctx->scene.cam.focus_dist, 0.1f, 100.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
-					g_ui_dirty |=
-						ImGui::SliderFloat("F-stop", &ctx->scene.cam.f_stop, 0.95f, 128.0f, "%.02f", ImGuiSliderFlags_Logarithmic);
-					g_ui_dirty |= ImGui::SliderFloat(
-						"Shutter speed", &ctx->scene.cam.shutter_speed, 0.01f, 10000.0f, "%.2f", ImGuiSliderFlags_Logarithmic);
-					g_ui_dirty |= ImGui::SliderFloat("ISO", &ctx->scene.cam.iso, 100.0f, 3000.0f, "%.0f", ImGuiSliderFlags_Logarithmic);
-				}
-				ImGui::Spacing();
-				ImGui::Spacing();
-				if (ImGui::CollapsingHeader("Environment", ImGuiTreeNodeFlags_DefaultOpen)) {
-					float temp = ctx->scene.cam.skydome_uv_offset.u * 360.0f;
-					if (ImGui::SliderFloat("Rotate", &temp, 0.0f, 360.0f, "%.0f")) {
-						ctx->scene.cam.skydome_uv_offset.u = temp / 360.0f;
-						g_ui_dirty = true;
-					}
-				}
-				ImGui::Spacing();
-				ImGui::Spacing();
-				if (ImGui::CollapsingHeader("Add", ImGuiTreeNodeFlags_DefaultOpen)) {}
 			}
 			ImGui::EndTabItem();
 		}
 
 		bool is_selecting{ ctx->editor.selected_obj != NULL };
 		if (is_selecting) {
+			t_object* obj = ctx->editor.selected_obj;
 			ImGuiTabItemFlags tab_flags = ImGuiTabItemFlags_None;
 			if (ctx->editor.request_ui_tab) {
 				tab_flags |= ImGuiTabItemFlags_SetSelected;
 				ctx->editor.request_ui_tab = false;
 			}
 			if (ImGui::BeginTabItem("Object", NULL, tab_flags)) {
+				ImGui::Spacing();
+				ImGui::Spacing();
 				ImGui::Text("Name");
-				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {}
 				ImGui::Spacing();
 				ImGui::Spacing();
-				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen)) {}
+				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+					ImGui::Spacing();
+					ImGui::Spacing();
+					bool update = false;
+
+					ImGui::Text("Position");
+					if (ImGui::DragFloat3("##pos", (float*)&obj->transform.pos, 0.005f)) {
+						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+							update = true;
+					}
+					if (ImGui::IsItemDeactivatedAfterEdit())
+						update = true;
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+
+					ImGui::Text("Rotation");
+					t_vec3 degrees = { //
+						rad_to_degrees(obj->transform.rot_euler.x),
+						rad_to_degrees(obj->transform.rot_euler.y),
+						rad_to_degrees(obj->transform.rot_euler.z)
+					};
+					if (ImGui::DragFloat3("##rot", (float*)&degrees, 0.5f)) {
+						obj->transform.rot_euler = { //
+							degrees_to_rad(degrees.x),
+							degrees_to_rad(degrees.y),
+							degrees_to_rad(degrees.z)
+						};
+						obj->transform.rot = quat_from_euler(obj->transform.rot_euler);
+						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+							update = true;
+					}
+					if (ImGui::IsItemDeactivatedAfterEdit())
+						update = true;
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+
+					static bool is_uniform = true;
+					ImGui::Text("Scale");
+					if (ImGui::DragFloat3("##scale", (float*)&obj->transform.scale, 0.002f)) {
+						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+							// if (is)
+							update = true;
+						}
+					}
+					if (ImGui::IsItemDeactivatedAfterEdit())
+						update = true;
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::SameLine();
+					if (ImGui::Checkbox("Uniform", &is_uniform)) {}
+
+					if (update) {
+						g_ui_transform_dirty = true;
+						g_ui_dirty = true;
+					}
+				}
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+
+				ImGuiSliderFlags mat_flags = ImGuiSliderFlags_AlwaysClamp;
+				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen)) {
+					ImGui::Spacing();
+					ImGui::Spacing();
+
+					char preview[64];
+					if (obj->material_id == 0)
+						snprintf(preview, sizeof(preview), "Material 0 (Default)");
+					else
+						snprintf(preview, sizeof(preview), "Material %u", obj->material_id);
+
+					if (ImGui::BeginCombo("##mat_select", preview)) {
+						for (uint32_t i = 0; i < ctx->scene.assets.materials.total; i++) {
+							char label[64];
+							if (i == 0)
+								snprintf(label, sizeof(label), "Material 0 (Default)");
+							else
+								snprintf(label, sizeof(label), "Material %u", i);
+
+							bool is_selected = (obj->material_id == i);
+							if (ImGui::Selectable(label, is_selected)) {
+								obj->material_id = i;
+								obj->mat = ((t_material**)ctx->scene.assets.materials.items)[i];
+								g_ui_dirty = true;
+							}
+							if (is_selected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::Separator();
+
+						if (ImGui::Selectable("Create New...")) {
+							t_material clone = *obj->mat;
+							uint32_t new_id;
+
+							atomic_store(&r->render_cancel, true);
+							pthread_mutex_lock(&r->mutex);
+							while (r->threads_running)
+								pthread_cond_wait(&r->cond, &r->mutex);
+
+							if (new_material(ctx, &clone, &new_id) == E_OK) {
+								obj->material_id = new_id;
+								obj->mat = ((t_material**)ctx->scene.assets.materials.items)[new_id];
+							}
+							pthread_mutex_unlock(&r->mutex);
+							g_ui_dirty = true;
+						}
+						ImGui::EndCombo();
+					}
+					ImGui::Spacing();
+					ImGui::Spacing();
+					ImGui::Spacing();
+					ImGui::Spacing();
+
+					bool is_default = (obj->material_id == 0);
+					if (is_default) {
+						ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.2f, 1.0f), "Default Material is Read-Only");
+						ImGui::BeginDisabled();
+						ImGui::Spacing();
+						ImGui::Spacing();
+					}
+
+					ImGuiColorEditFlags color_flags = ImGuiColorEditFlags_NoInputs;
+					if (ImGui::ColorEdit4("Albedo", obj->mat->albedo.data, color_flags))
+						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+
+					float roughness = obj->mat->roughness;
+					if (ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f, "%.2f", mat_flags)) {
+						obj->mat->roughness = fmaxf(roughness, 0.045f);
+						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+					}
+					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+
+					if (ImGui::SliderFloat("Metallic", &obj->mat->metallic, 0.0f, 1.0f, "%.2f", mat_flags))
+						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+
+					float ior = obj->mat->ior;
+					if (ImGui::SliderFloat("IOR", &ior, 1.0f, 2.4f, "%.2f", mat_flags)) {
+						obj->mat->ior = fmaxf(ior, 1.0f);
+						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+					}
+					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+
+					float transmission = obj->mat->transmission;
+					if (ImGui::SliderFloat("Transmission", &transmission, 1.0f, 2.4f, "%.2f", mat_flags)) {
+						obj->mat->transmission = fmaxf(transmission, 1.0f);
+						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+					}
+					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					ImGui::Spacing();
+					ImGui::Spacing();
+
+					// if (ImGui::Checkbox("Double-sided", &is_uniform)) {}
+
+					if (is_default)
+						ImGui::EndDisabled();
+				}
 				ImGui::EndTabItem();
 			}
 		}
 	}
 	ImGui::EndTabBar();
 	ImGui::End();
+
+	ImGui::SetNextWindowPos(ImVec2(0, wh - UI_BOTTOM), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(ww - 350, UI_BOTTOM), ImGuiCond_Always);
+	ImGuiWindowFlags bar_flags = 0;
+	bar_flags |= ImGuiWindowFlags_NoTitleBar;
+	bar_flags |= ImGuiWindowFlags_NoResize;
+	bar_flags |= ImGuiWindowFlags_NoMove;
+	bar_flags |= ImGuiWindowFlags_NoScrollbar;
+	bar_flags |= ImGuiWindowFlags_NoSavedSettings;
+	bar_flags |= ImGuiWindowFlags_NoFocusOnAppearing;
+	bar_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10.0f, 6.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+
+	ImGui::Begin("ActionBar", NULL, bar_flags);
+
+	bool is_selecting = (ctx->editor.selected_obj != NULL);
+	ImGui::TextDisabled("TAB:");
+	ImGui::SameLine(0, 4);
+	if (ctx->renderer.mode != SOLID) {
+		ImGui::Text("Edit Mode");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("LMB:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Select");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("W A S D:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Move");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("RMB:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Look");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("Space:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Ascend");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("Shift:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Descend");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("R:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Reset View");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("T:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Save View");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("ESC:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Quit");
+		ImGui::SameLine(0, 30);
+	} else {
+		ImGui::Text("Render Mode");
+		ImGui::SameLine(0, 30);
+		if (is_selecting) {
+			if (ctx->editor.mode != EDIT_DEFAULT) {
+				ImGui::TextDisabled("LMB:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Apply");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("RMB:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Cancel");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("X Y Z:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Axis Constraint");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("Shift+X Y Z:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Planar Constraint");
+				ImGui::SameLine(0, 30);
+
+			} else {
+				ImGui::TextDisabled("G:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Translate");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("S:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Scale");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("R:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Rotate");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("F:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Focus");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("Shift+D:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Duplicate");
+				ImGui::SameLine(0, 30);
+				ImGui::TextDisabled("DEL:");
+				ImGui::SameLine(0, 4);
+				ImGui::Text("Delete");
+				ImGui::SameLine(0, 30);
+			}
+		} else {
+			ImGui::TextDisabled("LMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Select");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Alt+LMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Orbit");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Alt+RMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Zoom");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Alt+MMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Pan");
+			ImGui::SameLine(0, 30);
+		}
+	}
+
+	ImGui::SameLine(ImGui::GetWindowWidth() - 65.0f);
+	ImGui::TextDisabled("%.1f FPS", ImGui::GetIO().Framerate);
+
+	ImGui::End();
+	ImGui::PopStyleColor();
+	ImGui::PopStyleVar(2);
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	// ImGuiIO& io = ImGui::GetIO();
-	// if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-	// 	GLFWwindow* window = glfwGetCurrentContext();
-	// 	ImGui::UpdatePlatformWindows();
-	// 	ImGui::RenderPlatformWindowsDefault();
-	// 	glfwMakeContextCurrent(window);
-	// }
 }
 
 void cleanup_ui() {

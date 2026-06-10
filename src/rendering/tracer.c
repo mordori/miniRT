@@ -80,7 +80,8 @@ static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel,
 			nee(ctx, path, pixel, mode);
 		return scatter(ctx, path, pixel);
 	}
-	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset, is_primary_ray);
+	t_vec3 bg_color =
+		background_color(&ctx->scene, &path->ray, ctx->renderer.cam.skydome_uv_offset, is_primary_ray, ctx->scene.env.show_background);
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	if (is_primary_ray)
 		accumulate_aux_buffers(r, pixel, bg_color, vec3_negate(path->ray.dir));

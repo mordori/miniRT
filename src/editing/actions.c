@@ -7,20 +7,18 @@
 #include "utils.h"
 
 void edit_action(t_context* ctx, t_vec2i delta) {
-	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300) {
-		if (delta.x || delta.y) {
-			float speed = eval_speed(ctx);
-			float magnitude = eval_magnitude(ctx, delta, speed);
-			if (ctx->editor.mode == EDIT_TRANSLATE)
-				obj_translate(ctx, magnitude, delta, speed);
-			else if (ctx->editor.mode == EDIT_ROTATE)
-				obj_rotate(ctx, magnitude);
-			else if (ctx->editor.mode == EDIT_SCALE)
-				obj_scale(ctx, magnitude);
-			update_transform(&ctx->editor.selected_obj->transform);
-			update_bounds(ctx->editor.selected_obj);
-			update_light_radius(ctx);
-		}
+	if (delta.x || delta.y) {
+		float speed = eval_speed(ctx);
+		float magnitude = eval_magnitude(ctx, delta, speed);
+		if (ctx->editor.mode == EDIT_TRANSLATE)
+			obj_translate(ctx, magnitude, delta, speed);
+		else if (ctx->editor.mode == EDIT_ROTATE)
+			obj_rotate(ctx, magnitude);
+		else if (ctx->editor.mode == EDIT_SCALE)
+			obj_scale(ctx, magnitude);
+		update_transform(&ctx->editor.selected_obj->transform);
+		update_bounds(ctx->editor.selected_obj);
+		update_light_radius(ctx);
 	}
 }
 
@@ -56,11 +54,10 @@ void apply_edit_action(t_context* ctx) {
 	end_edit_action(ctx);
 }
 
-bool cancel_edit_action(t_context* ctx) {
+void cancel_edit_action(t_context* ctx) {
 	ctx->editor.selected_obj->transform = ctx->editor.orig_transform;
 	update_transform(&ctx->editor.selected_obj->transform);
 	update_bounds(ctx->editor.selected_obj);
 	update_light_radius(ctx);
 	end_edit_action(ctx);
-	return true;
 }

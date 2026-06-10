@@ -1,7 +1,10 @@
 #include "camera.h"
 #include "editing.h"
 #include "input.h"
+#include "lights.h"
+#include "objects.h"
 #include "rendering.h"
+#include "scene.h"
 #include "ui.hpp"
 
 static inline void flag_update(t_context* ctx, bool* update);
@@ -11,15 +14,19 @@ void process_input(t_context* ctx, bool* update) {
 		while (ctx->renderer.threads_running)
 			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
 
+	if (ui_check_transform_dirty() && ctx->editor.selected_obj) {
+		update_transform(&ctx->editor.selected_obj->transform);
+		update_bounds(ctx->editor.selected_obj);
+		update_light_radius(ctx);
+	}
+
 	t_vec2i mouseDelta = get_mouse_delta(ctx);
 	bool dirty = false;
-	dirty |= config_camera(ctx);
 	if (!ui_want_mouse()) {
 		dirty |= control_camera(ctx, mouseDelta);
 		dirty |= edit_object(ctx, mouseDelta);
 		if (ctx->renderer.mode != SOLID)
 			dirty |= cam_fly(ctx);
-		dirty |= rotate_skydome(ctx);
 	}
 	dirty |= ui_check_dirty();
 	if (dirty)
@@ -48,18 +55,13 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 		dirty |= config_editor(ctx, keydata);
 		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
 			dirty |= frame_camera(ctx, ctx->editor.selected_obj);
-
-		if (keydata.key == MLX_KEY_Q && keydata.action == MLX_PRESS)
-			dirty |= deselect_object(ctx, &ctx->renderer);
 	}
-	if (keydata.key == MLX_KEY_H && keydata.action == MLX_PRESS)
-		ctx->hide_stats = !ctx->hide_stats;
 
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
 		dirty |= reset_camera(ctx);
-
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
 		set_default_view(ctx);
+
 	dirty |= config_renderer(ctx, keydata);
 	pthread_mutex_unlock(&ctx->renderer.mutex);
 
@@ -74,9 +76,10 @@ void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	if (ui_want_mouse())
 		return;
 
-	mods = 0;
+	(void)mods;
 	t_context* ctx = (t_context*)param;
 	t_renderer* r = &ctx->renderer;
+	bool dirty = false;
 
 	pthread_mutex_lock(&r->mutex);
 	if (r->mode == SOLID) {
@@ -88,13 +91,14 @@ void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 				select_object(ctx);
 			else
 				apply_edit_action(ctx);
-			mods = 1;
+			dirty = true;
 		} else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_PRESS && ctx->editor.mode != EDIT_DEFAULT &&
 			!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
-			mods = cancel_edit_action(ctx);
+			cancel_edit_action(ctx);
+			dirty = true;
 		}
 	}
-	if (mods)
+	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
 	pthread_mutex_unlock(&r->mutex);
 }

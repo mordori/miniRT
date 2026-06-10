@@ -20,7 +20,7 @@
  * @param fd File descriptor.
  * @return Number of characters written, ERROR on error or only partial write.
  */
-ssize_t ft_putstr_fd(char* s, int fd) {
+ssize_t ft_putstr_fd(const char* s, int fd) {
 	ssize_t bytes;
 	ssize_t totalbytes;
 	size_t len;

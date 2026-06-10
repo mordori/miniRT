@@ -318,6 +318,7 @@ static inline t_quat quat_normalize(t_quat q);
 static inline t_mat4 quat_to_mat4(t_quat q);
 static inline t_quat quat_mul(t_quat a, t_quat b);
 static inline t_quat quat_from_dir(t_vec3 dir);
+static inline t_vec3 quat_to_euler(t_quat q);
 #pragma endregion
 
 static inline t_v4sf v4sf(float x, float y, float z, float w) {
@@ -801,6 +802,33 @@ static inline t_quat quat_from_euler_angle(t_vec3 axis, float angle) {
 		.z = imag.z,
 		.w = theta.cos
 	};
+}
+
+static inline t_vec3 quat_to_euler(t_quat q) {
+	t_vec3 euler = { 0 };
+
+	float pitch = 2.0f * (q.w * q.y - q.z * q.x);
+	if (fabsf(pitch) >= 1.0f - B_EPSILON) {
+		euler.y = copysign(M_PIf / 2.0f, pitch);
+		euler.x = 0.0f;
+		euler.z = copysign(2.0f * atan2f(q.x, q.w), pitch);
+	} else {
+		euler.y = asinf(pitch);
+
+		t_vec2 roll = { //
+			.sin = 2.0f * (q.w * q.x + q.y * q.z),
+			.cos = 1.0f - 2.0f * (q.x * q.x + q.y * q.y)
+		};
+		euler.x = atan2f(roll.x, roll.y);
+
+		t_vec2 yaw = { //
+			.sin = 2.0f * (q.w * q.z + q.x * q.y),
+			.cos = 1.0f - 2.0f * (q.y * q.y + q.z * q.z)
+		};
+		euler.z = atan2f(yaw.x, yaw.y);
+	}
+
+	return euler;
 }
 
 static inline t_quat quat_normalize(t_quat q) {

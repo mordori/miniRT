@@ -91,7 +91,7 @@ float eval_magnitude(t_context* ctx, t_vec2i delta, float speed) {
 		else
 			magnitude = ((float)delta.x * right_align - (float)delta.y * up_align) * speed;
 	} else {
-		magnitude = ((float)(delta.x - delta.y)) * speed;
+		magnitude = ((float)(-delta.x - delta.y)) * speed;
 	}
 	return magnitude;
 }

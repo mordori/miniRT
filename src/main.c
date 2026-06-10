@@ -21,7 +21,11 @@ int main(int argc, char* argv[]) {
 	if (argc != 2)
 		fatal_error(NULL, errors(ERR_ARGINVL), __FILE__, __LINE__);
 
+	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
+	_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
+
 	t_context ctx = { 0 };
+	g_ui_ctx = &ctx;
 	ctx.file = argv[1];
 	validate_file_type(ctx.file);
 	ctx.fd = try_open(NULL, ctx.file, O_RDONLY, 0);
@@ -33,10 +37,10 @@ int main(int argc, char* argv[]) {
 
 static inline void initialize(t_context* ctx) {
 	init_scene(ctx);
-	ctx->mlx = mlx_init(WIDTH + UI_WIDTH, HEIGHT, "miniRT", true);
+	ctx->mlx = mlx_init(WIDTH + UI_WIDTH, HEIGHT + UI_BOTTOM, "miniPT", true);
 	if (!ctx->mlx)
 		fatal_error(ctx, errors(ERR_MLXINIT), __FILE__, __LINE__);
-	ctx->img = mlx_new_image(ctx->mlx, ctx->mlx->width - UI_WIDTH, ctx->mlx->height);
+	ctx->img = mlx_new_image(ctx->mlx, ctx->mlx->width - UI_WIDTH, ctx->mlx->height - UI_BOTTOM);
 	if (!ctx->img || mlx_image_to_window(ctx->mlx, ctx->img, 0, 0) == ERROR)
 		fatal_error(ctx, errors(ERR_IMGINIT), __FILE__, __LINE__);
 	mlx_key_hook(ctx->mlx, key_hook, ctx);
@@ -47,8 +51,6 @@ static inline void initialize(t_context* ctx) {
 	init_ui();
 	resize_hook(ctx->img->width, ctx->img->height, ctx);
 	resize_window(ctx);
-	g_ui_ctx = ctx;
-	// mlx_loop_hook(ctx->mlx, render_ui, ctx);
 	mlx_loop_hook(ctx->mlx, frame_loop, ctx);
 	mlx_loop(ctx->mlx);
 	cleanup_ui();

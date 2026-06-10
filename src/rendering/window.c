@@ -1,6 +1,8 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "camera.h"
+#include "defines.h"
 #include "rendering.h"
 #include "utils.h"
 
@@ -8,8 +10,11 @@ static inline void resize_frame_buffer(t_context* ctx, t_renderer* r);
 static inline void resize_selection_mask(t_context* ctx, t_renderer* r);
 
 void resize_hook(int width, int height, void* param) {
+	static uint32_t i;
 	t_context* ctx = (t_context*)param;
-	if (!ctx || !ctx->mlx || !ctx->img || width == 0 || height == 0)
+	if (!ctx || !ctx->mlx || !ctx->img || width <= UI_WIDTH || height <= UI_BOTTOM)
+		return;
+	if (ctx->renderer.width + UI_WIDTH == (uint32_t)width && ctx->renderer.height + UI_BOTTOM == (uint32_t)height)
 		return;
 
 	t_renderer* r = &ctx->renderer;
@@ -21,11 +26,16 @@ void resize_hook(int width, int height, void* param) {
 		r->resize_pending = true;
 		r->new_width = width;
 		r->new_height = height;
+		if (i != 0) {
+			r->new_width -= UI_WIDTH;
+			r->new_height -= UI_BOTTOM;
+		}
 		ctx->resize_time = time_now();
 		if (!is_pending)
 			pthread_cond_broadcast(&r->cond);
 	}
 	pthread_mutex_unlock(&r->mutex);
+	++i;
 }
 
 void resize_window(t_context* ctx) {

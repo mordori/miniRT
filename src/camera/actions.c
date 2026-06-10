@@ -3,15 +3,13 @@
 
 void apply_cam_action(t_context* ctx, t_vec2i delta) {
 	t_camera* cam = &ctx->scene.cam;
-	if (delta.x > -300 && delta.x < 300 && delta.y > -300 && delta.y < 300) {
-		switch (cam->state) {
-			case CAM_TURN: cam_turn(ctx, delta); break;
-			case CAM_LOOK: cam_look(ctx, delta); break;
-			case CAM_ORBIT: cam_orbit(ctx, delta); break;
-			case CAM_ZOOM: cam_zoom(ctx, delta); break;
-			case CAM_PAN: cam_pan(ctx, delta); break;
-			case CAM_DEFAULT: return;
-		}
+	switch (cam->state) {
+		case CAM_TURN: cam_turn(ctx, delta); break;
+		case CAM_LOOK: cam_look(ctx, delta); break;
+		case CAM_ORBIT: cam_orbit(ctx, delta); break;
+		case CAM_ZOOM: cam_zoom(ctx, delta); break;
+		case CAM_PAN: cam_pan(ctx, delta); break;
+		case CAM_DEFAULT: return;
 	}
 }
 

@@ -6,6 +6,9 @@ t_error new_material(t_context* ctx, t_material* mat, uint32_t* out_id) {
 	if (!new_mat)
 		return E_MALLOC;
 
+	// TODO: remove
+	mat->albedo.a = 1.0f;
+
 	mat->ior = fmaxf(mat->ior, 1.0f);
 	mat->roughness = fmaxf(mat->roughness, 0.045f);
 	mat->f0_dielectric = vec3_n(reflectance(mat->ior));

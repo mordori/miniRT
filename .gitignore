@@ -8,6 +8,6 @@ lib/MLX42/
 *.d
 libft.a
 .cache/
-miniRT
+miniPT
 compile_commands.json
 imgui.ini

@@ -10,6 +10,8 @@ extern "C" {
 bool ui_check_dirty(void);
 bool ui_want_mouse(void);
 bool ui_want_keyboard(void);
+bool ui_is_interacting(void);
+bool ui_check_transform_dirty(void);
 
 void init_ui(void);
 void render_ui(void* param);

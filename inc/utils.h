@@ -12,7 +12,7 @@
 #include "defines.h"
 
 char* errors(t_err_code code);
-void fatal_error(t_context* ctx, char* message, char* file, int line);
+void fatal_error(t_context* ctx, const char* message, const char* file, int line);
 void clean_context(t_context* ctx);
 
 void vector_try_init(t_context* ctx, t_vector* vec, bool is_shrink, void (*del)(void*));

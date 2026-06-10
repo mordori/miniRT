@@ -19,7 +19,7 @@
  * @param fd File descriptor.
  * @return Number of characters written, ERROR on error or only partial write.
  */
-ssize_t ft_putendl_fd(char* s, int fd) {
+ssize_t ft_putendl_fd(const char* s, int fd) {
 	ssize_t bytes;
 
 	if (!s)

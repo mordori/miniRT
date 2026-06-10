@@ -10,7 +10,7 @@ bool init_renderer(t_context* ctx);
 t_vec3 trace_path(const t_context* ctx, t_pixel* pixel, t_render_mode mode, uint8_t bounces);
 t_vec3 post_process(const t_context* ctx, const t_pixel* pixel, t_vec3 c);
 t_vec3 post_process_preview(const t_context* ctx, t_vec3 c);
-t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset, bool is_primary);
+t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset, bool is_primary, bool show_background);
 
 float reflectance(float ior);
 t_vec3 disney_brdf(const t_path* path);

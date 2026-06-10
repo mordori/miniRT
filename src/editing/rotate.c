@@ -1,4 +1,5 @@
 #include "editing.h"
+#include "lib_math.h"
 
 void obj_rotate(t_context* ctx, float angle) {
 	t_vec3 axis;
@@ -15,4 +16,5 @@ void obj_rotate(t_context* ctx, float angle) {
 	t_quat rot_delta = quat_from_euler_angle(axis, angle);
 	t_quat rot = quat_mul(rot_delta, ctx->editor.selected_obj->transform.rot);
 	ctx->editor.selected_obj->transform.rot = quat_normalize(rot);
+	ctx->editor.selected_obj->transform.rot_euler = quat_to_euler(ctx->editor.selected_obj->transform.rot);
 }

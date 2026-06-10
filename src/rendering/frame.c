@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "MLX42.h"
@@ -5,6 +6,7 @@
 #include "input.h"
 #include "lib_math.h"
 #include "rendering.h"
+#include "ui.hpp"
 #include "utils.h"
 
 static inline void process_frame(t_context* ctx, t_renderer* r);
@@ -65,6 +67,10 @@ static inline void set_renderer_state(t_context* ctx, t_renderer* r, bool* updat
 }
 
 static inline bool is_active(t_context* ctx) {
+	if (ui_is_interacting())
+		return true;
+	if (ui_check_dirty())
+		return false;
 	if (ctx->scene.cam.state != CAM_DEFAULT || ctx->editor.mode != EDIT_DEFAULT)
 		return true;
 	if (ctx->renderer.mode == SOLID)
@@ -154,7 +160,7 @@ static inline void copy_frame_buffer_preview(const t_context* ctx, const uint32_
 static inline void limit_polling_rate(t_renderer* r) {
 	static uint32_t last_frame_time;
 
-	if (r->frame < r->render_samples || r->mode != RENDERED)
+	if (r->frame < r->render_samples && r->mode == RENDERED)
 		return;
 
 	wait_until(last_frame_time + 17);

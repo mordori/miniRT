@@ -21,21 +21,19 @@
 - Modern PBR pipeline with microfacet BSDF
 - Custom scene description format
 - Bilinear texture filtering and normal mapping
-- Plane, sphere, cylinder, cone, quad, and triangle primitives
-- Multiple procedural patterns such as marble with Perlin noise
 - Physical camera with fly and turntable controllers
 - Object Editing mode with simplified lighting mimicing Blender
 - Integrates Intel Open Image Denoise for cleaning up the remaining noise in the completed render
 - Loads meshes in .obj format and the objects are instantiated
+- Utilizes Dear ImGui for scene controls and various parameters
 
 > [!NOTE]
-> Object instantiation from meshes is currently hard-coded to `empty.rt` and `cornell_box.rt` scenes until improved scene loading has been implemented.
+> You can drop your own .obj models in `📁assets/models/` and they will become available to instantiate from `Add->Mesh...` dropdown menu.
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
 - Improve the naive median-split BVH
-- Integrate ImGui for controls and parameters
 - Migrate from requiring scenes as arguments to more universal setup with presets
 
 #### Future Work
@@ -122,17 +120,17 @@ Run the program with a .rt scene file
 
 Premade scenes can be found in `📁assets/scenes/`.
 
+Saved renders are stored in `📁renders/`.
+
 > [!TIP]
 >
 > Adjust the camera's focus distance to desired surfaces easily in Edit Mode when using a larger aperture to produce a shallow depth of field.
 >
 > **Previously accumulated frames are not wasted!**
 >
-> Set the amount of samples lower with <kbd>O</kbd> and find the desired angle for the shot first. Then increment the amount with <kbd>P</kbd> for better image quality.
+> Set the amount of samples lower and find the desired angle for the shot first. Then increment the amount for better image quality.
 >
 > Setting the samples amount to be less than the current frame pauses the rendering. To continue, raise the samples to the previous amount.
->
-> Pressing <kbd>Y</kbd> saves the current render image as a PPM image into `📁renders/`.
 
 ## Controls
 ### Render Mode
@@ -144,7 +142,6 @@ Premade scenes can be found in `📁assets/scenes/`.
 | <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
 | <kbd>T</kbd>                                                   | Save View                                     |
 | <kbd>R</kbd>                                                   | Apply Saved View                              |
-| <kbd>Y</kbd>                                                   | Save Render                                   |
 
 ### Edit Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
@@ -172,13 +169,6 @@ Premade scenes can be found in `📁assets/scenes/`.
 ### General
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>,</kbd> / <kbd>.</kbd>                                    | Rotate Skydome                                |
-| <kbd>↓</kbd> / <kbd>↑</kbd>                                    | Focus Distance                                |
-| <kbd>←</kbd> / <kbd>→</kbd>                                    | Aperture                                      |
-| <kbd>K</kbd> / <kbd>L</kbd>                                    | Focal Length                                  |
-| <kbd>O</kbd> / <kbd>P</kbd>                                    | Samples                                       |
-| <kbd>U</kbd> / <kbd>I</kbd>                                    | Bounces                                       |
-| <kbd>H</kbd>                                                   | Toggle UI                                     |
 | <kbd>ESC</kbd>                                                 | Quit                                          |
 
 ## Project Review

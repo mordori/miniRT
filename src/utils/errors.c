@@ -2,7 +2,7 @@
 #include "libft_utils.h"
 #include "utils.h"
 
-void fatal_error(t_context* ctx, char* msg, char* file, int line) {
+void fatal_error(t_context* ctx, const char* msg, const char* file, int line) {
 	char str[INT32_LENGTH + 1];
 
 	ft_putstr_fd("\nError:\n", STDERR_FILENO);

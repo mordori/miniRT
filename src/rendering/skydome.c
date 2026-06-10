@@ -8,10 +8,8 @@
 
 static inline t_vec3 background_gradient(const t_scene* scene, const float t);
 
-t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset, bool is_primary) {
-	bool hide_background = true;
-
-	if (hide_background && is_primary)
+t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset, bool is_primary, bool show_background) {
+	if (!show_background && is_primary)
 		return (t_vec3){ 0 };
 
 	if (!scene->env.skydome.pixels)
@@ -32,25 +30,17 @@ bool rotate_skydome(t_context* ctx) {
 	if (!ctx->scene.env.skydome.pixels)
 		return false;
 
-	int change = mlx_is_key_down(ctx->mlx, MLX_KEY_PERIOD) - mlx_is_key_down(ctx->mlx, MLX_KEY_COMMA);
-	if (change) {
-		float delta = 0.085f * fminf(ctx->mlx->delta_time, 0.1f);
-		if (change < 0)
-			delta = -delta;
-		ctx->scene.cam.skydome_uv_offset.u += delta;
-
-		if (ctx->scene.env.has_dir_light) {
-			t_light* light = &ctx->scene.cam.directional_light;
-			float angle = ctx->scene.cam.skydome_uv_offset.u * M_TAUf;
-			t_vec2 theta = { .sin = sinf(angle), .cos = cosf(angle) };
-			light->obj->transform.pos = (t_vec3){ //
-				.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin,
-				.y = initial_pos.y,
-				.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos
-			};
-			update_transform(&light->obj->transform);
-			update_bounds(light->obj);
-		}
+	if (ctx->scene.env.has_dir_light) {
+		t_light* light = &ctx->scene.cam.directional_light;
+		float angle = ctx->scene.cam.skydome_uv_offset.u * M_TAUf;
+		t_vec2 theta = { .sin = sinf(angle), .cos = cosf(angle) };
+		light->obj->transform.pos = (t_vec3){ //
+			.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin,
+			.y = initial_pos.y,
+			.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos
+		};
+		update_transform(&light->obj->transform);
+		update_bounds(light->obj);
 	}
-	return (bool)change;
+	return true;
 }

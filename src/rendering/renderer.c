@@ -87,7 +87,7 @@ static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_
 	while (pixel.y < end.y && !atomic_load(&ctx->renderer.render_cancel)) {
 		pixel.color = &buf[pixel.y * width + start.x];
 		pixel.x = start.x;
-		while (pixel.x < end.x) {
+		while (pixel.x < end.x && !atomic_load(&ctx->renderer.render_cancel)) {
 			render_pixel(ctx, &pixel);
 			++pixel.color;
 			++pixel.x;

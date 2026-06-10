@@ -15,6 +15,7 @@
 #define WIDTH 1920
 #define HEIGHT 1080
 #define UI_WIDTH 350
+#define UI_BOTTOM 28
 #define THREADS_DFL 4
 #define TILE_SIZE 32
 #define RENDER_SAMPLES 32
@@ -29,11 +30,11 @@
 #define SENS_TRANSLATE 0.0015f
 #define SENS_ROTATE 0.003f
 #define SENS_SCALE 0.0019f
-#define SENS_LOOK 0.0019f
+#define SENS_LOOK 0.0023f
 #define SENS_ORBIT 0.003f
 #define SENS_ZOOM 0.0035f
 #define SENS_PAN 0.0005f
-#define SENS_MOVE 2.0f
+#define SENS_MOVE 1.0f
 
 #define SENSOR_HEIGHT_MM 24.0f
 #define SENSOR_HALF_HEIGHT_MM 12.0f
@@ -244,6 +245,7 @@ struct __attribute__((aligned(16))) s_transform {
 	t_mat4 object_to_world;
 	t_vec3 pos;
 	t_quat rot;
+	t_vec3 rot_euler;
 	t_vec3 scale;
 };
 
@@ -473,6 +475,7 @@ struct s_env {
 	t_texture skydome;
 	t_vec3 amb_color_2;
 	bool has_dir_light;
+	bool show_background;
 };
 
 struct s_geo {
@@ -600,7 +603,6 @@ struct __attribute__((aligned(64))) s_context {
 	uint32_t resize_time;
 	uint8_t bn_stride;
 	int fd;
-	bool hide_stats;
 };
 
 #endif

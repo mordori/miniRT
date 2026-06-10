@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "lib_math.h"
 #include "objects.h"
 #include "parsing.h"
 #include "scene.h"
@@ -10,6 +11,7 @@ t_error add_object(t_context* ctx, t_object* obj) {
 		return E_MALLOC;
 
 	obj->transform.scale = g_one;
+	obj->transform.rot_euler = quat_to_euler(obj->transform.rot);
 	update_transform(&obj->transform);
 	update_bounds(obj);
 	if (get_max_bounds_dim(obj) > WORLD_LIMIT) {

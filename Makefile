@@ -1,4 +1,4 @@
-NAME		:=miniRT
+NAME		:=miniPT
 
 CC			:=clang
 WFLAGS		:=-Wall -Wextra -Werror -Wpedantic -Wunreachable-code -Wshadow -Wnull-dereference -Wfloat-equal -Wcast-align -Wformat=2 -Wundef
@@ -213,7 +213,7 @@ endef
 
 define output
 	echo "$(YELLOW) [✔] $(NAME) created$(COLOR)"
-	echo "$(GREEN) [/] usage: $(YELLOW)./$(NAME) 'assets/scenes/scene_name.rt$(COLOR)'"; \
+	echo "$(GREEN) [/] usage: $(YELLOW)./$(NAME)$(COLOR)"; \
 	if [ "$(BUILD_TYPE)" = "DEBUG" ]; then \
 		echo "$(YELLOW) [DEBUG]$(COLOR)"; \
 	fi;
