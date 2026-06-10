@@ -26,7 +26,7 @@ t_error init_cone(t_context* ctx, t_cone* cone, int32_t mat_id) {
 	cone->apex = g_zero;
 	cone->axis = g_up;
 	obj.shape.cone = *cone;
-	return add_object(ctx, &obj);
+	return add_object(ctx, &obj, false);
 }
 
 /*

@@ -217,7 +217,7 @@ static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t
 			r->mode = SOLID;
 		} else {
 			if (ctx->editor.selected_obj)
-				reset_editor(ctx, r);
+				reset_editor(ctx);
 			else if (ctx->editor.mode != EDIT_DEFAULT)
 				end_edit_action(ctx);
 			ctx->editor.mode = EDIT_DEFAULT;

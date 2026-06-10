@@ -18,7 +18,7 @@ t_error init_point_light(t_context* ctx, t_light* light, uint32_t mat_id) {
 	if (vec3_length(obj.transform.pos) > 500.0f)
 		return (init_dir_light(ctx, l, &obj));
 
-	t_error err = add_object(ctx, &obj);
+	t_error err = add_object(ctx, &obj, false);
 	if (err != E_OK) {
 		free(l);
 		return err;
@@ -29,7 +29,7 @@ t_error init_point_light(t_context* ctx, t_light* light, uint32_t mat_id) {
 		free(l);
 		return E_MALLOC;
 	}
-	l->idx = ctx->scene.env.lights.total;
+	l->idx = (uint32_t)ctx->scene.env.lights.total;
 	return E_OK;
 }
 

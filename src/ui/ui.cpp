@@ -7,7 +7,9 @@
 
 extern "C" {
 #include "defines.h"
+#include "editing.h"
 #include "lib_math.h"
+#include "libft_vector.h"
 #include "materials.h"
 #include "objects.h"
 #include "rendering.h"
@@ -136,14 +138,13 @@ void render_ui(void* param) {
 					for (uint32_t i = 0; i < ctx->loaded_mesh_count; ++i) {
 						if (ImGui::Selectable(ctx->lib_mesh[i].name)) {
 							atomic_store(&r->render_cancel, true);
-							add_mesh(ctx, ctx->lib_mesh[i].name, 0);
 							pthread_mutex_lock(&r->mutex);
 							while (r->threads_running)
 								pthread_cond_wait(&r->cond, &r->mutex);
-							if (!init_bvh(ctx)) {
-								pthread_mutex_unlock(&r->mutex);
-								fatal_error(ctx, errors(ERR_BVH), (char*)__FILE__, __LINE__);
-							}
+
+							deselect_object(ctx);
+							add_mesh(ctx, ctx->lib_mesh[i].name, 0, true);
+
 							pthread_mutex_unlock(&r->mutex);
 							g_ui_dirty = true;
 						}

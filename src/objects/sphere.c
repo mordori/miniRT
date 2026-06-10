@@ -12,7 +12,7 @@ t_error init_sphere(t_context* ctx, t_vec3 center, float diameter, uint32_t mat_
 	obj.shape.sphere.radius = radius;
 	obj.shape.sphere.radius_sq = radius * radius;
 	obj.transform.rot.w = 1.0f;
-	return add_object(ctx, &obj);
+	return add_object(ctx, &obj, false);
 }
 
 bool hit_sphere(const t_shape* shape, const t_ray* ray, t_hit* hit) {

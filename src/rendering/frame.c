@@ -81,14 +81,6 @@ static inline bool is_active(t_context* ctx) {
 		mlx_is_key_down(m, KEY_UP) || mlx_is_key_down(m, KEY_DOWN)) {
 		return true;
 	}
-	if (mlx_is_key_down(m, MLX_KEY_L) || mlx_is_key_down(m, MLX_KEY_K) ||
-		(ctx->scene.env.skydome.pixels && (mlx_is_key_down(m, MLX_KEY_COMMA) || mlx_is_key_down(m, MLX_KEY_PERIOD)))) {
-		return true;
-	}
-	if (mlx_is_key_down(m, MLX_KEY_LEFT) || mlx_is_key_down(m, MLX_KEY_RIGHT) || mlx_is_key_down(m, MLX_KEY_UP) ||
-		mlx_is_key_down(m, MLX_KEY_DOWN)) {
-		return true;
-	}
 	return false;
 }
 

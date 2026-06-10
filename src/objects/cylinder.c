@@ -30,7 +30,7 @@ t_error init_cylinder(t_context* ctx, t_cylinder* cyl, int32_t mat_id) {
 	cyl->center = g_zero;
 	cyl->axis = g_up;
 	obj.shape.cylinder = *cyl;
-	return add_object(ctx, &obj);
+	return add_object(ctx, &obj, false);
 }
 
 /*

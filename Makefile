@@ -74,7 +74,7 @@ LDFLAGS		+= -L$(DIR_OIDN)lib -lOpenImageDenoise -Wl,-rpath,$(CURDIR)/$(DIR_OIDN)
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_CAM), \
-				camera.c controls.c config.c controls_router.c actions.c)
+				camera.c controls.c controls_router.c actions.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_EDIT), \
 				select.c edit.c constraints.c translate.c rotate.c scale.c actions.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_INPUT), \

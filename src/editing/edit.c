@@ -96,10 +96,11 @@ float eval_magnitude(t_context* ctx, t_vec2i delta, float speed) {
 	return magnitude;
 }
 
-void reset_editor(t_context* ctx, t_renderer* r) {
+void reset_editor(t_context* ctx) {
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		cancel_edit_action(ctx);
 
+	t_renderer* r = &ctx->renderer;
 	t_object* obj = ctx->editor.selected_obj;
 	ctx->editor.selected_obj = NULL;
 

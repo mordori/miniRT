@@ -38,5 +38,6 @@ void* vector_getlast(t_vector* vec);
 bool vector_insert(t_vector* vec, void* item, size_t index);
 void vector_clean_items(t_vector* vec, void (*del)(void*));
 bool vector_remove(t_vector* vec, void* item);
+bool vector_del2(t_vector* vec, void* item);
 
 #endif

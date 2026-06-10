@@ -58,3 +58,29 @@ bool vector_remove(t_vector* vec, void* item) {
 	vec->total--;
 	return (true);
 }
+
+bool vector_del2(t_vector* vec, void* item) {
+	uint32_t i;
+
+	if (!vec || !vec->total)
+		return (false);
+	i = 0;
+	while (i < vec->total) {
+		if (vec->items[i] == item) {
+			if (vec->del) {
+				vec->del(item);
+				item = NULL;
+			}
+			break;
+		}
+		++i;
+	}
+	if (i == vec->total)
+		return (false);
+	while (i < vec->total - 1) {
+		vec->items[i] = vec->items[i + 1];
+		++i;
+	}
+	vec->total--;
+	return (true);
+}

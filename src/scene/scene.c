@@ -1,5 +1,6 @@
 #include "scene.h"
 
+#include <stdbool.h>
 #include <string.h>
 
 #include "defines.h"
@@ -43,9 +44,9 @@ void init_scene(t_context* ctx) {
 	// TODO: remove hard coded test
 	{
 		if (strcmp("assets/scenes/empty.rt", ctx->file) == 0)
-			add_mesh(ctx, "dragon.obj", 4);
+			add_mesh(ctx, "dragon.obj", 4, false);
 		else if (strcmp("assets/scenes/cornell_box.rt", ctx->file) == 0)
-			add_mesh(ctx, "bunny.obj", 5);
+			add_mesh(ctx, "bunny.obj", 5, false);
 
 		if (ctx->scene.env.has_dir_light) {
 			t_vec3 initial_pos = { { 704000.0f, 484000.0f, 520000.0f, 0.0f } };

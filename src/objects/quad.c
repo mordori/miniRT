@@ -40,7 +40,7 @@ t_error init_quad(t_context* ctx, t_quad* quad, uint32_t mat_id) {
 	world_to_obj = mat4_transpose(&world_to_obj);
 	quad_init_helper(quad, &world_to_obj);
 	obj.shape.quad = *quad;
-	return add_object(ctx, &obj);
+	return add_object(ctx, &obj, false);
 }
 
 static inline void quad_init_helper(t_quad* quad, t_mat4* world_to_obj) {

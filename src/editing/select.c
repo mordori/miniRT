@@ -5,7 +5,7 @@
 #include "scene.h"
 #include "utils.h"
 
-static inline void select_obj(t_context* ctx, t_renderer* r, t_ray* ray, t_hit* hit);
+static inline void select_obj(t_context* ctx, t_ray* ray, t_hit* hit);
 
 void select_object(t_context* ctx) {
 	t_vec2i mouse;
@@ -20,12 +20,12 @@ void select_object(t_context* ctx) {
 	bool hitBVH = hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &ray, &hit, ctx->scene.geo.bvh_nodes);
 	bool hitPlanes = hit_planes(ctx, &ray, &hit);
 	if (hitBVH || hitPlanes)
-		select_obj(ctx, r, &ray, &hit);
+		select_obj(ctx, &ray, &hit);
 	else if (ctx->editor.selected_obj && !hit_object(ctx->editor.selected_obj, &ray, &hit))
-		deselect_object(ctx, r);
+		deselect_object(ctx);
 }
 
-static inline void select_obj(t_context* ctx, t_renderer* r, t_ray* ray, t_hit* hit) {
+static inline void select_obj(t_context* ctx, t_ray* ray, t_hit* hit) {
 	bool hitSelectedObj = hit_object(ctx->editor.selected_obj, ray, hit);
 	if (hitSelectedObj || hit->obj == ctx->scene.env.dir_light.obj)
 		return;
@@ -46,16 +46,18 @@ static inline void select_obj(t_context* ctx, t_renderer* r, t_ray* ray, t_hit* 
 	ctx->scene.cam.distance = fmaxf(vec3_dist(ctx->scene.cam.transform.pos, hit->obj->transform.pos), 0.01f);
 
 	if (rebuild_bvh && !init_bvh(ctx)) {
-		pthread_mutex_unlock(&r->mutex);
+		pthread_mutex_unlock(&ctx->renderer.mutex);
 		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	}
 	ctx->editor.request_ui_tab = true;
 }
 
-bool deselect_object(t_context* ctx, t_renderer* r) {
+bool deselect_object(t_context* ctx) {
 	t_object* obj = ctx->editor.selected_obj;
 	if (!obj)
 		return false;
+
+	t_renderer* r = &ctx->renderer;
 
 	if (ctx->editor.mode != EDIT_DEFAULT)
 		cancel_edit_action(ctx);

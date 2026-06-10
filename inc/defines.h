@@ -384,7 +384,7 @@ struct __attribute__((aligned(16))) s_light {
 	t_vec3 color;
 	t_vec3 emission;
 	t_object* obj;
-	float idx;
+	uint32_t idx;
 	float radius;
 	float intensity;
 	float max_radiance;

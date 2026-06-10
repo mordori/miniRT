@@ -1,4 +1,6 @@
+#include "MLX42.h"
 #include "camera.h"
+#include "defines.h"
 #include "editing.h"
 #include "input.h"
 #include "lights.h"
@@ -55,6 +57,12 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 		dirty |= config_editor(ctx, keydata);
 		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
 			dirty |= frame_camera(ctx, ctx->editor.selected_obj);
+
+		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_D && keydata.modifier == MLX_SHIFT && keydata.action == MLX_PRESS)
+			dirty |= dup_object(ctx);
+
+		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_DELETE && keydata.action == MLX_PRESS)
+			dirty |= del_object(ctx);
 	}
 
 	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
