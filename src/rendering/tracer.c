@@ -56,15 +56,17 @@ static inline bool trace_ray(const t_context* ctx, t_path* path, t_pixel* pixel,
 
 	bool is_primary_ray = path->bounce == 0;
 
+	// bool hitSelectedObj = ctx->editor.selected_obj && !(is_primary_ray && (ctx->editor.selected_obj->flags & OBJ_HIDDEN_CAM)) &&
+	// 	hit_object(ctx->editor.selected_obj, &path->ray, &path->hit);
 	bool hitDirLightObj = false;
 	if (ctx->scene.env.has_dir_light) {
 		t_object* dir_light = ctx->renderer.cam.directional_light.obj;
 		hitDirLightObj = !(is_primary_ray && (dir_light->flags & OBJ_HIDDEN_CAM)) && hit_object(dir_light, &path->ray, &path->hit);
 	}
 	bool hitBVH = hit_bvh(ctx->scene.geo.bvh_root_idx, &path->ray, &path->hit, ctx->scene.geo.bvh_nodes);
-	bool hitPlanes = hit_planes(ctx, &path->ray, &path->hit);
 
-	if (hitPlanes || hitBVH || hitDirLightObj) {
+	// (void)hitSelectedObj;
+	if (hitBVH || hitDirLightObj) {
 		path->mat = path->hit.obj->mat;
 		set_material_data(path);
 		if (is_primary_ray) {

@@ -90,22 +90,23 @@ void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	bool dirty = false;
 
 	pthread_mutex_lock(&r->mutex);
-	if (r->mode == SOLID) {
-		while (r->threads_running)
-			pthread_cond_wait(&r->cond, &r->mutex);
-		if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_PRESS && r->cam.state == CAM_DEFAULT &&
-			!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
-			if (ctx->editor.mode == EDIT_DEFAULT)
-				select_object(ctx);
-			else
-				apply_edit_action(ctx);
+	// if (r->mode == SOLID) {
+	while (r->threads_running)
+		pthread_cond_wait(&r->cond, &r->mutex);
+	if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_PRESS && r->cam.state == CAM_DEFAULT &&
+		!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
+		if (ctx->editor.mode == EDIT_DEFAULT)
+			select_object(ctx);
+		else
+			apply_edit_action(ctx);
+		if (r->mode == SOLID)
 			dirty = true;
-		} else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_PRESS && ctx->editor.mode != EDIT_DEFAULT &&
-			!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
-			cancel_edit_action(ctx);
-			dirty = true;
-		}
+	} else if (button == MLX_MOUSE_BUTTON_RIGHT && action == MLX_PRESS && ctx->editor.mode != EDIT_DEFAULT &&
+		!mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
+		cancel_edit_action(ctx);
+		dirty = true;
 	}
+	// }
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
 	pthread_mutex_unlock(&r->mutex);

@@ -85,25 +85,15 @@ enum e_err_code {
 };
 
 enum e_obj_type {
-	OBJ_PLANE,
 	OBJ_SPHERE,
-	OBJ_CYLINDER,
-	OBJ_CONE,
 	OBJ_QUAD,
 	OBJ_MESH,
-};
-
-enum e_light_type {
-	LIGHT_POINT,
-	LIGHT_AMBIENT,
-	LIGHT_AREA,
-	LIGHT_DIRECTIONAL,
 };
 
 enum e_cam_state {
 	CAM_DEFAULT,
 	CAM_TURN,
-	CAM_LOOK,
+	// CAM_LOOK,
 	CAM_ORBIT,
 	CAM_ZOOM,
 	CAM_PAN,
@@ -182,7 +172,6 @@ static const t_vec3 g_world_limit = { { WORLD_LIMIT, WORLD_LIMIT, WORLD_LIMIT, 1
 static const t_vec3 g_world_limit_neg = { { -WORLD_LIMIT, -WORLD_LIMIT, -WORLD_LIMIT, 1.0f } };
 
 typedef enum e_obj_type t_obj_type;
-typedef enum e_light_type t_light_type;
 typedef enum e_cam_state t_cam_state;
 typedef enum e_base_color t_base_color;
 typedef enum e_pattern t_pattern;
@@ -198,10 +187,7 @@ typedef struct s_bvh_node t_bvh_node;
 typedef struct s_aabb t_aabb;
 typedef struct s_object t_object;
 typedef struct s_hit t_hit;
-typedef struct s_plane t_plane;
 typedef struct s_sphere t_sphere;
-typedef struct s_cylinder t_cylinder;
-typedef struct s_cone t_cone;
 typedef struct s_quad t_quad;
 typedef struct s_triangle t_triangle;
 typedef struct s_mesh t_mesh;
@@ -301,35 +287,9 @@ struct __attribute__((aligned(16))) s_material {
 	bool is_emissive;
 };
 
-struct __attribute__((aligned(16))) s_plane {
-	t_vec3 point;
-	t_vec3 normal;
-	t_vec3 u;
-	t_vec3 v;
-	float d;
-};
-
 struct __attribute__((aligned(16))) s_sphere {
 	float radius;
 	float radius_sq;
-};
-
-struct __attribute__((aligned(16))) s_cylinder {
-	t_vec3 axis;
-	t_vec3 center;
-	float radius;
-	float height;
-};
-
-struct __attribute__((aligned(16))) s_cone {
-	t_vec3 apex;
-	t_vec3 axis;
-	float angle;
-	float height;
-	float cos_sq;
-	float tan_sq;
-	float base_radius;
-	float inv_height;
 };
 
 struct __attribute__((aligned(16))) s_quad {
@@ -362,10 +322,7 @@ struct __attribute__((aligned(16))) s_mesh {
 
 union __attribute__((aligned(16))) u_shape {
 	t_mesh mesh;
-	t_plane plane;
 	t_sphere sphere;
-	t_cylinder cylinder;
-	t_cone cone;
 	t_quad quad;
 };
 struct __attribute__((aligned(16))) s_object {
@@ -380,8 +337,6 @@ struct __attribute__((aligned(16))) s_object {
 };
 
 struct __attribute__((aligned(16))) s_light {
-	t_vec3 pos;
-	t_vec3 color;
 	t_vec3 emission;
 	t_object* obj;
 	uint32_t idx;
@@ -389,9 +344,6 @@ struct __attribute__((aligned(16))) s_light {
 	float intensity;
 	float max_radiance;
 	float radius_sq;
-	float angle;
-	float cos_theta_max;
-	t_light_type type;
 };
 
 struct __attribute__((aligned(16))) s_viewport {
@@ -480,7 +432,6 @@ struct s_env {
 
 struct s_geo {
 	t_vector objs;
-	t_vector planes;
 	t_bvh_node* bvh_nodes;
 	uint32_t bvh_root_idx;
 };
@@ -550,6 +501,8 @@ struct __attribute__((aligned(16))) s_editor {
 	t_edit_mode mode;
 	t_axis constraint_axis;
 	uint32_t constraints;
+	uint32_t selection_time;
+	bool is_selected_light;
 	bool request_ui_tab;
 };
 

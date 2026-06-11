@@ -21,7 +21,7 @@ t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset
 }
 
 static inline t_vec3 background_gradient(const t_scene* scene, const float t) {
-	return vec3_lerp(scene->env.amb_light.color, scene->env.amb_color_2, t);
+	return vec3_lerp(scene->env.amb_light.emission, scene->env.amb_color_2, t);
 }
 
 bool rotate_skydome(t_context* ctx) {

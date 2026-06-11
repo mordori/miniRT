@@ -102,7 +102,7 @@ void render_ui(void* param) {
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			if (ImGui::CollapsingHeader("Add", ImGuiTreeNodeFlags_DefaultOpen)) {
+			if (ImGui::CollapsingHeader("Add Object", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ImGui::Spacing();
 				ImGui::Spacing();
 
@@ -120,16 +120,16 @@ void render_ui(void* param) {
 			}
 			ImGui::Spacing();
 
-			float refresh_width = ImGui::CalcTextSize("Refresh").x + (ImGui::GetStyle().FramePadding.x * 2.0f);
-			float spacing = ImGui::GetStyle().ItemSpacing.x;
+			// float refresh_width = ImGui::CalcTextSize("Refresh").x + (ImGui::GetStyle().FramePadding.x * 2.0f);
+			// float spacing = ImGui::GetStyle().ItemSpacing.x;
 
-			if (ImGui::Button("Mesh...", ImVec2(-(refresh_width + spacing), 0.0f)))
+			if (ImGui::Button("Mesh...", ImVec2(-FLT_MIN, 0.0f)))
 				ImGui::OpenPopup("MeshDropdown");
 
-			ImGui::SameLine();
-			if (ImGui::Button("Refresh", ImVec2(refresh_width, 0.0f))) {
-				// TODO: scan_for_new_meshes(ctx)
-			}
+			// ImGui::SameLine();
+			// if (ImGui::Button("Refresh", ImVec2(refresh_width, 0.0f))) {
+			// 	// TODO: scan_for_new_meshes(ctx)
+			// }
 
 			if (ImGui::BeginPopup("MeshDropdown")) {
 				if (ctx->loaded_mesh_count == 0 || !ctx->lib_mesh) {
@@ -144,6 +144,7 @@ void render_ui(void* param) {
 
 							deselect_object(ctx);
 							add_mesh(ctx, ctx->lib_mesh[i].name, 0, true);
+							ctx->editor.request_ui_tab = true;
 
 							pthread_mutex_unlock(&r->mutex);
 							g_ui_dirty = true;
@@ -151,6 +152,24 @@ void render_ui(void* param) {
 					}
 				}
 				ImGui::EndPopup();
+			}
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			if (ImGui::CollapsingHeader("Add Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Spacing();
+				ImGui::Spacing();
+
+				if (ImGui::BeginTable("AddLightTable", 2)) {
+					ImVec2 button_size(-FLT_MIN, 0.0f);
+
+					ImGui::TableNextColumn();
+					if (ImGui::Button("Area", button_size)) {}
+
+					ImGui::EndTable();
+				}
 			}
 			ImGui::Spacing();
 			ImGui::Spacing();
@@ -355,6 +374,29 @@ void render_ui(void* param) {
 					ImGui::Spacing();
 					bool update = false;
 
+					if (ctx->renderer.mode != SOLID) {
+						if (ImGui::Button("Edit Mode")) {
+							atomic_store(&r->render_cancel, true);
+							pthread_mutex_lock(&r->mutex);
+							while (r->threads_running)
+								pthread_cond_wait(&r->cond, &r->mutex);
+							r->mode = SOLID;
+							if (ctx->editor.selected_obj) {
+								vector_remove(&ctx->scene.geo.objs, ctx->editor.selected_obj);
+								if (!init_bvh(ctx)) {
+									pthread_mutex_unlock(&ctx->renderer.mutex);
+									fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+								}
+								ctx->editor.selection_time = engine_time();
+							}
+							pthread_mutex_unlock(&r->mutex);
+						} else {
+							ImGui::BeginDisabled();
+						}
+						ImGui::Spacing();
+						ImGui::Spacing();
+					}
+
 					ImGui::Text("Position");
 					if (ImGui::DragFloat3("##pos", (float*)&obj->transform.pos, 0.005f)) {
 						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
@@ -363,7 +405,6 @@ void render_ui(void* param) {
 					if (ImGui::IsItemDeactivatedAfterEdit())
 						update = true;
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
-					ImGui::Spacing();
 
 					ImGui::Text("Rotation");
 					t_vec3 degrees = { //
@@ -384,7 +425,6 @@ void render_ui(void* param) {
 					if (ImGui::IsItemDeactivatedAfterEdit())
 						update = true;
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
-					ImGui::Spacing();
 
 					static bool is_uniform = true;
 					ImGui::Text("Scale");
@@ -404,6 +444,9 @@ void render_ui(void* param) {
 						g_ui_transform_dirty = true;
 						g_ui_dirty = true;
 					}
+
+					if (ctx->renderer.mode != SOLID)
+						ImGui::EndDisabled();
 				}
 				ImGui::Spacing();
 				ImGui::Spacing();
@@ -458,12 +501,21 @@ void render_ui(void* param) {
 						}
 						ImGui::EndCombo();
 					}
+
+					bool is_default = (obj->material_id == 0);
+
+					if (!is_default) {
+						ImGui::SameLine();
+						if (ImGui::Button("Delete")) {
+							// TODO: scan_for_new_meshes(ctx)
+						}
+					}
+
 					ImGui::Spacing();
 					ImGui::Spacing();
 					ImGui::Spacing();
 					ImGui::Spacing();
 
-					bool is_default = (obj->material_id == 0);
 					if (is_default) {
 						ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.2f, 1.0f), "Default Material is Read-Only");
 						ImGui::BeginDisabled();
@@ -476,7 +528,6 @@ void render_ui(void* param) {
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
 					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
-					ImGui::Spacing();
 
 					float roughness = obj->mat->roughness;
 					if (ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f, "%.2f", mat_flags)) {
@@ -485,13 +536,11 @@ void render_ui(void* param) {
 					}
 					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
-					ImGui::Spacing();
 
 					if (ImGui::SliderFloat("Metallic", &obj->mat->metallic, 0.0f, 1.0f, "%.2f", mat_flags))
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
 					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
-					ImGui::Spacing();
 
 					float ior = obj->mat->ior;
 					if (ImGui::SliderFloat("IOR", &ior, 1.0f, 2.4f, "%.2f", mat_flags)) {
@@ -500,7 +549,6 @@ void render_ui(void* param) {
 					}
 					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
-					ImGui::Spacing();
 
 					float transmission = obj->mat->transmission;
 					if (ImGui::SliderFloat("Transmission", &transmission, 1.0f, 2.4f, "%.2f", mat_flags)) {
@@ -582,26 +630,41 @@ void render_ui(void* param) {
 	} else {
 		ImGui::Text("Render Mode");
 		ImGui::SameLine(0, 30);
-		if (is_selecting) {
-			if (ctx->editor.mode != EDIT_DEFAULT) {
-				ImGui::TextDisabled("LMB:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Apply");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("RMB:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Cancel");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("X Y Z:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Axis Constraint");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("Shift+X Y Z:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Planar Constraint");
-				ImGui::SameLine(0, 30);
-
-			} else {
+		if (ctx->editor.mode != EDIT_DEFAULT) {
+			ImGui::TextDisabled("LMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Apply");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("RMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Cancel");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("X Y Z:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Axis Constraint");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Shift+X Y Z:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Planar Constraint");
+			ImGui::SameLine(0, 30);
+		} else {
+			ImGui::TextDisabled("LMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Select");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Alt+LMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Orbit");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Alt+RMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Zoom");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Alt+MMB:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Pan");
+			ImGui::SameLine(0, 30);
+			if (is_selecting) {
 				ImGui::TextDisabled("G:");
 				ImGui::SameLine(0, 4);
 				ImGui::Text("Translate");
@@ -627,23 +690,6 @@ void render_ui(void* param) {
 				ImGui::Text("Delete");
 				ImGui::SameLine(0, 30);
 			}
-		} else {
-			ImGui::TextDisabled("LMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Select");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Alt+LMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Orbit");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Alt+RMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Zoom");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Alt+MMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Pan");
-			ImGui::SameLine(0, 30);
 		}
 	}
 

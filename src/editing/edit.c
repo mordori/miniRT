@@ -102,16 +102,12 @@ void reset_editor(t_context* ctx) {
 
 	t_renderer* r = &ctx->renderer;
 	t_object* obj = ctx->editor.selected_obj;
-	ctx->editor.selected_obj = NULL;
 
-	if (obj->type == OBJ_PLANE) {
-		vector_try_add(ctx, &ctx->scene.geo.planes, obj);
-	} else {
-		vector_try_add(ctx, &ctx->scene.geo.objs, obj);
-		if (!init_bvh(ctx)) {
-			pthread_mutex_unlock(&r->mutex);
-			fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
-		}
+	vector_try_add(ctx, &ctx->scene.geo.objs, obj);
+	if (!init_bvh(ctx)) {
+		pthread_mutex_unlock(&r->mutex);
+		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 	}
+
 	memset(ctx->editor.selection_mask, 0, sizeof(float) * r->pixels);
 }

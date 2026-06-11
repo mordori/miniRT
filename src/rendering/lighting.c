@@ -81,8 +81,9 @@ static inline bool hit_shadow(const t_context* ctx, const t_path* path, t_vec3 h
 	t_ray shadow_ray = new_ray(hit_biased, path->l);
 	t_hit dummy_hit = { .t = dist };
 	if (!(path->mat->flags & MAT_NO_REC_SHADOW) &&
-		(hit_bvh_shadow(ctx->scene.geo.bvh_root_idx, &shadow_ray, dist, ctx->scene.geo.bvh_nodes) ||
-			hit_planes(ctx, &shadow_ray, &dummy_hit))) {
+		((ctx->editor.selected_obj && !(ctx->editor.selected_obj->flags & OBJ_NO_CAST_SHADOW) &&
+			 hit_object(ctx->editor.selected_obj, &shadow_ray, &dummy_hit)) ||
+			hit_bvh_shadow(ctx->scene.geo.bvh_root_idx, &shadow_ray, dist, ctx->scene.geo.bvh_nodes))) {
 		return true;
 	}
 	return false;

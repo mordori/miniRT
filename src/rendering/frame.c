@@ -15,7 +15,7 @@ static inline bool is_active(t_context* ctx);
 static inline void copy_frame_buffer_rendered(const t_context* ctx, t_vec3* buf, uint32_t* pixels, t_pixel* pixel);
 static inline void copy_frame_buffer_preview(const t_context* ctx, const uint32_t width, t_vec3* buf, uint32_t* pixels);
 static inline void limit_polling_rate(t_renderer* r);
-static inline uint32_t color_wave(uint32_t c1, uint32_t c2, float speed);
+static inline uint32_t color_wave(const t_context* ctx, uint32_t c1, uint32_t c2, float speed);
 
 void frame_loop(void* param) {
 	t_context* ctx = (t_context*)param;
@@ -132,7 +132,7 @@ static inline void copy_frame_buffer_preview(const t_context* ctx, const uint32_
 	float* m = ctx->editor.selection_mask;
 	uint32_t limit = ctx->renderer.pixels;
 	uint32_t mask;
-	uint32_t edge_color = color_wave(0xFF007BFF, 0xFFFFFFFF, 10.0f);
+	uint32_t edge_color = color_wave(ctx, 0xFF007BFF, 0xFFFFFFFF, 10.0f);
 	uint32_t i = 0;
 	while (i < limit) {
 		if (m[i] > 0.0f) {
@@ -159,9 +159,9 @@ static inline void limit_polling_rate(t_renderer* r) {
 	last_frame_time = time_now();
 }
 
-static inline uint32_t color_wave(uint32_t c1, uint32_t c2, float speed) {
-	float time = engine_time() / 1000.0f;
-	float wave = sinf(time * speed);
+static inline uint32_t color_wave(const t_context* ctx, uint32_t c1, uint32_t c2, float speed) {
+	float time = (engine_time() - ctx->editor.selection_time) / 1000.0f;
+	float wave = -cosf(time * speed);
 	float t = (wave + 1.0f) * 0.5f;
 	return vec3_to_uint32(lerp_color(c1, c2, t));
 }

@@ -7,8 +7,6 @@ static inline t_aabb combine_aabb(const t_aabb* a, const t_aabb* b);
 static inline t_aabb aabb_object_to_world(t_aabb aabb, const t_mat4* object_to_world);
 
 static inline t_aabb sphere_bounds(const t_object* obj);
-static inline t_aabb cylinder_bounds(const t_object* obj);
-static inline t_aabb cone_bounds(const t_object* obj);
 static inline t_aabb quad_bounds(const t_object* obj);
 
 static inline t_aabb triangle_bounds(const t_triangle* tri);
@@ -32,10 +30,7 @@ t_aabb get_object_bounds(const t_object* obj) {
 	t_aabb res = { 0 };
 	switch (obj->type) {
 		case OBJ_SPHERE: res = sphere_bounds(obj); break;
-		case OBJ_CYLINDER: res = cylinder_bounds(obj); break;
-		case OBJ_CONE: res = cone_bounds(obj); break;
 		case OBJ_QUAD: res = quad_bounds(obj); break;
-		case OBJ_PLANE: break;
 		case OBJ_MESH: {
 			t_bvh_node root = obj->shape.mesh.bvh_nodes[obj->shape.mesh.bvh_root_idx - 1];
 			res = aabb_object_to_world(root.aabb, &obj->transform.object_to_world);
@@ -92,45 +87,6 @@ static inline t_aabb sphere_bounds(const t_object* obj) {
 	return aabb_object_to_world(aabb, &obj->transform.object_to_world);
 }
 
-static inline t_aabb cylinder_bounds(const t_object* obj) {
-	t_cylinder cyl = obj->shape.cylinder;
-	t_vec3 a2 = { //
-		.x = cyl.axis.x * cyl.axis.x,
-		.y = cyl.axis.y * cyl.axis.y,
-		.z = cyl.axis.z * cyl.axis.z
-	};
-	t_vec3 half = { //
-		.x = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.x)) + (cyl.height * 0.5f) * fabsf(cyl.axis.x),
-		.y = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.y)) + (cyl.height * 0.5f) * fabsf(cyl.axis.y),
-		.z = cyl.radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z)) + (cyl.height * 0.5f) * fabsf(cyl.axis.z)
-	};
-	t_aabb aabb = { //
-		.min = vec3_negate(half),
-		.max = half
-	};
-	return aabb_object_to_world(aabb, &obj->transform.object_to_world);
-}
-
-static inline t_aabb cone_bounds(const t_object* obj) {
-	t_cone cone = obj->shape.cone;
-	t_vec3 a2 = { //
-		.x = cone.axis.x * cone.axis.x,
-		.y = cone.axis.y * cone.axis.y,
-		.z = cone.axis.z * cone.axis.z
-	};
-	t_vec3 radial = { //
-		.x = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.x)),
-		.y = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.y)),
-		.z = cone.base_radius * sqrtf(fmaxf(0.0f, 1.0f - a2.z))
-	};
-	t_vec3 base_center = vec3_scale(cone.axis, cone.height);
-	t_aabb aabb = { //
-		.min.v = _mm_min_ps(g_zero.v, vec3_sub(base_center, radial).v),
-		.max.v = _mm_max_ps(g_zero.v, vec3_add(base_center, radial).v)
-	};
-	return aabb_object_to_world(aabb, &obj->transform.object_to_world);
-}
-
 static inline t_aabb quad_bounds(const t_object* obj) {
 	t_quad quad = obj->shape.quad;
 	t_vec3 p1 = vec3_add(quad.q, quad.u);
@@ -170,13 +126,9 @@ int cmp_bounds_z(const void* a, const void* b) {
 }
 
 void update_bounds(t_object* obj) {
-	if (obj->type == OBJ_PLANE) {
-		obj->bounds_center = obj->transform.pos;
-	} else {
-		t_aabb aabb = get_object_bounds(obj);
-		obj->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
-		obj->bounds = vec3_sub(aabb.max, aabb.min);
-	}
+	t_aabb aabb = get_object_bounds(obj);
+	obj->bounds_center = vec3_div(vec3_add(aabb.min, aabb.max), 2.0f);
+	obj->bounds = vec3_sub(aabb.max, aabb.min);
 }
 
 float get_max_bounds_dim(const t_object* obj) {

@@ -89,7 +89,8 @@ void clean_context(t_context* ctx) {
 	free(r->albedo_buffer);
 	free(r->normal_buffer);
 	free(ctx->editor.selection_mask);
-	free(ctx->editor.selected_obj);
+	if (ctx->editor.selected_obj && ctx->renderer.mode == SOLID)
+		free(ctx->editor.selected_obj);
 	if (ctx->img)
 		mlx_delete_image(ctx->mlx, ctx->img);
 	if (ctx->mlx)

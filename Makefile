@@ -84,7 +84,7 @@ SRCS		+= $(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_MAT), \
 				material.c patterns.c textures.c perlin_noise.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
-				object.c cylinder.c plane.c sphere.c cone.c quad.c triangle.c mesh.c)
+				object.c sphere.c quad.c triangle.c mesh.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse_mesh.c \
 				parse.c parse_elements.c parse_light.c parse_objects.c try_split.c \

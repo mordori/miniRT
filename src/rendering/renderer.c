@@ -3,6 +3,7 @@
 #include "editing.h"
 #include "lib_math.h"
 #include "rendering.h"
+#include "scene.h"
 #include "utils.h"
 
 static inline void* render_routine(void* arg);
@@ -157,6 +158,7 @@ void start_render(t_renderer* r, const t_camera* cam) {
 }
 
 void stop_render(t_renderer* r) {
+	atomic_store(&r->render_cancel, true);
 	pthread_mutex_lock(&r->mutex);
 	r->active = false;
 	r->resize_pending = false;
@@ -215,6 +217,14 @@ static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t
 
 		if (r->mode != SOLID) {
 			r->mode = SOLID;
+			if (ctx->editor.selected_obj) {
+				vector_remove(&ctx->scene.geo.objs, ctx->editor.selected_obj);
+				if (!init_bvh(ctx)) {
+					pthread_mutex_unlock(&ctx->renderer.mutex);
+					fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+				}
+				ctx->editor.selection_time = engine_time();
+			}
 		} else {
 			if (ctx->editor.selected_obj)
 				reset_editor(ctx);

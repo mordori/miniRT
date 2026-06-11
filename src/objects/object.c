@@ -13,24 +13,61 @@ t_error add_object(t_context* ctx, t_object* obj, bool is_selected) {
 	if (!new_obj)
 		return E_MALLOC;
 
-	obj->transform.scale = g_one;
-	obj->transform.rot_euler = quat_to_euler(obj->transform.rot);
-	update_transform(&obj->transform);
-	update_bounds(obj);
-	if (get_max_bounds_dim(obj) > WORLD_LIMIT) {
+	*new_obj = *obj;
+	if (new_obj->transform.scale.x == 0.0f)
+		new_obj->transform.scale = g_one;
+	new_obj->transform.rot_euler = quat_to_euler(new_obj->transform.rot);
+	update_transform(&new_obj->transform);
+	update_bounds(new_obj);
+	if (get_max_bounds_dim(new_obj) > WORLD_LIMIT) {
 		free(new_obj);
 		return E_TOO_BIG;
 	}
 
-	*new_obj = *obj;
-	new_obj->mat = ((t_material**)ctx->scene.assets.materials.items)[obj->material_id];
+	new_obj->mat = ((t_material**)ctx->scene.assets.materials.items)[new_obj->material_id];
 	new_obj->flags = new_obj->mat->flags;
+
 	if (is_selected) {
 		ctx->editor.selected_obj = new_obj;
-	} else if (!vector_add(&ctx->scene.geo.objs, new_obj)) {
-		free(new_obj);
-		return E_MALLOC;
+		ctx->scene.cam.distance = fmaxf(vec3_dist(ctx->scene.cam.transform.pos, new_obj->transform.pos), 0.01f);
+		ctx->editor.selection_time = engine_time();
 	}
+	if (ctx->renderer.mode != SOLID) {
+		if (!vector_add(&ctx->scene.geo.objs, new_obj)) {
+			free(new_obj);
+			return E_MALLOC;
+		}
+		if (is_selected) {
+			if (!init_bvh(ctx)) {
+				pthread_mutex_unlock(&ctx->renderer.mutex);
+				fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+			}
+		}
+	}
+
+	if (ctx->editor.is_selected_light) {
+		t_light* light = malloc(sizeof(t_light));
+		if (!light)
+			return E_MALLOC;
+
+		float max_scale = fminf(fminf(new_obj->transform.scale.x, new_obj->transform.scale.y), new_obj->transform.scale.z);
+		float r = new_obj->shape.sphere.radius * max_scale;
+
+		*light = (t_light){ //
+			.radius = r,
+			.radius_sq = r * r,
+			.emission = new_obj->mat->emission,
+			.max_radiance = MAX_RADIANCE,
+			.idx = ctx->scene.env.lights.total,
+			.obj = new_obj
+		};
+		if (!vector_add(&ctx->scene.env.lights, light)) {
+			free(light);
+			return E_MALLOC;
+		}
+		ctx->bn_stride = (BN_CO_U + ((ctx->scene.env.lights.total + 1) * 2) + 3) & ~3;
+	}
+
 	return E_OK;
 }
 
@@ -92,10 +129,7 @@ bool hit_object(const t_object* obj, const t_ray* ray, t_hit* hit) {
 	bool result = false;
 	switch (obj->type) {
 		case OBJ_SPHERE: result = hit_sphere(shape, &r, hit); break;
-		case OBJ_CYLINDER: result = hit_cylinder(shape, &r, hit); break;
-		case OBJ_CONE: result = hit_cone(shape, &r, hit); break;
 		case OBJ_QUAD: result = hit_quad(shape, &r, hit, obj->flags); break;
-		case OBJ_PLANE: result = hit_plane(shape, &r, hit, obj->flags); break;
 		case OBJ_MESH: result = hit_mesh(shape, &r, hit, obj->flags); break;
 	}
 	if (result) {

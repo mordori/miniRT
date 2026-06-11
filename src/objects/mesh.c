@@ -89,7 +89,7 @@ void add_mesh(t_context* ctx, const char* name, uint32_t mat_id, bool is_selecte
 		mat_id = 0;
 	}
 
-	t_object obj = (t_object){ //
+	t_object obj = { //
 		.type = OBJ_MESH,
 		.material_id = mat_id,
 		.transform.rot.w = 1.0f,

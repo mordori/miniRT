@@ -50,9 +50,6 @@ typedef struct s_parser {
 	bool has_ambient;
 	bool has_camera;
 	bool has_sphere;
-	bool has_plane;
-	bool has_cylinder;
-	bool has_cone;
 	bool has_quad;
 	bool has_render_settings;
 	t_mat_entry materials[MAX_MATERIALS];
@@ -80,9 +77,6 @@ bool validate_normalized(t_vec3* vec);
 
 /* Element parsing */
 t_error parse_sphere(t_context* ctx, t_parser* p, char** tokens);
-t_error parse_plane(t_context* ctx, t_parser* p, char** tokens);
-t_error parse_cylinder(t_context* ctx, t_parser* p, char** tokens);
-t_error parse_cone(t_context* ctx, t_parser* p, char** tokens);
 t_error parse_quad(t_context* ctx, t_parser* p, char** tokens);
 t_error parse_ambient(t_context* ctx, t_parser* p, char** tokens);
 t_error parse_skydome(t_context* ctx, char** tokens);

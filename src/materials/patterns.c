@@ -39,8 +39,8 @@ t_vec3 pattern_checkerboard(const t_hit* hit, const t_material* mat) {
 ** Produces a smooth linear blend between albedo and albedo2.
 **
 ** For spheres : v goes from north pole (0) to south pole (1)
-** For cylinders : v goes along the height
-** For planes  : v is based on world position
+** For  : v goes along the height
+** For   : v is based on world position
 **
 ** @param hit  - Hit record with UV coordinates
 ** @param mat  - Material with primary and secondary albedo colors

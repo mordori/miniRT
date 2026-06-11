@@ -4,7 +4,7 @@ render			64			16
 
 # Ambient
 #		intensity		color
-A		0.1				0,0,0
+A		0.25			255,255,255
 
 # Camera
 #		pos				dir			fov			exposure	focus_dist

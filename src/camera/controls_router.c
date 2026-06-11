@@ -59,15 +59,11 @@ bool frame_camera(t_context* ctx, t_object* obj) {
 	proj.width = vec3_dot(vec3_fabsf(cam->right), half_bounds);
 	proj.height = vec3_dot(vec3_fabsf(cam->up), half_bounds);
 	proj.depth = vec3_dot(vec3_fabsf(cam->forward), half_bounds);
-	if (obj->type == OBJ_PLANE) {
-		cam->distance = 20.0f;
-	} else {
-		float tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
-		t_vec2 dist;
-		dist.height = proj.height / tan_half_fov;
-		dist.width = proj.width / (tan_half_fov * cam->aspect);
-		cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
-	}
+	float tan_half_fov = SENSOR_HALF_HEIGHT_MM / ctx->scene.cam.focal_len_mm;
+	t_vec2 dist;
+	dist.height = proj.height / tan_half_fov;
+	dist.width = proj.width / (tan_half_fov * cam->aspect);
+	cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
 	cam->transform.pos = vec3_sub(obj->bounds_center, vec3_scale(cam->forward, cam->distance));
 	update_camera(ctx, cam);
 	return true;
@@ -88,8 +84,8 @@ static inline bool set_cam_state(t_context* ctx) {
 	} else if (ctx->renderer.mode != SOLID) {
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 			state = CAM_TURN;
-		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
-			state = CAM_LOOK;
+		// else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
+		// 	state = CAM_LOOK;
 	}
 	if (state != CAM_DEFAULT) {
 		begin_cam_action(ctx, state);

@@ -72,12 +72,6 @@ t_error identify_element(t_context* ctx, t_parser* p, char** tokens) {
 		return (parse_camera(ctx, p, tokens));
 	if (ft_strcmp(id, "sp") == 0)
 		return (parse_sphere(ctx, p, tokens));
-	if (ft_strcmp(id, "pl") == 0)
-		return (parse_plane(ctx, p, tokens));
-	if (ft_strcmp(id, "cy") == 0)
-		return (parse_cylinder(ctx, p, tokens));
-	if (ft_strcmp(id, "co") == 0)
-		return (parse_cone(ctx, p, tokens));
 	if (ft_strcmp(id, "qu") == 0)
 		return (parse_quad(ctx, p, tokens));
 	return (E_UNKNOWN_ID);

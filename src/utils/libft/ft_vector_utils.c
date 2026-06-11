@@ -120,9 +120,13 @@ bool vector_free(t_vector* vec, ...) {
 	while (vec) {
 		if (vec->size) {
 			i = 0;
-			if (vec->del && vec->total)
-				while (i < vec->total)
-					vec->del(vec->items[i++]);
+			if (vec->del && vec->total) {
+				while (i < vec->total) {
+					vec->del(vec->items[i]);
+					vec->items[i] = NULL;
+					++i;
+				}
+			}
 			vec->total = 0;
 			vec->size = 0;
 			free(vec->items);

@@ -4,7 +4,7 @@
 #include "defines.h"
 #include "parsing.h"
 
-t_error init_point_light(t_context* ctx, t_light* light, uint32_t mat_id);
+t_error init_point_light(t_context* ctx, t_light* light, uint32_t mat_id, t_vec3 pos);
 void update_light_radius(t_context* ctx);
 
 #endif

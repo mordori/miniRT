@@ -23,7 +23,7 @@ static inline void quad_init_helper(t_quad* quad, t_mat4* world_to_obj);
 ** A quad is defined by a corner point Q and two edge vectors u and v.
 ** The surface spans: P(α,β) = Q + α*u + β*v, where α,β ∈ [0,1].
 **
-** Precomputed: normal, w (parametric coord helper), d (plane const), area.
+** Precomputed: normal, w (parametric coord helper), d ( const), area.
 */
 t_error init_quad(t_context* ctx, t_quad* quad, uint32_t mat_id) {
 	t_vec3 n_cross = vec3_cross(quad->u, quad->v);
@@ -59,7 +59,7 @@ static inline void quad_init_helper(t_quad* quad, t_mat4* world_to_obj) {
 }
 
 /*
-** Check if ray-plane hit point lies within the quad parallelogram.
+** Check if ray- hit point lies within the quad parallelogram.
 ** Uses Cramer's rule: α = dot(w, cross(p, v)), β = dot(w, cross(u, p)).
 ** α,β ∈ [0,1] means inside. They also become the UV coordinates.
 */
@@ -85,7 +85,7 @@ static bool quad_hit_record(const t_quad* quad, const t_ray* ray, t_hit* hit, fl
 }
 
 /*
-** Ray-quad intersection: intersect the plane, then bounds-check.
+** Ray-quad intersection: intersect the , then bounds-check.
 */
 bool hit_quad(const t_shape* shape, const t_ray* ray, t_hit* hit, uint32_t flags) {
 	const t_quad* quad = &shape->quad;

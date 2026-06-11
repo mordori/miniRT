@@ -14,7 +14,6 @@
 void init_scene(t_context* ctx) {
 	ctx->scene = (t_scene){ 0 };
 	vector_try_init(ctx, &ctx->scene.geo.objs, false, free);
-	vector_try_init(ctx, &ctx->scene.geo.planes, false, free);
 	vector_try_init(ctx, &ctx->scene.env.lights, false, free);
 	vector_try_init(ctx, &ctx->scene.assets.materials, false, free);
 	lut_srgb_to_linear();
@@ -22,7 +21,7 @@ void init_scene(t_context* ctx) {
 	t_material mat = { 0 };
 	mat.albedo = (t_vec3){ { 0.5f, 0.5f, 0.5f, 1.0f } };
 	mat.ior = 1.4f;
-	mat.roughness = 0.4f;
+	mat.roughness = 0.5f;
 	new_material(ctx, &mat, 0);
 
 	// TODO: remove hard coded test
@@ -75,7 +74,7 @@ void clean_scene(t_context* ctx) {
 	free(ctx->scene.geo.bvh_nodes);
 	if (ctx->scene.env.has_dir_light && ctx->scene.cam.directional_light.obj)
 		free(ctx->scene.cam.directional_light.obj);
-	vector_free(&ctx->scene.geo.objs, &ctx->scene.geo.planes, &ctx->scene.env.lights, &ctx->scene.assets.materials, NULL);
+	vector_free(&ctx->scene.geo.objs, &ctx->scene.env.lights, &ctx->scene.assets.materials, NULL);
 	free_texture(&ctx->scene.env.skydome);
 	int i = 0;
 	while (i < ctx->scene.assets.tex_count) {

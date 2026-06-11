@@ -34,6 +34,7 @@ void begin_edit_action(t_context* ctx, t_edit_mode mode) {
 	ctx->mouse.pos_prev = ctx->mouse.pos_orig;
 	ctx->editor.axis_primary = ctx->scene.cam.right;
 	ctx->editor.axis_secondary = ctx->scene.cam.up;
+	ctx->editor.selection_time = engine_time();
 }
 
 void end_edit_action(t_context* ctx) {
@@ -48,6 +49,7 @@ void end_edit_action(t_context* ctx) {
 		}
 	}
 	ctx->editor.mode = EDIT_DEFAULT;
+	ctx->editor.selection_time = engine_time();
 }
 
 void apply_edit_action(t_context* ctx) {

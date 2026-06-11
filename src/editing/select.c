@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "defines.h"
 #include "editing.h"
 #include "lib_math.h"
@@ -18,11 +20,11 @@ void select_object(t_context* ctx) {
 	t_hit hit = new_hit(0);
 
 	bool hitBVH = hit_bvh_editing(ctx->scene.geo.bvh_root_idx, &ray, &hit, ctx->scene.geo.bvh_nodes);
-	bool hitPlanes = hit_planes(ctx, &ray, &hit);
-	if (hitBVH || hitPlanes)
+	if (hitBVH)
 		select_obj(ctx, &ray, &hit);
 	else if (ctx->editor.selected_obj && !hit_object(ctx->editor.selected_obj, &ray, &hit))
 		deselect_object(ctx);
+	ctx->editor.selection_time = engine_time();
 }
 
 static inline void select_obj(t_context* ctx, t_ray* ray, t_hit* hit) {
@@ -31,19 +33,22 @@ static inline void select_obj(t_context* ctx, t_ray* ray, t_hit* hit) {
 		return;
 
 	bool rebuild_bvh = false;
-	if (ctx->editor.selected_obj) {
-		if (ctx->editor.selected_obj->type == OBJ_PLANE)
-			vector_try_add(ctx, &ctx->scene.geo.planes, ctx->editor.selected_obj);
-		else
+	if (ctx->renderer.mode == SOLID) {
+		if (ctx->editor.selected_obj)
 			rebuild_bvh = vector_try_add(ctx, &ctx->scene.geo.objs, ctx->editor.selected_obj);
+		rebuild_bvh = vector_remove(&ctx->scene.geo.objs, hit->obj);
 	}
 
-	if (hit->obj->type == OBJ_PLANE)
-		vector_remove(&ctx->scene.geo.planes, hit->obj);
-	else
-		rebuild_bvh = vector_remove(&ctx->scene.geo.objs, hit->obj);
 	ctx->editor.selected_obj = hit->obj;
 	ctx->scene.cam.distance = fmaxf(vec3_dist(ctx->scene.cam.transform.pos, hit->obj->transform.pos), 0.01f);
+	ctx->editor.is_selected_light = false;
+	for (uint32_t i = 0; i < ctx->scene.env.lights.total; ++i) {
+		t_light* light = ctx->scene.env.lights.items[i];
+		if (light->obj == hit->obj) {
+			ctx->editor.is_selected_light = true;
+			break;
+		}
+	}
 
 	if (rebuild_bvh && !init_bvh(ctx)) {
 		pthread_mutex_unlock(&ctx->renderer.mutex);
@@ -63,15 +68,12 @@ bool deselect_object(t_context* ctx) {
 		cancel_edit_action(ctx);
 	ctx->editor.selected_obj = NULL;
 
-	if (obj->type == OBJ_PLANE) {
-		vector_try_add(ctx, &ctx->scene.geo.planes, obj);
-		return true;
-	}
-
-	vector_try_add(ctx, &ctx->scene.geo.objs, obj);
-	if (!init_bvh(ctx)) {
-		pthread_mutex_unlock(&r->mutex);
-		fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+	if (r->mode == SOLID) {
+		vector_try_add(ctx, &ctx->scene.geo.objs, obj);
+		if (!init_bvh(ctx)) {
+			pthread_mutex_unlock(&r->mutex);
+			fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
+		}
 	}
 	return true;
 }
