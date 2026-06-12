@@ -140,10 +140,6 @@ compdb:
 	fi
 
 $(MLX42):
-	@if [ ! -d "$(DIR_MLX)" ]; then \
-		echo "$(BLUE) [~]$(COLOR) cloning to lib/ $(BLUE)$(URL_MLX)$(COLOR)"; \
-		git clone --quiet $(URL_MLX) $(DIR_MLX); \
-	fi
 	@echo "$(GREEN) [+]$(COLOR) compiling mlx42.a"
 	@cmake $(DIR_MLX) -B $(DIR_MLX)build > /dev/null
 	@+make -C $(DIR_MLX)build > /dev/null
@@ -165,6 +161,7 @@ clean:
 
 fclean: clean
 	@$(call rm_dir,$(DIR_DEP))
+	@$(call rm_dir,$(DIR_MLX)/build)
 	@$(call rm_file,$(NAME))
 	@$(call rm_file,compile_commands.json)
 

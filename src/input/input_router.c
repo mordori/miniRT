@@ -90,7 +90,6 @@ void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 	bool dirty = false;
 
 	pthread_mutex_lock(&r->mutex);
-	// if (r->mode == SOLID) {
 	while (r->threads_running)
 		pthread_cond_wait(&r->cond, &r->mutex);
 	if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_PRESS && r->cam.state == CAM_DEFAULT &&

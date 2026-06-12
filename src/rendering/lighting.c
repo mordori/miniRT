@@ -18,18 +18,25 @@ t_vec3 add_lighting(const t_context* ctx, t_path* path, const t_light* light, t_
 static inline t_vec3 evaluate_light(const t_context* ctx, t_path* path, const t_light* light, t_pixel* pixel) {
 	random_uv(ctx, path, pixel, BN_CO_U + (light->idx * 2u));
 
-	t_vec3 hit_biased = vec3_bias(path->hit.point, path->hit.normal);
-	t_vec3 hit_to_l_center = vec3_sub(light->obj->transform.pos, hit_biased);
+	t_vec3 hit_to_l_center = vec3_sub(light->obj->transform.pos, path->hit.point);
 	path->l = sample_light(hit_to_l_center, light->radius_sq, path->uv, &path->pdf);
 
 	set_shader_data(path);
 	if (path->ndotl <= G_EPSILON)
-		return vec3_n(0.0f);
+		return g_zero;
 
-	t_vec3 cross = vec3_cross(hit_to_l_center, path->l);
-	float dist = vec3_dot(hit_to_l_center, path->l) - sqrtf(fmaxf(0.0f, light->radius_sq - vec3_dot(cross, cross)));
+	t_vec3 abs_p = vec3_fabsf(path->hit.point);
+	float max_coord = fmaxf(fmaxf(abs_p.x, abs_p.y), abs_p.z);
+	float bias = fmaxf(B_EPSILON, max_coord * G_EPSILON);
+	float adaptive_bias = bias * fmaxf(1.0f, 1.0f / fmaxf(path->ndotl, 0.05f));
+	t_vec3 hit_biased = vec3_add(path->hit.point, vec3_scale(path->hit.geo_normal, adaptive_bias));
+
+	t_vec3 biased_to_l_center = vec3_sub(light->obj->transform.pos, hit_biased);
+	t_vec3 cross = vec3_cross(biased_to_l_center, path->l);
+	float dist = vec3_dot(biased_to_l_center, path->l) - sqrtf(fmaxf(0.0f, light->radius_sq - vec3_dot(cross, cross)));
+
 	if (hit_shadow(ctx, path, hit_biased, dist - fmaxf(B_EPSILON, dist * G_EPSILON)))
-		return vec3_n(0.0f);
+		return g_zero;
 
 	t_vec3 radiance = vec3_mul(light->emission, bsdf(path));
 	radiance = vec3_scale(radiance, (path->ndotl / path->pdf) * power_heuristic(path->pdf, bsdf_pdf(path)));
@@ -39,7 +46,7 @@ static inline t_vec3 evaluate_light(const t_context* ctx, t_path* path, const t_
 static inline t_vec3 sample_light(t_vec3 l, float radius_sq, t_vec2 uv, float* pdf) {
 	float dist_sq = vec3_dot(l, l);
 	if (dist_sq <= radius_sq)
-		return vec3_n(0.0f);
+		return g_zero;
 
 	t_vec3 l_dir = vec3_scale(l, 1.0f / sqrtf(dist_sq));
 

@@ -58,4 +58,6 @@ void make_dir(t_context* ctx, const char* path);
 bool is_wsl(void);
 void open_image_viewer(const char* filepath);
 
+void eval_hit_normal_geo(const t_ray* ray, t_hit* hit, t_vec3 geo_n, t_vec3 n);
+
 #endif

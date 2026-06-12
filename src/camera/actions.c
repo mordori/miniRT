@@ -5,7 +5,6 @@ void apply_cam_action(t_context* ctx, t_vec2i delta) {
 	t_camera* cam = &ctx->scene.cam;
 	switch (cam->state) {
 		case CAM_TURN: cam_turn(ctx, delta); break;
-		// case CAM_LOOK: cam_look(ctx, delta); break;
 		case CAM_ORBIT: cam_orbit(ctx, delta); break;
 		case CAM_ZOOM: cam_zoom(ctx, delta); break;
 		case CAM_PAN: cam_pan(ctx, delta); break;
@@ -37,7 +36,6 @@ bool is_cam_action_active(const t_context* ctx) {
 		case CAM_ZOOM: key = MLX_MOUSE_BUTTON_RIGHT; break;
 		case CAM_PAN: key = MLX_MOUSE_BUTTON_MIDDLE; break;
 		case CAM_TURN: key = MLX_MOUSE_BUTTON_RIGHT; break;
-		// case CAM_LOOK: key = MLX_MOUSE_BUTTON_LEFT; break;
 		case CAM_DEFAULT: return false;
 	}
 	return mlx_is_mouse_down(ctx->mlx, key);

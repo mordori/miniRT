@@ -84,8 +84,6 @@ static inline bool set_cam_state(t_context* ctx) {
 	} else if (ctx->renderer.mode != SOLID) {
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))
 			state = CAM_TURN;
-		// else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
-		// 	state = CAM_LOOK;
 	}
 	if (state != CAM_DEFAULT) {
 		begin_cam_action(ctx, state);

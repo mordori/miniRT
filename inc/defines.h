@@ -93,7 +93,6 @@ enum e_obj_type {
 enum e_cam_state {
 	CAM_DEFAULT,
 	CAM_TURN,
-	// CAM_LOOK,
 	CAM_ORBIT,
 	CAM_ZOOM,
 	CAM_PAN,
@@ -257,6 +256,7 @@ struct __attribute__((aligned(16))) s_hit {
 	t_vec3 normal;
 	t_vec3 tangent;
 	t_vec3 bitangent;
+	t_vec3 geo_normal;
 	t_vec2 uv;
 };
 

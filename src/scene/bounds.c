@@ -76,7 +76,7 @@ bool hit_aabb(const t_aabb* aabb, const t_ray* ray, float closest_t) {
 	t_v4sf far = _mm_max_ps(t1, t2);
 	float enter = fmaxf(fmaxf(near[0], near[1]), fmaxf(near[2], 0.0f));
 	float exit = fminf(fminf(far[0], far[1]), fminf(far[2], closest_t));
-	return enter < exit;
+	return enter <= exit;
 }
 
 static inline t_aabb sphere_bounds(const t_object* obj) {

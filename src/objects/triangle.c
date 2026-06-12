@@ -9,22 +9,22 @@ bool hit_triangle(const t_triangle* tri, const t_ray* ray, t_hit* hit, uint32_t 
 	t_vec3 e2 = vec3_sub(tri->v2, tri->v0);
 	t_vec3 pvec = vec3_cross(ray->dir, e2);
 	float det = vec3_dot(e1, pvec);
-	if (flags & MAT_DOUBLE_SIDED) {
-		if (det == 0.0f)
-			return false;
-	} else if (det <= 0.0f) {
+
+	if (fabsf(det) < 1e-15f)
 		return false;
-	}
+
+	if (!(flags & MAT_DOUBLE_SIDED) && det < 0.0f)
+		return false;
 
 	float inv_det = 1.0 / det;
 	t_vec3 tvec = vec3_sub(ray->origin, tri->v0);
 	float u = vec3_dot(tvec, pvec) * inv_det;
-	if (!(u >= 0.0f && u <= 1.0f))
+	if (u < -1e-4f || u > 1.0f + 1e-4f)
 		return false;
 
 	t_vec3 qvec = vec3_cross(tvec, e1);
 	float v = vec3_dot(ray->dir, qvec) * inv_det;
-	if (!(v >= 0.0f && u + v <= 1.0f))
+	if (v < -1e-4f || u + v > 1.0f + 1e-4f)
 		return false;
 
 	float t = vec3_dot(e2, qvec) * inv_det;
@@ -35,6 +35,8 @@ bool hit_triangle(const t_triangle* tri, const t_ray* ray, t_hit* hit, uint32_t 
 	hit->point = vec3_add(ray->origin, vec3_scale(ray->dir, t));
 	float w = 1.0f - u - v;
 
+	t_vec3 geo_normal = vec3_normalize(vec3_cross(e1, e2));
+
 	t_vec3 normal;
 	if (tri->has_normals) {
 		t_vec3 n0 = vec3_scale(tri->n0, w);
@@ -42,9 +44,9 @@ bool hit_triangle(const t_triangle* tri, const t_ray* ray, t_hit* hit, uint32_t 
 		t_vec3 n2 = vec3_scale(tri->n2, v);
 		normal = vec3_normalize(vec3_add(vec3_add(n0, n1), n2));
 	} else {
-		normal = vec3_normalize(vec3_cross(e1, e2));
+		normal = geo_normal;
 	}
-	eval_hit_normal(ray, hit, normal);
+	eval_hit_normal_geo(ray, hit, geo_normal, normal);
 
 	if (tri->has_uvs) {
 		hit->uv.u = (tri->uv0.u * w) + (tri->uv1.u * u) + (tri->uv2.u * v);

@@ -1,3 +1,4 @@
+#include "defines.h"
 #include "lib_math.h"
 #include "materials.h"
 #include "objects.h"
@@ -17,20 +18,28 @@ void add_lighting_editing(const t_context* ctx, t_path* path, const t_light* lig
 
 static inline t_vec3 direct_lighting_editing(const t_context* ctx, t_path* path, const t_light* light) {
 	path->n = path->hit.normal;
-	t_vec3 hit_biased = vec3_bias(path->hit.point, path->n);
-	t_vec3 l = vec3_sub(light->obj->transform.pos, hit_biased);
+
+	t_vec3 l = vec3_sub(light->obj->transform.pos, path->hit.point);
 	float dist_sq = vec3_dot(l, l);
 	if (dist_sq < LEN_SQ_EPSILON)
-		return (t_vec3){ 0 };
+		return g_zero;
 
 	float dist = sqrtf(dist_sq);
 	path->l = vec3_scale(l, 1.0f / dist);
+
 	path->ndotl = clampf01(vec3_dot(path->n, path->l));
 	if (path->ndotl <= G_EPSILON)
-		return (t_vec3){ 0 };
+		return g_zero;
 
-	if (hit_shadow(ctx, path, hit_biased, fmaxf(B_EPSILON, (dist - light->radius) * G_EPSILON)))
-		return (t_vec3){ 0 };
+	t_vec3 abs_p = vec3_fabsf(path->hit.point);
+	float max_coord = fmaxf(fmaxf(abs_p.x, abs_p.y), abs_p.z);
+	float bias = fmaxf(B_EPSILON, max_coord * G_EPSILON);
+	float adaptive_bias = bias * fmaxf(1.0f, 1.0f / fmaxf(path->ndotl, 0.05f));
+	t_vec3 hit_biased = vec3_add(path->hit.point, vec3_scale(path->hit.geo_normal, adaptive_bias));
+
+	dist = dist - light->radius;
+	if (hit_shadow(ctx, path, hit_biased, dist - fmaxf(B_EPSILON, dist * G_EPSILON)))
+		return g_zero;
 
 	return add_light(path, light, dist_sq);
 }
