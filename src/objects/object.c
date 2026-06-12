@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "defines.h"
 #include "editing.h"
@@ -27,11 +28,28 @@ t_error add_object(t_context* ctx, t_object* obj, bool is_selected) {
 	new_obj->mat = ((t_material**)ctx->scene.assets.materials.items)[new_obj->material_id];
 	new_obj->flags = new_obj->mat->flags;
 
+	if (new_obj->mat->is_emissive) {
+		new_obj->id = ctx->scene.light_id_counter++;
+	} else if (new_obj->type == OBJ_MESH) {
+		uint32_t idx = 0;
+		for (uint32_t i = 0; i < ctx->loaded_mesh_count; ++i) {
+			if (strcmp(ctx->lib_mesh[i].name, new_obj->shape.mesh.name) == 0) {
+				idx = i;
+				break;
+			}
+		}
+		new_obj->id = ctx->scene.mesh_id_counters[idx]++;
+	} else {
+		new_obj->id = ctx->scene.obj_id_counters[new_obj->type]++;
+	}
+
 	if (is_selected) {
 		ctx->editor.selected_obj = new_obj;
 		ctx->scene.cam.distance = fmaxf(vec3_dist(ctx->scene.cam.transform.pos, new_obj->transform.pos), 0.01f);
 		ctx->editor.selection_time = engine_time();
+		ctx->editor.request_obj_tab = true;
 	}
+
 	if (ctx->renderer.mode != SOLID) {
 		if (!vector_add(&ctx->scene.geo.objs, new_obj)) {
 			free(new_obj);

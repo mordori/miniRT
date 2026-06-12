@@ -224,6 +224,7 @@ static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t
 					fatal_error(ctx, errors(ERR_BVH), __FILE__, __LINE__);
 				}
 				ctx->editor.selection_time = engine_time();
+				ctx->editor.request_obj_tab = true;
 			}
 		} else {
 			if (ctx->editor.selected_obj)
@@ -232,6 +233,7 @@ static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t
 				end_edit_action(ctx);
 			ctx->editor.mode = EDIT_DEFAULT;
 			r->mode = RENDERED;
+			ctx->editor.request_scene_tab = true;
 		}
 		return true;
 	}

@@ -9,6 +9,7 @@
 void load_mesh_dir(t_context* ctx, const char* dir_path);
 void parse_obj(t_context* ctx, const char* file, t_mesh* mesh);
 void add_mesh(t_context* ctx, const char* name, uint32_t mat_id, bool is_selected);
+void add_sphere(t_context* ctx, uint32_t mat_id, bool is_selected);
 bool del_object(t_context* ctx);
 bool dup_object(t_context* ctx);
 t_error add_object(t_context* ctx, t_object* obj, bool is_selected);

@@ -85,9 +85,9 @@ enum e_err_code {
 };
 
 enum e_obj_type {
+	OBJ_MESH,
 	OBJ_SPHERE,
 	OBJ_QUAD,
-	OBJ_MESH,
 };
 
 enum e_cam_state {
@@ -163,6 +163,12 @@ enum e_axis {
 	AXIS_YZ,
 };
 
+enum e_bg_mode {
+	BG_SOLID,
+	BG_GRADIENT,
+	BG_IMAGE,
+};
+
 static const t_vec3 g_zero = { { 0.0f, 0.0f, 0.0f, 0.0f } };
 static const t_vec3 g_one = { { 1.0f, 1.0f, 1.0f, 0.0f } };
 static const t_vec3 g_right = { { 1.0f, 0.0f, 0.0f, 0.0f } };
@@ -181,6 +187,7 @@ typedef enum e_render_mode t_render_mode;
 typedef enum e_bn_channel t_bn_channel;
 typedef enum e_edit_mode t_edit_mode;
 typedef enum e_axis t_axis;
+typedef enum e_bg_mode t_bg_mode;
 
 typedef struct s_context t_context;
 typedef struct s_bvh_node t_bvh_node;
@@ -329,6 +336,7 @@ struct __attribute__((aligned(16))) s_object {
 	t_obj_type type;
 	uint32_t flags;
 	uint32_t material_id;
+	uint32_t id;
 	t_material* mat;
 	t_shape shape;
 	t_transform transform;
@@ -425,7 +433,10 @@ struct s_env {
 	t_light dir_light;
 	t_light amb_light;
 	t_texture skydome;
+	t_vec3 ambient_1;
+	t_vec3 ambient_2;
 	t_vec3 amb_color_2;
+	t_bg_mode bg_mode;
 	bool has_dir_light;
 	bool show_background;
 };
@@ -441,6 +452,9 @@ struct __attribute__((aligned(16))) s_scene {
 	t_geo geo;
 	t_env env;
 	t_assets assets;
+	uint32_t obj_id_counters[3];
+	uint32_t mesh_id_counters[64];
+	uint32_t light_id_counter;
 };
 
 struct __attribute__((aligned(64))) s_renderer {
@@ -503,7 +517,8 @@ struct __attribute__((aligned(16))) s_editor {
 	uint32_t constraints;
 	uint32_t selection_time;
 	bool is_selected_light;
-	bool request_ui_tab;
+	bool request_obj_tab;
+	bool request_scene_tab;
 };
 
 struct __attribute__((aligned(16))) s_pixel {

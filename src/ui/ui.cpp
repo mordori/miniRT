@@ -1,5 +1,8 @@
 #include <GLFW/glfw3.h>
+#include <stdint.h>
 #include <stdio.h>
+
+#include <cstring>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -43,6 +46,11 @@ extern "C" bool ui_check_transform_dirty(void) {
 	return g_ui_transform_dirty;
 }
 
+static inline void apply_widget_state() {
+	g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
+	g_ui_interacting |= ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+}
+
 void init_ui() {
 	GLFWwindow* window = glfwGetCurrentContext();
 	if (!window)
@@ -77,7 +85,14 @@ void render_ui(void* param) {
 	window_flags |= ImGuiWindowFlags_NoNav;
 	ImGui::Begin("Side Panel", NULL, window_flags);
 	if (ImGui::BeginTabBar("SideBarTabs")) {
-		if (ImGui::BeginTabItem("Scene")) {
+		ImGuiTabItemFlags tab_scene_flags = ImGuiTabItemFlags_None;
+		if (ctx->editor.request_scene_tab) {
+			tab_scene_flags |= ImGuiTabItemFlags_SetSelected;
+			ctx->editor.request_scene_tab = false;
+			ctx->editor.request_obj_tab = false;
+		}
+		if (ImGui::BeginTabItem("Scene", NULL, tab_scene_flags)) {
+			ImGui::BeginDisabled();
 			if (ImGui::CollapsingHeader("Presets", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ImGui::Spacing();
 				ImGui::Spacing();
@@ -101,6 +116,7 @@ void render_ui(void* param) {
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();
+			ImGui::EndDisabled();
 
 			if (ImGui::CollapsingHeader("Add Object", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ImGui::Spacing();
@@ -110,10 +126,23 @@ void render_ui(void* param) {
 					ImVec2 button_size(-FLT_MIN, 0.0f);
 
 					ImGui::TableNextColumn();
+					ImGui::BeginDisabled();
 					if (ImGui::Button("Cube", button_size)) {}
+					ImGui::EndDisabled();
 
 					ImGui::TableNextColumn();
-					if (ImGui::Button("Sphere", button_size)) {}
+					if (ImGui::Button("Sphere", button_size)) {
+						atomic_store(&r->render_cancel, true);
+						pthread_mutex_lock(&r->mutex);
+						while (r->threads_running)
+							pthread_cond_wait(&r->cond, &r->mutex);
+
+						deselect_object(ctx);
+						add_sphere(ctx, 0, true);
+
+						pthread_mutex_unlock(&r->mutex);
+						g_ui_dirty = true;
+					}
 
 					ImGui::EndTable();
 				}
@@ -144,7 +173,6 @@ void render_ui(void* param) {
 
 							deselect_object(ctx);
 							add_mesh(ctx, ctx->lib_mesh[i].name, 0, true);
-							ctx->editor.request_ui_tab = true;
 
 							pthread_mutex_unlock(&r->mutex);
 							g_ui_dirty = true;
@@ -225,62 +253,109 @@ void render_ui(void* param) {
 
 				if (ImGui::SliderFloat("Focal Length", &ctx->scene.cam.focal_len_mm, 14.0f, 200.0f, "%.1f", cam_flags))
 					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-				g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+				apply_widget_state();
 
 				if (ImGui::SliderFloat("Focus Dist", &ctx->scene.cam.focus_dist, 0.1f, 100.0f, "%.1f", cam_flags))
 					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-				g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+				apply_widget_state();
 
 				if (ImGui::SliderFloat("F-stop", &ctx->scene.cam.f_stop, 1.0f, 128.0f, "%.1f", cam_flags))
 					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-				g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-				g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+				apply_widget_state();
 
-				// if (ImGui::SliderFloat("Shutter Speed", &ctx->scene.cam.shutter_speed, 0.01f, 10000.0f, "%.2f", cam_flags))
-				// 	g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-				// g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-				// g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+				ImGui::BeginDisabled();
+				if (ImGui::SliderFloat("Shutter Speed", &ctx->scene.cam.shutter_speed, 0.01f, 10000.0f, "%.2f", cam_flags))
+					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				apply_widget_state();
 
-				// if (ImGui::SliderFloat("ISO", &ctx->scene.cam.iso, 100.0f, 3000.0f, "%.0f", cam_flags))
-				// 	g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-				// g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-				// g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+				if (ImGui::SliderFloat("ISO", &ctx->scene.cam.iso, 100.0f, 3000.0f, "%.0f", cam_flags))
+					g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+				apply_widget_state();
+				ImGui::EndDisabled();
 			}
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			if (ctx->scene.env.has_dir_light) {
-				if (ImGui::CollapsingHeader("Environment", ImGuiTreeNodeFlags_DefaultOpen)) {
-					ImGui::Spacing();
-					ImGui::Spacing();
+			if (ImGui::CollapsingHeader("Environment", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Spacing();
+				ImGui::Spacing();
 
-					if (ImGui::Checkbox("Show Background", &ctx->scene.env.show_background))
-						g_ui_dirty = true;
-					ImGui::Spacing();
+				const char* items[] = { "Solid", "Gradient", "Image" };
+				static uint32_t current_item = (uint32_t)ctx->scene.env.bg_mode;
+				if (ImGui::BeginCombo("##env_presets", items[current_item])) {
+					for (uint32_t n = 0; n < IM_ARRAYSIZE(items); n++) {
+						bool is_selected = (current_item == n);
+						if (ImGui::Selectable(items[n], is_selected)) {
+							current_item = n;
+							ctx->scene.env.bg_mode = (t_bg_mode)current_item;
+							g_ui_dirty = true;
+						}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Show", &ctx->scene.env.show_background))
+					g_ui_dirty = true;
+				ImGui::Spacing();
+				ImGui::Spacing();
 
-					float temp = ctx->scene.cam.skydome_uv_offset.u * 360.0f;
-					if (ImGui::SliderFloat("Rotate", &temp, 0.0f, 360.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp)) {
-						ctx->scene.cam.skydome_uv_offset.u = temp / 360.0f;
-						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+				ImGuiColorEditFlags color_flags = ImGuiColorEditFlags_NoInputs;
+				switch (ctx->scene.env.bg_mode) {
+					case BG_SOLID: {
+						g_ui_dirty |= ImGui::ColorEdit3("Color", ctx->scene.env.ambient_1.data, color_flags);
+						apply_widget_state();
+					} break;
+					case BG_GRADIENT: {
+						g_ui_dirty |= ImGui::ColorEdit3("Color 1", ctx->scene.env.ambient_1.data, color_flags);
+						apply_widget_state();
+						ImGui::SameLine(0, 30);
+						g_ui_dirty |= ImGui::ColorEdit3("Color 2", ctx->scene.env.ambient_2.data, color_flags);
+						apply_widget_state();
+					} break;
+					case BG_IMAGE: {
+						const char* current_tex = ctx->scene.env.skydome.pixels ? "Skydome" : "None";
+						if (ImGui::BeginCombo("Texture", current_tex)) {
+							for (int i = 0; i < ctx->scene.assets.tex_count; i++) {
+								if (!ctx->scene.assets.textures[i].loaded)
+									continue;
+
+								bool is_selected = false;  // Optional: logic to detect active texture
+								if (ImGui::Selectable(ctx->scene.assets.textures[i].name, is_selected)) {
+									// ctx->scene.env.skydome = ctx->scene.assets.textures[i].texture;
+									g_ui_dirty = true;
+								}
+							}
+							ImGui::EndCombo();
+						}
+						if (!ctx->scene.env.has_dir_light)
+							ImGui::BeginDisabled();
+						float temp = ctx->scene.cam.skydome_uv_offset.u * 360.0f;
+						if (ImGui::SliderFloat("Rotate", &temp, 0.0f, 360.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp)) {
+							ctx->scene.cam.skydome_uv_offset.u = temp / 360.0f;
+							if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+								rotate_skydome(ctx);
+								g_ui_dirty = true;
+							}
+						}
+						if (ImGui::IsItemDeactivatedAfterEdit()) {
 							rotate_skydome(ctx);
 							g_ui_dirty = true;
 						}
-					}
-					if (ImGui::IsItemDeactivatedAfterEdit()) {
-						rotate_skydome(ctx);
-						g_ui_dirty = true;
-					}
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+						g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+						if (!ctx->scene.env.has_dir_light)
+							ImGui::EndDisabled();
+					} break;
+					default: break;
 				}
-				ImGui::Spacing();
-				ImGui::Spacing();
-				ImGui::Spacing();
-				ImGui::Spacing();
 			}
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
 
 			if (ImGui::CollapsingHeader("Renderer", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ImGui::Spacing();
@@ -359,14 +434,35 @@ void render_ui(void* param) {
 		if (is_selecting) {
 			t_object* obj = ctx->editor.selected_obj;
 			ImGuiTabItemFlags tab_flags = ImGuiTabItemFlags_None;
-			if (ctx->editor.request_ui_tab) {
+			if (ctx->editor.request_obj_tab) {
 				tab_flags |= ImGuiTabItemFlags_SetSelected;
-				ctx->editor.request_ui_tab = false;
+				ctx->editor.request_obj_tab = false;
 			}
-			if (ImGui::BeginTabItem("Object", NULL, tab_flags)) {
-				ImGui::Spacing();
-				ImGui::Spacing();
-				ImGui::Text("Name");
+
+			static char tab_obj_name[64] = "Object";
+			static t_object* last_obj = NULL;
+
+			if (obj != last_obj) {
+				last_obj = obj;
+				const char* base = "Object";
+
+				if (ctx->editor.is_selected_light) {
+					base = "Light";
+				} else {
+					switch (obj->type) {
+						case OBJ_MESH: base = obj->shape.mesh.name; break;
+						case OBJ_SPHERE: base = "Sphere"; break;
+						case OBJ_QUAD: base = "Quad"; break;
+						default: break;
+					}
+				}
+				if (obj->id == 0)
+					snprintf(tab_obj_name, sizeof(tab_obj_name), "%s", base);
+				else
+					snprintf(tab_obj_name, sizeof(tab_obj_name), "%s(%d)", base, obj->id);
+			}
+
+			if (ImGui::BeginTabItem(tab_obj_name, NULL, tab_flags)) {
 				ImGui::Spacing();
 				ImGui::Spacing();
 				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -404,7 +500,7 @@ void render_ui(void* param) {
 					}
 					if (ImGui::IsItemDeactivatedAfterEdit())
 						update = true;
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					g_ui_interacting |= ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left);
 
 					ImGui::Text("Rotation");
 					t_vec3 degrees = { //
@@ -426,7 +522,7 @@ void render_ui(void* param) {
 						update = true;
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
 
-					static bool is_uniform = true;
+					static bool is_uniform = false;
 					ImGui::Text("Scale");
 					if (ImGui::DragFloat3("##scale", (float*)&obj->transform.scale, 0.002f)) {
 						if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
@@ -436,9 +532,11 @@ void render_ui(void* param) {
 					}
 					if (ImGui::IsItemDeactivatedAfterEdit())
 						update = true;
+					ImGui::BeginDisabled();
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
 					ImGui::SameLine();
 					if (ImGui::Checkbox("Uniform", &is_uniform)) {}
+					ImGui::EndDisabled();
 
 					if (update) {
 						g_ui_transform_dirty = true;
@@ -504,12 +602,14 @@ void render_ui(void* param) {
 
 					bool is_default = (obj->material_id == 0);
 
+					ImGui::BeginDisabled();
 					if (!is_default) {
 						ImGui::SameLine();
 						if (ImGui::Button("Delete")) {
 							// TODO: scan_for_new_meshes(ctx)
 						}
 					}
+					ImGui::EndDisabled();
 
 					ImGui::Spacing();
 					ImGui::Spacing();
@@ -526,37 +626,32 @@ void render_ui(void* param) {
 					ImGuiColorEditFlags color_flags = ImGuiColorEditFlags_NoInputs;
 					if (ImGui::ColorEdit4("Albedo", obj->mat->albedo.data, color_flags))
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					apply_widget_state();
 
 					float roughness = obj->mat->roughness;
 					if (ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f, "%.2f", mat_flags)) {
 						obj->mat->roughness = fmaxf(roughness, 0.045f);
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
 					}
-					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					apply_widget_state();
 
 					if (ImGui::SliderFloat("Metallic", &obj->mat->metallic, 0.0f, 1.0f, "%.2f", mat_flags))
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					apply_widget_state();
 
 					float ior = obj->mat->ior;
 					if (ImGui::SliderFloat("IOR", &ior, 1.0f, 2.4f, "%.2f", mat_flags)) {
 						obj->mat->ior = fmaxf(ior, 1.0f);
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
 					}
-					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					apply_widget_state();
 
 					float transmission = obj->mat->transmission;
 					if (ImGui::SliderFloat("Transmission", &transmission, 1.0f, 2.4f, "%.2f", mat_flags)) {
 						obj->mat->transmission = fmaxf(transmission, 1.0f);
 						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
 					}
-					g_ui_dirty |= ImGui::IsItemDeactivatedAfterEdit();
-					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
+					apply_widget_state();
 					ImGui::Spacing();
 					ImGui::Spacing();
 

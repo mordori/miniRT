@@ -1,7 +1,20 @@
+#include "defines.h"
+#include "lib_math.h"
 #include "objects.h"
 #include "utils.h"
 
 static inline float solve_quadratic(const t_sphere* sphere, const t_ray* ray, float t_max);
+
+void add_sphere(t_context* ctx, uint32_t mat_id, bool is_selected) {
+	t_object obj = (t_object){ 0 };
+	obj.type = OBJ_SPHERE;
+	obj.material_id = mat_id;
+	obj.transform.pos = (t_vec3){ { 0.0f, 0.5f, 0.0f, 1.0f } };
+	obj.shape.sphere.radius = 0.5f;
+	obj.shape.sphere.radius_sq = 0.25f;
+	obj.transform.rot.w = 1.0f;
+	add_object(ctx, &obj, is_selected);
+}
 
 t_error init_sphere(t_context* ctx, t_vec3 center, float diameter, uint32_t mat_id) {
 	t_object obj = (t_object){ 0 };

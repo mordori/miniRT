@@ -19,35 +19,31 @@
 - Modest post-processing stack with ACES-calibrated tonemapping
 - High-performance CPU parallelism with multi-threading, memory efficiency, and systems-level optimisations enabling vectorisation of data
 - Modern PBR pipeline with microfacet BSDF
-- Custom scene description format
 - Bilinear texture filtering and normal mapping
 - Physical camera with fly and turntable controllers
-- Object Editing mode with simplified lighting mimicing Blender
-- Integrates Intel Open Image Denoise for cleaning up the remaining noise in the completed render
+- Object Edit Mode with simplified lighting inspired by Blender
+- Integrates Intel Open Image Denoise for cleaning up the remaining noise from the completed render
 - Loads meshes in .obj format and the objects are instantiated
-- Utilizes Dear ImGui for scene controls and various parameters
+- Utilizes Dear ImGui for scene controls and various object/material parameters
 
 > [!NOTE]
-> You can drop your own .obj models in `📁assets/models/` and they will become available to instantiate from `Add->Mesh...` dropdown menu.
+> You can drop your own .obj models in `📁assets/models/` and they will become available to instantiate from `Add Object->Mesh` dropdown menu.
 
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
 - Improve the naive median-split BVH
-- Migrate from requiring scenes as arguments to more universal setup with presets
 
 #### Future Work
 - Support for MacOS and Apple Silicon
 - Image based lighting
 - EV100 exposure triangle
-- Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA)
-- Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
 ## Physically Based Rendering
 ### BSDF
 Principled BSDF, a hybrid material model featuring Disney diffuse and Cook-Torrance specular lobes.
 
-- Implements Dupuy's 2023 spherical cap VNDF sampling method for efficient visible microfacet normal generation.
+- Implements Dupuy & Benyoub 2023 spherical cap VNDF sampling method for efficient visible microfacet normal generation.
 - Height-correlated Smith G2 visibility and analytically simplified Smith G1 masking to maintain stable 32-bit floating point weights.
 - Firefly mitigation and defense against variance spikes with indirect weight clamping, path roughing, and NaN/Inf sanitisation.
 
@@ -65,20 +61,26 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 ### Math Utilities
 - Custom high-performance [linear algebra library](https://github.com/mordori/Lib_math) providing SIMD-accelerated, memory-aligned vector and matrix primitives.
 
-### Blit Function
-#### Vectorised Preview Mode
-- Used during the camera movement. Achieves pure SIMD execution, processing 4 pixels in parallel per instruction cycle to maximize frame rate at the cost of slight image quality reduction.
-
-#### Pipelined Rendered Mode
-- Leverages loop unrolling to maximize instruction level parallelism. While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
+### Multi-threading
+-
 
 ### BVH
 - Documentation under construction
 
+### Light-weight Edit Mode
+- Simplified lighting calculations with artificial ambient lighting
+
+### Blit
+#### Vectorised Preview Mode
+- Used during the camera movement and in Edit Mode. Achieves pure SIMD execution, processing 4 pixels in parallel per instruction cycle to maximize frame rate at the cost of slight image quality reduction.
+
+#### Pipelined Rendered Mode
+- Leverages loop unrolling to maximize instruction level parallelism. While color channel dependencies limit vectorisation in this stage, unrolling reduces branch prediction overhead and saturates the CPU's superscalar execution.
+
 ### Micro-optimisations
 - Invariant caching to local variables to prevent pointer aliasing.
 - Branchless arithmetic to minimise CPU stalls in performance-critical loops.
-- Strategically segregated write-heavy synchronization primitives from read-only render data to eliminate false sharing and cache line invalidation.
+- Segregation of write-heavy synchronization primitives from read-only render data to eliminate false sharing and cache line invalidation.
 
 ## Quasi-Monte Carlo Integration
 - Documentation under construction
@@ -118,8 +120,6 @@ Run the program with a .rt scene file
 ./miniRT assets/scenes/empty.rt
 ```
 
-Premade scenes can be found in `📁assets/scenes/`.
-
 Saved renders are stored in `📁renders/`.
 
 > [!TIP]
@@ -136,8 +136,8 @@ Saved renders are stored in `📁renders/`.
 ### Render Mode
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>LMB</kbd>                                                 | Look                                          |
-| <kbd>RMB</kbd>                                                 | Turn                                          |
+| <kbd>LMB</kbd>                                                 | Select                                        |
+| <kbd>RMB</kbd>                                                 | Look                                          |
 | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
 | <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
 | <kbd>T</kbd>                                                   | Save View                                     |
@@ -159,7 +159,6 @@ Saved renders are stored in `📁renders/`.
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Select Object / Apply Edit                    |
 | <kbd>RMB</kbd>                                                 | Cancel Edit                                   |
-| <kbd>Q</kbd>                                                   | Deselct Object                                |
 | <kbd>G</kbd>                                                   | Move                                          |
 | <kbd>R</kbd>                                                   | Rotate                                        |
 | <kbd>S</kbd>                                                   | Scale                                         |

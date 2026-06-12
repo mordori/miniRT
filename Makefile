@@ -92,7 +92,7 @@ SRCS		+= $(addprefix $(DIR_SRC)$(DIR_PARSE), \
 				parse_pass.c parse_patterns.c parse_validate.c ft_strtod.c ft_strtof.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				editing/tracer.c editing/lighting.c \
-				renderer.c tracer.c post_processing.c skydome.c window.c \
+				renderer.c tracer.c post_processing.c environment.c window.c \
 				frame.c bsdf.c brdf.c lighting.c sampling.c screenshot.c projection.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_SCENE), \
 				scene.c bvh.c bounds.c)

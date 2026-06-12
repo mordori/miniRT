@@ -24,11 +24,9 @@ void init_scene(t_context* ctx) {
 	mat.roughness = 0.5f;
 	new_material(ctx, &mat, 0);
 
-	// TODO: remove hard coded test
-	if (strcmp("assets/scenes/empty.rt", ctx->file) == 0 || strcmp("assets/scenes/cornell_box.rt", ctx->file) == 0) {
-		load_mesh_dir(ctx, "assets/models");
-		printf("\n");
-	}
+	load_mesh_dir(ctx, "assets/models");
+
+	ctx->scene.env.skydome = load_texture("assets/textures/sky.png", true);
 
 	if (!parse_scene(ctx, ctx->fd))
 		fatal_error(ctx, "Failed to parse scene file", __FILE__, __LINE__);
@@ -40,27 +38,22 @@ void init_scene(t_context* ctx) {
 	close(ctx->fd);
 	ctx->fd = ERROR;
 
-	// TODO: remove hard coded test
-	{
-		if (strcmp("assets/scenes/empty.rt", ctx->file) == 0)
-			add_mesh(ctx, "dragon.obj", 4, false);
-		else if (strcmp("assets/scenes/cornell_box.rt", ctx->file) == 0)
-			add_mesh(ctx, "bunny.obj", 5, false);
+	if (strcmp("assets/scenes/empty.rt", ctx->file) == 0)
+		ctx->scene.env.bg_mode = BG_IMAGE;
 
-		if (ctx->scene.env.has_dir_light) {
-			t_vec3 initial_pos = { { 704000.0f, 484000.0f, 520000.0f, 0.0f } };
-			ctx->scene.cam.skydome_uv_offset.u = 0.5f;
-			t_light* light = &ctx->scene.cam.directional_light;
-			float angle = ctx->scene.cam.skydome_uv_offset.u * M_TAUf;
-			t_vec2 theta = { .sin = sinf(angle), .cos = cosf(angle) };
-			light->obj->transform.pos = (t_vec3){ //
-				.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin,
-				.y = initial_pos.y,
-				.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos
-			};
-			update_transform(&light->obj->transform);
-			update_bounds(light->obj);
-		}
+	if (ctx->scene.env.has_dir_light) {
+		t_vec3 initial_pos = { { 704000.0f, 484000.0f, 520000.0f, 0.0f } };
+		ctx->scene.cam.skydome_uv_offset.u = 0.5f;
+		t_light* light = &ctx->scene.cam.directional_light;
+		float angle = ctx->scene.cam.skydome_uv_offset.u * M_TAUf;
+		t_vec2 theta = { .sin = sinf(angle), .cos = cosf(angle) };
+		light->obj->transform.pos = (t_vec3){ //
+			.x = initial_pos.x * theta.cos + initial_pos.z * theta.sin,
+			.y = initial_pos.y,
+			.z = -initial_pos.x * theta.sin + initial_pos.z * theta.cos
+		};
+		update_transform(&light->obj->transform);
+		update_bounds(light->obj);
 	}
 
 	if (!init_bvh(ctx))

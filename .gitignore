@@ -3,7 +3,7 @@
 dep/
 obj/
 renders/
-lib/MLX42/
+lib/MLX42/build
 *.o
 *.d
 libft.a
