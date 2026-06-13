@@ -41,6 +41,7 @@ bool hit_sphere(const t_shape* shape, const t_ray* ray, t_hit* hit) {
 	t_vec3 normal_outward = vec3_normalize(hit->point);
 	hit->point = vec3_scale(normal_outward, sphere->radius);
 	eval_hit_normal(ray, hit, normal_outward);
+	hit->geo_normal = hit->normal;
 	hit->uv = spherical_uv(normal_outward);
 
 	hit->tangent = vec3(-normal_outward.z, 0.0f, normal_outward.x);

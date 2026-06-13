@@ -12,8 +12,8 @@ t_vec3 background_color(const t_scene* scene, const t_ray* ray, t_vec2 uv_offset
 		return g_zero;
 
 	switch (scene->env.bg_mode) {
-		case BG_SOLID: return scene->env.ambient_1;
-		case BG_GRADIENT: return vec3_lerp(scene->env.ambient_1, scene->env.ambient_2, (ray->dir.y + 1.0f) * 0.5f);
+		case BG_SOLID: return scene->env.ambient;
+		case BG_GRADIENT: return vec3_lerp(scene->env.gradient_1, scene->env.gradient_2, (ray->dir.y + 1.0f) * 0.5f);
 		case BG_IMAGE: {
 			t_vec2 uv = vec2_add(spherical_uv(ray->dir), uv_offset);
 			return sample_texture(&scene->env.skydome, uv);

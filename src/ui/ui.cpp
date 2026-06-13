@@ -306,26 +306,26 @@ void render_ui(void* param) {
 				ImGuiColorEditFlags color_flags = ImGuiColorEditFlags_NoInputs;
 				switch (ctx->scene.env.bg_mode) {
 					case BG_SOLID: {
-						g_ui_dirty |= ImGui::ColorEdit3("Color", ctx->scene.env.ambient_1.data, color_flags);
+						g_ui_dirty |= ImGui::ColorEdit3("Color", ctx->scene.env.ambient.data, color_flags);
 						apply_widget_state();
 					} break;
 					case BG_GRADIENT: {
-						g_ui_dirty |= ImGui::ColorEdit3("Color 1", ctx->scene.env.ambient_1.data, color_flags);
+						g_ui_dirty |= ImGui::ColorEdit3("Color 1", ctx->scene.env.gradient_1.data, color_flags);
 						apply_widget_state();
 						ImGui::SameLine(0, 30);
-						g_ui_dirty |= ImGui::ColorEdit3("Color 2", ctx->scene.env.ambient_2.data, color_flags);
+						g_ui_dirty |= ImGui::ColorEdit3("Color 2", ctx->scene.env.gradient_2.data, color_flags);
 						apply_widget_state();
 					} break;
 					case BG_IMAGE: {
-						const char* current_tex = ctx->scene.env.skydome.pixels ? "Skydome" : "None";
+						const char* current_tex = ctx->scene.env.skydome.pixels ? "sky.png" : "None";
 						if (ImGui::BeginCombo("Texture", current_tex)) {
 							for (int i = 0; i < ctx->scene.assets.tex_count; i++) {
 								if (!ctx->scene.assets.textures[i].loaded)
 									continue;
 
-								bool is_selected = false;  // Optional: logic to detect active texture
+								bool is_selected = false;
 								if (ImGui::Selectable(ctx->scene.assets.textures[i].name, is_selected)) {
-									// ctx->scene.env.skydome = ctx->scene.assets.textures[i].texture;
+									ctx->scene.env.skydome = ctx->scene.assets.textures[i].texture;
 									g_ui_dirty = true;
 								}
 							}
@@ -394,18 +394,24 @@ void render_ui(void* param) {
 						snprintf(progress_text, sizeof(progress_text), "Done! (%.1fs)", elapsed_sec);
 					else
 						snprintf(progress_text, sizeof(progress_text), "Rendering %u / %u", r->frame, r->render_samples);
-				} else {
+				} else if (r->mode == PREVIEW) {
 					snprintf(progress_text, sizeof(progress_text), "Preview Mode");
+				} else {
+					snprintf(progress_text, sizeof(progress_text), "Edit Mode");
 				}
-				if (is_done)
+				if (is_done) {
 					ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.2f, 0.8f, 0.2f, 1.0f));
-				else if (r->mode != RENDERED)
+				} else if (r->mode != RENDERED) {
 					progress = 1.0f;
+					if (r->mode == SOLID)
+						ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.2f, 0.2f, 0.8f, 1.0f));
+				}
 				ImGui::ProgressBar(progress, ImVec2(-1.0f, 0.0f), progress_text);
 				static uint64_t save_time = 0;
 				static char last_saved_file[256] = "";
-				if (is_done) {
+				if (is_done || r->mode == SOLID)
 					ImGui::PopStyleColor();
+				if (is_done) {
 					ImGui::Spacing();
 					ImGui::Spacing();
 					float button_width = 150.0f;
@@ -535,7 +541,8 @@ void render_ui(void* param) {
 					ImGui::BeginDisabled();
 					g_ui_interacting |= (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left));
 					ImGui::SameLine();
-					if (ImGui::Checkbox("Uniform", &is_uniform)) {}
+					if (ImGui::Checkbox("Uniform", &is_uniform))
+						update = true;
 					ImGui::EndDisabled();
 
 					if (update) {
@@ -583,16 +590,15 @@ void render_ui(void* param) {
 
 						if (ImGui::Selectable("Create New...")) {
 							t_material clone = *obj->mat;
-							uint32_t new_id;
 
 							atomic_store(&r->render_cancel, true);
 							pthread_mutex_lock(&r->mutex);
 							while (r->threads_running)
 								pthread_cond_wait(&r->cond, &r->mutex);
 
-							if (new_material(ctx, &clone, &new_id) == E_OK) {
-								obj->material_id = new_id;
-								obj->mat = ((t_material**)ctx->scene.assets.materials.items)[new_id];
+							if (new_material(ctx, &clone) == E_OK) {
+								obj->material_id = ctx->scene.assets.materials.total - 1;
+								obj->mat = ((t_material**)ctx->scene.assets.materials.items)[obj->material_id];
 							}
 							pthread_mutex_unlock(&r->mutex);
 							g_ui_dirty = true;
@@ -624,34 +630,90 @@ void render_ui(void* param) {
 					}
 
 					ImGuiColorEditFlags color_flags = ImGuiColorEditFlags_NoInputs;
-					if (ImGui::ColorEdit4("Albedo", obj->mat->albedo.data, color_flags))
-						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+
+					if (ImGui::Checkbox("Emissive", &obj->mat->is_emissive))
+						g_ui_dirty = true;
 					apply_widget_state();
 
-					float roughness = obj->mat->roughness;
-					if (ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f, "%.2f", mat_flags)) {
-						obj->mat->roughness = fmaxf(roughness, 0.045f);
-						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+					if (obj->mat->is_emissive) {
+						ImGui::Spacing();
+						ImGui::Spacing();
+						if (ImGui::ColorEdit3("Color", obj->mat->emission_color.data, color_flags)) {
+							obj->mat->emission = vec3_scale(obj->mat->emission_color, obj->mat->emission_strength);
+							g_ui_dirty = true;
+						}
+						apply_widget_state();
+						ImGui::Spacing();
+						ImGui::Spacing();
+
+						// clang-format off
+						if (ImGui::SliderFloat("Strength", &obj->mat->emission_strength,
+								0.0f, 1000.0f, "%.2f", mat_flags | ImGuiSliderFlags_Logarithmic)) {
+							obj->mat->emission = vec3_scale(obj->mat->emission_color, obj->mat->emission_strength);
+							g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+						}
+						apply_widget_state();
+						// clang-format on
+					} else {
+						ImGui::Spacing();
+						ImGui::Spacing();
+
+						g_ui_dirty |= ImGui::ColorEdit3("Albedo", obj->mat->albedo.data, color_flags);
+						apply_widget_state();
+
+						ImGui::SameLine(0, 30);
+						if (ImGui::Checkbox("Texture", &obj->mat->is_texture))
+							g_ui_dirty = true;
+						apply_widget_state();
+
+						if (obj->mat->is_texture) {
+							// TODO: tex dropdown
+							apply_widget_state();
+						}
+
+						ImGui::Spacing();
+						ImGui::Spacing();
+
+						float roughness = obj->mat->roughness;
+						if (ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f, "%.2f", mat_flags)) {
+							obj->mat->roughness = fmaxf(roughness, 0.045f);
+							g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+						}
+						apply_widget_state();
+
+						if (ImGui::SliderFloat("Metallic", &obj->mat->metallic, 0.0f, 1.0f, "%.2f", mat_flags))
+							g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+						apply_widget_state();
+
+						float ior = obj->mat->ior;
+						if (ImGui::SliderFloat("IOR", &ior, 1.0f, 2.4f, "%.2f", mat_flags)) {
+							// obj->mat->ior = fmaxf(ior, 1.0f);
+							obj->mat->f0_dielectric = vec3_n(reflectance(obj->mat->ior));
+							g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+						}
+						apply_widget_state();
+
+						float transmission = obj->mat->transmission;
+						if (ImGui::SliderFloat("Transmission", &transmission, 1.0f, 2.4f, "%.2f", mat_flags)) {
+							obj->mat->transmission = fmaxf(transmission, 1.0f);
+							g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+						}
+						apply_widget_state();
+						ImGui::Spacing();
+						ImGui::Spacing();
+
+						if (ImGui::Checkbox("Normal Map", &obj->mat->is_normal_map))
+							g_ui_dirty = true;
+						apply_widget_state();
+
+						if (obj->mat->is_normal_map) {
+							ImGui::Spacing();
+							ImGui::Spacing();
+							if (ImGui::SliderFloat("Strength", &obj->mat->normal_strength, 0.0f, 1.0f, "%.2f", mat_flags))
+								g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
+							apply_widget_state();
+						}
 					}
-					apply_widget_state();
-
-					if (ImGui::SliderFloat("Metallic", &obj->mat->metallic, 0.0f, 1.0f, "%.2f", mat_flags))
-						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-					apply_widget_state();
-
-					float ior = obj->mat->ior;
-					if (ImGui::SliderFloat("IOR", &ior, 1.0f, 2.4f, "%.2f", mat_flags)) {
-						obj->mat->ior = fmaxf(ior, 1.0f);
-						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-					}
-					apply_widget_state();
-
-					float transmission = obj->mat->transmission;
-					if (ImGui::SliderFloat("Transmission", &transmission, 1.0f, 2.4f, "%.2f", mat_flags)) {
-						obj->mat->transmission = fmaxf(transmission, 1.0f);
-						g_ui_dirty |= ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-					}
-					apply_widget_state();
 					ImGui::Spacing();
 					ImGui::Spacing();
 
@@ -687,105 +749,84 @@ void render_ui(void* param) {
 	bool is_selecting = (ctx->editor.selected_obj != NULL);
 	ImGui::TextDisabled("TAB:");
 	ImGui::SameLine(0, 4);
-	if (ctx->renderer.mode != SOLID) {
+	if (ctx->renderer.mode != SOLID)
 		ImGui::Text("Edit Mode");
+	else
+		ImGui::Text("Render Mode");
+
+	if (ctx->editor.mode != EDIT_DEFAULT) {
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("LMB:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Apply");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("RMB:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Cancel");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("X Y Z:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Axis Constraint");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("Shift+X Y Z:");
+		ImGui::SameLine(0, 4);
+		ImGui::Text("Planar Constraint");
+	} else {
 		ImGui::SameLine(0, 30);
 		ImGui::TextDisabled("LMB:");
 		ImGui::SameLine(0, 4);
 		ImGui::Text("Select");
 		ImGui::SameLine(0, 30);
-		ImGui::TextDisabled("W A S D:");
+		ImGui::TextDisabled("Alt+LMB:");
 		ImGui::SameLine(0, 4);
-		ImGui::Text("Move");
+		ImGui::Text("Orbit");
 		ImGui::SameLine(0, 30);
-		ImGui::TextDisabled("RMB:");
+		ImGui::TextDisabled("Alt+RMB:");
 		ImGui::SameLine(0, 4);
-		ImGui::Text("Look");
+		ImGui::Text("Zoom");
 		ImGui::SameLine(0, 30);
-		ImGui::TextDisabled("Space:");
+		ImGui::TextDisabled("Alt+MMB:");
 		ImGui::SameLine(0, 4);
-		ImGui::Text("Ascend");
-		ImGui::SameLine(0, 30);
-		ImGui::TextDisabled("Shift:");
-		ImGui::SameLine(0, 4);
-		ImGui::Text("Descend");
-		ImGui::SameLine(0, 30);
-		ImGui::TextDisabled("R:");
-		ImGui::SameLine(0, 4);
-		ImGui::Text("Reset View");
+		ImGui::Text("Pan");
 		ImGui::SameLine(0, 30);
 		ImGui::TextDisabled("T:");
 		ImGui::SameLine(0, 4);
+		ImGui::Text("Reset View");
+		ImGui::SameLine(0, 30);
+		ImGui::TextDisabled("Y:");
+		ImGui::SameLine(0, 4);
 		ImGui::Text("Save View");
+		if (is_selecting) {
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("G:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Translate");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("S:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Scale");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("R:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Rotate");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("F:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Frame");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("Shift+D:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Duplicate");
+			ImGui::SameLine(0, 30);
+			ImGui::TextDisabled("DEL:");
+			ImGui::SameLine(0, 4);
+			ImGui::Text("Delete");
+			ImGui::SameLine(0, 30);
+		}
 		ImGui::SameLine(0, 30);
 		ImGui::TextDisabled("ESC:");
 		ImGui::SameLine(0, 4);
 		ImGui::Text("Quit");
-		ImGui::SameLine(0, 30);
-	} else {
-		ImGui::Text("Render Mode");
-		ImGui::SameLine(0, 30);
-		if (ctx->editor.mode != EDIT_DEFAULT) {
-			ImGui::TextDisabled("LMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Apply");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("RMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Cancel");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("X Y Z:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Axis Constraint");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Shift+X Y Z:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Planar Constraint");
-			ImGui::SameLine(0, 30);
-		} else {
-			ImGui::TextDisabled("LMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Select");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Alt+LMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Orbit");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Alt+RMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Zoom");
-			ImGui::SameLine(0, 30);
-			ImGui::TextDisabled("Alt+MMB:");
-			ImGui::SameLine(0, 4);
-			ImGui::Text("Pan");
-			ImGui::SameLine(0, 30);
-			if (is_selecting) {
-				ImGui::TextDisabled("G:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Translate");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("S:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Scale");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("R:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Rotate");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("F:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Focus");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("Shift+D:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Duplicate");
-				ImGui::SameLine(0, 30);
-				ImGui::TextDisabled("DEL:");
-				ImGui::SameLine(0, 4);
-				ImGui::Text("Delete");
-				ImGui::SameLine(0, 30);
-			}
-		}
 	}
 
 	ImGui::SameLine(ImGui::GetWindowWidth() - 65.0f);

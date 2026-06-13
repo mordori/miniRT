@@ -20,7 +20,6 @@ void cam_turn(t_context* ctx, t_vec2i delta);
 void cam_orbit(t_context* ctx, t_vec2i delta);
 void cam_zoom(t_context* ctx, t_vec2i delta);
 void cam_pan(t_context* ctx, t_vec2i delta);
-bool cam_fly(t_context* ctx);
 
 bool frame_camera(t_context* ctx, t_object* obj);
 void set_default_view(t_context* ctx);

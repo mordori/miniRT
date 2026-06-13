@@ -27,8 +27,6 @@ void process_input(t_context* ctx, bool* update) {
 	if (!ui_want_mouse()) {
 		dirty |= control_camera(ctx, mouseDelta);
 		dirty |= edit_object(ctx, mouseDelta);
-		if (ctx->renderer.mode != SOLID)
-			dirty |= cam_fly(ctx);
 	}
 	dirty |= ui_check_dirty();
 	if (dirty)
@@ -47,16 +45,15 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 	if (ui_want_keyboard())
 		return;
 	t_context* ctx = (t_context*)param;
+	t_renderer* r = &ctx->renderer;
 
-	pthread_mutex_lock(&ctx->renderer.mutex);
+	pthread_mutex_lock(&r->mutex);
 	bool dirty = false;
-	if (ctx->renderer.mode == SOLID) {
-		while (ctx->renderer.threads_running)
-			pthread_cond_wait(&ctx->renderer.cond, &ctx->renderer.mutex);
+	if (r->mode == SOLID) {
+		while (r->threads_running)
+			pthread_cond_wait(&r->cond, &r->mutex);
 
 		dirty |= config_editor(ctx, keydata);
-		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
-			dirty |= frame_camera(ctx, ctx->editor.selected_obj);
 
 		if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_D && keydata.modifier == MLX_SHIFT && keydata.action == MLX_PRESS)
 			dirty |= dup_object(ctx);
@@ -65,16 +62,19 @@ void key_hook(mlx_key_data_t keydata, void* param) {
 			dirty |= del_object(ctx);
 	}
 
-	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_R && keydata.action == MLX_PRESS)
+	if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS)
+		dirty |= frame_camera(ctx, ctx->editor.selected_obj);
+
+	if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
 		dirty |= reset_camera(ctx);
-	if (ctx->renderer.mode != SOLID && keydata.key == MLX_KEY_T && keydata.action == MLX_PRESS)
+	if (ctx->editor.mode == EDIT_DEFAULT && keydata.key == MLX_KEY_Y && keydata.action == MLX_PRESS)
 		set_default_view(ctx);
 
 	dirty |= config_renderer(ctx, keydata);
-	pthread_mutex_unlock(&ctx->renderer.mutex);
+	pthread_mutex_unlock(&r->mutex);
 
 	if (dirty)
-		atomic_store(&ctx->renderer.render_cancel, true);
+		atomic_store(&r->render_cancel, true);
 
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_RELEASE)
 		mlx_close_window(ctx->mlx);
@@ -105,7 +105,6 @@ void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* 
 		cancel_edit_action(ctx);
 		dirty = true;
 	}
-	// }
 	if (dirty)
 		atomic_store(&ctx->renderer.render_cancel, true);
 	pthread_mutex_unlock(&r->mutex);

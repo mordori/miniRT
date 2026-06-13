@@ -29,14 +29,13 @@ bool trace_ray_editing(const t_context* ctx, t_path* path, t_pixel* pixel) {
 			add_lighting_editing(ctx, path, &r->cam.directional_light);
 		if (ctx->scene.env.lights.total > 0)
 			nee_editing(ctx, path);
-		ambient_lighting(path, &ctx->scene.env.amb_light);
+		ambient_lighting(path, ctx->scene.env.ambient);
 		return false;
 	}
 
 	ctx->editor.selection_mask[pixel->y * r->width + pixel->x] = -M_INFf;
 	t_vec3 bg_color = background_color(&ctx->scene, &path->ray, r->cam.skydome_uv_offset, is_primary_ray, ctx->scene.env.show_background);
-	t_vec3 color = vec3_scale(bg_color, ctx->scene.env.amb_light.intensity);
-	path->color = vec3_add(path->color, vec3_mul(path->throughput, color));
+	path->color = vec3_add(path->color, vec3_mul(path->throughput, bg_color));
 	return false;
 }
 

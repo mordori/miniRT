@@ -96,7 +96,7 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 
 > [!NOTE]
 >
-> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation and input hooks, and manages a frame buffer to which we copy ours.
+> Includes [MLX42](https://github.com/codam-coding-college/MLX42), a minimal graphics library required by the subject. It handles window creation, input hooks, and manages a frame buffer to which we copy ours.
 
 > [!IMPORTANT]
 >
@@ -108,16 +108,16 @@ Our approach optimises memory alignment for SIMD (Single Instruction, Multiple D
 >
 > If you are compiling on legacy hardware, please replace `-march=haswell` with `-msse4.1` in the Makefile to ensure compatibility.
 
-Run the following commands to clone the repository and create `miniRT` program
+Run the following commands to clone the repository and create `miniPT` program
 ``` git
-git clone https://github.com/mordori/miniRT.git miniRT
-cd miniRT
+git clone https://github.com/mordori/miniPT.git miniPT
+cd miniPT
 make
 ```
 
-Run the program with a .rt scene file
+Run the program
 ``` bash
-./miniRT assets/scenes/empty.rt
+./miniPT
 ```
 
 Saved renders are stored in `📁renders/`.
@@ -137,29 +137,20 @@ Saved renders are stored in `📁renders/`.
 | Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
 | <kbd>LMB</kbd>                                                 | Select                                        |
-| <kbd>RMB</kbd>                                                 | Look                                          |
-| <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>            | Move                                          |
-| <kbd>SHIFT</kbd> / <kbd>SPACE</kbd>                            | Descend / Ascend                              |
-| <kbd>T</kbd>                                                   | Save View                                     |
-| <kbd>R</kbd>                                                   | Apply Saved View                              |
-
-### Edit Mode
-| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Navigation          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
-|----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>TAB</kbd>                                                 | Toggle Edit Mode                              |
-
-| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
-|----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>F</kbd>                                                   | Frame Selected                                |
 | <kbd>ALT</kbd> + <kbd>LMB</kbd>                                | Orbit                                         |
 | <kbd>ALT</kbd> + <kbd>LMB</kbd>                                | Zoom                                          |
 | <kbd>ALT</kbd> + <kbd>LMB</kbd>                                | Pan                                           |
+| <kbd>F</kbd>                                                   | Frame                                         |
+| <kbd>Y</kbd>                                                   | Save View                                     |
+| <kbd>T</kbd>                                                   | Apply Saved View                              |
 
-| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Editing          ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
+### Edit Mode
+| Key⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                     | Action               ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |
 |----------------------------------------------------------------|-----------------------------------------------|
-| <kbd>LMB</kbd>                                                 | Select Object / Apply Edit                    |
+| <kbd>TAB</kbd>                                                 | Toggle Edit Mode                              |
+| <kbd>LMB</kbd>                                                 | Select / Apply Edit                           |
 | <kbd>RMB</kbd>                                                 | Cancel Edit                                   |
-| <kbd>G</kbd>                                                   | Move                                          |
+| <kbd>G</kbd>                                                   | Translate                                     |
 | <kbd>R</kbd>                                                   | Rotate                                        |
 | <kbd>S</kbd>                                                   | Scale                                         |
 | <kbd>X</kbd> / <kbd>Y</kbd> / <kbd>Z</kbd>                     | Axis Constraint                               |

@@ -67,20 +67,14 @@ static inline void set_renderer_state(t_context* ctx, t_renderer* r, bool* updat
 }
 
 static inline bool is_active(t_context* ctx) {
+	if (ctx->renderer.mode == SOLID)
+		return false;
 	if (ui_is_interacting())
 		return true;
 	if (ui_check_dirty())
 		return false;
 	if (ctx->scene.cam.state != CAM_DEFAULT || ctx->editor.mode != EDIT_DEFAULT)
 		return true;
-	if (ctx->renderer.mode == SOLID)
-		return false;
-
-	mlx_t* m = ctx->mlx;
-	if (mlx_is_key_down(m, KEY_FORWARD) || mlx_is_key_down(m, KEY_BACK) || mlx_is_key_down(m, KEY_RIGHT) || mlx_is_key_down(m, KEY_LEFT) ||
-		mlx_is_key_down(m, KEY_UP) || mlx_is_key_down(m, KEY_DOWN)) {
-		return true;
-	}
 	return false;
 }
 

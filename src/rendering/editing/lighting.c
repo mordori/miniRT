@@ -56,9 +56,8 @@ static inline bool hit_shadow(const t_context* ctx, const t_path* path, t_vec3 h
 	return false;
 }
 
-void ambient_lighting(t_path* path, const t_light* light) {
-	t_vec3 radiance = vec3_mul(light->emission, get_surface_color(path->mat, &path->hit));
-	radiance = vec3_scale(radiance, light->intensity);
+void ambient_lighting(t_path* path, t_vec3 bg_color) {
+	t_vec3 radiance = vec3_mul(bg_color, get_surface_color(path->mat, &path->hit));
 	path->color = vec3_add(path->color, vec3_mul(path->throughput, radiance));
 }
 

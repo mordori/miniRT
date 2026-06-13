@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "defines.h"
 #include "editing.h"
 #include "lib_math.h"
 #include "rendering.h"
@@ -11,7 +12,7 @@ static inline void render_tile(const t_context* ctx, t_vec3* buf, uint32_t tile_
 static inline void render_pixel(const t_context* ctx, t_pixel* pixel);
 static inline void sample_pixel(const t_context* ctx, t_pixel* pixel);
 static inline bool get_thread_status(t_renderer* r, uint32_t* tile_id);
-static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t keydata);
+static inline bool set_render_mode(t_context* ctx, mlx_key_data_t keydata);
 // static inline void set_samples(t_context* ctx, mlx_key_data_t keydata);
 // static inline bool set_bounces(t_context* ctx, mlx_key_data_t keydata);
 
@@ -206,11 +207,13 @@ void set_mode_rendered(t_renderer* r) {
 
 bool config_renderer(t_context* ctx, mlx_key_data_t keydata) {
 	bool dirty = false;
-	dirty |= set_render_mode(ctx, &ctx->renderer, keydata);
+	dirty |= set_render_mode(ctx, keydata);
 	return dirty;
 }
 
-static inline bool set_render_mode(t_context* ctx, t_renderer* r, mlx_key_data_t keydata) {
+static inline bool set_render_mode(t_context* ctx, mlx_key_data_t keydata) {
+	t_renderer* r = &ctx->renderer;
+
 	if (keydata.key == MLX_KEY_TAB && keydata.action == MLX_PRESS) {
 		while (r->threads_running)
 			pthread_cond_wait(&r->cond, &r->mutex);

@@ -5,7 +5,6 @@
 
 #include "defines.h"
 
-void validate_file_type(char* file);
 void init_scene(t_context* ctx);
 void clean_scene(t_context* ctx);
 

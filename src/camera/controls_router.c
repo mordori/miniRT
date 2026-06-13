@@ -66,6 +66,7 @@ bool frame_camera(t_context* ctx, t_object* obj) {
 	cam->distance = (fmaxf(dist.height, dist.width) + proj.depth) * 1.1f;
 	cam->transform.pos = vec3_sub(obj->bounds_center, vec3_scale(cam->forward, cam->distance));
 	update_camera(ctx, cam);
+	ctx->renderer.cam = *cam;
 	return true;
 }
 
@@ -74,7 +75,7 @@ static inline bool set_cam_state(t_context* ctx) {
 		return true;
 
 	t_cam_state state = CAM_DEFAULT;
-	if (ctx->renderer.mode == SOLID && mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
+	if (mlx_is_key_down(ctx->mlx, MLX_KEY_LEFT_ALT)) {
 		if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_LEFT))
 			state = CAM_ORBIT;
 		else if (mlx_is_mouse_down(ctx->mlx, MLX_MOUSE_BUTTON_RIGHT))

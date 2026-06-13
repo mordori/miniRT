@@ -50,6 +50,6 @@ void sample_ggx_vndf(t_path* path, float alpha, t_vec2 uv);
 // -----------------------------------------------------------------
 bool trace_ray_editing(const t_context* ctx, t_path* path, t_pixel* pixel);
 void add_lighting_editing(const t_context* ctx, t_path* path, const t_light* light);
-void ambient_lighting(t_path* path, const t_light* light);
+void ambient_lighting(t_path* path, t_vec3 bg_color);
 
 #endif

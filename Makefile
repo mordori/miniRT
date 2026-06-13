@@ -82,14 +82,11 @@ SRCS		+= $(addprefix $(DIR_SRC)$(DIR_INPUT), \
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_LIGHTS), \
 				point.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_MAT), \
-				material.c patterns.c textures.c perlin_noise.c)
+				material.c textures.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_OBJECTS), \
 				object.c sphere.c quad.c triangle.c mesh.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_PARSE), \
-				parse_mesh.c \
-				parse.c parse_elements.c parse_light.c parse_objects.c try_split.c \
-				parse_tools.c parse_materials.c parse_textures.c parse_utils.c \
-				parse_pass.c parse_patterns.c parse_validate.c ft_strtod.c ft_strtof.c)
+				parse_mesh.c)
 SRCS		+= $(addprefix $(DIR_SRC)$(DIR_RENDER), \
 				editing/tracer.c editing/lighting.c \
 				renderer.c tracer.c post_processing.c environment.c window.c \

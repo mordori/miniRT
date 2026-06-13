@@ -17,23 +17,23 @@ static inline void tex_to_linear(t_texture* texture, bool is_srgb);
 
 static float g_lut[256];
 
-t_texture load_texture(char* file, bool is_srgb) {
+t_texture load_texture(t_context* ctx, char* file, bool is_srgb) {
 	printf("\033[1;33mLoading texture:    %s\033[0m\n", file);
 	t_texture texture = (t_texture){ 0 };
 	texture.tex = mlx_load_png(file);
 	if (!texture.tex)
-		return (t_texture){ 0 };
+		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 
 	if (!is_pot(texture.tex->width) || !is_pot(texture.tex->height)) {
 		mlx_delete_texture(texture.tex);
-		return (t_texture){ 0 };
+		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	}
 
 	size_t size = (sizeof(float) * texture.tex->width * texture.tex->height * 4);
 	texture.pixels = a_alloc(64, size);
 	if (!texture.pixels) {
 		mlx_delete_texture(texture.tex);
-		return (t_texture){ 0 };
+		fatal_error(ctx, errors(ERR_TEX), __FILE__, __LINE__);
 	}
 
 	texture.width = texture.tex->width;
@@ -148,9 +148,7 @@ t_vec3 sample_texture(const t_texture* tex, t_vec2 uv) {
  * Uses texture if available, otherwise returns albedo.
  */
 t_vec3 get_surface_color(const t_material* mat, const t_hit* hit) {
-	if (mat->base_color == BASE_TEXTURE)
+	if (mat->is_texture && mat->texture.pixels)
 		return sample_texture(&mat->texture, hit->uv);
-	if (mat->base_color == BASE_PATTERN)
-		return eval_pattern((t_material*)mat, (t_hit*)hit);
 	return mat->albedo;
 }

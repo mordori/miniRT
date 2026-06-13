@@ -34,7 +34,6 @@
 #define SENS_ORBIT 0.003f
 #define SENS_ZOOM 0.0035f
 #define SENS_PAN 0.0005f
-#define SENS_MOVE 1.0f
 
 #define SENSOR_HEIGHT_MM 24.0f
 #define SENSOR_HALF_HEIGHT_MM 12.0f
@@ -42,14 +41,6 @@
 #define MAX_RADIANCE 10.0f
 #define CLAMP_INDIRECT 10.0f
 #define WORLD_LIMIT 9999.9f
-
-#define KEY_FORWARD MLX_KEY_W
-#define KEY_LEFT MLX_KEY_A
-#define KEY_BACK MLX_KEY_S
-#define KEY_RIGHT MLX_KEY_D
-#define KEY_UP MLX_KEY_SPACE
-#define KEY_DOWN MLX_KEY_LEFT_SHIFT
-#define KEY_RESET MLX_KEY_R
 
 #define OBJ_HIDDEN_SCENE 1
 #define OBJ_HIDDEN_CAM 2
@@ -96,31 +87,6 @@ enum e_cam_state {
 	CAM_ORBIT,
 	CAM_ZOOM,
 	CAM_PAN,
-};
-
-enum e_base_color {
-	BASE_COLOR,
-	BASE_PATTERN,
-	BASE_TEXTURE,
-};
-
-enum e_pattern {
-	PAT_NONE,
-	PAT_CHECKERBOARD,
-	PAT_GRADIENT,
-	PAT_STRIPES,
-	PAT_SPIRAL,
-	PAT_GRID,
-	PAT_BRICK,
-	PAT_MARBLE,
-	PAT_WOOD,
-	PAT_TURBULENCE,
-};
-
-enum e_entity {
-	ENT_CAMERA,
-	ENT_LIGHT,
-	ENT_OBJECT,
 };
 
 enum e_render_mode {
@@ -178,9 +144,6 @@ static const t_vec3 g_world_limit_neg = { { -WORLD_LIMIT, -WORLD_LIMIT, -WORLD_L
 
 typedef enum e_obj_type t_obj_type;
 typedef enum e_cam_state t_cam_state;
-typedef enum e_base_color t_base_color;
-typedef enum e_pattern t_pattern;
-typedef enum e_entity t_entity;
 typedef enum e_err_code t_err_code;
 typedef enum e_render_mode t_render_mode;
 typedef enum e_bn_channel t_bn_channel;
@@ -279,18 +242,18 @@ struct __attribute__((aligned(16))) s_material {
 	t_texture texture;
 	t_texture normal_map;
 	t_vec3 albedo;
-	t_vec3 albedo2;
 	t_vec3 emission;
+	t_vec3 emission_color;
 	t_vec3 f0_dielectric;
 	float metallic;
 	float roughness;
 	float ior;
 	float transmission;
-	float pattern_scale;
-	float bump_strength;
+	float normal_strength;
+	float emission_strength;
 	uint32_t flags;
-	t_base_color base_color;
-	t_pattern pattern;
+	bool is_texture;
+	bool is_normal_map;
 	bool is_emissive;
 };
 
@@ -431,11 +394,10 @@ struct s_assets {
 struct s_env {
 	t_vector lights;
 	t_light dir_light;
-	t_light amb_light;
 	t_texture skydome;
-	t_vec3 ambient_1;
-	t_vec3 ambient_2;
-	t_vec3 amb_color_2;
+	t_vec3 ambient;
+	t_vec3 gradient_1;
+	t_vec3 gradient_2;
 	t_bg_mode bg_mode;
 	bool has_dir_light;
 	bool show_background;
@@ -564,13 +526,11 @@ struct __attribute__((aligned(64))) s_context {
 	t_mouse mouse;
 	mlx_t* mlx;
 	t_image* img;
-	char* file;
 	t_mesh* lib_mesh;
 	uint32_t lib_mesh_capacity;
 	uint32_t loaded_mesh_count;
 	uint32_t resize_time;
 	uint8_t bn_stride;
-	int fd;
 };
 
 #endif

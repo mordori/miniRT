@@ -17,18 +17,12 @@ void* g_ui_ctx = NULL;
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Wassem Showeky		https://github.com/wshoweky
  */
-int main(int argc, char* argv[]) {
-	if (argc != 2)
-		fatal_error(NULL, errors(ERR_ARGINVL), __FILE__, __LINE__);
-
+int main(void) {
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
 	_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
 
 	t_context ctx = { 0 };
 	g_ui_ctx = &ctx;
-	ctx.file = argv[1];
-	validate_file_type(ctx.file);
-	ctx.fd = try_open(NULL, ctx.file, O_RDONLY, 0);
 	initialize(&ctx);
 	try_write(&ctx, STDOUT_FILENO, "\033[?25h\n\nGoodbye!\n\n");
 	clean_context(&ctx);
@@ -59,8 +53,6 @@ static inline void initialize(t_context* ctx) {
 
 // TODO: clean parse
 void clean_context(t_context* ctx) {
-	if (ctx->fd != ERROR)
-		close(ctx->fd);
 	t_renderer* r = &ctx->renderer;
 	if (r->oidn_filter)
 		oidnReleaseFilter(r->oidn_filter);
