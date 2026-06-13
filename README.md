@@ -2,6 +2,11 @@
 ## Introduction
 **High-Performance CPU Path Tracer with Quasi-Monte Carlo Integration.**
 
+> [!IMPORTANT]
+> Development has been migrated and continues in https://github.com/mordori/miniPT.
+> 
+> This repository maintains the history, but will be made unavailable soon.
+
 <p align="center">
 	<img src="doc/ball.gif" alt="Demo" />
 </p>
@@ -28,22 +33,16 @@
 - Integrates Intel Open Image Denoise for cleaning up the remaining noise in the completed render
 - Loads meshes in .obj format and the objects are instantiated
 
-> [!NOTE]
-> Object instantiation from meshes is currently hard-coded to `empty.rt` and `cornell_box.rt` scenes until improved scene loading has been implemented.
-
 #### TODO
 - Anisotropic & clear coat BRDF
 - BTDF for BSDF
 - Improve the naive median-split BVH
 - Integrate ImGui for controls and parameters
-- Migrate from requiring scenes as arguments to more universal setup with presets
 
 #### Future Work
 - Support for MacOS and Apple Silicon
 - Image based lighting
 - EV100 exposure triangle
-- Port the rendering kernel to CUDA and refactor data to Structure of Arrays (SoA)
-- Replace MLX42 with GPU interop to render directly to the display buffer, avoiding data transfer back to CPU
 
 ## Physically Based Rendering
 ### BSDF
